@@ -156,7 +156,7 @@ detect_existing_exam_resources() {
             local ns_count=0
             for ns in "${EXAM_NAMESPACES[@]}"; do
                 if namespace_exists "$ns"; then
-                    ((ns_count++))
+                    ((++ns_count))
                     found_namespaces+=("$ns")
                 fi
             done
@@ -214,7 +214,7 @@ check_and_offer_cleanup() {
 
         local choice
         while true; do
-            read -r -p "Enter choice (1-3): " choice
+            read -r -p "Enter your choice: " choice
             case $choice in
                 1)
                     echo ""
@@ -235,7 +235,7 @@ check_and_offer_cleanup() {
                     exit 0
                     ;;
                 *)
-                    echo -e "${RED}Invalid choice. Please enter 1, 2, or 3.${NC}"
+                    echo -e "${RED}Invalid choice. Please enter a valid option.${NC}"
                     ;;
             esac
         done
@@ -350,7 +350,7 @@ verify_exam_setup() {
     local ns_total=${#EXAM_NAMESPACES[@]}
     for ns in "${EXAM_NAMESPACES[@]}"; do
         if namespace_exists "$ns"; then
-            ((ns_count++))
+            ((++ns_count))
         fi
     done
 
@@ -658,9 +658,9 @@ show_status() {
             break
         fi
         if namespace_exists "$ns"; then
-            ((ns_found++))
+            ((++ns_found))
         fi
-        ((ns_checked++))
+        ((++ns_checked))
     done
 
     if [ $ns_found -gt 0 ]; then
