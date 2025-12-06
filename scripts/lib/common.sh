@@ -213,62 +213,90 @@ podman_image_exists() {
 }
 
 # ============================================================================
-# TERMINAL FUNCTIONS
+# TTYD WEB TERMINAL FUNCTIONS
 # ============================================================================
 
-# Terminal emulators in priority order
-TERMINAL_EMULATORS=("terminator" "gnome-terminal" "konsole" "xfce4-terminal" "xterm")
+# ttyd configuration
+TTYD_PORT="${TTYD_PORT:-7682}"
+TTYD_PID_FILE="/tmp/ckad-dojo-ttyd.pid"
 
-# Detect available terminal emulator
-# Returns: terminal name or empty string
-detect_terminal() {
-    for terminal in "${TERMINAL_EMULATORS[@]}"; do
-        if command_exists "$terminal"; then
-            echo "$terminal"
-            return 0
-        fi
-    done
-    return 1
+# Check if ttyd is installed
+# Returns: 0 if installed, 1 if not
+check_ttyd() {
+    if ! command_exists ttyd; then
+        print_error "ttyd is not installed"
+        echo ""
+        echo "Install ttyd using one of the following methods:"
+        echo ""
+        echo "  Ubuntu/Debian:"
+        echo "    sudo apt install ttyd"
+        echo ""
+        echo "  macOS:"
+        echo "    brew install ttyd"
+        echo ""
+        echo "  From binary:"
+        echo "    curl -L https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.x86_64 -o ttyd"
+        echo "    chmod +x ttyd"
+        echo "    sudo mv ttyd /usr/local/bin/"
+        echo ""
+        return 1
+    fi
+    return 0
 }
 
-# Open a terminal in the specified directory
-# Usage: open_terminal [directory]
-open_terminal() {
-    local dir="${1:-$PROJECT_DIR}"
-    local terminal
+# Start ttyd web terminal
+# Usage: start_ttyd [port] [working_directory]
+start_ttyd() {
+    local port="${1:-$TTYD_PORT}"
+    local workdir="${2:-$PROJECT_DIR}"
 
-    terminal=$(detect_terminal)
-    if [ -z "$terminal" ]; then
-        print_fail "No terminal emulator found"
-        echo "  Checked: ${TERMINAL_EMULATORS[*]}"
+    # Check if ttyd is already running
+    if [ -f "$TTYD_PID_FILE" ]; then
+        local pid
+        pid=$(cat "$TTYD_PID_FILE")
+        if kill -0 "$pid" 2>/dev/null; then
+            print_success "ttyd already running (PID: $pid)"
+            return 0
+        fi
+        rm -f "$TTYD_PID_FILE"
+    fi
+
+    # Check if port is in use
+    if lsof -i ":$port" &>/dev/null; then
+        print_error "Port $port is already in use"
         return 1
     fi
 
-    print_success "Opening terminal ($terminal)..."
+    # Start ttyd
+    ttyd --port "$port" --writable --cwd "$workdir" bash &
+    local pid=$!
+    echo "$pid" > "$TTYD_PID_FILE"
 
-    case "$terminal" in
-        terminator)
-            terminator --working-directory="$dir" &
-            ;;
-        gnome-terminal)
-            gnome-terminal --working-directory="$dir" &
-            ;;
-        konsole)
-            konsole --workdir "$dir" &
-            ;;
-        xfce4-terminal)
-            xfce4-terminal --working-directory="$dir" &
-            ;;
-        xterm)
-            (cd "$dir" && xterm) &
-            ;;
-        *)
-            print_fail "Unknown terminal: $terminal"
-            return 1
-            ;;
-    esac
-
-    # Disown the background process to prevent it from being killed
-    disown 2>/dev/null || true
-    return 0
+    # Wait for ttyd to start
+    sleep 1
+    if kill -0 "$pid" 2>/dev/null; then
+        print_success "ttyd started on port $port (PID: $pid)"
+        return 0
+    else
+        print_error "Failed to start ttyd"
+        rm -f "$TTYD_PID_FILE"
+        return 1
+    fi
 }
+
+# Stop ttyd web terminal
+stop_ttyd() {
+    if [ -f "$TTYD_PID_FILE" ]; then
+        local pid
+        pid=$(cat "$TTYD_PID_FILE")
+        if kill -0 "$pid" 2>/dev/null; then
+            kill "$pid" 2>/dev/null
+            print_success "ttyd stopped (PID: $pid)"
+        fi
+        rm -f "$TTYD_PID_FILE"
+    fi
+
+    # Also try to kill any stray ttyd processes on our port
+    pkill -f "ttyd.*--port.*$TTYD_PORT" 2>/dev/null || true
+}
+

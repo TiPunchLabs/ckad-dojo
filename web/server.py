@@ -362,6 +362,27 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
             self.send_json(self.get_timer_state())
         elif path == "/api/flags":
             self.send_json(list(flagged_questions))
+        elif path == "/api/terminal/status":
+            # Check if terminal is disabled via environment
+            no_terminal = os.environ.get("NO_TERMINAL", "false").lower() == "true"
+
+            if no_terminal:
+                self.send_json({
+                    "enabled": False,
+                    "running": False,
+                    "port": 0,
+                    "url": None
+                })
+            else:
+                # Check if ttyd is running
+                ttyd_port = int(os.environ.get("TTYD_PORT", "7681"))
+                ttyd_running = self.check_ttyd_status(ttyd_port)
+                self.send_json({
+                    "enabled": True,
+                    "running": ttyd_running,
+                    "port": ttyd_port,
+                    "url": f"http://localhost:{ttyd_port}"
+                })
         elif path.startswith("/api/exam/") and "/solutions" in path:
             parts = path.split("/")
             exam_id = parts[3]
@@ -479,6 +500,18 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
             "start_question": timer_state.get("start_question", 1)
         }
 
+    def check_ttyd_status(self, port: int) -> bool:
+        """Check if ttyd is running on the specified port"""
+        import socket
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(1)
+            result = sock.connect_ex(('localhost', port))
+            sock.close()
+            return result == 0
+        except Exception:
+            return False
+
     def send_json(self, data):
         """Send JSON response"""
         response = json.dumps(data, ensure_ascii=False)
@@ -518,6 +551,8 @@ def main():
         except ValueError:
             start_question = 1
 
+    # Allow port reuse to avoid "Address already in use" after restart
+    socketserver.TCPServer.allow_reuse_address = True
     with socketserver.TCPServer((HOST, PORT), ExamHandler) as httpd:
         print(f"\n{'='*60}")
         print(f"  ckad-dojo - CKAD Exam Simulator")

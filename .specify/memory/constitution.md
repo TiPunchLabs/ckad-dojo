@@ -84,7 +84,7 @@ The web interface is served locally via Python HTTP server using `uv run` and re
 ## Technical Constraints
 
 **Cluster Type**: kubeadm (user's existing cluster)
-**Required Tools**: kubectl, helm, docker, podman, bash 4.0+, uv
+**Required Tools**: kubectl, helm, docker, podman, ttyd, bash 4.0+, uv
 **File Structure**:
 ```
 ckad-dojo/
@@ -134,7 +134,7 @@ ckad-dojo/
 - Interactive exam selection menu at launch
 - Starting question selection (-q option or interactive prompt)
 - Automatic detection of existing exam resources with cleanup offer
-- Auto-open terminal on exam start (terminator preferred, fallback to other terminals)
+- Embedded web terminal via ttyd (split layout with resizable divider)
 
 **Not Implemented**:
 - No SSH simulation (single cluster context)
@@ -151,4 +151,4 @@ This constitution governs all development on the ckad-dojo project:
 - Version updates follow semantic versioning
 - Constitution amendments require updating this file and dependent templates
 
-**Version**: 2.1.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-06
+**Version**: 2.2.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-06

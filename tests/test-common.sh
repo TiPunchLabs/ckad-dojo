@@ -167,6 +167,24 @@ assert_function_exists "podman_container_running" "podman_container_running func
 assert_function_exists "docker_image_exists" "docker_image_exists function should exist"
 assert_function_exists "podman_image_exists" "podman_image_exists function should exist"
 
+# ----------------------------------------------------------------------------
+# Test: ttyd functions exist
+# ----------------------------------------------------------------------------
+test_case "ttyd utility functions are defined"
+
+assert_function_exists "check_ttyd" "check_ttyd function should exist"
+assert_function_exists "start_ttyd" "start_ttyd function should exist"
+assert_function_exists "stop_ttyd" "stop_ttyd function should exist"
+
+# ----------------------------------------------------------------------------
+# Test: ttyd variables are set
+# ----------------------------------------------------------------------------
+test_case "ttyd configuration variables are set"
+
+assert_not_empty "$TTYD_PORT" "TTYD_PORT should be set"
+assert_not_empty "$TTYD_PID_FILE" "TTYD_PID_FILE should be set"
+assert_equals "7682" "$TTYD_PORT" "TTYD_PORT should default to 7682"
+
 # ============================================================================
 # SUMMARY
 # ============================================================================

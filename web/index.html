@@ -83,31 +83,52 @@
             </div>
         </div>
 
-        <!-- Main Content -->
+        <!-- Main Content - Split Layout -->
         <main class="exam-main">
-            <!-- Question Metadata -->
-            <div class="question-meta">
-                <div class="meta-item">
-                    <span class="meta-label">Points</span>
-                    <span id="meta-points" class="meta-value">0</span>
-                </div>
-                <div class="meta-item">
-                    <span class="meta-label">Namespace</span>
-                    <span id="meta-namespace" class="meta-value">-</span>
-                </div>
-                <div class="meta-item">
-                    <span class="meta-label">Resources</span>
-                    <span id="meta-resources" class="meta-value">-</span>
-                </div>
-                <div class="meta-item">
-                    <span class="meta-label">Files</span>
-                    <span id="meta-files" class="meta-value">-</span>
-                </div>
-            </div>
+            <div class="split-container">
+                <!-- Question Panel (Left) -->
+                <div id="question-panel" class="question-panel">
+                    <!-- Question Metadata -->
+                    <div class="question-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Points</span>
+                            <span id="meta-points" class="meta-value">0</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Namespace</span>
+                            <span id="meta-namespace" class="meta-value">-</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Resources</span>
+                            <span id="meta-resources" class="meta-value">-</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Files</span>
+                            <span id="meta-files" class="meta-value">-</span>
+                        </div>
+                    </div>
 
-            <!-- Question Content -->
-            <div id="question-content" class="question-content">
-                <!-- Question will be rendered here -->
+                    <!-- Question Content -->
+                    <div id="question-content" class="question-content">
+                        <!-- Question will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Resizable Divider -->
+                <div id="split-divider" class="split-divider"></div>
+
+                <!-- Terminal Panel (Right) -->
+                <div id="terminal-panel" class="terminal-panel">
+                    <iframe id="terminal-frame" src="about:blank" title="Terminal"></iframe>
+                    <!-- Terminal Error Overlay -->
+                    <div id="terminal-error" class="terminal-error hidden">
+                        <div class="terminal-error-content">
+                            <span class="error-icon">&#9888;</span>
+                            <p id="terminal-error-message">Terminal disconnected</p>
+                            <button id="btn-reconnect" class="btn-primary">Reconnect</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
 

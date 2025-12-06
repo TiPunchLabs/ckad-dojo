@@ -20,7 +20,12 @@ const state = {
     solutions: [],
     scoreResult: null,
     currentSolutionIndex: 0,
-    viewingSolutions: false
+    viewingSolutions: false,
+    // Terminal state
+    terminalEnabled: true,
+    terminalPort: 7681,
+    terminalConnected: false,
+    splitRatio: 0.5  // 50% split by default
 };
 
 // ============================================================================
@@ -82,6 +87,11 @@ const api = {
 
     async getSolution(examId, questionId) {
         const response = await fetch(`/api/exam/${examId}/solutions/${questionId}`);
+        return response.json();
+    },
+
+    async getTerminalStatus() {
+        const response = await fetch('/api/terminal/status');
         return response.json();
     }
 };
@@ -160,7 +170,17 @@ const elements = {
     btnPrevSolution: document.getElementById('btn-prev-solution'),
     btnNextSolution: document.getElementById('btn-next-solution'),
     btnBackToScore: document.getElementById('btn-back-to-score'),
-    solutionSelect: document.getElementById('solution-select')
+    solutionSelect: document.getElementById('solution-select'),
+
+    // Terminal
+    splitContainer: document.querySelector('.split-container'),
+    questionPanel: document.getElementById('question-panel'),
+    terminalPanel: document.getElementById('terminal-panel'),
+    terminalFrame: document.getElementById('terminal-frame'),
+    terminalError: document.getElementById('terminal-error'),
+    terminalErrorMessage: document.getElementById('terminal-error-message'),
+    splitDivider: document.getElementById('split-divider'),
+    btnReconnect: document.getElementById('btn-reconnect')
 };
 
 // ============================================================================
@@ -188,6 +208,191 @@ function updateHljsTheme(theme) {
     } else {
         hljsLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
     }
+}
+
+// ============================================================================
+// Terminal Management
+// ============================================================================
+
+async function initTerminal() {
+    // Check URL params for terminal settings
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Check if terminal is disabled via URL param
+    if (urlParams.get('terminal') === 'false') {
+        state.terminalEnabled = false;
+    }
+
+    // Get custom terminal port if specified
+    const portParam = urlParams.get('terminal_port');
+    if (portParam) {
+        state.terminalPort = parseInt(portParam, 10);
+    }
+
+    // Load saved split ratio from localStorage
+    const savedRatio = localStorage.getItem('ckad-split-ratio');
+    if (savedRatio) {
+        state.splitRatio = parseFloat(savedRatio);
+    }
+
+    // Check terminal status via API
+    if (state.terminalEnabled) {
+        try {
+            const status = await api.getTerminalStatus();
+            if (!status.enabled) {
+                console.log('Terminal disabled via --no-terminal flag');
+                state.terminalEnabled = false;
+            } else if (status.running) {
+                state.terminalPort = status.port;
+            } else {
+                console.log('Terminal not running, disabling terminal panel');
+                state.terminalEnabled = false;
+            }
+        } catch (error) {
+            console.error('Failed to check terminal status:', error);
+            // Continue with terminal enabled, will show error if it fails
+        }
+    }
+
+    // Apply terminal state
+    updateTerminalVisibility();
+
+    // Setup split divider drag
+    initSplitDivider();
+
+    // Setup reconnect button handler
+    if (elements.btnReconnect) {
+        elements.btnReconnect.addEventListener('click', reconnectTerminal);
+    }
+}
+
+function updateTerminalVisibility() {
+    if (!elements.terminalPanel || !elements.splitDivider || !elements.splitContainer) {
+        return;
+    }
+
+    if (state.terminalEnabled) {
+        elements.terminalPanel.classList.remove('hidden');
+        elements.splitDivider.classList.remove('hidden');
+        elements.splitContainer.classList.remove('no-terminal');
+
+        // Apply saved split ratio
+        applySplitRatio(state.splitRatio);
+
+        // Load terminal iframe
+        loadTerminalFrame();
+    } else {
+        elements.terminalPanel.classList.add('hidden');
+        elements.splitDivider.classList.add('hidden');
+        elements.splitContainer.classList.add('no-terminal');
+    }
+}
+
+function loadTerminalFrame() {
+    if (!elements.terminalFrame) return;
+
+    const terminalUrl = `http://localhost:${state.terminalPort}`;
+    elements.terminalFrame.src = terminalUrl;
+
+    // Monitor iframe load
+    elements.terminalFrame.onload = () => {
+        state.terminalConnected = true;
+        hideTerminalError();
+    };
+
+    elements.terminalFrame.onerror = () => {
+        state.terminalConnected = false;
+        showTerminalError('Failed to connect to terminal');
+    };
+}
+
+function showTerminalError(message) {
+    if (!elements.terminalError || !elements.terminalErrorMessage) return;
+
+    elements.terminalErrorMessage.textContent = message;
+    elements.terminalError.classList.remove('hidden');
+}
+
+function hideTerminalError() {
+    if (!elements.terminalError) return;
+    elements.terminalError.classList.add('hidden');
+}
+
+function reconnectTerminal() {
+    hideTerminalError();
+    loadTerminalFrame();
+}
+
+function applySplitRatio(ratio) {
+    if (!elements.questionPanel || !elements.terminalPanel) return;
+
+    // Clamp ratio between 0.2 and 0.8 (20% to 80%)
+    ratio = Math.max(0.2, Math.min(0.8, ratio));
+    state.splitRatio = ratio;
+
+    elements.questionPanel.style.flex = `${ratio}`;
+    elements.terminalPanel.style.flex = `${1 - ratio}`;
+}
+
+function saveSplitRatio() {
+    localStorage.setItem('ckad-split-ratio', state.splitRatio.toString());
+}
+
+// Split divider drag handling
+let isDragging = false;
+
+function initSplitDivider() {
+    if (!elements.splitDivider || !elements.splitContainer) return;
+
+    elements.splitDivider.addEventListener('mousedown', startDrag);
+    document.addEventListener('mousemove', onDrag);
+    document.addEventListener('mouseup', stopDrag);
+
+    // Touch support
+    elements.splitDivider.addEventListener('touchstart', startDrag, { passive: false });
+    document.addEventListener('touchmove', onDrag, { passive: false });
+    document.addEventListener('touchend', stopDrag);
+}
+
+function startDrag(e) {
+    if (!state.terminalEnabled) return;
+
+    isDragging = true;
+    elements.splitDivider.classList.add('dragging');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+
+    e.preventDefault();
+}
+
+function onDrag(e) {
+    if (!isDragging) return;
+
+    const container = elements.splitContainer;
+    const rect = container.getBoundingClientRect();
+
+    // Get X position from mouse or touch
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+
+    // Calculate ratio
+    const ratio = (clientX - rect.left) / rect.width;
+
+    // Apply ratio with constraints
+    applySplitRatio(ratio);
+
+    e.preventDefault();
+}
+
+function stopDrag() {
+    if (!isDragging) return;
+
+    isDragging = false;
+    elements.splitDivider.classList.remove('dragging');
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+
+    // Save preference
+    saveSplitRatio();
 }
 
 // ============================================================================
@@ -909,6 +1114,7 @@ async function resumeExam(examId, startQuestion = 1) {
 
 async function init() {
     initTheme();
+    await initTerminal();
     initEventListeners();
 
     // Check for existing session first
