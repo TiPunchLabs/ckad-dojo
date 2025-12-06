@@ -14,6 +14,7 @@ const state = {
     flaggedQuestions: new Set(),
     timerInterval: null,
     timeRemaining: 0,
+    timerPaused: false,
     examStarted: false,
     examEnded: false,
     // Solutions state
@@ -93,6 +94,30 @@ const api = {
     async getTerminalStatus() {
         const response = await fetch('/api/terminal/status');
         return response.json();
+    },
+
+    async togglePause() {
+        const response = await fetch('/api/timer/pause', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        return response.json();
+    },
+
+    async cleanup() {
+        const response = await fetch('/api/cleanup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        return response.json();
+    },
+
+    async shutdown() {
+        const response = await fetch('/api/shutdown', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        return response.json();
     }
 };
 
@@ -171,6 +196,14 @@ const elements = {
     btnNextSolution: document.getElementById('btn-next-solution'),
     btnBackToScore: document.getElementById('btn-back-to-score'),
     solutionSelect: document.getElementById('solution-select'),
+
+    // Confirm Modal
+    confirmModal: document.getElementById('confirm-modal'),
+    btnConfirmCancel: document.getElementById('btn-confirm-cancel'),
+    btnConfirmStop: document.getElementById('btn-confirm-stop'),
+
+    // Pause Button
+    btnPause: document.getElementById('btn-pause'),
 
     // Terminal
     splitContainer: document.querySelector('.split-container'),
@@ -498,6 +531,12 @@ async function updateTimer() {
         const timerState = await api.getTimerState();
         state.timeRemaining = timerState.remaining_seconds;
 
+        // Sync paused state from server
+        if (timerState.paused !== state.timerPaused) {
+            state.timerPaused = timerState.paused;
+            updatePauseUI();
+        }
+
         // Format time
         const minutes = Math.floor(state.timeRemaining / 60);
         const seconds = state.timeRemaining % 60;
@@ -516,12 +555,29 @@ async function updateTimer() {
         }
 
         // Check if time's up
-        if (!timerState.running && state.examStarted && !state.examEnded) {
+        if (!timerState.running && state.examStarted && !state.examEnded && !timerState.paused) {
             endExam();
         }
 
     } catch (error) {
         console.error('Failed to update timer:', error);
+    }
+}
+
+function updatePauseUI() {
+    if (elements.btnPause) {
+        elements.btnPause.classList.toggle('paused', state.timerPaused);
+        elements.btnPause.title = state.timerPaused ? 'Resume timer' : 'Pause timer';
+        // Toggle pause/resume icons
+        const pauseIcon = elements.btnPause.querySelector('.pause-icon');
+        const resumeIcon = elements.btnPause.querySelector('.resume-icon');
+        if (pauseIcon && resumeIcon) {
+            pauseIcon.classList.toggle('hidden', state.timerPaused);
+            resumeIcon.classList.toggle('hidden', !state.timerPaused);
+        }
+    }
+    if (elements.timer) {
+        elements.timer.classList.toggle('paused', state.timerPaused);
     }
 }
 
@@ -537,12 +593,28 @@ function endExam() {
 // Stop Exam and Scoring
 // ============================================================================
 
-async function stopExam() {
-    // Confirm with user
-    if (!confirm('Are you sure you want to stop the exam? This will calculate your final score.')) {
-        return;
-    }
+// Show confirm modal
+function showConfirmModal() {
+    elements.confirmModal.classList.remove('hidden');
+}
 
+// Hide confirm modal
+function hideConfirmModal() {
+    elements.confirmModal.classList.add('hidden');
+}
+
+// Handle confirm stop
+async function confirmStopExam() {
+    hideConfirmModal();
+    await executeStopExam();
+}
+
+async function stopExam() {
+    // Show custom confirm modal instead of browser confirm
+    showConfirmModal();
+}
+
+async function executeStopExam() {
     // Stop timer
     state.examEnded = true;
     if (state.timerInterval) {
@@ -637,6 +709,106 @@ function renderQuestionScores(questions) {
             <span class="score-q-status">${q.passed ? '✓' : '✗'}</span>
         </div>
     `).join('');
+}
+
+// ============================================================================
+// Pause Timer
+// ============================================================================
+
+async function togglePause() {
+    try {
+        const result = await api.togglePause();
+
+        if (!result.error) {
+            state.timerPaused = result.paused;
+
+            // Update UI
+            if (elements.btnPause) {
+                elements.btnPause.classList.toggle('paused', state.timerPaused);
+                // Toggle pause/resume icons
+                const pauseIcon = elements.btnPause.querySelector('.pause-icon');
+                const resumeIcon = elements.btnPause.querySelector('.resume-icon');
+                if (pauseIcon && resumeIcon) {
+                    pauseIcon.classList.toggle('hidden', state.timerPaused);
+                    resumeIcon.classList.toggle('hidden', !state.timerPaused);
+                }
+            }
+            if (elements.timer) {
+                elements.timer.classList.toggle('paused', state.timerPaused);
+            }
+
+            // Update button title
+            if (elements.btnPause) {
+                elements.btnPause.title = state.timerPaused ? 'Resume timer' : 'Pause timer';
+            }
+        }
+    } catch (error) {
+        console.error('Failed to toggle pause:', error);
+    }
+}
+
+// ============================================================================
+// Cleanup and Shutdown
+// ============================================================================
+
+async function closeExamAndCleanup() {
+    // Hide score details and show cleanup loader
+    const scoreContainer = elements.scoreModal.querySelector('.modal-content');
+    const originalContent = scoreContainer.innerHTML;
+
+    scoreContainer.innerHTML = `
+        <div class="cleanup-loader">
+            <div class="spinner"></div>
+            <div class="cleanup-message">Cleaning up exam resources...</div>
+            <div class="cleanup-status">Please wait</div>
+        </div>
+    `;
+
+    const statusEl = scoreContainer.querySelector('.cleanup-status');
+    const messageEl = scoreContainer.querySelector('.cleanup-message');
+
+    try {
+        // Call cleanup endpoint
+        statusEl.textContent = 'Running ckad-cleanup.sh...';
+        const result = await api.cleanup();
+
+        if (result.success) {
+            messageEl.textContent = 'Cleanup complete!';
+            statusEl.textContent = 'Shutting down server...';
+
+            // Short delay to show message
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            // Call shutdown endpoint
+            try {
+                await api.shutdown();
+            } catch (e) {
+                // Expected - server stops so request may fail
+            }
+
+            // Show final message
+            elements.scoreModal.classList.add('hidden');
+            document.body.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; height: 100vh; background: var(--bg-primary); color: var(--text-primary); font-family: system-ui;">
+                    <div style="text-align: center;">
+                        <h1 style="margin-bottom: 1rem;">Exam Ended</h1>
+                        <p style="color: var(--text-secondary);">You can close this browser tab.</p>
+                    </div>
+                </div>
+            `;
+        } else {
+            // Restore original content on error
+            scoreContainer.innerHTML = originalContent;
+            elements.scoreStatus.textContent = 'Cleanup failed: ' + (result.error || 'Unknown error');
+            elements.scoreStatus.className = 'score-status failed';
+        }
+    } catch (error) {
+        console.error('Cleanup failed:', error);
+        // Restore original content on error
+        scoreContainer.innerHTML = originalContent;
+        elements.scoreStatus.textContent = 'Failed to cleanup';
+        elements.scoreStatus.className = 'score-status failed';
+    }
 }
 
 // ============================================================================
@@ -925,9 +1097,18 @@ function backToSelection() {
 // ============================================================================
 
 function handleKeyboard(event) {
+    // Handle Escape for confirm modal
+    if (event.key === 'Escape') {
+        if (elements.confirmModal && !elements.confirmModal.classList.contains('hidden')) {
+            hideConfirmModal();
+            return;
+        }
+    }
+
     // Don't handle if modal is open
     if (!elements.timesUpModal.classList.contains('hidden') ||
-        !elements.flaggedModal.classList.contains('hidden')) {
+        !elements.flaggedModal.classList.contains('hidden') ||
+        (elements.confirmModal && !elements.confirmModal.classList.contains('hidden'))) {
         return;
     }
 
@@ -987,10 +1168,21 @@ function initEventListeners() {
     // Stop exam button
     elements.btnStopExam.addEventListener('click', stopExam);
 
+    // Confirm modal buttons
+    if (elements.btnConfirmCancel) {
+        elements.btnConfirmCancel.addEventListener('click', hideConfirmModal);
+    }
+    if (elements.btnConfirmStop) {
+        elements.btnConfirmStop.addEventListener('click', confirmStopExam);
+    }
+
+    // Pause button
+    if (elements.btnPause) {
+        elements.btnPause.addEventListener('click', togglePause);
+    }
+
     // Score modal buttons
-    elements.btnCloseScore.addEventListener('click', () => {
-        elements.scoreModal.classList.add('hidden');
-    });
+    elements.btnCloseScore.addEventListener('click', closeExamAndCleanup);
     elements.btnBackToSelection.addEventListener('click', () => {
         elements.scoreModal.classList.add('hidden');
         backToSelection();
@@ -1045,6 +1237,15 @@ function initEventListeners() {
             elements.scoreModal.classList.add('hidden');
         }
     });
+
+    // Confirm modal backdrop click
+    if (elements.confirmModal) {
+        elements.confirmModal.addEventListener('click', (e) => {
+            if (e.target === elements.confirmModal) {
+                hideConfirmModal();
+            }
+        });
+    }
 }
 
 // ============================================================================

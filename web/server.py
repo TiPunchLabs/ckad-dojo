@@ -32,14 +32,61 @@ timer_state = {
     "exam_id": None,
     "exam_name": None,
     "running": False,
-    "start_question": 1
+    "start_question": 1,
+    "paused": False,
+    "pause_time": None,
+    "total_paused_seconds": 0
 }
+
+# Server shutdown flag
+shutdown_requested = False
 
 # Question flags state (in-memory)
 flagged_questions = set()
 
 # Scripts directory
 SCRIPTS_DIR = PROJECT_DIR / "scripts"
+
+
+def run_cleanup_script(exam_id: str = None) -> dict:
+    """Run ckad-cleanup.sh to clean up exam resources"""
+    script_path = SCRIPTS_DIR / "ckad-cleanup.sh"
+
+    if not script_path.exists():
+        return {
+            "success": False,
+            "error": "Cleanup script not found"
+        }
+
+    try:
+        cmd = [str(script_path)]
+        if exam_id:
+            cmd.extend(["-e", exam_id])
+
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_DIR),
+            timeout=120
+        )
+
+        return {
+            "success": result.returncode == 0,
+            "output": result.stdout,
+            "error": result.stderr if result.returncode != 0 else None
+        }
+
+    except subprocess.TimeoutExpired:
+        return {
+            "success": False,
+            "error": "Cleanup script timed out"
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": str(e)
+        }
 
 
 def run_scoring_script(exam_id: str = None) -> dict:
@@ -428,6 +475,9 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
             timer_state["exam_id"] = exam_id
             timer_state["exam_name"] = config["exam_name"]
             timer_state["running"] = True
+            timer_state["paused"] = False
+            timer_state["pause_time"] = None
+            timer_state["total_paused_seconds"] = 0
             flagged_questions.clear()
             self.send_json({"status": "started", "timer": self.get_timer_state()})
 
@@ -447,9 +497,28 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
             else:
                 self.send_error(400, "Missing question_id")
 
+        elif path == "/api/timer/pause":
+            # Toggle pause state
+            if timer_state["running"]:
+                if timer_state.get("paused"):
+                    # Resume timer
+                    paused_duration = time.time() - timer_state["pause_time"]
+                    timer_state["total_paused_seconds"] = timer_state.get("total_paused_seconds", 0) + paused_duration
+                    timer_state["paused"] = False
+                    timer_state["pause_time"] = None
+                    self.send_json({"paused": False, "timer": self.get_timer_state()})
+                else:
+                    # Pause timer
+                    timer_state["paused"] = True
+                    timer_state["pause_time"] = time.time()
+                    self.send_json({"paused": True, "timer": self.get_timer_state()})
+            else:
+                self.send_json({"error": "Timer not running", "paused": False})
+
         elif path == "/api/score":
             # Stop the timer
             timer_state["running"] = False
+            timer_state["paused"] = False
 
             # Run the scoring script
             exam_id = timer_state.get("exam_id") or data.get("exam_id")
@@ -457,7 +526,8 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
 
             # Add timer info to result
             if timer_state["start_time"]:
-                elapsed = time.time() - timer_state["start_time"]
+                total_paused = timer_state.get("total_paused_seconds", 0)
+                elapsed = time.time() - timer_state["start_time"] - total_paused
                 score_result["elapsed_seconds"] = int(elapsed)
                 score_result["elapsed_formatted"] = f"{int(elapsed // 60)}:{int(elapsed % 60):02d}"
 
@@ -467,6 +537,27 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
 
             self.send_json(score_result)
 
+        elif path == "/api/cleanup":
+            # Run cleanup script
+            exam_id = timer_state.get("exam_id") or data.get("exam_id")
+            cleanup_result = run_cleanup_script(exam_id)
+            self.send_json(cleanup_result)
+
+        elif path == "/api/shutdown":
+            global shutdown_requested
+            # Stop timer if running
+            timer_state["running"] = False
+            timer_state["paused"] = False
+            # Signal shutdown
+            shutdown_requested = True
+            self.send_json({"status": "shutdown_initiated"})
+            # Schedule shutdown after response is sent
+            import threading
+            def delayed_shutdown():
+                time.sleep(0.5)
+                os._exit(0)
+            threading.Thread(target=delayed_shutdown, daemon=True).start()
+
         else:
             self.send_error(404, "Not found")
 
@@ -475,6 +566,7 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
         if not timer_state["running"] or timer_state["start_time"] is None:
             return {
                 "running": False,
+                "paused": timer_state.get("paused", False),
                 "remaining_seconds": 0,
                 "elapsed_seconds": 0,
                 "total_seconds": timer_state["duration_minutes"] * 60,
@@ -483,7 +575,16 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
                 "start_question": timer_state.get("start_question", 1)
             }
 
-        elapsed = time.time() - timer_state["start_time"]
+        # Calculate elapsed time, accounting for paused time
+        total_paused = timer_state.get("total_paused_seconds", 0)
+
+        if timer_state.get("paused") and timer_state.get("pause_time"):
+            # Currently paused - use pause_time as reference
+            elapsed = timer_state["pause_time"] - timer_state["start_time"] - total_paused
+        else:
+            # Running - use current time
+            elapsed = time.time() - timer_state["start_time"] - total_paused
+
         total = timer_state["duration_minutes"] * 60
         remaining = max(0, total - elapsed)
 
@@ -492,6 +593,7 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
 
         return {
             "running": timer_state["running"],
+            "paused": timer_state.get("paused", False),
             "remaining_seconds": int(remaining),
             "elapsed_seconds": int(elapsed),
             "total_seconds": total,
