@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ckad-dojo</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" id="hljs-theme">
+</head>
+<body>
+    <!-- Exam Selection Screen -->
+    <div id="exam-selection" class="screen">
+        <div class="selection-container">
+            <div class="logo">
+                <span class="logo-icon">K8s</span>
+                <h1>ckad-dojo</h1>
+            </div>
+            <p class="subtitle">Select an exam to begin your practice session</p>
+
+            <div id="exam-list" class="exam-list">
+                <!-- Exams will be loaded here -->
+            </div>
+
+            <div class="theme-toggle-container">
+                <button id="theme-toggle-selection" class="theme-toggle" title="Toggle theme">
+                    <span class="icon-sun">&#9728;</span>
+                    <span class="icon-moon">&#9790;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exam Interface -->
+    <div id="exam-interface" class="screen hidden">
+        <!-- Header with Timer -->
+        <header class="exam-header">
+            <div class="header-left">
+                <button id="btn-back" class="btn-icon" title="Back to exam selection">
+                    <span>&#8592;</span>
+                </button>
+                <span id="exam-title" class="exam-title">CKAD Simulation</span>
+            </div>
+
+            <div class="header-center">
+                <div id="timer" class="timer">
+                    <span class="timer-icon">&#9202;</span>
+                    <span id="timer-display">120:00</span>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="progress-info">
+                    <span id="progress-text">0 / 22</span>
+                </div>
+                <button id="theme-toggle" class="btn-icon theme-toggle" title="Toggle theme">
+                    <span class="icon-sun">&#9728;</span>
+                    <span class="icon-moon">&#9790;</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Question Navigation -->
+        <nav class="question-nav">
+            <button id="btn-prev" class="btn-nav" title="Previous question (Left arrow)">
+                <span>&#8249;</span>
+            </button>
+
+            <div class="question-selector">
+                <select id="question-select">
+                    <!-- Questions will be loaded here -->
+                </select>
+            </div>
+
+            <button id="btn-next" class="btn-nav" title="Next question (Right arrow)">
+                <span>&#8250;</span>
+            </button>
+        </nav>
+
+        <!-- Question Overview (mini map) -->
+        <div class="question-overview">
+            <div id="question-dots" class="question-dots">
+                <!-- Question indicators will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="exam-main">
+            <!-- Question Metadata -->
+            <div class="question-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Points</span>
+                    <span id="meta-points" class="meta-value">0</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Namespace</span>
+                    <span id="meta-namespace" class="meta-value">-</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Resources</span>
+                    <span id="meta-resources" class="meta-value">-</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Files</span>
+                    <span id="meta-files" class="meta-value">-</span>
+                </div>
+            </div>
+
+            <!-- Question Content -->
+            <div id="question-content" class="question-content">
+                <!-- Question will be rendered here -->
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="exam-footer">
+            <div class="footer-left">
+                <button id="btn-flag" class="btn-flag" title="Flag for review">
+                    <span class="flag-icon">&#9873;</span>
+                    <span>Flag this</span>
+                </button>
+            </div>
+
+            <div class="footer-center">
+                <button id="btn-flagged-list" class="btn-secondary">
+                    <span>Flagged</span>
+                    <span id="flagged-count" class="badge">0</span>
+                </button>
+                <button id="btn-stop-exam" class="btn-danger" title="Stop exam and calculate score">
+                    <span>&#9632;</span>
+                    <span>Stop Exam</span>
+                </button>
+            </div>
+
+            <div class="footer-right">
+                <button id="btn-next-footer" class="btn-primary">
+                    Next <span>&#8250;</span>
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Time's Up Modal -->
+    <div id="times-up-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-icon">&#9202;</div>
+            <h2>Time's Up!</h2>
+            <p>Your exam time has ended.</p>
+            <p class="modal-info">Run <code>./scripts/ckad-score.sh</code> to see your results.</p>
+            <button id="btn-close-modal" class="btn-primary">Close</button>
+        </div>
+    </div>
+
+    <!-- Flagged Questions Modal -->
+    <div id="flagged-modal" class="modal hidden">
+        <div class="modal-content modal-list">
+            <h2>Flagged Questions</h2>
+            <div id="flagged-list" class="flagged-list">
+                <!-- Flagged questions will be listed here -->
+            </div>
+            <button id="btn-close-flagged" class="btn-secondary">Close</button>
+        </div>
+    </div>
+
+    <!-- Score Results Modal -->
+    <div id="score-modal" class="modal hidden">
+        <div class="modal-content modal-score">
+            <div id="score-result-icon" class="modal-icon score-icon">&#9733;</div>
+            <h2 id="score-result-title">Exam Complete</h2>
+            <div id="score-summary" class="score-summary">
+                <div class="score-big">
+                    <span id="score-percentage">0</span><span class="score-percent">%</span>
+                </div>
+                <div class="score-details">
+                    <span id="score-points">0 / 0</span> points
+                </div>
+                <div id="score-status" class="score-status">Calculating...</div>
+            </div>
+            <div id="score-time" class="score-time">
+                Time elapsed: <span id="score-elapsed">--:--</span>
+            </div>
+            <div id="score-questions-container" class="score-questions-container">
+                <h3>Question Details</h3>
+                <div id="score-questions-list" class="score-questions-list">
+                    <!-- Question scores will be listed here -->
+                </div>
+            </div>
+            <div class="score-actions">
+                <button id="btn-view-solutions" class="btn-primary hidden">View Solutions</button>
+                <button id="btn-close-score" class="btn-secondary">Close</button>
+                <button id="btn-back-to-selection" class="btn-secondary">Back to Exams</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Solutions View Modal -->
+    <div id="solutions-view" class="modal hidden">
+        <div class="modal-content modal-solutions">
+            <div class="solutions-header">
+                <button id="btn-back-to-score" class="btn-icon" title="Back to score">
+                    <span>&#8592;</span>
+                </button>
+                <h2 id="solution-title">Question 1 | Topic</h2>
+                <span id="solution-status" class="solution-status"></span>
+            </div>
+
+            <div class="solutions-nav">
+                <button id="btn-prev-solution" class="btn-nav" title="Previous solution">
+                    <span>&#8249;</span>
+                </button>
+                <select id="solution-select" class="solution-select">
+                    <!-- Solutions will be loaded here -->
+                </select>
+                <button id="btn-next-solution" class="btn-nav" title="Next solution">
+                    <span>&#8250;</span>
+                </button>
+            </div>
+
+            <div id="solution-content" class="solution-content">
+                <!-- Solution will be rendered here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
