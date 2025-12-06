@@ -107,7 +107,7 @@ main() {
     echo -e "Exam:        ${CYAN}$EXAM_NAME${NC}"
     echo -e "Exam ID:     ${CYAN}$CURRENT_EXAM_ID${NC}"
     echo "Exam directory: $EXAM_DIR"
-    echo "Manifests: $MANIFESTS_DIR"
+    echo "Manifests: $CURRENT_MANIFESTS_DIR"
     echo ""
 
     # Check prerequisites
