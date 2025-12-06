@@ -118,35 +118,34 @@ main() {
 
     # Score specific question or all
     if [ -n "$SPECIFIC_QUESTION" ]; then
-        case "$SPECIFIC_QUESTION" in
-            1) echo ""; score_q1; ;;
-            2) echo ""; score_q2; ;;
-            3) echo ""; score_q3; ;;
-            4) echo ""; score_q4; ;;
-            5) echo ""; score_q5; ;;
-            6) echo ""; score_q6; ;;
-            7) echo ""; score_q7; ;;
-            8) echo ""; score_q8; ;;
-            9) echo ""; score_q9; ;;
-            10) echo ""; score_q10; ;;
-            11) echo ""; score_q11; ;;
-            12) echo ""; score_q12; ;;
-            13) echo ""; score_q13; ;;
-            14) echo ""; score_q14; ;;
-            15) echo ""; score_q15; ;;
-            16) echo ""; score_q16; ;;
-            17) echo ""; score_q17; ;;
-            18) echo ""; score_q18; ;;
-            19) echo ""; score_q19; ;;
-            20) echo ""; score_q20; ;;
-            21) echo ""; score_q21; ;;
-            22) echo ""; score_q22; ;;
-            p1|P1) echo ""; score_preview_q1; ;;
-            *)
-                print_error "Invalid question: $SPECIFIC_QUESTION"
+        # Check if it's a preview question
+        if [[ "$SPECIFIC_QUESTION" =~ ^[pP][0-9]+$ ]]; then
+            local p_num="${SPECIFIC_QUESTION//[pP]/}"
+            if declare -f "score_preview_q$p_num" > /dev/null; then
+                echo ""
+                "score_preview_q$p_num"
+            else
+                print_error "Preview question $SPECIFIC_QUESTION not found"
                 exit 1
-                ;;
-        esac
+            fi
+        # Check if it's a regular question
+        elif [[ "$SPECIFIC_QUESTION" =~ ^[0-9]+$ ]]; then
+            if [ "$SPECIFIC_QUESTION" -ge 1 ] && [ "$SPECIFIC_QUESTION" -le "$TOTAL_QUESTIONS" ]; then
+                if declare -f "score_q$SPECIFIC_QUESTION" > /dev/null; then
+                    echo ""
+                    "score_q$SPECIFIC_QUESTION"
+                else
+                    print_error "Scoring function for question $SPECIFIC_QUESTION not found"
+                    exit 1
+                fi
+            else
+                print_error "Question $SPECIFIC_QUESTION out of range (1-$TOTAL_QUESTIONS)"
+                exit 1
+            fi
+        else
+            print_error "Invalid question format: $SPECIFIC_QUESTION"
+            exit 1
+        fi
         exit 0
     fi
 
@@ -156,69 +155,60 @@ main() {
     echo ""
     echo "═══════════════════════════════════════════════════════════════════"
 
-    # Question scoring with point tracking
-    # Format: question_number|max_points|description
+    # Dynamic question scoring - discover available score functions
+    local total_qs="${TOTAL_QUESTIONS:-22}"
 
-    local questions=(
-        "1|1|Namespaces"
-        "2|5|Pods"
-        "3|6|Job"
-        "4|5|Helm Management"
-        "5|1|ServiceAccount, Secret"
-        "6|5|ReadinessProbe"
-        "7|6|Pods, Namespaces"
-        "8|4|Deployment, Rollouts"
-        "9|10|Pod -> Deployment"
-        "10|9|Service, Logs"
-        "11|7|Working with Containers"
-        "12|6|Storage, PV, PVC, Pod volume"
-        "13|6|Storage, StorageClass, PVC"
-        "14|8|Secret, Secret-Volume, Secret-Env"
-        "15|3|ConfigMap, Configmap-Volume"
-        "16|6|Logging sidecar"
-        "17|5|InitContainer"
-        "18|2|Service misconfiguration"
-        "19|2|Service ClusterIP->NodePort"
-        "20|5|NetworkPolicy"
-        "21|8|Requests and Limits, ServiceAccount"
-        "22|3|Labels, Annotations"
-    )
+    for qnum in $(seq 1 "$total_qs"); do
+        if declare -f "score_q$qnum" > /dev/null; then
+            echo ""
+            score_result=$("score_q$qnum" 2>/dev/null || echo "0/0")
+            scored=$(echo "$score_result" | tail -1 | cut -d'/' -f1)
+            max_points=$(echo "$score_result" | tail -1 | cut -d'/' -f2)
 
-    for q in "${questions[@]}"; do
-        IFS='|' read -r qnum max_points desc <<< "$q"
+            # Handle cases where scoring fails
+            if [ -z "$scored" ] || ! [[ "$scored" =~ ^[0-9]+$ ]]; then
+                scored=0
+            fi
+            if [ -z "$max_points" ] || ! [[ "$max_points" =~ ^[0-9]+$ ]]; then
+                max_points=0
+            fi
 
-        echo ""
-        score_result=$(score_q$qnum 2>/dev/null || echo "0/0")
-        scored=$(echo "$score_result" | tail -1 | cut -d'/' -f1)
+            total_score=$((total_score + scored))
+            total_possible=$((total_possible + max_points))
 
-        # Handle cases where scoring fails
-        if [ -z "$scored" ] || ! [[ "$scored" =~ ^[0-9]+$ ]]; then
-            scored=0
+            results+=("Q$qnum|$scored/$max_points|Question $qnum")
+
+            echo "───────────────────────────────────────────────────────────────────"
+        else
+            print_fail "No scoring function for question $qnum"
         fi
-
-        total_score=$((total_score + scored))
-        total_possible=$((total_possible + max_points))
-
-        results+=("Q$qnum|$scored/$max_points|$desc")
-
-        echo "───────────────────────────────────────────────────────────────────"
     done
 
     # Preview questions
-    echo ""
-    echo "═══════════════════════════════════════════════════════════════════"
-    echo "PREVIEW QUESTIONS"
-    echo "═══════════════════════════════════════════════════════════════════"
+    local preview_qs="${PREVIEW_QUESTIONS:-1}"
+    if [ "$preview_qs" -gt 0 ]; then
+        echo ""
+        echo "═══════════════════════════════════════════════════════════════════"
+        echo "PREVIEW QUESTIONS"
+        echo "═══════════════════════════════════════════════════════════════════"
 
-    echo ""
-    preview_result=$(score_preview_q1 2>/dev/null || echo "0/0")
-    preview_scored=$(echo "$preview_result" | tail -1 | cut -d'/' -f1)
-    if [ -z "$preview_scored" ] || ! [[ "$preview_scored" =~ ^[0-9]+$ ]]; then
-        preview_scored=0
+        for pnum in $(seq 1 "$preview_qs"); do
+            if declare -f "score_preview_q$pnum" > /dev/null; then
+                echo ""
+                preview_result=$("score_preview_q$pnum" 2>/dev/null || echo "0/0")
+                preview_scored=$(echo "$preview_result" | tail -1 | cut -d'/' -f1)
+                preview_max=$(echo "$preview_result" | tail -1 | cut -d'/' -f2)
+                if [ -z "$preview_scored" ] || ! [[ "$preview_scored" =~ ^[0-9]+$ ]]; then
+                    preview_scored=0
+                fi
+                if [ -z "$preview_max" ] || ! [[ "$preview_max" =~ ^[0-9]+$ ]]; then
+                    preview_max=0
+                fi
+                # Preview questions don't count towards total
+                results+=("P$pnum|$preview_scored/$preview_max|Preview Question $pnum")
+            fi
+        done
     fi
-
-    # Preview questions don't count towards total
-    results+=("P1|$preview_scored/3|Liveness Probe (Preview)")
 
     # Calculate percentage
     local percentage=0

@@ -8,38 +8,98 @@ This is a CKAD (Certified Kubernetes Application Developer) exam preparation rep
 
 ## Structure
 
-- `simulation1.md` - Contains 22 practice questions with detailed answers covering CKAD exam topics
-- `scorring.md` - Scoring criteria for all questions (113 total points)
-- `scripts/` - Automation scripts for the exam simulator
-  - `ckad-setup.sh` - Sets up the exam environment
-  - `ckad-score.sh` - Scores your answers against all criteria
-  - `ckad-cleanup.sh` - Resets the environment for a fresh attempt
-  - `lib/` - Shared library functions
-- `manifests/setup/` - Kubernetes manifests for pre-existing exam resources
-- `templates/` - Template files copied to exam directories during setup
-- `web/` - Python web server for exam interface
-- `pyproject.toml` - Python project configuration (uses `uv` for execution)
+```
+ckad-dojo/
+├── exams/                      # Exam configurations and content
+│   ├── ckad-simulation1/       # First exam (22 questions, 113 points)
+│   │   ├── exam.conf           # Exam configuration
+│   │   ├── questions.md        # Questions in markdown
+│   │   ├── solutions.md        # Solutions for review
+│   │   ├── scoring-functions.sh # Scoring functions
+│   │   ├── manifests/setup/    # Pre-existing K8s resources
+│   │   └── templates/          # Template files for questions
+│   └── ckad-simulation2/       # Second exam (21 questions, 112 points)
+│       └── ...                 # Same structure as simulation1
+├── scripts/                    # Automation scripts
+│   ├── ckad-setup.sh           # Sets up exam environment
+│   ├── ckad-exam.sh            # Launches exam (web or terminal)
+│   ├── ckad-score.sh           # Scores answers
+│   ├── ckad-cleanup.sh         # Resets environment
+│   └── lib/                    # Shared library functions
+│       ├── common.sh           # Core utilities
+│       ├── setup-functions.sh  # Setup/cleanup functions
+│       └── timer.sh            # Timer functions
+├── tests/                      # Unit tests
+│   ├── run-tests.sh            # Test runner
+│   ├── test-framework.sh       # Assertion library
+│   ├── test-common.sh          # Tests for common.sh
+│   └── test-setup-functions.sh # Tests for setup-functions.sh
+├── web/                        # Web interface
+│   ├── server.py               # Python HTTP server
+│   ├── index.html              # Main HTML page
+│   ├── js/app.js               # Frontend JavaScript
+│   └── css/style.css           # Styles
+└── .claude/commands/           # Custom slash commands
+    └── commit.md               # /commit command
+```
 
 ## Usage
 
 ```bash
-# 1. Setup the exam environment
-./scripts/ckad-setup.sh
+# Start exam with web interface (recommended)
+./scripts/ckad-exam.sh web
 
-# 2. Practice exam questions from simulation1.md
-#    Save files to ./exam/course/N/ directories
+# Or specify an exam directly
+./scripts/ckad-exam.sh web -e ckad-simulation2
 
-# 3. Check your score
-./scripts/ckad-score.sh
+# Check your score
+./scripts/ckad-score.sh -e ckad-simulation1
 
-# 4. Reset and retry
-./scripts/ckad-cleanup.sh
-./scripts/ckad-setup.sh
+# Reset and retry
+./scripts/ckad-cleanup.sh -e ckad-simulation1
 ```
 
-### Path Mappings
+## Testing
+
+```bash
+# Run all unit tests
+./tests/run-tests.sh
+
+# Run specific test suite
+./tests/test-common.sh
+./tests/test-setup-functions.sh
+```
+
+## Multi-Exam Architecture
+
+Each exam is self-contained in `exams/{exam-id}/` with:
+- `exam.conf` - Configuration (namespaces, points, duration, helm releases)
+- `questions.md` - Questions in markdown format
+- `solutions.md` - Solutions for post-exam review
+- `scoring-functions.sh` - Bash functions for scoring each question
+- `manifests/setup/` - YAML files for pre-existing K8s resources
+- `templates/` - Template files copied to exam directories
+
+### Exam Configuration Variables
+
+```bash
+# exam.conf structure
+EXAM_NAME="CKAD Simulation 1"
+EXAM_ID="ckad-simulation1"
+EXAM_DURATION=120           # minutes
+TOTAL_QUESTIONS=22
+PREVIEW_QUESTIONS=1
+TOTAL_POINTS=113
+PASSING_PERCENTAGE=66
+EXAM_NAMESPACES=(...)       # Array of namespace names
+HELM_NAMESPACE="mercury"    # Namespace for helm releases
+HELM_RELEASES=(...)         # Array of helm release names
+```
+
+## Path Mappings
+
 - Exam `/opt/course/N/` → Use `./exam/course/N/`
-- Use local registry at `localhost:5000`
+- Local registry at `localhost:5000`
 
 ## Topics Covered
 
@@ -58,30 +118,41 @@ The questions cover core CKAD exam domains:
 - Resource requests and limits
 - Labels and Annotations
 
-## Exam Environment Notes
+## Development Guidelines
 
-**Original exam setup:**
-- Each question is solved on a specific SSH instance (e.g., `ssh ckad5601`)
-- Always `exit` back to main terminal before connecting to a different instance
+### Adding a New Exam
 
-**Local simulator setup:**
-- All questions solved on a single kubeadm cluster (no SSH needed)
-- Files saved to `./exam/course/N/` instead of `/opt/course/N/`
-- Local registry at `localhost:5000`
+1. Create `exams/{new-exam-id}/` directory
+2. Copy structure from existing exam
+3. Create `exam.conf` with exam-specific settings
+4. Define `EXAM_NAMESPACES` array with unique namespace names
+5. Write `questions.md` and `solutions.md`
+6. Implement `scoring-functions.sh` with `score_q1()`, `score_q2()`, etc.
+7. Add manifests in `manifests/setup/`
+8. Add templates in `templates/`
 
-**Python environment:**
-- Uses `uv` for Python execution (`uv run python ...`)
-- No external dependencies (standard library only)
-- Install uv: `curl -LsSf https://astral.sh/uv/install.sh | sh`
+### Scoring Functions
 
-**Common tips:**
-- Use alias: `alias k=kubectl`
-- Generate YAML with `kubectl ... --dry-run=client -o yaml`
-- Check kubernetes.io/docs for reference (allowed in real exam)
+Each question needs a scoring function that returns `score/max_points`:
+
+```bash
+score_q1() {
+    local score=0
+    local max_points=5
+
+    if check_criterion "condition1"; then
+        ((score++))
+    fi
+    # ... more checks
+
+    echo "$score/$max_points"
+}
+```
 
 ## Active Technologies
-- Bash 4.0+ (scripts), Python 3.8+ (web server), JavaScript ES6+ (frontend) + kubectl, helm, docker/podman, uv (Python runner) (002-002-ckad-simulation2)
-- File-based (YAML manifests, markdown files) (002-002-ckad-simulation2)
 
-## Recent Changes
-- 002-002-ckad-simulation2: Added Bash 4.0+ (scripts), Python 3.8+ (web server), JavaScript ES6+ (frontend) + kubectl, helm, docker/podman, uv (Python runner)
+- Bash 4.0+ (scripts)
+- Python 3.8+ (web server, standard library only)
+- JavaScript ES6+ (frontend, vanilla JS)
+- kubectl, helm, docker/podman
+- uv (Python runner)

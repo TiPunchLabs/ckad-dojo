@@ -373,8 +373,11 @@ verify_exam_setup() {
     fi
 
     # Check registry (if needed)
-    if docker_container_running "$REGISTRY_NAME"; then
-        print_success "Docker registry running on $REGISTRY_HOST:$REGISTRY_PORT"
+    local registry_name="${REGISTRY_NAME:-registry}"
+    local registry_host="${REGISTRY_HOST:-localhost}"
+    local registry_port="${REGISTRY_PORT:-5000}"
+    if docker_container_running "$registry_name"; then
+        print_success "Docker registry running on $registry_host:$registry_port"
     else
         print_fail "Docker registry not running"
         ((errors++))
@@ -646,22 +649,29 @@ show_status() {
     echo ""
     print_section "Environment Status"
 
-    # Quick namespace check
+    # Quick namespace check using first 3 namespaces from config
     local ns_found=0
-    for ns in "neptune" "saturn" "earth"; do
+    local ns_to_check=3
+    local ns_checked=0
+    for ns in "${EXAM_NAMESPACES[@]}"; do
+        if [ $ns_checked -ge $ns_to_check ]; then
+            break
+        fi
         if namespace_exists "$ns"; then
             ((ns_found++))
         fi
+        ((ns_checked++))
     done
 
     if [ $ns_found -gt 0 ]; then
-        print_success "Exam namespaces found"
+        print_success "Exam namespaces found ($ns_found/$ns_checked checked)"
     else
         print_fail "Exam namespaces not found - run setup first"
     fi
 
     # Check registry
-    if docker_container_running "registry"; then
+    local registry_name="${REGISTRY_NAME:-registry}"
+    if docker_container_running "$registry_name"; then
         print_success "Docker registry running"
     else
         print_fail "Docker registry not running"
