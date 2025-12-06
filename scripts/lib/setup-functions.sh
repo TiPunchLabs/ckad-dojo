@@ -53,7 +53,7 @@ setup_resources() {
                     print_success "Applied $filename"
                 else
                     print_fail "Failed to apply $filename"
-                    ((errors++))
+                    ((++errors))
                 fi
             fi
         done
@@ -292,7 +292,7 @@ cleanup_helm() {
                 for release in $releases; do
                     helm uninstall "$release" -n "$ns" 2>/dev/null
                     print_success "Uninstalled Helm release: $release (namespace: $ns)"
-                    ((found_releases++))
+                    ((++found_releases))
                 done
             fi
         fi
@@ -345,7 +345,7 @@ wait_for_namespace_deletion() {
         local remaining=0
         for ns in "${EXAM_NAMESPACES[@]}"; do
             if namespace_exists "$ns"; then
-                ((remaining++))
+                ((++remaining))
             fi
         done
 
