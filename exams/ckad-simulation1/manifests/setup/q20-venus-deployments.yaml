@@ -1,0 +1,63 @@
+# T016 - Q20: api and frontend Deployments and Services in venus
+# User must create NetworkPolicy to restrict frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: venus
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      id: api
+  template:
+    metadata:
+      labels:
+        id: api
+    spec:
+      containers:
+      - name: httpd
+        image: httpd:2.4-alpine
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: venus
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      id: frontend
+  template:
+    metadata:
+      labels:
+        id: frontend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.17.3-alpine
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+  namespace: venus
+spec:
+  selector:
+    id: api
+  ports:
+  - port: 2222
+    targetPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: venus
+spec:
+  selector:
+    id: frontend
+  ports:
+  - port: 80

@@ -1,0 +1,14 @@
+# Template: Pod with startup probe to add
+# This is for Preview Question 1
+apiVersion: v1
+kind: Pod
+metadata:
+  name: startup-pod
+  namespace: centaurus
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.21-alpine
+    ports:
+    - containerPort: 80
+    # TODO: Add startupProbe here

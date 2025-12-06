@@ -1,0 +1,77 @@
+# T008 - Q7: Saturn webserver pods
+# 6 pods named webserver-sat-001 through webserver-sat-006
+# webserver-sat-003 is the one the user needs to move to neptune
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webserver-sat-001
+  namespace: saturn
+  labels:
+    id: webserver-sat-001
+spec:
+  containers:
+  - name: webserver-sat
+    image: nginx:1.16.1-alpine
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webserver-sat-002
+  namespace: saturn
+  labels:
+    id: webserver-sat-002
+spec:
+  containers:
+  - name: webserver-sat
+    image: nginx:1.16.1-alpine
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webserver-sat-003
+  namespace: saturn
+  annotations:
+    description: "this is the server for the E-Commerce System my-happy-shop"
+  labels:
+    id: webserver-sat-003
+spec:
+  containers:
+  - name: webserver-sat
+    image: nginx:1.16.1-alpine
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webserver-sat-004
+  namespace: saturn
+  labels:
+    id: webserver-sat-004
+spec:
+  containers:
+  - name: webserver-sat
+    image: nginx:1.16.1-alpine
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webserver-sat-005
+  namespace: saturn
+  labels:
+    id: webserver-sat-005
+spec:
+  containers:
+  - name: webserver-sat
+    image: nginx:1.16.1-alpine
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webserver-sat-006
+  namespace: saturn
+  labels:
+    id: webserver-sat-006
+spec:
+  containers:
+  - name: webserver-sat
+    image: nginx:1.16.1-alpine

@@ -1,0 +1,14 @@
+# Q9: Pre-existing pod to be converted to deployment
+apiVersion: v1
+kind: Pod
+metadata:
+  name: galaxy-api
+  namespace: phoenix
+  labels:
+    app: galaxy-api
+spec:
+  containers:
+  - name: api
+    image: nginx:1.21-alpine
+    ports:
+    - containerPort: 80
