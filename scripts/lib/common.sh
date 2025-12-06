@@ -211,3 +211,64 @@ docker_image_exists() {
 podman_image_exists() {
     podman images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | grep -q "^$1$"
 }
+
+# ============================================================================
+# TERMINAL FUNCTIONS
+# ============================================================================
+
+# Terminal emulators in priority order
+TERMINAL_EMULATORS=("terminator" "gnome-terminal" "konsole" "xfce4-terminal" "xterm")
+
+# Detect available terminal emulator
+# Returns: terminal name or empty string
+detect_terminal() {
+    for terminal in "${TERMINAL_EMULATORS[@]}"; do
+        if command_exists "$terminal"; then
+            echo "$terminal"
+            return 0
+        fi
+    done
+    return 1
+}
+
+# Open a terminal in the specified directory
+# Usage: open_terminal [directory]
+open_terminal() {
+    local dir="${1:-$PROJECT_DIR}"
+    local terminal
+
+    terminal=$(detect_terminal)
+    if [ -z "$terminal" ]; then
+        print_fail "No terminal emulator found"
+        echo "  Checked: ${TERMINAL_EMULATORS[*]}"
+        return 1
+    fi
+
+    print_success "Opening terminal ($terminal)..."
+
+    case "$terminal" in
+        terminator)
+            terminator --working-directory="$dir" &
+            ;;
+        gnome-terminal)
+            gnome-terminal --working-directory="$dir" &
+            ;;
+        konsole)
+            konsole --workdir "$dir" &
+            ;;
+        xfce4-terminal)
+            xfce4-terminal --working-directory="$dir" &
+            ;;
+        xterm)
+            (cd "$dir" && xterm) &
+            ;;
+        *)
+            print_fail "Unknown terminal: $terminal"
+            return 1
+            ;;
+    esac
+
+    # Disown the background process to prevent it from being killed
+    disown 2>/dev/null || true
+    return 0
+}
