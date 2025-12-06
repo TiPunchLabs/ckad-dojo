@@ -185,7 +185,7 @@ check_and_offer_cleanup() {
     print_section "Checking for existing exam resources..."
 
     local existing_exam
-    existing_exam=$(detect_existing_exam_resources "$target_exam")
+    existing_exam=$(detect_existing_exam_resources "$target_exam") || true
 
     if [ -n "$existing_exam" ]; then
         echo ""
