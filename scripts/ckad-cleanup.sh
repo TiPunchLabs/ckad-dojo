@@ -112,7 +112,9 @@ main() {
         echo ""
         echo "The following will be deleted:"
         echo "  - All exam namespaces (${EXAM_NAMESPACES[*]})"
-        echo "  - Helm releases in mercury namespace"
+        if [ ${#HELM_RELEASES[@]} -gt 0 ]; then
+            echo "  - Helm releases: ${HELM_RELEASES[*]}"
+        fi
         if [ "$KEEP_DIRS" = false ]; then
             echo "  - Directory: $EXAM_DIR"
         fi

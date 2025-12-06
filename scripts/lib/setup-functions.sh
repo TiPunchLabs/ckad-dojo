@@ -18,8 +18,7 @@ setup_namespaces() {
     local manifests_dir="${CURRENT_MANIFESTS_DIR:-$MANIFESTS_DIR}"
 
     if [ -f "$manifests_dir/namespaces.yaml" ]; then
-        kubectl apply -f "$manifests_dir/namespaces.yaml" 2>/dev/null
-        if [ $? -eq 0 ]; then
+        if kubectl apply -f "$manifests_dir/namespaces.yaml" 2>/dev/null; then
             print_success "Namespaces created/verified"
         else
             print_fail "Failed to create namespaces"
@@ -191,9 +190,7 @@ setup_registry() {
     docker rm -f registry 2>/dev/null
 
     # Start registry
-    docker run -d -p 5000:5000 --restart=always --name registry registry:2 2>/dev/null
-
-    if [ $? -eq 0 ]; then
+    if docker run -d -p 5000:5000 --restart=always --name registry registry:2 2>/dev/null; then
         print_success "Local registry started at localhost:5000"
     else
         print_fail "Failed to start local registry"
@@ -201,7 +198,7 @@ setup_registry() {
     fi
 }
 
-# Setup Helm environment for Q4
+# Setup Helm environment
 setup_helm() {
     print_section "Setting up Helm environment..."
 
@@ -211,73 +208,47 @@ setup_helm() {
         return 1
     fi
 
+    # Check if HELM_RELEASES is defined
+    if [ ${#HELM_RELEASES[@]} -eq 0 ]; then
+        print_skip "No Helm releases defined for this exam"
+        return 0
+    fi
+
+    # Get helm namespace from config (default to first exam namespace)
+    local helm_ns="${HELM_NAMESPACE:-${EXAM_NAMESPACES[0]}}"
+
     # Add bitnami repo for Helm charts
     helm repo add bitnami https://charts.bitnami.com/bitnami 2>/dev/null
     helm repo update 2>/dev/null
     print_success "Helm repo configured"
 
-    # Wait for mercury namespace to be ready
+    # Wait for helm namespace to be ready
     local wait_count=0
-    while ! namespace_exists "mercury" && [ $wait_count -lt 30 ]; do
+    while ! namespace_exists "$helm_ns" && [ $wait_count -lt 30 ]; do
         sleep 1
         ((wait_count++))
     done
 
-    if ! namespace_exists "mercury"; then
-        print_fail "Mercury namespace not available"
+    if ! namespace_exists "$helm_ns"; then
+        print_fail "Helm namespace '$helm_ns' not available"
         return 1
     fi
 
-    # Install pre-existing Helm releases in mercury namespace using bitnami/nginx
-
-    # Release 1: internal-issue-report-apiv1 (to be deleted by user)
-    if ! helm status internal-issue-report-apiv1 -n mercury &>/dev/null; then
-        helm install internal-issue-report-apiv1 bitnami/nginx -n mercury \
-            --set service.type=ClusterIP \
-            --set replicaCount=1 \
-            --wait --timeout 120s 2>/dev/null
-        if [ $? -eq 0 ]; then
-            print_success "Installed Helm release: internal-issue-report-apiv1"
+    # Install all Helm releases defined in config
+    for release in "${HELM_RELEASES[@]}"; do
+        if ! helm status "$release" -n "$helm_ns" &>/dev/null; then
+            if helm install "$release" bitnami/nginx -n "$helm_ns" \
+                --set service.type=ClusterIP \
+                --set replicaCount=1 \
+                --wait --timeout 120s 2>/dev/null; then
+                print_success "Installed Helm release: $release"
+            else
+                print_fail "Failed to install $release"
+            fi
         else
-            print_fail "Failed to install internal-issue-report-apiv1"
+            print_skip "$release already exists"
         fi
-    else
-        print_skip "internal-issue-report-apiv1 already exists"
-    fi
-
-    # Release 2: internal-issue-report-apiv2 (to be upgraded by user)
-    if ! helm status internal-issue-report-apiv2 -n mercury &>/dev/null; then
-        helm install internal-issue-report-apiv2 bitnami/nginx -n mercury \
-            --set service.type=ClusterIP \
-            --set replicaCount=1 \
-            --wait --timeout 120s 2>/dev/null
-        if [ $? -eq 0 ]; then
-            print_success "Installed Helm release: internal-issue-report-apiv2"
-        else
-            print_fail "Failed to install internal-issue-report-apiv2"
-        fi
-    else
-        print_skip "internal-issue-report-apiv2 already exists"
-    fi
-
-    # Release 3: internal-issue-report-app (existing, no action needed)
-    if ! helm status internal-issue-report-app -n mercury &>/dev/null; then
-        helm install internal-issue-report-app bitnami/nginx -n mercury \
-            --set service.type=ClusterIP \
-            --set replicaCount=1 \
-            --wait --timeout 120s 2>/dev/null
-        if [ $? -eq 0 ]; then
-            print_success "Installed Helm release: internal-issue-report-app"
-        else
-            print_fail "Failed to install internal-issue-report-app"
-        fi
-    else
-        print_skip "internal-issue-report-app already exists"
-    fi
-
-    # Note: Creating a pending-install release is complex and would require
-    # interrupting a helm install. For simulation purposes, we skip this.
-    # The user can still practice deleting broken releases by checking helm list -a
+    done
 
     return 0
 }
@@ -290,9 +261,13 @@ setup_helm() {
 cleanup_namespaces() {
     print_section "Deleting exam namespaces..."
 
-    local namespaces=("neptune" "saturn" "earth" "mars" "pluto" "jupiter" "mercury" "venus" "moon" "sun" "shell-intern")
+    # Use EXAM_NAMESPACES from config if available
+    if [ ${#EXAM_NAMESPACES[@]} -eq 0 ]; then
+        print_error "No EXAM_NAMESPACES defined in exam config"
+        return 1
+    fi
 
-    for ns in "${namespaces[@]}"; do
+    for ns in "${EXAM_NAMESPACES[@]}"; do
         if namespace_exists "$ns"; then
             kubectl delete namespace "$ns" --wait=false 2>/dev/null
             print_success "Deleting $ns (background)"
@@ -306,17 +281,25 @@ cleanup_namespaces() {
 cleanup_helm() {
     print_section "Cleaning up Helm releases..."
 
-    # Get all releases in mercury namespace
-    if namespace_exists "mercury"; then
-        local releases=$(helm list -n mercury -q 2>/dev/null)
-        if [ -n "$releases" ]; then
-            for release in $releases; do
-                helm uninstall "$release" -n mercury 2>/dev/null
-                print_success "Uninstalled Helm release: $release"
-            done
-        else
-            print_skip "No Helm releases found in mercury"
+    local found_releases=0
+
+    # Search for helm releases in all exam namespaces
+    for ns in "${EXAM_NAMESPACES[@]}"; do
+        if namespace_exists "$ns"; then
+            local releases
+            releases=$(helm list -n "$ns" -q 2>/dev/null)
+            if [ -n "$releases" ]; then
+                for release in $releases; do
+                    helm uninstall "$release" -n "$ns" 2>/dev/null
+                    print_success "Uninstalled Helm release: $release (namespace: $ns)"
+                    ((found_releases++))
+                done
+            fi
         fi
+    done
+
+    if [ $found_releases -eq 0 ]; then
+        print_skip "No Helm releases found in exam namespaces"
     fi
 }
 
@@ -349,13 +332,18 @@ cleanup_registry() {
 wait_for_namespace_deletion() {
     print_section "Waiting for namespace deletion..."
 
-    local namespaces=("neptune" "saturn" "earth" "mars" "pluto" "jupiter" "mercury" "venus" "moon" "sun" "shell-intern")
+    # Use EXAM_NAMESPACES from config
+    if [ ${#EXAM_NAMESPACES[@]} -eq 0 ]; then
+        print_skip "No namespaces to wait for"
+        return 0
+    fi
+
     local timeout=60
     local elapsed=0
 
     while [ $elapsed -lt $timeout ]; do
         local remaining=0
-        for ns in "${namespaces[@]}"; do
+        for ns in "${EXAM_NAMESPACES[@]}"; do
             if namespace_exists "$ns"; then
                 ((remaining++))
             fi
