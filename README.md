@@ -87,6 +87,7 @@ Opens `http://localhost:9090` with the exam interface.
 | `helm` | 3.x | Package manager | `curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \| bash` |
 | `docker` | 20.x+ | Container runtime | [docs.docker.com](https://docs.docker.com/engine/install/) |
 | `podman` | 4.x+ | Container runtime (Q11) | `apt install podman` or [podman.io](https://podman.io/getting-started/installation) |
+| `ttyd` | 1.7+ | Embedded web terminal | `apt install ttyd` or [github.com/tsl0922/ttyd](https://github.com/tsl0922/ttyd) |
 | `uv` | 0.4+ | Python package manager | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
 | `bash` | 4.0+ | Script execution | Pre-installed on Linux |
 
@@ -101,6 +102,7 @@ kubectl version --client
 helm version
 docker --version
 podman --version
+ttyd --version
 uv --version
 bash --version
 ```
@@ -124,17 +126,17 @@ bash --version
 | `-e, --exam EXAM` | Specify exam (skip interactive selection) |
 | `-q, --question N` | Start at question N |
 | `-y, --yes` | Skip confirmation prompts |
-| `--no-terminal` | Don't auto-open terminal |
+| `--no-terminal` | Disable embedded terminal panel |
 | `--port PORT` | Use custom port (default: 9090) |
+| `--terminal-port PORT` | Terminal port (default: 7681) |
 
-**Terminal Auto-Open:**
+**Embedded Terminal:**
 
-When starting the exam, a terminal is automatically opened in the project directory. Supported terminals (in priority order):
-- terminator (preferred)
-- gnome-terminal
-- konsole
-- xfce4-terminal
-- xterm
+The exam interface includes an embedded terminal panel (powered by ttyd) that displays alongside the questions. This provides a unified exam experience similar to the real CKAD exam.
+
+- **Split Layout**: Questions on the left, terminal on the right
+- **Resizable**: Drag the divider to adjust panel sizes
+- **Persistent**: Terminal session persists across question navigation
 
 **Keyboard Shortcuts:**
 
