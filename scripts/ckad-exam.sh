@@ -55,6 +55,7 @@ show_help() {
     echo "  -q, --question N Start at question number N"
     echo "  -y, --yes        Skip confirmation prompt"
     echo "  --no-timer       Start exam without timer"
+    echo "  --no-terminal    Don't auto-open terminal"
     echo "  --port PORT      Web interface port (default: $WEB_PORT)"
     echo ""
     echo "EXAMPLES:"
@@ -417,6 +418,7 @@ start_web() {
     local exam_id=${1:-$DEFAULT_EXAM}
     local skip_confirm=$2
     local start_question=${3:-1}
+    local no_terminal=$4
 
     # Load exam configuration (may already be loaded)
     load_exam_config "$exam_id"
@@ -478,6 +480,11 @@ start_web() {
             echo "Exam cancelled."
             exit 0
         fi
+    fi
+
+    # Open terminal (unless disabled)
+    if [ "$no_terminal" != "true" ]; then
+        open_terminal "$PROJECT_DIR" || true
     fi
 
     # Stop any existing timer
@@ -698,6 +705,7 @@ EXAM_ID=""
 START_QUESTION=""
 SKIP_CONFIRM=false
 NO_TIMER=false
+NO_TERMINAL=false
 INTERACTIVE_EXAM=true
 
 while [[ $# -gt 0 ]]; do
@@ -721,6 +729,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --no-timer)
             NO_TIMER=true
+            shift
+            ;;
+        --no-terminal)
+            NO_TERMINAL=true
             shift
             ;;
         --port)
@@ -800,7 +812,7 @@ fi
 # Execute command
 case $COMMAND in
     web)
-        start_web "$EXAM_ID" "$SKIP_CONFIRM" "$START_QUESTION"
+        start_web "$EXAM_ID" "$SKIP_CONFIRM" "$START_QUESTION" "$NO_TERMINAL"
         ;;
     start)
         start_exam "$EXAM_ID" "$SKIP_CONFIRM" "$NO_TIMER" "$START_QUESTION"

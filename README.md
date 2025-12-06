@@ -124,7 +124,17 @@ bash --version
 | `-e, --exam EXAM` | Specify exam (skip interactive selection) |
 | `-q, --question N` | Start at question N |
 | `-y, --yes` | Skip confirmation prompts |
+| `--no-terminal` | Don't auto-open terminal |
 | `--port PORT` | Use custom port (default: 9090) |
+
+**Terminal Auto-Open:**
+
+When starting the exam, a terminal is automatically opened in the project directory. Supported terminals (in priority order):
+- terminator (preferred)
+- gnome-terminal
+- konsole
+- xfce4-terminal
+- xterm
 
 **Keyboard Shortcuts:**
 
