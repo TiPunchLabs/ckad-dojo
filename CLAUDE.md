@@ -150,9 +150,13 @@ score_q1() {
 ```
 
 ## Active Technologies
+- Bash 4.0+ (scripts), Python 3.8+ (web server), JavaScript ES6+ (frontend) + ttyd (external binary for web terminal), existing libs (marked.js, highlight.js) (004-web-terminal-replace)
 
 - Bash 4.0+ (scripts)
 - Python 3.8+ (web server, standard library only)
 - JavaScript ES6+ (frontend, vanilla JS)
 - kubectl, helm, docker/podman
 - uv (Python runner)
+
+## Recent Changes
+- 004-web-terminal-replace: Added Bash 4.0+ (scripts), Python 3.8+ (web server), JavaScript ES6+ (frontend) + ttyd (external binary for web terminal), existing libs (marked.js, highlight.js)

@@ -128,13 +128,16 @@ ckad-dojo/
 - Flag questions for review
 - Dark/light theme toggle
 - Visual timer warnings (yellow 15 min, orange 5 min, red 1 min)
+- Timer pause/resume button with visual feedback
 - Multi-exam support via exams/ directory
-- Stop Exam button with score calculation and results display
+- Stop Exam button with custom styled modal (replaces browser confirm)
 - Score modal with pass/fail status (66% threshold), elapsed time, and per-question breakdown
 - Interactive exam selection menu at launch
 - Starting question selection (-q option or interactive prompt)
 - Automatic detection of existing exam resources with cleanup offer
 - Embedded web terminal via ttyd (split layout with resizable divider)
+- Graceful cleanup on Close: runs ckad-cleanup.sh and stops server
+- Auto-open K8s and Helm documentation tabs (--no-docs to disable)
 
 **Not Implemented**:
 - No SSH simulation (single cluster context)
@@ -151,4 +154,4 @@ This constitution governs all development on the ckad-dojo project:
 - Version updates follow semantic versioning
 - Constitution amendments require updating this file and dependent templates
 
-**Version**: 2.2.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-06
+**Version**: 2.4.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-06

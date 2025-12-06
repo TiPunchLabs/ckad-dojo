@@ -45,6 +45,10 @@
                 <div id="timer" class="timer">
                     <span class="timer-icon">&#9202;</span>
                     <span id="timer-display">120:00</span>
+                    <button id="btn-pause" class="btn-pause" title="Pause timer">
+                        <span class="pause-icon">&#10074;&#10074;</span>
+                        <span class="resume-icon hidden">&#9654;</span>
+                    </button>
                 </div>
             </div>
 
@@ -158,6 +162,20 @@
                 </button>
             </div>
         </footer>
+    </div>
+
+    <!-- Confirm Stop Exam Modal -->
+    <div id="confirm-modal" class="modal hidden">
+        <div class="modal-content modal-confirm">
+            <div class="modal-icon confirm-icon">&#9888;</div>
+            <h2>Stop Exam?</h2>
+            <p>Are you sure you want to stop the exam?</p>
+            <p class="modal-warning">This will calculate your final score.</p>
+            <div class="modal-actions">
+                <button id="btn-confirm-cancel" class="btn-secondary">Cancel</button>
+                <button id="btn-confirm-stop" class="btn-danger">Stop Exam</button>
+            </div>
+        </div>
     </div>
 
     <!-- Time's Up Modal -->

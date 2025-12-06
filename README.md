@@ -23,8 +23,9 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/questions-24-blue" alt="24 Questions">
-  <img src="https://img.shields.io/badge/points-113-green" alt="113 Points">
+  <img src="https://img.shields.io/badge/version-1.0.0-blue" alt="Version 1.0.0">
+  <img src="https://img.shields.io/badge/questions-21-blue" alt="21 Questions">
+  <img src="https://img.shields.io/badge/points-112-green" alt="112 Points">
   <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
 </p>
 
@@ -35,7 +36,7 @@
 **ckad-dojo** is a local CKAD exam simulator that lets you practice under realistic exam conditions with:
 
 - **Automated environment setup** - All namespaces, resources, and Helm releases pre-configured
-- **Real-time scoring** - Instant feedback on 113+ criteria
+- **Real-time scoring** - Instant feedback on 100+ criteria
 - **Modern web interface** - Timer, question navigation, and dark mode
 - **Idempotent scripts** - Safe to re-run at any time
 
@@ -45,9 +46,9 @@
 
 | Feature | Description |
 |---------|-------------|
-| **24 Questions** | 22 main + 2 preview questions covering all CKAD domains |
+| **21 Questions** | 20 main + 1 preview question covering all CKAD domains |
 | **Web Interface** | Modern UI with 120-minute countdown timer |
-| **Auto-Scoring** | 113+ criteria automatically evaluated |
+| **Auto-Scoring** | 100+ criteria automatically evaluated |
 | **Multi-Exam** | Support for multiple exam sets |
 | **Themes** | Dark and light mode |
 

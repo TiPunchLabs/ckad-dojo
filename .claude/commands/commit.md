@@ -1,5 +1,7 @@
 # Commit Changes
 
+> ckad-dojo v1.0.0
+
 Create a professional git commit for the current changes.
 
 ## Instructions

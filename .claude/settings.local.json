@@ -28,7 +28,18 @@
       "Bash(git add:*)",
       "Bash(git commit -m \"$(cat <<''EOF''\nfeat: add CKAD exam simulator with multi-exam support and solutions viewer\n\nImplement a complete CKAD exam preparation system with:\n\n- Web interface (Python server + vanilla JS frontend)\n  - Timer with configurable duration per exam\n  - Question navigation with flag/bookmark feature\n  - Dark/light theme support\n  - Score display with per-question breakdown\n  - Solutions viewer with markdown rendering\n\n- Two complete exam simulations\n  - ckad-simulation1: 22 questions (113 points) - planetary theme\n  - ckad-simulation2: 21 questions (112 points) - constellation theme\n\n- Bash automation scripts\n  - ckad-setup.sh: creates namespaces, deploys resources, copies templates\n  - ckad-score.sh: validates answers against scoring criteria\n  - ckad-cleanup.sh: resets environment for fresh attempts\n  - ckad-exam.sh: launches web interface with exam selection\n\n- Dynamic multi-exam architecture\n  - Each exam in exams/{id}/ with exam.conf, questions.md, solutions.md\n  - Scoring functions per exam in scoring-functions.sh\n  - Manifests and templates per exam\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git commit:*)",
-      "Bash(./tests/run-tests.sh:*)"
+      "Bash(./tests/run-tests.sh:*)",
+      "SlashCommand(/speckit.plan)",
+      "Bash(./tests/test-common.sh)",
+      "Bash(lsof:*)",
+      "Bash(xargs:*)",
+      "Bash(fuser:*)",
+      "Bash(source:*)",
+      "Bash(score_q2)",
+      "Bash(git -C /home/xgueret/Workspace/01-projets/tools/ckad-dojo status)",
+      "Bash(git -C /home/xgueret/Workspace/01-projets/tools/ckad-dojo log --oneline -5)",
+      "Bash(git rm:*)",
+      "Bash(git tag:*)"
     ],
     "deny": [],
     "ask": []

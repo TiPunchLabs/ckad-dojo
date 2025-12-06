@@ -2,9 +2,10 @@
 # scoring-functions.sh - Scoring functions for CKAD Simulation 2
 # Each function returns the number of points scored and prints detailed results
 
-# Source common utilities from scripts/lib/
-SCRIPT_LIB_DIR="${SCRIPT_LIB_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../scripts/lib" && pwd)}"
-source "$SCRIPT_LIB_DIR/common.sh"
+# Source common utilities from scripts/lib
+CURRENT_EXAM_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$CURRENT_EXAM_DIR/../.." && pwd)"
+source "$PROJECT_DIR/scripts/lib/common.sh"
 
 # Exam directory for student answers
 EXAM_DIR="${EXAM_DIR:-./exam/course}"
@@ -42,11 +43,11 @@ score_q1() {
     if [ -f "$file" ] && grep -q "default" "$file" 2>/dev/null; then
         check_criterion "File contains namespace list" "true" && ((score++))
     else
-        check_criterion "File contains namespace list" "false"
+        check_criterion "File contains namespace list" "false" || true
     fi
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -79,7 +80,7 @@ score_q2() {
     check_criterion "Second container uses busybox image" "$(echo "$img2" | grep -q "busybox" && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -112,7 +113,7 @@ score_q3() {
     check_criterion "YAML file saved to exam/course/3/cronjob.yaml" "$([ -f "$yaml_file" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -141,11 +142,11 @@ score_q4() {
     if [ -f "$cmd_file" ] && grep -q "kubectl scale" "$cmd_file" 2>/dev/null; then
         check_criterion "Scale command saved to file" "true" && ((score++))
     else
-        check_criterion "Scale command saved to file" "false"
+        check_criterion "Scale command saved to file" "false" || true
     fi
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -182,7 +183,7 @@ score_q5() {
     check_criterion "Rollout completed successfully" "$rollout" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -215,7 +216,7 @@ score_q6() {
     check_criterion "ConfigMap contains app.properties" "$([ -n "$data" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -248,7 +249,7 @@ score_q7() {
     check_criterion "DB_PASSWORD env var configured" "$db_pass_ref" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -277,7 +278,7 @@ score_q8() {
     check_criterion "Service selector configured" "$([ -n "$selector" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -322,7 +323,7 @@ score_q9() {
     check_criterion "Original image preserved" "$([ -n "$image" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -359,7 +360,7 @@ score_q10() {
     check_criterion "Pod mounts galaxy-pvc" "$(echo "$pvc_mount" | grep -q "galaxy-pvc" && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -395,7 +396,7 @@ score_q11() {
     check_criterion "NetworkPolicy applied successfully" "$np_exists" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -435,7 +436,7 @@ score_q12() {
     check_criterion "Pod logs saved to exam/course/12/logs" "$([ -f "$logs_file" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -468,7 +469,7 @@ score_q13() {
     check_criterion "Deleted broken release" "$([ "$broken" = "false" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -501,7 +502,7 @@ score_q14() {
     check_criterion "Deployment is ready" "$([ -n "$ready" ] && [ "$ready" -gt 0 ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -538,7 +539,7 @@ score_q15() {
     check_criterion "Deployment is ready" "$([ -n "$ready" ] && [ "$ready" -gt 0 ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -560,11 +561,11 @@ score_q16() {
         local token_content=$(cat "$token_file" 2>/dev/null)
         check_criterion "Token saved (base64 decoded)" "$([ -n "$token_content" ] && echo true || echo false)" && ((score++))
     else
-        check_criterion "Token saved (base64 decoded)" "false"
+        check_criterion "Token saved (base64 decoded)" "false" || true
     fi
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -597,7 +598,7 @@ score_q17() {
     check_criterion "initialDelaySeconds configured" "$([ -n "$delay" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -630,7 +631,7 @@ score_q18() {
     check_criterion "periodSeconds configured" "$([ -n "$period" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -663,7 +664,7 @@ score_q19() {
     check_criterion "CPU limit: 200m" "$([ "$cpu_limit" = "200m" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -692,7 +693,7 @@ score_q20() {
     check_criterion "Selected pods saved to file" "$([ -f "$output_file" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -717,7 +718,7 @@ score_q21() {
     check_criterion "Deployment is ready after rollback" "$([ -n "$ready" ] && [ "$ready" -gt 0 ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }
 
 # ============================================================================
@@ -746,5 +747,5 @@ score_preview_q1() {
     check_criterion "periodSeconds configured" "$([ -n "$period" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
-    return $score
+    return 0
 }

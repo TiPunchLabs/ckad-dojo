@@ -254,6 +254,46 @@ html, body {
     font-size: 1.25rem;
 }
 
+/* Pause Button */
+.btn-pause {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition);
+    margin-left: 0.5rem;
+}
+
+.btn-pause:hover {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.btn-pause .resume-icon {
+    display: none;
+}
+
+.btn-pause.paused .pause-icon {
+    display: none;
+}
+
+.btn-pause.paused .resume-icon {
+    display: inline;
+}
+
+.timer.paused {
+    animation: timer-pulse 1.5s ease-in-out infinite;
+    opacity: 0.7;
+}
+
+@keyframes timer-pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
 /* Progress */
 .progress-info {
     font-size: 0.875rem;
@@ -815,6 +855,33 @@ html, body {
     margin-top: 1.5rem;
 }
 
+/* Confirm Modal */
+.modal-confirm {
+    max-width: 380px;
+}
+
+.modal-confirm .confirm-icon {
+    color: var(--accent-warning);
+}
+
+.modal-confirm .modal-warning {
+    color: var(--accent-warning);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.modal-confirm .modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.modal-confirm .modal-actions button {
+    margin-top: 0;
+    min-width: 100px;
+}
+
 /* Flagged List */
 .flagged-list {
     max-height: 300px;
@@ -1014,6 +1081,38 @@ html, body {
     text-align: center;
     color: var(--text-muted);
     padding: 1rem;
+}
+
+/* Cleanup Loader */
+.cleanup-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.cleanup-loader .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--accent-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.cleanup-loader .cleanup-message {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.cleanup-loader .cleanup-status {
+    font-size: 0.875rem;
+    color: var(--text-muted);
 }
 
 /* ============================================================================
