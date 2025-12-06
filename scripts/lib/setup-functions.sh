@@ -128,7 +128,7 @@ setup_templates() {
             if [ -d "$EXAM_DIR/$q_num" ]; then
                 cp "$template" "$EXAM_DIR/$q_num/$target_name"
                 print_success "Q$q_num: $target_name template"
-                ((copied++))
+                ((++copied))
             fi
         fi
     done
@@ -148,7 +148,7 @@ setup_templates() {
             if [ -d "$EXAM_DIR/$p_num" ]; then
                 cp "$template" "$EXAM_DIR/$p_num/$target_name"
                 print_success "Preview $p_num: $target_name template"
-                ((copied++))
+                ((++copied))
             fi
         fi
     done
@@ -165,7 +165,7 @@ setup_templates() {
             if [ -d "$EXAM_DIR/$q_num/image" ]; then
                 cp -r "$image_dir"* "$EXAM_DIR/$q_num/image/"
                 print_success "Q$q_num: image files (Dockerfile, etc.)"
-                ((copied++))
+                ((++copied))
             fi
         fi
     done
