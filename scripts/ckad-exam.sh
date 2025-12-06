@@ -55,8 +55,9 @@ show_help() {
     echo "  -q, --question N Start at question number N"
     echo "  -y, --yes        Skip confirmation prompt"
     echo "  --no-timer       Start exam without timer"
-    echo "  --no-terminal    Don't auto-open terminal"
+    echo "  --no-terminal    Disable embedded terminal panel"
     echo "  --port PORT      Web interface port (default: $WEB_PORT)"
+    echo "  --terminal-port PORT  Terminal port (default: 7681)"
     echo ""
     echo "EXAMPLES:"
     echo "  $(basename "$0")                          # Interactive exam selection"
@@ -413,12 +414,23 @@ display_exam_info() {
     echo ""
 }
 
+# Cleanup function for web interface
+cleanup_web() {
+    echo ""
+    echo -e "${YELLOW}Shutting down...${NC}"
+    stop_ttyd
+    timer_stop 2>/dev/null || true
+}
+
 # Start web interface
 start_web() {
     local exam_id=${1:-$DEFAULT_EXAM}
     local skip_confirm=$2
     local start_question=${3:-1}
     local no_terminal=$4
+
+    # Setup cleanup trap
+    trap cleanup_web EXIT INT TERM
 
     # Load exam configuration (may already be loaded)
     load_exam_config "$exam_id"
@@ -472,7 +484,7 @@ start_web() {
     if [ "$skip_confirm" != "true" ]; then
         echo ""
         echo -e "${YELLOW}Ready to launch the exam interface.${NC}"
-        echo -e "${YELLOW}The browser will open and the timer will start.${NC}"
+        echo -e "${YELLOW}The browser will open with embedded terminal and timer.${NC}"
         echo ""
         read -p "Start exam now? (y/n) " -n 1 -r
         echo ""
@@ -482,9 +494,19 @@ start_web() {
         fi
     fi
 
-    # Open terminal (unless disabled)
+    # Start ttyd web terminal (unless disabled)
     if [ "$no_terminal" != "true" ]; then
-        open_terminal "$PROJECT_DIR" || true
+        if ! check_ttyd; then
+            echo ""
+            echo -e "${YELLOW}Continuing without embedded terminal...${NC}"
+            no_terminal="true"
+        else
+            if ! start_ttyd "$TTYD_PORT" "$PROJECT_DIR"; then
+                echo ""
+                echo -e "${YELLOW}Failed to start terminal, continuing without it...${NC}"
+                no_terminal="true"
+            fi
+        fi
     fi
 
     # Stop any existing timer
@@ -522,6 +544,8 @@ start_web() {
 
     # Start the web server (blocks until Ctrl+C)
     cd "$PROJECT_DIR"
+    export NO_TERMINAL="$no_terminal"
+    export TTYD_PORT="$TTYD_PORT"
     uv run python web/server.py "$WEB_PORT" "$exam_id" "$start_question"
 }
 
@@ -737,6 +761,11 @@ while [[ $# -gt 0 ]]; do
             ;;
         --port)
             WEB_PORT=$2
+            shift 2
+            ;;
+        --terminal-port)
+            TTYD_PORT=$2
+            export TTYD_PORT
             shift 2
             ;;
         start|stop|status|list|timer|web)
