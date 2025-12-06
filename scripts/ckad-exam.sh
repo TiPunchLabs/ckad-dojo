@@ -56,6 +56,7 @@ show_help() {
     echo "  -y, --yes        Skip confirmation prompt"
     echo "  --no-timer       Start exam without timer"
     echo "  --no-terminal    Disable embedded terminal panel"
+    echo "  --no-docs        Don't open K8s/Helm documentation tabs"
     echo "  --port PORT      Web interface port (default: $WEB_PORT)"
     echo "  --terminal-port PORT  Terminal port (default: 7681)"
     echo ""
@@ -428,6 +429,7 @@ start_web() {
     local skip_confirm=$2
     local start_question=${3:-1}
     local no_terminal=$4
+    local no_docs=$5
 
     # Setup cleanup trap
     trap cleanup_web EXIT INT TERM
@@ -540,6 +542,11 @@ start_web() {
         (sleep 1 && xdg-open "http://localhost:$WEB_PORT" 2>/dev/null) &
     elif command_exists open; then
         (sleep 1 && open "http://localhost:$WEB_PORT" 2>/dev/null) &
+    fi
+
+    # Open documentation tabs (unless disabled)
+    if [ "$no_docs" != "true" ]; then
+        (sleep 2 && open_docs_tabs) &
     fi
 
     # Start the web server (blocks until Ctrl+C)
@@ -730,6 +737,7 @@ START_QUESTION=""
 SKIP_CONFIRM=false
 NO_TIMER=false
 NO_TERMINAL=false
+NO_DOCS=false
 INTERACTIVE_EXAM=true
 
 while [[ $# -gt 0 ]]; do
@@ -757,6 +765,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --no-terminal)
             NO_TERMINAL=true
+            shift
+            ;;
+        --no-docs)
+            NO_DOCS=true
             shift
             ;;
         --port)
@@ -841,7 +853,7 @@ fi
 # Execute command
 case $COMMAND in
     web)
-        start_web "$EXAM_ID" "$SKIP_CONFIRM" "$START_QUESTION" "$NO_TERMINAL"
+        start_web "$EXAM_ID" "$SKIP_CONFIRM" "$START_QUESTION" "$NO_TERMINAL" "$NO_DOCS"
         ;;
     start)
         start_exam "$EXAM_ID" "$SKIP_CONFIRM" "$NO_TIMER" "$START_QUESTION"

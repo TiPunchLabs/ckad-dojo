@@ -300,3 +300,48 @@ stop_ttyd() {
     pkill -f "ttyd.*--port.*$TTYD_PORT" 2>/dev/null || true
 }
 
+# ============================================================================
+# BROWSER HELPER FUNCTIONS
+# ============================================================================
+
+# Open a URL in the default browser
+# Usage: open_browser_tab <url>
+open_browser_tab() {
+    local url="$1"
+
+    if command_exists xdg-open; then
+        xdg-open "$url" 2>/dev/null &
+    elif command_exists open; then
+        open "$url" 2>/dev/null &
+    elif command_exists wslview; then
+        wslview "$url" 2>/dev/null &
+    else
+        return 1
+    fi
+    return 0
+}
+
+# Open documentation tabs (Kubernetes and Helm)
+# Usage: open_docs_tabs
+open_docs_tabs() {
+    local k8s_docs="https://kubernetes.io/docs/home/"
+    local helm_docs="https://helm.sh/docs"
+
+    print_section "Opening documentation tabs..."
+
+    if open_browser_tab "$k8s_docs"; then
+        print_success "Kubernetes docs: $k8s_docs"
+    else
+        print_fail "Could not open Kubernetes docs"
+    fi
+
+    # Small delay between tabs
+    sleep 0.3
+
+    if open_browser_tab "$helm_docs"; then
+        print_success "Helm docs: $helm_docs"
+    else
+        print_fail "Could not open Helm docs"
+    fi
+}
+
