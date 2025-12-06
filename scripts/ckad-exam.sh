@@ -125,12 +125,12 @@ select_exam_interactive() {
 
     local selection
     while true; do
-        read -r -p "Enter exam number (1-$num_exams): " selection
+        read -r -p "Select an exam: " selection
         if [[ "$selection" =~ ^[0-9]+$ ]] && [ "$selection" -ge 1 ] && [ "$selection" -le "$num_exams" ]; then
             SELECTED_EXAM="${exams[$((selection-1))]}"
             break
         else
-            echo -e "${RED}Invalid selection. Please enter a number between 1 and $num_exams.${NC}"
+            echo -e "${RED}Invalid selection. Please enter a valid exam number.${NC}"
         fi
     done
 
