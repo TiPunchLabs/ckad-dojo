@@ -251,8 +251,8 @@ Solve this question on instance: `ssh ckad7326`
 Team Mercury asked you to perform some operations using Helm, all in *Namespace* `mercury`:
 
 1. Delete release `internal-issue-report-apiv1`
-2. Upgrade release `internal-issue-report-apiv2` to any newer version of chart `killershell/nginx` available
-3. Install a new release `internal-issue-report-apache` of chart `killershell/apache`. The *Deployment* should have two replicas, set these via Helm-values during install
+2. Upgrade release `internal-issue-report-apiv2` to any newer version of chart `bitnami/nginx` available
+3. Install a new release `internal-issue-report-apache` of chart `bitnami/apache`. The *Deployment* should have two replicas, set these via Helm-values during install
 4. There seems to be a broken release, stuck in `pending-install` state. Find it and delete it
 
  
@@ -298,27 +298,27 @@ Next we need to upgrade a release, for this we could first list the charts of th
 ```
 ➜ helm repo list
 NAME            URL                  
-killershell     http://localhost:6000
+bitnami     https://charts.bitnami.com/bitnami
 
 
 ➜ helm repo update
 Hang tight while we grab the latest from your chart repositories...
-...Successfully got an update from the "killershell" chart repository
+...Successfully got an update from the "bitnami" chart repository
 Update Complete. ⎈Happy Helming!⎈
 
 
 ➜ helm search repo nginx --versions
 NAME                CHART VERSION    DESCRIPTION                                       
-killershell/nginx   18.2.0       NGINX Open Source is a...
-killershell/nginx   18.1.15      NGINX Open Source is a...
-killershell/nginx   18.1.14      NGINX Open Source is a...
-killershell/nginx   13.0.0       NGINX Open Source is a...
+bitnami/nginx   18.2.0       NGINX Open Source is a...
+bitnami/nginx   18.1.15      NGINX Open Source is a...
+bitnami/nginx   18.1.14      NGINX Open Source is a...
+bitnami/nginx   13.0.0       NGINX Open Source is a...
 ```
 
 Here we see that two newer chart versions are available. But the question only requires us to upgrade to any newer chart version available, so we can simply run:
 
 ```
-➜ helm -n mercury upgrade internal-issue-report-apiv2 killershell/nginx
+➜ helm -n mercury upgrade internal-issue-report-apiv2 bitnami/nginx
 Release "internal-issue-report-apiv2" has been upgraded. Happy Helming!
 NAME: internal-issue-report-apiv2
 LAST DEPLOYED: Mon Aug 25 14:21:24 2025
@@ -345,7 +345,7 @@ Looking good!
 Now we're asked to install a new release, with a customised values setting. For this we first list all possible value settings for the chart, we can do this via:
 
 ```
-➜ helm show values killershell/apache
+➜ helm show values bitnami/apache
 global:
   imageRegistry: ""
   imagePullSecrets: []
@@ -371,13 +371,13 @@ extraPodSpec: {}
 Or to parse yaml and render with colors:
 
 ```
-helm show values killershell/apache | yq e
+helm show values bitnami/apache | yq e
 ```
 
 This can be a huge list for larger Helm charts. We should find the setting `replicaCount: 1` on top level. This means we can run:
 
 ```
-➜ helm -n mercury install internal-issue-report-apache killershell/apache --set replicaCount=2
+➜ helm -n mercury install internal-issue-report-apache bitnami/apache --set replicaCount=2
 NAME: internal-issue-report-apache
 LAST DEPLOYED: Mon Aug 25 14:23:38 2025
 NAMESPACE: mercury
@@ -389,7 +389,7 @@ TEST SUITE: None
 If we would also need to set a value on a deeper level, for example `image.debug`, we could run:
 
 ```
-helm -n mercury install internal-issue-report-apache killershell/apache \
+helm -n mercury install internal-issue-report-apache bitnami/apache \
   --set replicaCount=2 \
   --set image.debug=true
 ```
@@ -1065,9 +1065,9 @@ There are files to build a container image located at `/opt/course/11/image` on 
  
 
 1. Change the Dockerfile: set ENV variable `SUN_CIPHER_ID` to hardcoded value `5b9c1065-e39d-4a43-a04a-e59bcea3e03f`
-2. Build the image using `sudo docker`, tag it `registry.killer.sh:5000/sun-cipher:v1-docker` and push it to the registry
-3. Build the image using `sudo podman`, tag it `registry.killer.sh:5000/sun-cipher:v1-podman` and push it to the registry
-4. Run a container using `sudo podman`, which keeps running detached in the background, named `sun-cipher` using image `registry.killer.sh:5000/sun-cipher:v1-podman`
+2. Build the image using `sudo docker`, tag it `localhost:5000/sun-cipher:v1-docker` and push it to the registry
+3. Build the image using `sudo podman`, tag it `localhost:5000/sun-cipher:v1-podman` and push it to the registry
+4. Run a container using `sudo podman`, which keeps running detached in the background, named `sun-cipher` using image `localhost:5000/sun-cipher:v1-podman`
 5. Write the logs your container `sun-cipher` produces into `/opt/course/11/logs` on `ckad9043`
 
  
@@ -1120,20 +1120,20 @@ Then we build the image using Docker:
 ➜ cd /opt/course/11/image
 
 
-➜ sudo docker build -t registry.killer.sh:5000/sun-cipher:v1-docker .
+➜ sudo docker build -t localhost:5000/sun-cipher:v1-docker .
 ...
 Successfully built 409fde3c5bf9
-Successfully tagged registry.killer.sh:5000/sun-cipher:v1-docker
+Successfully tagged localhost:5000/sun-cipher:v1-docker
 
 
 ➜ sudo docker image ls
 REPOSITORY                           TAG         IMAGE ID       CREATED           SIZE
-registry.killer.sh:5000/sun-cipher   v1-docker   409fde3c5bf9   24 seconds ago    7.76MB
+localhost:5000/sun-cipher   v1-docker   409fde3c5bf9   24 seconds ago    7.76MB
 ...
 
 
-➜ sudo docker push registry.killer.sh:5000/sun-cipher:v1-docker
-The push refers to repository [registry.killer.sh:5000/sun-cipher]
+➜ sudo docker push localhost:5000/sun-cipher:v1-docker
+The push refers to repository [localhost:5000/sun-cipher]
 c947fb5eba52: Pushed 
 33e8713114f8: Pushed 
 latest: digest: sha256:d216b4136a5b232b738698e826e7d12fccba9921d163b63777be23572250f23d size: 739
@@ -1151,20 +1151,20 @@ Next we build the image using Podman. Here it's only required to create one tag.
 ➜ cd /opt/course/11/image
 
 
-➜ sudo podman build -t registry.killer.sh:5000/sun-cipher:v1-podman .
+➜ sudo podman build -t localhost:5000/sun-cipher:v1-podman .
 ...
 --> 38adc53bd92
-Successfully tagged registry.killer.sh:5000/sun-cipher:v1-podman
+Successfully tagged localhost:5000/sun-cipher:v1-podman
 38adc53bd92881d91981c4b537f4f1b64f8de1de1b32eacc8479883170cee537
 
 
 ➜ sudo podman image ls
 REPOSITORY                          TAG         IMAGE ID      CREATED        SIZE
-registry.killer.sh:5000/sun-cipher  v1-podman   38adc53bd928  2 minutes ago  8.03 MB
+localhost:5000/sun-cipher  v1-podman   38adc53bd928  2 minutes ago  8.03 MB
 ...
 
 
-➜ sudo podman push registry.killer.sh:5000/sun-cipher:v1-podman
+➜ sudo podman push localhost:5000/sun-cipher:v1-podman
 Getting image source signatures
 Copying blob 4d0d60db9eb6 done  
 Copying blob 33e8713114f8 done  
@@ -1182,7 +1182,7 @@ Built and pushed using Podman.
 We'll create a container from the perviously created image, using Podman, which keeps running in the background:
 
 ```
-➜ sudo podman run -d --name sun-cipher registry.killer.sh:5000/sun-cipher:v1-podman
+➜ sudo podman run -d --name sun-cipher localhost:5000/sun-cipher:v1-podman
 f8199cba792f9fd2d1bd4decc9b7a9c0acfb975d95eda35f5f583c9efbf95589
 ```
 
@@ -2581,7 +2581,6 @@ k -n sun get pod -l protected=true -o yaml | grep -A 8 metadata:
 
 # CKAD Simulator Preview Kubernetes 1.34
 
-[https://killer.sh](https://killer.sh/)
 
  
 

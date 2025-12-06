@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "SlashCommand(/speckit.constitution)",
+      "SlashCommand(/speckit.specify)",
+      "Bash(./.specify/scripts/bash/create-new-feature.sh:*)",
+      "SlashCommand(/speckit.tasks)",
+      "Bash(./.specify/scripts/bash/check-prerequisites.sh:*)",
+      "SlashCommand(/speckit.implement)",
+      "Bash(chmod:*)",
+      "Bash(./scripts/ckad-setup.sh:*)",
+      "Bash(./scripts/ckad-score.sh:*)",
+      "Bash(./scripts/ckad-cleanup.sh:*)",
+      "Bash(ls:*)",
+      "Bash(uv --version:*)",
+      "Bash(uv sync:*)",
+      "Bash(uv run python:*)",
+      "Bash(timeout 3 uv run python:*)",
+      "Bash(bash:*)",
+      "Bash(./scripts/ckad-exam.sh:*)",
+      "Bash(cat:*)",
+      "Bash(timeout 2 uv run:*)",
+      "Bash(./.specify/scripts/bash/setup-plan.sh:*)",
+      "Bash(if [ -f \"./.specify/scripts/bash/update-agent-context.sh\" ])",
+      "Bash(then ./.specify/scripts/bash/update-agent-context.sh claude)",
+      "Bash(else echo \"Agent context script not found\")",
+      "Bash(fi)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

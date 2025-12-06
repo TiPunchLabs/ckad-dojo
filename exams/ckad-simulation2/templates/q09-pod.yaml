@@ -1,0 +1,15 @@
+# Template: Pod to convert to Deployment
+# Copy this to ./exam/course/9/galaxy-api-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: galaxy-api
+  namespace: phoenix
+  labels:
+    app: galaxy-api
+spec:
+  containers:
+  - name: api
+    image: nginx:1.21-alpine
+    ports:
+    - containerPort: 80

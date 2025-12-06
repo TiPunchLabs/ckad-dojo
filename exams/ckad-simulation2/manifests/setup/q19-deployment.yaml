@@ -1,0 +1,24 @@
+# Q19: Pre-existing deployment for resource limits
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resource-app
+  namespace: draco
+  labels:
+    app: resource-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: resource-app
+  template:
+    metadata:
+      labels:
+        app: resource-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21-alpine
+        ports:
+        - containerPort: 80
+        # Resources to be added by the student

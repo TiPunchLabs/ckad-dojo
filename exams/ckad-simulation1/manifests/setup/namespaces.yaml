@@ -1,0 +1,57 @@
+# T006 - Namespaces for CKAD Exam Simulator
+# All 11 namespaces required for the exam questions
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: neptune
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: saturn
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: earth
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mars
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pluto
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jupiter
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mercury
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: venus
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: moon
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sun
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shell-intern
