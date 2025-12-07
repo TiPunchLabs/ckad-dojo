@@ -31,6 +31,12 @@
 
 ---
 
+
+
+![](./img/view001.png)
+
+
+
 ## Overview
 
 **ckad-dojo** is a local CKAD exam simulator that lets you practice under realistic exam conditions with:
