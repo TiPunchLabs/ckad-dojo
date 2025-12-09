@@ -147,6 +147,36 @@ uv run ckad-dojo status                         # Check environment status
 | `--help` | Show help |
 | `--version` | Show version |
 
+### Shell Autocompletion
+
+Enable tab completion for commands, options, and exam IDs:
+
+**Bash:**
+```bash
+# Add to ~/.bashrc
+eval "$(uv run ckad-dojo completion bash)"
+
+# Or save to a file
+uv run ckad-dojo completion bash > ~/.local/share/bash-completion/completions/ckad-dojo
+```
+
+**Zsh:**
+```bash
+# Add to ~/.zshrc
+eval "$(uv run ckad-dojo completion zsh)"
+
+# Or save to a file (ensure directory is in $fpath)
+uv run ckad-dojo completion zsh > ~/.zfunc/_ckad-dojo
+```
+
+**Fish:**
+```bash
+# Save to completions directory
+uv run ckad-dojo completion fish > ~/.config/fish/completions/ckad-dojo.fish
+```
+
+After setup, press `Tab` to autocomplete commands, options, and exam IDs.
+
 ---
 
 ## Bash Scripts Usage
