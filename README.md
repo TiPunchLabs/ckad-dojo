@@ -153,25 +153,31 @@ Enable tab completion for commands, options, and exam IDs:
 
 **Bash:**
 ```bash
-# Add to ~/.bashrc
-eval "$(uv run ckad-dojo completion bash)"
+# Option 1: Add to ~/.bashrc (loads on each shell start)
+echo 'eval "$(uv run ckad-dojo completion bash)"' >> ~/.bashrc
+source ~/.bashrc
 
-# Or save to a file
+# Option 2: Save to completions directory (recommended, loads once)
+mkdir -p ~/.local/share/bash-completion/completions
 uv run ckad-dojo completion bash > ~/.local/share/bash-completion/completions/ckad-dojo
 ```
 
 **Zsh:**
 ```bash
-# Add to ~/.zshrc
-eval "$(uv run ckad-dojo completion zsh)"
+# Create completions directory and add to fpath (one-time setup)
+mkdir -p ~/.zfunc
+echo 'fpath=(~/.zfunc $fpath)' >> ~/.zshrc
+echo 'autoload -Uz compinit && compinit' >> ~/.zshrc
 
-# Or save to a file (ensure directory is in $fpath)
+# Generate completion file
 uv run ckad-dojo completion zsh > ~/.zfunc/_ckad-dojo
+source ~/.zshrc
 ```
 
 **Fish:**
 ```bash
-# Save to completions directory
+# Create completions directory and generate file
+mkdir -p ~/.config/fish/completions
 uv run ckad-dojo completion fish > ~/.config/fish/completions/ckad-dojo.fish
 ```
 
