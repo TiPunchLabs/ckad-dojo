@@ -1,0 +1,14 @@
+# Q11 - Pod for ClusterIP service exercise
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lightning-pod
+  namespace: thor
+  labels:
+    app: lightning
+spec:
+  containers:
+  - name: lightning
+    image: nginx:1.21-alpine
+    ports:
+    - containerPort: 80

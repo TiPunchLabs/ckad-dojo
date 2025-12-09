@@ -1,0 +1,22 @@
+# Template for Q1 - Multi-container Pod
+# Complete this template to create the ravens-pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ravens-pod
+  namespace: odin
+spec:
+  containers:
+  - name: huginn
+    image: # Add the correct image
+    ports:
+    - containerPort: 80
+  - name: muninn
+    image: # Add the correct image
+    command: # Add the command
+    volumeMounts:
+    - name: shared-logs
+      mountPath: /var/log
+  volumes:
+  - name: shared-logs
+    # Add volume type

@@ -1,0 +1,22 @@
+# Q9 - Deployment for rollback exercise
+# This deployment will be updated with a broken image during post-setup
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voyage-app
+  namespace: njord
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: voyage-app
+  template:
+    metadata:
+      labels:
+        app: voyage-app
+    spec:
+      containers:
+      - name: voyage-container
+        image: nginx:1.21-alpine
+        ports:
+        - containerPort: 80
