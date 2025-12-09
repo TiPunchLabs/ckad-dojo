@@ -50,7 +50,15 @@
       "Bash(python3:*)",
       "Bash(git -C /home/xgueret/Workspace/01-projets/tools/ckad-dojo diff --stat)",
       "Bash(git -C /home/xgueret/Workspace/01-projets/tools/ckad-dojo tag -l)",
-      "Bash(git -C /home/xgueret/Workspace/01-projets/tools/ckad-dojo add -A)"
+      "Bash(git -C /home/xgueret/Workspace/01-projets/tools/ckad-dojo add -A)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(echo 'No matching local branches' ls -d specs/*skip-exam* specs/*fix-cli-setup*)",
+      "Bash(sort:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(kubectl cluster-info:*)",
+      "Bash(timeout 10 ./scripts/ckad-exam.sh:*)",
+      "Bash(timeout 5 ./scripts/ckad-exam.sh:*)"
     ],
     "deny": [],
     "ask": []
