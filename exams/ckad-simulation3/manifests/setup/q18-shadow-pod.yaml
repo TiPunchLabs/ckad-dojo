@@ -1,0 +1,22 @@
+# Q18 - Pod for logs/debugging exercise
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shadow-app
+  namespace: hades
+  labels:
+    app: shadow
+spec:
+  containers:
+  - name: shadow-container
+    image: busybox:1.35
+    command: ["/bin/sh", "-c"]
+    args:
+    - |
+      while true; do
+        echo "$(date) - Shadow realm operational"
+        if [ $((RANDOM % 5)) -eq 0 ]; then
+          echo "$(date) - ERROR: Soul escaped from underworld"
+        fi
+        sleep 3
+      done

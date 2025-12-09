@@ -155,6 +155,9 @@ main() {
     print_section "Waiting for resources to be ready..."
     sleep 3
 
+    # Step 7: Post-setup configurations (multi-revision deployments, etc.)
+    setup_post_resources
+
     # Summary
     local end_time=$(date +%s)
     local duration=$((end_time - start_time))

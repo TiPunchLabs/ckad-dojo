@@ -751,6 +751,58 @@ async function togglePause() {
 // Cleanup and Shutdown
 // ============================================================================
 
+async function cleanupAndGoBack() {
+    // Show cleanup loader in score modal
+    const scoreContainer = elements.scoreModal.querySelector('.modal-content');
+    const originalContent = scoreContainer.innerHTML;
+
+    scoreContainer.innerHTML = `
+        <div class="cleanup-loader">
+            <div class="spinner"></div>
+            <div class="cleanup-message">Cleaning up exam resources...</div>
+            <div class="cleanup-status">Please wait</div>
+        </div>
+    `;
+
+    const statusEl = scoreContainer.querySelector('.cleanup-status');
+    const messageEl = scoreContainer.querySelector('.cleanup-message');
+
+    try {
+        // Call cleanup endpoint
+        statusEl.textContent = 'Running ckad-cleanup.sh...';
+        const result = await api.cleanup();
+
+        if (result.success) {
+            messageEl.textContent = 'Cleanup complete!';
+            statusEl.textContent = 'Returning to exam selection...';
+
+            // Short delay to show message
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            // Hide modal and go back to selection
+            elements.scoreModal.classList.add('hidden');
+            backToSelection();
+        } else {
+            // Restore original content on error
+            scoreContainer.innerHTML = originalContent;
+            const statusElement = scoreContainer.querySelector('.score-status');
+            if (statusElement) {
+                statusElement.textContent = 'Cleanup failed: ' + (result.error || 'Unknown error');
+                statusElement.className = 'score-status failed';
+            }
+        }
+    } catch (error) {
+        console.error('Cleanup failed:', error);
+        // Restore original content on error
+        scoreContainer.innerHTML = originalContent;
+        const statusElement = scoreContainer.querySelector('.score-status');
+        if (statusElement) {
+            statusElement.textContent = 'Failed to cleanup';
+            statusElement.className = 'score-status failed';
+        }
+    }
+}
+
 async function closeExamAndCleanup() {
     // Hide score details and show cleanup loader
     const scoreContainer = elements.scoreModal.querySelector('.modal-content');
@@ -1160,9 +1212,10 @@ function initEventListeners() {
     // Back button
     elements.btnBack.addEventListener('click', backToSelection);
 
-    // Modal close
-    elements.btnCloseModal.addEventListener('click', () => {
+    // Modal close - when time's up, calculate score
+    elements.btnCloseModal.addEventListener('click', async () => {
         elements.timesUpModal.classList.add('hidden');
+        await executeStopExam();
     });
 
     // Stop exam button
@@ -1183,10 +1236,7 @@ function initEventListeners() {
 
     // Score modal buttons
     elements.btnCloseScore.addEventListener('click', closeExamAndCleanup);
-    elements.btnBackToSelection.addEventListener('click', () => {
-        elements.scoreModal.classList.add('hidden');
-        backToSelection();
-    });
+    elements.btnBackToSelection.addEventListener('click', cleanupAndGoBack);
 
     // View Solutions button
     if (elements.btnViewSolutions) {

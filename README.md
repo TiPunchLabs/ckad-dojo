@@ -1,11 +1,11 @@
 <p align="center">
   <pre>
- ██████╗██╗  ██╗ █████╗ ██████╗       ██████╗  ██████╗      ██╗ ██████╗
-██╔════╝██║ ██╔╝██╔══██╗██╔══██╗      ██╔══██╗██╔═══██╗     ██║██╔═══██╗
-██║     █████╔╝ ███████║██║  ██║█████╗██║  ██║██║   ██║     ██║██║   ██║
-██║     ██╔═██╗ ██╔══██║██║  ██║╚════╝██║  ██║██║   ██║██   ██║██║   ██║
-╚██████╗██║  ██╗██║  ██║██████╔╝      ██████╔╝╚██████╔╝╚█████╔╝╚██████╔╝
- ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝       ╚═════╝  ╚═════╝  ╚════╝  ╚═════╝
+ ██████╗██╗  ██╗ █████╗ ██████╗        ██████╗  ██████╗      ██╗ ██████╗
+██╔════╝██║ ██╔╝██╔══██╗██╔══██╗       ██╔══██╗██╔═══██╗     ██║██╔═══██╗
+██║     █████╔╝ ███████║██║  ██║ ████╗ ██║  ██║██║   ██║     ██║██║   ██║
+██║     ██╔═██╗ ██╔══██║██║  ██║ ╚═══╝ ██║  ██║██║   ██║██   ██║██║   ██║
+╚██████╗██║  ██╗██║  ██║██████╔╝       ██████╔╝╚██████╔╝╚█████╔╝╚██████╔╝
+ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝        ╚═════╝  ╚═════╝  ╚════╝  ╚═════╝
   </pre>
 </p>
 
@@ -23,9 +23,9 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.0.0-blue" alt="Version 1.0.0">
-  <img src="https://img.shields.io/badge/questions-21-blue" alt="21 Questions">
-  <img src="https://img.shields.io/badge/points-112-green" alt="112 Points">
+  <img src="https://img.shields.io/badge/version-1.1.0-blue" alt="Version 1.1.0">
+  <img src="https://img.shields.io/badge/exams-4-blue" alt="4 Exams">
+  <img src="https://img.shields.io/badge/questions-85-blue" alt="85 Questions">
   <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
 </p>
 
@@ -52,10 +52,11 @@
 
 | Feature | Description |
 |---------|-------------|
-| **21 Questions** | 20 main + 1 preview question covering all CKAD domains |
+| **4 Exam Sets** | 85 questions total across 4 simulation exams |
+| **Unified CLI** | Single `uv run ckad-dojo` command for all operations |
 | **Web Interface** | Modern UI with 120-minute countdown timer |
-| **Auto-Scoring** | 100+ criteria automatically evaluated |
-| **Multi-Exam** | Support for multiple exam sets |
+| **Auto-Scoring** | 400+ criteria automatically evaluated |
+| **Interactive Menu** | Easy navigation without memorizing commands |
 | **Themes** | Dark and light mode |
 
 ### Timer Warnings
@@ -75,7 +76,10 @@
 # 1. Install uv (Python package manager)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 2. Launch the exam
+# 2. Launch the unified CLI (recommended)
+uv run ckad-dojo
+
+# Or use the bash script directly
 ./scripts/ckad-exam.sh
 ```
 
@@ -116,7 +120,36 @@ bash --version
 
 ---
 
-## Usage
+## CLI Usage (Recommended)
+
+The `ckad-dojo` CLI provides a unified interface for all exam operations:
+
+```bash
+# Interactive menu (run without arguments)
+uv run ckad-dojo
+
+# Direct commands
+uv run ckad-dojo list                           # List all available exams
+uv run ckad-dojo info -e ckad-simulation1       # View exam details
+uv run ckad-dojo exam start -e ckad-simulation1 # Start exam (setup + web UI)
+uv run ckad-dojo setup -e ckad-simulation1      # Setup only (no web UI)
+uv run ckad-dojo score -e ckad-simulation1      # Score your answers
+uv run ckad-dojo cleanup -e ckad-simulation1    # Cleanup resources
+uv run ckad-dojo status                         # Check environment status
+```
+
+**CLI Options:**
+
+| Option | Description |
+|--------|-------------|
+| `-e, --exam` | Specify exam ID |
+| `--no-color` | Disable colored output |
+| `--help` | Show help |
+| `--version` | Show version |
+
+---
+
+## Bash Scripts Usage
 
 ### Web Interface (Recommended)
 
@@ -210,17 +243,22 @@ PASS - Congratulations!
 
 ```
 ckad-dojo/
+├── ckad_dojo.py              # Unified Python CLI
+├── pyproject.toml            # Python project config (uv)
 ├── scripts/
-│   ├── ckad-exam.sh          # Main launcher
+│   ├── ckad-exam.sh          # Main launcher (bash)
 │   ├── ckad-setup.sh         # Environment setup
 │   ├── ckad-score.sh         # Automated scoring
 │   ├── ckad-cleanup.sh       # Cleanup
 │   └── lib/                  # Shared functions
 ├── web/                      # Web interface
 ├── exams/                    # Exam definitions
-│   └── ckad-simulation1/
+│   ├── ckad-simulation1/     # 22 questions, 113 points (planetary)
+│   ├── ckad-simulation2/     # 21 questions, 112 points (constellation)
+│   ├── ckad-simulation3/     # 20 questions, 105 points (Greek mythology)
+│   └── ckad-simulation4/     # 22 questions, 115 points (Norse mythology)
 ├── exam/course/              # Your answers (created by setup)
-└── simulation1.md            # Questions with answers (reference)
+└── tests/                    # Unit tests
 ```
 
 ---
