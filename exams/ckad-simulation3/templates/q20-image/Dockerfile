@@ -1,4 +1,4 @@
-FROM alpine:3.18
+FROM docker.io/library/alpine:3.18
 
 # Application metadata
 LABEL maintainer="olympus-team@example.com"

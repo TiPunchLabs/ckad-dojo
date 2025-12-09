@@ -119,6 +119,27 @@ uv --version
 bash --version
 ```
 
+### Podman Configuration
+
+Podman requires registry configuration to pull images with short names (e.g., `alpine:3.18`). Without this, you'll get errors like:
+
+```
+Error: short-name "alpine:3.18" did not resolve to an alias
+```
+
+**Configure podman to search docker.io:**
+
+```bash
+# Create or edit the registries configuration
+sudo mkdir -p /etc/containers
+echo 'unqualified-search-registries = ["docker.io"]' | sudo tee /etc/containers/registries.conf
+```
+
+Alternatively, use fully-qualified image names in your commands:
+```bash
+podman build -t localhost:5000/myapp:v1 --from docker.io/library/alpine:3.18 .
+```
+
 ---
 
 ## CLI Usage (Recommended)
