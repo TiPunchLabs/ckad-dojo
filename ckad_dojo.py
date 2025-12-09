@@ -381,10 +381,10 @@ def menu_start_exam() -> None:
         print_error("Setup failed")
         return
 
-    # Run exam
+    # Run exam (skip detection since we just ran setup)
     print()
     print_info("Launching exam interface...")
-    run_script("ckad-exam.sh", ["web", "-e", exam_id])
+    run_script("ckad-exam.sh", ["web", "-e", exam_id, "--skip-detection"])
 
 
 def menu_score_exam() -> None:
@@ -505,10 +505,10 @@ def cmd_exam_start(args) -> int:
         print_error("Setup failed")
         return returncode
 
-    # Start exam
+    # Start exam (skip detection since we just ran setup)
     print()
     print_info("Launching exam interface...")
-    returncode, _, _ = run_script("ckad-exam.sh", ["web", "-e", exam_id])
+    returncode, _, _ = run_script("ckad-exam.sh", ["web", "-e", exam_id, "--skip-detection"])
     return returncode
 
 
