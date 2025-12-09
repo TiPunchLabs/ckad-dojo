@@ -1,0 +1,13 @@
+# Q21 - Broken pod for debugging exercise
+# This pod has an intentionally wrong image to cause failure
+apiVersion: v1
+kind: Pod
+metadata:
+  name: broken-valkyrie
+  namespace: asgard
+spec:
+  containers:
+  - name: valkyrie
+    image: nginx:nonexistent-tag
+    ports:
+    - containerPort: 80

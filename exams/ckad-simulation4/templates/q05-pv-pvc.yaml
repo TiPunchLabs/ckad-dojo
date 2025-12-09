@@ -1,0 +1,30 @@
+# Template for Q5 - PersistentVolume and PVC
+# Complete both PV and PVC definitions
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: bifrost-storage
+spec:
+  capacity:
+    storage: # Add capacity
+  accessModes:
+    - # Add access mode
+  hostPath:
+    path: # Add host path
+  storageClassName: # Add storage class
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bifrost-claim
+  namespace: heimdall
+spec:
+  accessModes:
+    - # Add access mode
+  resources:
+    requests:
+      storage: # Add request size
+  storageClassName: # Add storage class

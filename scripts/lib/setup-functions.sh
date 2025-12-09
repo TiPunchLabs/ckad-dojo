@@ -253,6 +253,107 @@ setup_helm() {
     return 0
 }
 
+# Post-setup for specific questions requiring multi-step initialization
+setup_post_resources() {
+    print_section "Applying post-setup configurations..."
+
+    local errors=0
+
+    # ============================================================================
+    # CKAD-SIMULATION1: Q8 - Create broken revision for rollback exercise
+    # ============================================================================
+    if kubectl get deployment api-new-c32 -n neptune &>/dev/null; then
+        # Wait for deployment to be available
+        kubectl rollout status deployment api-new-c32 -n neptune --timeout=60s 2>/dev/null
+
+        # Update with broken image to create revision 2
+        if kubectl set image deployment/api-new-c32 nginx=ngnix:1.25.5-alpine -n neptune --record=false 2>/dev/null; then
+            print_success "Q8: Created broken deployment revision (ngnix typo)"
+        else
+            print_fail "Q8: Failed to create broken revision"
+            ((errors++))
+        fi
+    fi
+
+    # ============================================================================
+    # CKAD-SIMULATION2: Q21 - Create broken revision for rollback exercise
+    # ============================================================================
+    if kubectl get deployment rollback-app -n hydra &>/dev/null; then
+        # Wait for deployment to be available
+        kubectl rollout status deployment rollback-app -n hydra --timeout=60s 2>/dev/null
+
+        # Update with broken image to create revision 2
+        if kubectl set image deployment/rollback-app nginx=nginx:broken -n hydra --record=false 2>/dev/null; then
+            print_success "Q21: Created broken deployment revision (nginx:broken)"
+        else
+            print_fail "Q21: Failed to create broken revision"
+            ((errors++))
+        fi
+    fi
+
+    # ============================================================================
+    # CKAD-SIMULATION3: Q8 - Create broken revision for rollback exercise
+    # ============================================================================
+    if kubectl get deployment battle-app -n ares &>/dev/null; then
+        # Wait for deployment to be available
+        kubectl rollout status deployment battle-app -n ares --timeout=60s 2>/dev/null
+
+        # Update with broken image to create revision 2
+        if kubectl set image deployment/battle-app battle-container=nginx:broken-image -n ares --record=false 2>/dev/null; then
+            print_success "Q8: Created broken deployment revision (nginx:broken-image)"
+        else
+            print_fail "Q8: Failed to create broken revision"
+            ((errors++))
+        fi
+    fi
+
+    # ============================================================================
+    # CKAD-SIMULATION4: Q9 - Create broken revision for rollback exercise
+    # ============================================================================
+    if kubectl get deployment voyage-app -n njord &>/dev/null; then
+        # Wait for deployment to be available
+        kubectl rollout status deployment voyage-app -n njord --timeout=60s 2>/dev/null
+
+        # Update with broken image to create revision 2
+        if kubectl set image deployment/voyage-app voyage-container=nginx:broken-voyage -n njord --record=false 2>/dev/null; then
+            print_success "Q9: Created broken deployment revision (nginx:broken-voyage)"
+        else
+            print_fail "Q9: Failed to create broken revision"
+            ((errors++))
+        fi
+    fi
+
+    # ============================================================================
+    # BOTH EXAMS: Create broken Helm release for Q4/Q13
+    # ============================================================================
+    local helm_ns="${HELM_NAMESPACE:-}"
+    if [ -n "$helm_ns" ] && namespace_exists "$helm_ns"; then
+        # Create a broken Helm release that stays in pending-install state
+        # Use timeout to kill helm mid-install, leaving release in pending-install state
+        if ! helm status broken-release -n "$helm_ns" &>/dev/null; then
+            # Use timeout with SIGKILL to forcefully terminate helm during install
+            # This leaves the release in pending-install state
+            timeout --signal=KILL 3s helm install broken-release bitnami/nginx -n "$helm_ns" \
+                --set service.type=ClusterIP \
+                --wait &>/dev/null || true
+
+            # Verify the release is in pending-install state
+            if helm list -n "$helm_ns" -a 2>/dev/null | grep -q "broken-release.*pending-install"; then
+                print_success "Q4/Q13: Created broken Helm release (pending-install)"
+            else
+                # Fallback: try with failed state (also valid for the exercise)
+                if helm list -n "$helm_ns" -a 2>/dev/null | grep -q "broken-release"; then
+                    print_success "Q4/Q13: Created broken Helm release"
+                else
+                    print_skip "Q4/Q13: Broken Helm release may not be in expected state"
+                fi
+            fi
+        fi
+    fi
+
+    return $errors
+}
+
 # ============================================================================
 # CLEANUP FUNCTIONS
 # ============================================================================
