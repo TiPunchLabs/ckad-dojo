@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#326CE5"/>
+      <stop offset="100%" style="stop-color:#1E4FA3"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="32" cy="32" r="30" fill="url(#bg)"/>
+  <!-- Kubernetes-inspired helm wheel -->
+  <g fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+    <!-- Center hub -->
+    <circle cx="32" cy="32" r="6" fill="#fff"/>
+    <!-- Spokes -->
+    <line x1="32" y1="12" x2="32" y2="22"/>
+    <line x1="32" y1="42" x2="32" y2="52"/>
+    <line x1="12" y1="32" x2="22" y2="32"/>
+    <line x1="42" y1="32" x2="52" y2="32"/>
+    <line x1="17.9" y1="17.9" x2="24.9" y2="24.9"/>
+    <line x1="39.1" y1="39.1" x2="46.1" y2="46.1"/>
+    <line x1="46.1" y1="17.9" x2="39.1" y2="24.9"/>
+    <line x1="24.9" y1="39.1" x2="17.9" y2="46.1"/>
+    <!-- Outer spoke ends -->
+    <circle cx="32" cy="12" r="3" fill="#fff"/>
+    <circle cx="32" cy="52" r="3" fill="#fff"/>
+    <circle cx="12" cy="32" r="3" fill="#fff"/>
+    <circle cx="52" cy="32" r="3" fill="#fff"/>
+    <circle cx="17.9" cy="17.9" r="3" fill="#fff"/>
+    <circle cx="46.1" cy="46.1" r="3" fill="#fff"/>
+    <circle cx="46.1" cy="17.9" r="3" fill="#fff"/>
+    <circle cx="17.9" cy="46.1" r="3" fill="#fff"/>
+  </g>
+</svg>
