@@ -24,10 +24,14 @@
 
 ### I. Script-First Automation
 
-All exam environment operations MUST be fully automated via bash scripts:
+All exam environment operations MUST be fully automated via scripts:
+- `ckad_dojo.py`: Unified Python CLI providing interactive menu and direct commands
 - `ckad-setup.sh`: Configures the cluster with all pre-requisites
+- `ckad-exam.sh`: Launches the exam interface
 - `ckad-score.sh`: Evaluates answers and calculates scores
 - `ckad-cleanup.sh`: Removes all exam-related resources
+
+The Python CLI (`uv run ckad-dojo`) wraps existing bash scripts without modifying their functionality.
 
 Scripts MUST be idempotent and safe to re-run. Manual intervention MUST NOT be required for standard operations.
 
@@ -88,6 +92,8 @@ The web interface is served locally via Python HTTP server using `uv run` and re
 **File Structure**:
 ```
 ckad-dojo/
+├── ckad_dojo.py           # Unified Python CLI
+├── pyproject.toml         # Python project config (uv)
 ├── scripts/
 │   ├── ckad-exam.sh       # Main exam launcher (web + terminal)
 │   ├── ckad-setup.sh
@@ -100,16 +106,21 @@ ckad-dojo/
 │   ├── css/style.css
 │   └── js/app.js
 ├── exams/
-│   └── ckad-simulation1/  # Exam-specific files
+│   ├── ckad-simulation1/  # 22 questions, 113 points (planetary theme)
+│   ├── ckad-simulation2/  # 21 questions, 112 points (constellation theme)
+│   ├── ckad-simulation3/  # 20 questions, 105 points (Greek mythology theme)
+│   └── ckad-simulation4/  # 22 questions, 115 points (Norse mythology theme)
 │       ├── exam.conf
 │       ├── questions.md
+│       ├── solutions.md
+│       ├── scoring-functions.sh
 │       ├── manifests/setup/
 │       └── templates/
 ├── exam/
 │   └── course/
-│       ├── 1/ through 22/
+│       ├── 1/ through N/
 │       └── p1/, p2/  (preview questions)
-└── simulation1.md
+└── tests/                 # Unit tests
 ```
 
 **Namespaces Required**: default, neptune, saturn, earth, mars, pluto, jupiter, mercury, venus, moon, sun, shell-intern
@@ -118,11 +129,16 @@ ckad-dojo/
 
 ## Exam Environment
 
-**Questions Scope**: 22 main questions + 2 preview questions = 24 total
-**Max Score**: 113 points (per `scorring.md` criteria)
+**Exam Sets**: 4 simulation exams (85 questions total, 445 points)
+- ckad-simulation1: 22 questions, 113 points (planetary theme namespaces)
+- ckad-simulation2: 21 questions, 112 points (constellation theme namespaces)
+- ckad-simulation3: 20 questions, 105 points (Greek mythology theme namespaces)
+- ckad-simulation4: 22 questions, 115 points (Norse mythology theme namespaces)
+
 **Duration**: 120 minutes (configurable per exam in exam.conf)
 
 **Implemented Features**:
+- Unified Python CLI (`uv run ckad-dojo`) with interactive menu and direct commands
 - Web interface with integrated timer at http://localhost:9090
 - Question navigation with keyboard shortcuts (← → F)
 - Flag questions for review
@@ -154,4 +170,4 @@ This constitution governs all development on the ckad-dojo project:
 - Version updates follow semantic versioning
 - Constitution amendments require updating this file and dependent templates
 
-**Version**: 2.4.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-06
+**Version**: 2.6.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-09

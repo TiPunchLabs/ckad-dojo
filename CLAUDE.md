@@ -151,6 +151,10 @@ score_q1() {
 
 ## Active Technologies
 - Bash 4.0+ (scripts), Python 3.8+ (web server), JavaScript ES6+ (frontend) + ttyd (external binary for web terminal), existing libs (marked.js, highlight.js) (004-web-terminal-replace)
+- Python 3.8+ (using uv as runner) + Standard library only (argparse, subprocess, os, sys, pathlib) (008-ckad-dojo-cli)
+- N/A (stateless CLI wrapper) (008-ckad-dojo-cli)
+- Bash 4.0+ (scripts), Python 3.8+ (web server), Markdown (questions/solutions) + kubectl, helm, docker/podman (existing tooling) (009-ckad-simulation4)
+- N/A (file-based exam content) (009-ckad-simulation4)
 
 - Bash 4.0+ (scripts)
 - Python 3.8+ (web server, standard library only)

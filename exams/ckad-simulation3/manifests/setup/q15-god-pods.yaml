@@ -1,0 +1,53 @@
+# Q15 - Pods with role=god label for labels/selectors exercise
+apiVersion: v1
+kind: Pod
+metadata:
+  name: zeus-pod
+  namespace: olympus
+  labels:
+    role: god
+    element: lightning
+spec:
+  containers:
+  - name: zeus-container
+    image: nginx:1.21-alpine
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: poseidon-pod
+  namespace: olympus
+  labels:
+    role: god
+    element: water
+spec:
+  containers:
+  - name: poseidon-container
+    image: nginx:1.21-alpine
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hades-pod
+  namespace: olympus
+  labels:
+    role: god
+    element: underworld
+spec:
+  containers:
+  - name: hades-container
+    image: nginx:1.21-alpine
+---
+# A non-god pod for comparison
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hero-pod
+  namespace: olympus
+  labels:
+    role: hero
+    element: mortal
+spec:
+  containers:
+  - name: hero-container
+    image: nginx:1.21-alpine

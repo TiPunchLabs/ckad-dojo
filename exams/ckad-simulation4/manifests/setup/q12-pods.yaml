@@ -1,0 +1,29 @@
+# Q12 - Pods for NetworkPolicy exercise
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lover-pod
+  namespace: freya
+  labels:
+    role: lover
+spec:
+  containers:
+  - name: app
+    image: nginx:1.21-alpine
+    ports:
+    - containerPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: protector-pod
+  namespace: freya
+  labels:
+    role: protector
+spec:
+  containers:
+  - name: app
+    image: nginx:1.21-alpine
+    ports:
+    - containerPort: 80
+    - containerPort: 443

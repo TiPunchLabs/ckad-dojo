@@ -39,7 +39,18 @@
       "Bash(git -C /home/xgueret/Workspace/01-projets/tools/ckad-dojo status)",
       "Bash(git -C /home/xgueret/Workspace/01-projets/tools/ckad-dojo log --oneline -5)",
       "Bash(git rm:*)",
-      "Bash(git tag:*)"
+      "Bash(git tag:*)",
+      "Bash(list_available_exams)",
+      "Bash(git fetch:*)",
+      "SlashCommand(/speckit.specify Script CLI centralisé ckad-dojo en Python (uv) qui unifie toutes les commandes: setup, exam, score, cleanup. Interface interactive avec menu, support des options en ligne de commande, et intégration avec le système d'examen existant.)",
+      "SlashCommand(/speckit.specify:*)",
+      "Bash(uv run:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(python3:*)",
+      "Bash(git -C /home/xgueret/Workspace/01-projets/tools/ckad-dojo diff --stat)",
+      "Bash(git -C /home/xgueret/Workspace/01-projets/tools/ckad-dojo tag -l)",
+      "Bash(git -C /home/xgueret/Workspace/01-projets/tools/ckad-dojo add -A)"
     ],
     "deny": [],
     "ask": []
