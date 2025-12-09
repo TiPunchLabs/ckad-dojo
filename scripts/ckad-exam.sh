@@ -57,6 +57,7 @@ show_help() {
     echo "  --no-timer       Start exam without timer"
     echo "  --no-terminal    Disable embedded terminal panel"
     echo "  --no-docs        Don't open K8s/Helm documentation tabs"
+    echo "  --skip-detection Skip existing exam resource detection"
     echo "  --port PORT      Web interface port (default: $WEB_PORT)"
     echo "  --terminal-port PORT  Terminal port (default: 7681)"
     echo ""
@@ -183,6 +184,12 @@ detect_existing_exam_resources() {
 # Offer cleanup if resources from another exam exist
 check_and_offer_cleanup() {
     local target_exam=$1
+
+    # Skip detection if flag is set (used when CLI already ran setup)
+    if [ "$SKIP_DETECTION" = "true" ]; then
+        print_success "Skipping exam resource detection (--skip-detection)"
+        return 0
+    fi
 
     echo ""
     print_section "Checking for existing exam resources..."
@@ -738,6 +745,7 @@ SKIP_CONFIRM=false
 NO_TIMER=false
 NO_TERMINAL=false
 NO_DOCS=false
+SKIP_DETECTION=false
 INTERACTIVE_EXAM=true
 
 while [[ $# -gt 0 ]]; do
@@ -769,6 +777,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --no-docs)
             NO_DOCS=true
+            shift
+            ;;
+        --skip-detection)
+            SKIP_DETECTION=true
             shift
             ;;
         --port)
