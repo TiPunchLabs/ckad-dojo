@@ -89,6 +89,58 @@ def run_cleanup_script(exam_id: str = None) -> dict:
         }
 
 
+def parse_criteria_from_output(output: str, question_id: str) -> list:
+    """Extract criteria (PASS/FAIL) for a specific question from scoring output.
+
+    Criteria lines start with ✓ (pass) or ✗ (fail) markers.
+    They appear between the question header and the score line.
+    """
+    criteria = []
+
+    # Find the section for this question
+    # Question headers: "Question N | Topic" or just "Question N"
+    # Also handle format with "QN" prefix in summary
+    lines = output.split('\n')
+    in_question = False
+
+    for line in lines:
+        # Check if we're entering a question section
+        # Match patterns like "Question 1 |" or "Question 1 "
+        if re.match(rf'^Question\s+{question_id}\s*[\|\s]', line, re.IGNORECASE):
+            in_question = True
+            continue
+
+        # Check if we're at the score line (end of question section)
+        # Format: "N/N" at end of scoring output for each question
+        if in_question and re.match(r'^\d+/\d+$', line.strip()):
+            break
+
+        # Check if we've reached a new question (exit current section)
+        if in_question and re.match(r'^Question\s+\d+', line, re.IGNORECASE):
+            break
+
+        # Parse criteria lines (✓ or ✗ followed by description)
+        if in_question:
+            # Match PASS criteria: ✓ description
+            pass_match = re.match(r'^[✓✔]\s+(.+)$', line.strip())
+            if pass_match:
+                criteria.append({
+                    "description": pass_match.group(1).strip(),
+                    "passed": True
+                })
+                continue
+
+            # Match FAIL criteria: ✗ description
+            fail_match = re.match(r'^[✗✘×]\s+(.+)$', line.strip())
+            if fail_match:
+                criteria.append({
+                    "description": fail_match.group(1).strip(),
+                    "passed": False
+                })
+
+    return criteria
+
+
 def run_scoring_script(exam_id: str = None) -> dict:
     """Run ckad-score.sh and parse the output"""
     script_path = SCRIPTS_DIR / "ckad-score.sh"
@@ -133,12 +185,17 @@ def run_scoring_script(exam_id: str = None) -> dict:
                 scored = int(match.group(2))
                 possible = int(match.group(3))
                 topic = match.group(4).strip()
+
+                # Parse criteria for this question
+                criteria = parse_criteria_from_output(output, q_id)
+
                 questions.append({
                     "id": q_id,
                     "score": scored,
                     "max_score": possible,
                     "topic": topic,
-                    "passed": scored == possible
+                    "passed": scored == possible,
+                    "criteria": criteria
                 })
                 total_score += scored
                 max_score += possible
