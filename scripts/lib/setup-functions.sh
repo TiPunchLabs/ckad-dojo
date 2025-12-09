@@ -113,15 +113,15 @@ setup_templates() {
         return 0
     fi
 
-    # Copy all YAML templates (q##-*.yaml format)
-    for template in "$templates_dir"/q[0-9]*-*.yaml; do
+    # Copy all template files (q##-*.* format - yaml, html, sh, etc.)
+    for template in "$templates_dir"/q[0-9]*-*.*; do
         if [ -f "$template" ]; then
             local filename
             filename=$(basename "$template")
-            # Extract question number (e.g., q09-pod.yaml -> 9)
+            # Extract question number (e.g., q09-pod.yaml -> 9, q15-web-moon.html -> 15)
             local q_num
             q_num=$(echo "$filename" | sed 's/q0*\([0-9]*\)-.*/\1/')
-            # Extract target filename (e.g., q09-pod.yaml -> pod.yaml)
+            # Extract target filename (e.g., q09-pod.yaml -> pod.yaml, q15-web-moon.html -> web-moon.html)
             local target_name
             target_name=$(echo "$filename" | sed 's/q[0-9]*-//')
 
