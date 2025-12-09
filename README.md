@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.1.0-blue" alt="Version 1.1.0">
+  <img src="https://img.shields.io/badge/version-1.2.0-blue" alt="Version 1.2.0">
   <img src="https://img.shields.io/badge/exams-4-blue" alt="4 Exams">
   <img src="https://img.shields.io/badge/questions-85-blue" alt="85 Questions">
   <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
@@ -146,6 +146,42 @@ uv run ckad-dojo status                         # Check environment status
 | `--no-color` | Disable colored output |
 | `--help` | Show help |
 | `--version` | Show version |
+
+### Shell Autocompletion
+
+Enable tab completion for commands, options, and exam IDs:
+
+**Bash:**
+```bash
+# Option 1: Add to ~/.bashrc (loads on each shell start)
+echo 'eval "$(uv run ckad-dojo completion bash)"' >> ~/.bashrc
+source ~/.bashrc
+
+# Option 2: Save to completions directory (recommended, loads once)
+mkdir -p ~/.local/share/bash-completion/completions
+uv run ckad-dojo completion bash > ~/.local/share/bash-completion/completions/ckad-dojo
+```
+
+**Zsh:**
+```bash
+# Create completions directory and add to fpath (one-time setup)
+mkdir -p ~/.zfunc
+echo 'fpath=(~/.zfunc $fpath)' >> ~/.zshrc
+echo 'autoload -Uz compinit && compinit' >> ~/.zshrc
+
+# Generate completion file
+uv run ckad-dojo completion zsh > ~/.zfunc/_ckad-dojo
+source ~/.zshrc
+```
+
+**Fish:**
+```bash
+# Create completions directory and generate file
+mkdir -p ~/.config/fish/completions
+uv run ckad-dojo completion fish > ~/.config/fish/completions/ckad-dojo.fish
+```
+
+After setup, press `Tab` to autocomplete commands, options, and exam IDs.
 
 ---
 
