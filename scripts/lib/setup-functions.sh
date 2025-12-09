@@ -329,24 +329,27 @@ setup_post_resources() {
     local helm_ns="${HELM_NAMESPACE:-}"
     if [ -n "$helm_ns" ] && namespace_exists "$helm_ns"; then
         # Create a broken Helm release that stays in pending-install state
-        # Use timeout to kill helm mid-install, leaving release in pending-install state
         if ! helm status broken-release -n "$helm_ns" &>/dev/null; then
-            # Use timeout with SIGKILL to forcefully terminate helm during install
-            # This leaves the release in pending-install state
-            timeout --signal=KILL 3s helm install broken-release bitnami/nginx -n "$helm_ns" \
+            # Method: Use --wait with very short timeout (1s)
+            # The chart won't be ready in 1s, leaving release in pending-install state
+            helm install broken-release bitnami/nginx -n "$helm_ns" \
                 --set service.type=ClusterIP \
-                --wait &>/dev/null || true
+                --set replicaCount=1 \
+                --wait --timeout 1s &>/dev/null || true
+
+            # Wait a moment for Helm to record the state
+            sleep 2
 
             # Verify the release is in pending-install state
             if helm list -n "$helm_ns" -a 2>/dev/null | grep -q "broken-release.*pending-install"; then
                 print_success "Q4/Q13: Created broken Helm release (pending-install)"
+            elif helm list -n "$helm_ns" -a 2>/dev/null | grep -q "broken-release.*failed"; then
+                # Failed state is also acceptable for the exercise
+                print_success "Q4/Q13: Created broken Helm release (failed)"
+            elif helm list -n "$helm_ns" -a 2>/dev/null | grep -q "broken-release"; then
+                print_success "Q4/Q13: Created broken Helm release"
             else
-                # Fallback: try with failed state (also valid for the exercise)
-                if helm list -n "$helm_ns" -a 2>/dev/null | grep -q "broken-release"; then
-                    print_success "Q4/Q13: Created broken Helm release"
-                else
-                    print_skip "Q4/Q13: Broken Helm release may not be in expected state"
-                fi
+                print_skip "Q4/Q13: Broken Helm release may not be in expected state"
             fi
         fi
     fi
