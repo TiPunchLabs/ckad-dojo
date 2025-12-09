@@ -27,6 +27,7 @@
   <img src="https://img.shields.io/badge/exams-4-blue" alt="4 Exams">
   <img src="https://img.shields.io/badge/questions-85-blue" alt="85 Questions">
   <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-lightgrey" alt="License: CC BY-NC-SA 4.0"></a>
 </p>
 
 ---
@@ -356,6 +357,24 @@ podman push localhost:5000/image:tag --tls-verify=false
 - NetworkPolicies
 - Resource requests and limits
 - Labels and Annotations
+
+---
+
+## License
+
+This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International** (CC BY-NC-SA 4.0).
+
+**You are free to:**
+- Use, copy, and share this project for personal and educational purposes
+- Modify and create derivative works (under the same license)
+
+**You may NOT:**
+- Use this project for commercial purposes without explicit permission
+- Sell or include in paid products/services
+
+For commercial licensing, please contact the author.
+
+See the [LICENSE](LICENSE) file for full details.
 
 ---
 
