@@ -23,6 +23,7 @@ dependencies = []
 
 [project.scripts]
 ckad-server = "web.server:main"
+ckad-dojo = "ckad_dojo:main"
 
 [build-system]
 requires = ["hatchling"]

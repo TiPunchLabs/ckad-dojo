@@ -1,0 +1,21 @@
+# Template for Q13 - Ingress
+# Complete this template to create the light-gateway ingress
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: light-gateway
+  namespace: baldur
+spec:
+  ingressClassName: # Add ingress class
+  rules:
+  - host: # Add host
+    http:
+      paths:
+      - path: # Add path
+        pathType: # Add path type
+        backend:
+          service:
+            name: # Add service name
+            port:
+              number: # Add port number

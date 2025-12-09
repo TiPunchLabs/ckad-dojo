@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: olympus
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: athena
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: apollo
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: artemis
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hermes
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: poseidon
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hades
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zeus
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hera
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ares
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: titan

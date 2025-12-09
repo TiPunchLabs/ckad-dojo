@@ -1,0 +1,21 @@
+# Q8 - Deployment for scaling exercise
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sea-fleet
+  namespace: njord
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sea-fleet
+  template:
+    metadata:
+      labels:
+        app: sea-fleet
+    spec:
+      containers:
+      - name: ship
+        image: nginx:1.21-alpine
+        ports:
+        - containerPort: 80

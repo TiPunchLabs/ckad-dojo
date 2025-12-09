@@ -300,23 +300,32 @@ def parse_questions_md(exam_id: str) -> list:
             }
             current_content = []
         elif current_question:
-            # Parse metadata from table
-            if line.startswith('| Points'):
-                continue
-            if line.startswith('|---'):
-                continue
-            if line.startswith('|') and not line.startswith('| Points'):
+            # Parse metadata from table (format: | **Key** | value |)
+            # Only process as metadata if it's a key-value table row with **bold** key
+            if line.startswith('|'):
                 parts = [p.strip() for p in line.split('|')[1:-1]]
-                if len(parts) >= 4:
-                    try:
-                        current_question['points'] = int(parts[0])
-                    except ValueError:
-                        pass
-                    current_question['namespace'] = parts[1]
-                    current_question['resources'] = parts[2]
-                    current_question['files'] = parts[3]
-            else:
-                current_content.append(line)
+                # Check if this is a metadata row (has **Key** format in first column)
+                if len(parts) >= 2 and parts[0].startswith('**') and parts[0].endswith('**'):
+                    key = parts[0].strip('*').lower()
+                    value = parts[1]
+                    if key == 'points':
+                        # Extract points from format like "7/113 (6%)"
+                        points_match = re.match(r'(\d+)', value)
+                        if points_match:
+                            current_question['points'] = int(points_match.group(1))
+                    elif key == 'namespace':
+                        current_question['namespace'] = value.strip('`')
+                    elif key == 'resources':
+                        current_question['resources'] = value
+                    elif key in ('file to create', 'files to create', 'files'):
+                        current_question['files'] = value
+                    # Skip metadata rows from content
+                    continue
+                elif line.strip() in ('| | |', '|---|---|'):
+                    # Skip empty header and separator rows of metadata table
+                    continue
+            # Add all other lines (including task tables) to content
+            current_content.append(line)
 
     # Save last question
     if current_question:

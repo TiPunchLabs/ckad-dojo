@@ -1,0 +1,83 @@
+# CKAD Simulation 4 - Norse Mythology Namespaces
+# These namespaces are created during exam setup
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: odin
+  labels:
+    exam: ckad-simulation4
+    theme: norse-mythology
+    realm: allfather
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: thor
+  labels:
+    exam: ckad-simulation4
+    theme: norse-mythology
+    realm: thunder
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: loki
+  labels:
+    exam: ckad-simulation4
+    theme: norse-mythology
+    realm: trickster
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: freya
+  labels:
+    exam: ckad-simulation4
+    theme: norse-mythology
+    realm: love
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: heimdall
+  labels:
+    exam: ckad-simulation4
+    theme: norse-mythology
+    realm: guardian
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: baldur
+  labels:
+    exam: ckad-simulation4
+    theme: norse-mythology
+    realm: light
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tyr
+  labels:
+    exam: ckad-simulation4
+    theme: norse-mythology
+    realm: war
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: njord
+  labels:
+    exam: ckad-simulation4
+    theme: norse-mythology
+    realm: sea
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: asgard
+  labels:
+    exam: ckad-simulation4
+    theme: norse-mythology
+    realm: divine
