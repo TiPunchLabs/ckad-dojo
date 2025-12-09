@@ -360,6 +360,38 @@ podman push localhost:5000/image:tag --tls-verify=false
 
 ---
 
+## Contributing
+
+This is an open source project and contributions are welcome!
+
+### Report a Bug
+
+Found a bug? Please [open an issue](https://github.com/TiPunchLabs/ckad-dojo/issues/new?template=bug_report.md) with:
+- A clear description of the problem
+- Steps to reproduce
+- Expected vs actual behavior
+- Your environment (OS, kubectl version, etc.)
+
+### Suggest an Improvement
+
+Have an idea to make ckad-dojo better? [Create a feature request](https://github.com/TiPunchLabs/ckad-dojo/issues/new?template=feature_request.md) with:
+- Description of the proposed feature
+- Use case and benefits
+- Any implementation ideas (optional)
+
+### Submit a Pull Request
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/my-feature`)
+3. Make your changes
+4. Test your changes (`./tests/run-tests.sh`)
+5. Commit with a clear message
+6. Open a Pull Request
+
+All contributions must respect the [CC BY-NC-SA 4.0](LICENSE) license.
+
+---
+
 ## License
 
 This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International** (CC BY-NC-SA 4.0).
