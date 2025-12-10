@@ -148,6 +148,8 @@ ckad-dojo/
 - Multi-exam support via exams/ directory
 - Stop Exam button with custom styled modal (replaces browser confirm)
 - Score modal with pass/fail status (66% threshold), elapsed time, and per-question breakdown
+- Detailed criteria display in score modal: expand/collapse per question to view PASS/FAIL criteria
+- Visual score indicators: green ✓ (full), orange ⚠ (partial), red ✗ (zero)
 - Interactive exam selection menu at launch
 - Starting question selection (-q option or interactive prompt)
 - Automatic detection of existing exam resources with cleanup offer
@@ -170,4 +172,4 @@ This constitution governs all development on the ckad-dojo project:
 - Version updates follow semantic versioning
 - Constitution amendments require updating this file and dependent templates
 
-**Version**: 2.6.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-09
+**Version**: 2.7.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-09
