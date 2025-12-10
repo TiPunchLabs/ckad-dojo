@@ -44,3 +44,5 @@ Thumbs.db
 
 # Timer state
 .timer_*
+
+.claude/settings.local.json
