@@ -701,14 +701,74 @@ function renderQuestionScores(questions) {
         return;
     }
 
-    elements.scoreQuestionsList.innerHTML = questions.map(q => `
-        <div class="score-question-item ${q.passed ? 'passed' : 'failed'}">
-            <span class="score-q-id">Q${q.id}</span>
-            <span class="score-q-topic">${q.topic}</span>
-            <span class="score-q-points">${q.score}/${q.max_score}</span>
-            <span class="score-q-status">${q.passed ? '✓' : '✗'}</span>
+    elements.scoreQuestionsList.innerHTML = questions.map(q => {
+        const indicator = getScoreIndicator(q.score, q.max_score);
+        return `
+        <div class="score-question-item ${q.passed ? 'passed' : 'failed'}" data-question-id="${q.id}">
+            <div class="question-header">
+                <span class="expand-icon">▶</span>
+                <span class="score-indicator ${indicator.class}">${indicator.icon}</span>
+                <span class="score-q-id">Q${q.id}</span>
+                <span class="score-q-topic">${q.topic}</span>
+                <span class="score-q-points">${q.score}/${q.max_score}</span>
+            </div>
+            ${renderCriteriaList(q.criteria, true)}
+        </div>
+    `;
+    }).join('');
+
+    // Add click handlers for expand/collapse
+    setupQuestionRowClickHandlers();
+}
+
+function renderCriteriaList(criteria, collapsed = false) {
+    if (!criteria || criteria.length === 0) {
+        return '';
+    }
+
+    const criteriaHtml = criteria.map(c => `
+        <div class="criterion ${c.passed ? 'criterion-pass' : 'criterion-fail'}">
+            <span class="criterion-icon">${c.passed ? '✓' : '✗'}</span>
+            <span class="criterion-text">${c.description}</span>
         </div>
     `).join('');
+
+    return `<div class="criteria-list${collapsed ? ' collapsed' : ''}">${criteriaHtml}</div>`;
+}
+
+function setupQuestionRowClickHandlers() {
+    const questionItems = document.querySelectorAll('.score-question-item');
+    questionItems.forEach(item => {
+        const header = item.querySelector('.question-header');
+        if (header) {
+            header.addEventListener('click', () => toggleQuestionCriteria(item));
+        }
+    });
+}
+
+function toggleQuestionCriteria(questionItem) {
+    const criteriaList = questionItem.querySelector('.criteria-list');
+    if (!criteriaList) return;
+
+    const isExpanded = questionItem.classList.contains('expanded');
+
+    if (isExpanded) {
+        questionItem.classList.remove('expanded');
+        criteriaList.classList.add('collapsed');
+    } else {
+        questionItem.classList.add('expanded');
+        criteriaList.classList.remove('collapsed');
+    }
+}
+
+function getScoreIndicator(score, maxScore) {
+    if (score === maxScore) {
+        return { icon: '✓', class: 'score-full' };
+    } else if (score === 0) {
+        return { icon: '✗', class: 'score-zero' };
+    } else {
+        return { icon: '⚠', class: 'score-partial' };
+    }
 }
 
 // ============================================================================

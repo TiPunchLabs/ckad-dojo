@@ -1000,13 +1000,19 @@ html, body {
 
 .score-question-item {
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
+    flex-direction: column;
     padding: 0.5rem 0.75rem;
     border-radius: var(--radius-sm);
     margin-bottom: 0.25rem;
     background: var(--bg-tertiary);
     font-size: 0.875rem;
+}
+
+.score-question-item .question-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
 }
 
 .score-question-item.passed {
@@ -1050,6 +1056,116 @@ html, body {
 
 .score-question-item.failed .score-q-status {
     color: var(--accent-danger);
+}
+
+/* Criteria list for detailed score display */
+.criteria-list {
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-sm);
+    border-left: 2px solid var(--border-color);
+}
+
+.criterion {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.criterion-icon {
+    flex-shrink: 0;
+    width: 16px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.criterion-description {
+    flex: 1;
+    color: var(--text-secondary);
+}
+
+.criterion-pass .criterion-icon {
+    color: var(--accent-success);
+}
+
+.criterion-pass .criterion-description {
+    color: var(--text-primary);
+}
+
+.criterion-fail .criterion-icon {
+    color: var(--accent-danger);
+}
+
+.criterion-fail .criterion-description {
+    color: var(--text-secondary);
+}
+
+/* Expandable question rows (US2) */
+.score-question-item {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.score-question-item:hover {
+    background: var(--bg-primary);
+}
+
+.expand-icon {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+    width: 1rem;
+    text-align: center;
+}
+
+.score-question-item.expanded .expand-icon {
+    transform: rotate(90deg);
+}
+
+/* Score status indicators (US3) */
+.score-indicator {
+    font-size: 1rem;
+    font-weight: 600;
+    flex-shrink: 0;
+    width: 1.25rem;
+    text-align: center;
+}
+
+.score-indicator.score-full {
+    color: var(--accent-success);
+}
+
+.score-indicator.score-partial {
+    color: var(--accent-warning);
+}
+
+.score-indicator.score-zero {
+    color: var(--accent-danger);
+}
+
+/* Collapsed criteria list */
+.criteria-list.collapsed {
+    display: none;
+}
+
+/* Expand/collapse animation */
+.criteria-list {
+    overflow: hidden;
+    transition: max-height 0.2s ease-out, opacity 0.2s ease-out;
+    max-height: 500px;
+    opacity: 1;
+}
+
+.criteria-list.collapsed {
+    max-height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
 }
 
 .score-actions {
