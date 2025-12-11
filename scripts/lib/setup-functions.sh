@@ -49,8 +49,11 @@ setup_resources() {
                     continue
                 fi
 
+                # Try apply first, if it fails due to immutable fields, use replace --force
                 if kubectl apply -f "$manifest" 2>/dev/null; then
                     print_success "Applied $filename"
+                elif kubectl replace --force -f "$manifest" 2>/dev/null; then
+                    print_success "Replaced $filename (force)"
                 else
                     print_fail "Failed to apply $filename"
                     ((++errors))
