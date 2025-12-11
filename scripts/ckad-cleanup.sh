@@ -26,10 +26,11 @@ show_help() {
     echo ""
     echo "This script will:"
     echo "  1. Stop any running exam timer"
-    echo "  2. Delete all exam namespaces"
-    echo "  3. Uninstall Helm releases"
-    echo "  4. Remove ./exam/course/ directory"
-    echo "  5. Stop and remove local Docker registry"
+    echo "  2. Uninstall Helm releases"
+    echo "  3. Clean up resources in default namespace"
+    echo "  4. Delete all exam namespaces"
+    echo "  5. Remove ./exam/course/ directory"
+    echo "  6. Stop and remove local Docker registry"
     echo ""
     echo "WARNING: This will delete all exam resources!"
 }
@@ -111,6 +112,7 @@ main() {
         echo -e "${YELLOW}WARNING: This will delete all exam resources!${NC}"
         echo ""
         echo "The following will be deleted:"
+        echo "  - Resources in default namespace (pods, deployments, services, secrets, configmaps)"
         echo "  - All exam namespaces (${EXAM_NAMESPACES[*]})"
         if [ ${#HELM_RELEASES[@]} -gt 0 ]; then
             echo "  - Helm releases: ${HELM_RELEASES[*]}"
@@ -146,24 +148,27 @@ main() {
     # Step 1: Cleanup Helm releases (before namespace deletion)
     cleanup_helm
 
-    # Step 2: Delete namespaces
+    # Step 2: Clean up resources in default namespace
+    cleanup_default_namespace
+
+    # Step 3: Delete namespaces
     cleanup_namespaces
 
-    # Step 3: Remove exam directories
+    # Step 4: Remove exam directories
     if [ "$KEEP_DIRS" = false ]; then
         cleanup_directories
     else
         print_section "Keeping exam directories (--keep-dirs)"
     fi
 
-    # Step 4: Stop registry
+    # Step 5: Stop registry
     if [ "$KEEP_REGISTRY" = false ]; then
         cleanup_registry
     else
         print_section "Keeping local registry (--keep-registry)"
     fi
 
-    # Step 5: Reset timer state
+    # Step 6: Reset timer state
     timer_reset 2>/dev/null || true
 
     # Wait for namespace deletion
