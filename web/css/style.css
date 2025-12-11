@@ -1148,11 +1148,6 @@ html, body {
     color: var(--accent-danger);
 }
 
-/* Collapsed criteria list */
-.criteria-list.collapsed {
-    display: none;
-}
-
 /* Expand/collapse animation */
 .criteria-list {
     overflow: hidden;
