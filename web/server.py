@@ -89,6 +89,12 @@ def run_cleanup_script(exam_id: str = None) -> dict:
         }
 
 
+def strip_ansi_codes(text: str) -> str:
+    """Remove ANSI escape codes from text."""
+    ansi_pattern = re.compile(r'\x1b\[[0-9;]*m')
+    return ansi_pattern.sub('', text)
+
+
 def parse_criteria_from_output(output: str, question_id: str) -> list:
     """Extract criteria (PASS/FAIL) for a specific question from scoring output.
 
@@ -96,6 +102,9 @@ def parse_criteria_from_output(output: str, question_id: str) -> list:
     They appear between the question header and the score line.
     """
     criteria = []
+
+    # Strip ANSI color codes from output before parsing
+    output = strip_ansi_codes(output)
 
     # Find the section for this question
     # Question headers: "Question N | Topic" or just "Question N"

@@ -245,10 +245,11 @@ check_ttyd() {
 }
 
 # Start ttyd web terminal
-# Usage: start_ttyd [port] [working_directory]
+# Usage: start_ttyd [port] [working_directory] [exam_id]
 start_ttyd() {
     local port="${1:-$TTYD_PORT}"
     local workdir="${2:-$PROJECT_DIR}"
+    local exam_id="${3:-}"
 
     # Check if ttyd is already running
     if [ -f "$TTYD_PID_FILE" ]; then
@@ -267,8 +268,15 @@ start_ttyd() {
         return 1
     fi
 
-    # Start ttyd
-    ttyd --port "$port" --writable --cwd "$workdir" bash &
+    # Start ttyd with dojo welcome banner
+    if [ -n "$exam_id" ] && [ -f "$workdir/scripts/lib/banner.sh" ]; then
+        # Show dojo banner before launching interactive shell
+        ttyd --port "$port" --writable --cwd "$workdir" \
+            bash -c "source scripts/lib/banner.sh && show_dojo_banner '$exam_id'; exec bash" &
+    else
+        # Fallback: plain bash without banner
+        ttyd --port "$port" --writable --cwd "$workdir" bash &
+    fi
     local pid=$!
     echo "$pid" > "$TTYD_PID_FILE"
 

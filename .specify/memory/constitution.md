@@ -105,11 +105,11 @@ ckad-dojo/
 │   ├── index.html
 │   ├── css/style.css
 │   └── js/app.js
-├── exams/
-│   ├── ckad-simulation1/  # 22 questions, 113 points (planetary theme)
-│   ├── ckad-simulation2/  # 21 questions, 112 points (constellation theme)
-│   ├── ckad-simulation3/  # 20 questions, 105 points (Greek mythology theme)
-│   └── ckad-simulation4/  # 22 questions, 115 points (Norse mythology theme)
+├── exams/                 # Shishin (四神) - Four Celestial Guardians
+│   ├── ckad-simulation1/  # Dojo Seiryu 🐉 - 22 questions, 113 points
+│   ├── ckad-simulation2/  # Dojo Suzaku 🔥 - 21 questions, 112 points
+│   ├── ckad-simulation3/  # Dojo Byakko 🐯 - 20 questions, 105 points
+│   └── ckad-simulation4/  # Dojo Genbu 🐢 - 22 questions, 115 points
 │       ├── exam.conf
 │       ├── questions.md
 │       ├── solutions.md
@@ -129,11 +129,14 @@ ckad-dojo/
 
 ## Exam Environment
 
-**Exam Sets**: 4 simulation exams (85 questions total, 445 points)
-- ckad-simulation1: 22 questions, 113 points (planetary theme namespaces)
-- ckad-simulation2: 21 questions, 112 points (constellation theme namespaces)
-- ckad-simulation3: 20 questions, 105 points (Greek mythology theme namespaces)
-- ckad-simulation4: 22 questions, 115 points (Norse mythology theme namespaces)
+**Exam Sets**: 4 dojos based on Shishin (四神 - Four Celestial Guardians), 85 questions total, 445 points
+
+| Dojo | Guardian | Questions | Points | Quote |
+|------|----------|-----------|--------|-------|
+| Seiryu 🐉 | Dragon Azure de l'Est | 22 | 113 | *"Le dragon s'élève avec la tempête..."* |
+| Suzaku 🔥 | Phénix Vermillon du Sud | 21 | 112 | *"Le phénix renaît de ses cendres..."* |
+| Byakko 🐯 | Tigre Blanc de l'Ouest | 20 | 105 | *"Le tigre frappe avec précision..."* |
+| Genbu 🐢 | Tortue Noire du Nord | 22 | 115 | *"La tortue porte le monde..."* |
 
 **Duration**: 120 minutes (configurable per exam in exam.conf)
 
@@ -154,6 +157,7 @@ ckad-dojo/
 - Starting question selection (-q option or interactive prompt)
 - Automatic detection of existing exam resources with cleanup offer
 - Embedded web terminal via ttyd (split layout with resizable divider)
+- Personalized dojo welcome banner in terminal (ASCII art + dojo name + stats)
 - Graceful cleanup on Close: runs ckad-cleanup.sh and stops server
 - Auto-open K8s and Helm documentation tabs (--no-docs to disable)
 
@@ -172,4 +176,4 @@ This constitution governs all development on the ckad-dojo project:
 - Version updates follow semantic versioning
 - Constitution amendments require updating this file and dependent templates
 
-**Version**: 2.7.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-09
+**Version**: 2.10.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-11
