@@ -6,6 +6,8 @@
 CYAN='\033[0;36m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+WHITE='\033[1;37m'
+DIM='\033[2m'
 NC='\033[0m' # No Color
 
 # ASCII Art Banner (from ckad_dojo.py)
@@ -28,6 +30,8 @@ show_dojo_banner() {
     # Default values (fallback if config not found)
     local dojo_name="${DOJO_NAME:-CKAD Dojo}"
     local dojo_emoji="${DOJO_EMOJI:-🥋}"
+    local dojo_title="${DOJO_TITLE:-}"
+    local dojo_quote="${DOJO_QUOTE:-}"
     local total_questions="${TOTAL_QUESTIONS:-22}"
     local total_points="${TOTAL_POINTS:-113}"
     local exam_duration="${EXAM_DURATION:-120}"
@@ -40,6 +44,8 @@ show_dojo_banner() {
             source "$exam_conf"
             dojo_name="${DOJO_NAME:-CKAD Dojo}"
             dojo_emoji="${DOJO_EMOJI:-🥋}"
+            dojo_title="${DOJO_TITLE:-}"
+            dojo_quote="${DOJO_QUOTE:-}"
             total_questions="${TOTAL_QUESTIONS:-22}"
             total_points="${TOTAL_POINTS:-113}"
             exam_duration="${EXAM_DURATION:-120}"
@@ -50,8 +56,15 @@ show_dojo_banner() {
     echo -e "${CYAN}${DOJO_BANNER}${NC}"
     echo ""
     echo -e "        ${dojo_emoji} ${GREEN}Bienvenue au ${dojo_name}${NC} ${dojo_emoji}"
+    if [ -n "$dojo_title" ]; then
+        echo -e "              ${WHITE}${dojo_title}${NC}"
+    fi
     echo -e "           ${YELLOW}${total_questions} questions${NC} • ${YELLOW}${total_points} points${NC} • ${YELLOW}${exam_duration} min${NC}"
     echo ""
+    if [ -n "$dojo_quote" ]; then
+        echo -e "    ${DIM}\"${dojo_quote}\"${NC}"
+        echo ""
+    fi
     echo "─────────────────────────────────────────────────────────────────────────"
     echo ""
 }
