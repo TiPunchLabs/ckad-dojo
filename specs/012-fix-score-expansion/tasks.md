@@ -19,7 +19,7 @@
 
 **Purpose**: Understand current implementation
 
-- [ ] T001 Review current scoring output by running `./scripts/ckad-score.sh -q 1` in scripts/ckad-score.sh
+- [x] T001 Review current scoring output by running `./scripts/ckad-score.sh -q 1` in scripts/ckad-score.sh
 
 ---
 
@@ -29,7 +29,7 @@
 
 **CRITICAL**: This fix enables all scoring criteria to be visible in output
 
-- [ ] T002 Modify scoring loop in scripts/ckad-score.sh to echo full scoring function output (including criteria lines) before extracting score from line ~164
+- [x] T002 Modify scoring loop in scripts/ckad-score.sh to echo full scoring function output (including criteria lines) before extracting score from line ~164
 
 **Checkpoint**: After T002, running `./scripts/ckad-score.sh` should display criteria lines (with pass/fail markers) for each question
 
@@ -43,10 +43,10 @@
 
 ### Implementation for User Story 1
 
-- [ ] T003 [US1] Verify parse_criteria_from_output() in web/server.py correctly extracts criteria from enhanced scoring output
-- [ ] T004 [US1] Test API response by checking /api/score endpoint returns criteria array for each question
-- [ ] T005 [US1] Verify renderQuestionScores() in web/js/app.js displays criteria list correctly
-- [ ] T006 [US1] Verify toggleQuestionCriteria() in web/js/app.js toggles expand/collapse on click
+- [x] T003 [US1] Verify parse_criteria_from_output() in web/server.py correctly extracts criteria from enhanced scoring output
+- [x] T004 [US1] Test API response by checking /api/score endpoint returns criteria array for each question
+- [x] T005 [US1] Verify renderQuestionScores() in web/js/app.js displays criteria list correctly
+- [x] T006 [US1] Verify toggleQuestionCriteria() in web/js/app.js toggles expand/collapse on click
 
 **Checkpoint**: User Story 1 complete - clicking question rows expands/collapses criteria
 
@@ -60,8 +60,8 @@
 
 ### Implementation for User Story 2
 
-- [ ] T007 [US2] Verify expand icon changes in web/js/app.js (collapsed vs expanded indicator)
-- [ ] T008 [US2] Verify CSS styling for expanded/collapsed states in web/css/style.css
+- [x] T007 [US2] Verify expand icon changes in web/js/app.js (collapsed vs expanded indicator)
+- [x] T008 [US2] Verify CSS styling for expanded/collapsed states in web/css/style.css
 
 **Checkpoint**: User Story 2 complete - visual feedback is clear and consistent
 
@@ -71,10 +71,10 @@
 
 **Purpose**: End-to-end validation and edge case handling
 
-- [ ] T009 Test with question scoring 0/N (all criteria failed)
-- [ ] T010 Test with question scoring N/N (all criteria passed)
-- [ ] T011 Test with partial scores (some criteria passed, some failed)
-- [ ] T012 Verify all 22 questions display criteria correctly
+- [x] T009 Test with question scoring 0/N (all criteria failed)
+- [x] T010 Test with question scoring N/N (all criteria passed)
+- [x] T011 Test with partial scores (some criteria passed, some failed)
+- [x] T012 Verify all 22 questions display criteria correctly
 
 ---
 
