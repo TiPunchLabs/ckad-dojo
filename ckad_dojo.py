@@ -198,6 +198,8 @@ def get_exam_info(exam_id: str) -> Optional[Dict[str, str]]:
     return {
         "id": exam_id,
         "name": config.get("EXAM_NAME", exam_id),
+        "dojo_name": config.get("DOJO_NAME", ""),
+        "dojo_emoji": config.get("DOJO_EMOJI", ""),
         "questions": config.get("TOTAL_QUESTIONS", "?"),
         "points": config.get("TOTAL_POINTS", "?"),
         "duration": config.get("EXAM_DURATION", "120"),
@@ -344,7 +346,12 @@ def select_exam(prompt: str = "Select an exam") -> Optional[str]:
     for i, exam in enumerate(exams, 1):
         info = get_exam_info(exam)
         if info:
-            print(f"  {i}. {info['name']} ({info['questions']} questions, {info['points']} points)")
+            # Use dojo name with emoji if available, otherwise fall back to exam name
+            if info['dojo_name'] and info['dojo_emoji']:
+                display_name = f"{info['dojo_name']} {info['dojo_emoji']}"
+            else:
+                display_name = info['name']
+            print(f"  {i}. {display_name} ({info['questions']} questions, {info['points']} points)")
         else:
             print(f"  {i}. {exam}")
     print()
@@ -599,15 +606,20 @@ def cmd_list(args) -> int:
 
     # Table header
     print()
-    print(f"{'Exam ID':<25} {'Name':<30} {'Questions':<10} {'Points':<8} {'Duration'}")
-    print("-" * 90)
+    print(f"{'Exam ID':<20} {'Dojo':<25} {'Questions':<12} {'Points':<10} {'Duration'}")
+    print("-" * 85)
 
     for exam_id in exams:
         info = get_exam_info(exam_id)
         if info:
-            print(f"{info['id']:<25} {info['name']:<30} {info['questions']:<10} {info['points']:<8} {info['duration']} min")
+            # Use dojo name with emoji if available
+            if info['dojo_name'] and info['dojo_emoji']:
+                display_name = f"{info['dojo_name']} {info['dojo_emoji']}"
+            else:
+                display_name = info['name']
+            print(f"{info['id']:<20} {display_name:<25} {info['questions']:<12} {info['points']:<10} {info['duration']} min")
         else:
-            print(f"{exam_id:<25} {'(config error)':<30}")
+            print(f"{exam_id:<20} {'(config error)':<25}")
 
     print()
     return 0
