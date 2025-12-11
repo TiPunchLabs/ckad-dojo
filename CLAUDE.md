@@ -158,6 +158,8 @@ score_q1() {
 - Python 3.8+ (server), JavaScript ES6+ (frontend), Bash 4.0+ (scoring scripts) + Python standard library only (http.server, json, re), vanilla JavaScript, marked.js, highlight.js (011-score-details)
 - N/A (in-memory state only) (011-score-details)
 - Bash 4.0+ (scripts), Python 3.8+ (web server), JavaScript ES6+ (frontend) + Python standard library only (http.server, json, re), vanilla JavaScript, marked.js, highlight.js (012-fix-score-expansion)
+- Bash 4.0+ (scripts), Python 3.8+ (web server) + ttyd (terminal), existing ASCII art from ckad_dojo.py (013-dojo-welcome-banner)
+- N/A (configuration in exam.conf files) (013-dojo-welcome-banner)
 
 - Bash 4.0+ (scripts)
 - Python 3.8+ (web server, standard library only)
