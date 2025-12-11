@@ -392,7 +392,7 @@ cleanup_default_namespace() {
 
     # Delete user-created pods in default namespace (exclude system pods)
     local pods
-    pods=$(kubectl get pods -n default -o name 2>/dev/null | grep -v "^pod/kube-\|^pod/coredns\|^pod/etcd\|^pod/local-path")
+    pods=$(kubectl get pods -n default -o name 2>/dev/null | grep -v "^pod/kube-\|^pod/coredns\|^pod/etcd\|^pod/local-path" || true)
     if [ -n "$pods" ]; then
         for pod in $pods; do
             kubectl delete "$pod" -n default --grace-period=0 --force 2>/dev/null
@@ -414,7 +414,7 @@ cleanup_default_namespace() {
 
     # Delete user-created services (exclude kubernetes service)
     local services
-    services=$(kubectl get services -n default -o name 2>/dev/null | grep -v "^service/kubernetes$")
+    services=$(kubectl get services -n default -o name 2>/dev/null | grep -v "^service/kubernetes$" || true)
     if [ -n "$services" ]; then
         for svc in $services; do
             kubectl delete "$svc" -n default 2>/dev/null
@@ -425,7 +425,7 @@ cleanup_default_namespace() {
 
     # Delete user-created secrets (exclude default-token and helm releases)
     local secrets
-    secrets=$(kubectl get secrets -n default -o name 2>/dev/null | grep -v "default-token\|sh.helm.release")
+    secrets=$(kubectl get secrets -n default -o name 2>/dev/null | grep -v "default-token\|sh.helm.release" || true)
     if [ -n "$secrets" ]; then
         for secret in $secrets; do
             kubectl delete "$secret" -n default 2>/dev/null
@@ -436,7 +436,7 @@ cleanup_default_namespace() {
 
     # Delete user-created configmaps (exclude kube-root-ca.crt)
     local configmaps
-    configmaps=$(kubectl get configmaps -n default -o name 2>/dev/null | grep -v "kube-root-ca.crt")
+    configmaps=$(kubectl get configmaps -n default -o name 2>/dev/null | grep -v "kube-root-ca.crt" || true)
     if [ -n "$configmaps" ]; then
         for cm in $configmaps; do
             kubectl delete "$cm" -n default 2>/dev/null
