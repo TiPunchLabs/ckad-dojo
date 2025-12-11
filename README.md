@@ -72,6 +72,32 @@
 
 ---
 
+## The Four Dojos (四神 Shishin)
+
+Each exam is themed after one of the Four Celestial Guardians from East Asian mythology:
+
+### 🐉 Dojo Seiryu — Dragon Azure de l'Est
+> *"Le dragon s'élève avec la tempête. Que ton code déploie ses ailes."*
+
+**22 questions • 113 points** — Planetary theme (Neptune, Saturn, Mars...)
+
+### 🔥 Dojo Suzaku — Phénix Vermillon du Sud
+> *"Le phénix renaît de ses cendres. Chaque erreur forge ta maîtrise."*
+
+**21 questions • 112 points** — Constellation theme (Orion, Andromeda, Pegasus...)
+
+### 🐯 Dojo Byakko — Tigre Blanc de l'Ouest
+> *"Le tigre frappe avec précision. Un manifeste, une solution."*
+
+**20 questions • 105 points** — Greek mythology theme (Olympus, Zeus, Athena...)
+
+### 🐢 Dojo Genbu — Tortue Noire du Nord
+> *"La tortue porte le monde. La patience est la clé du succès."*
+
+**22 questions • 115 points** — Norse mythology theme (Odin, Thor, Asgard...)
+
+---
+
 ## Quick Start
 
 ```bash
