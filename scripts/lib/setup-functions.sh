@@ -49,8 +49,11 @@ setup_resources() {
                     continue
                 fi
 
+                # Try apply first, if it fails due to immutable fields, use replace --force
                 if kubectl apply -f "$manifest" 2>/dev/null; then
                     print_success "Applied $filename"
+                elif kubectl replace --force -f "$manifest" 2>/dev/null; then
+                    print_success "Replaced $filename (force)"
                 else
                     print_fail "Failed to apply $filename"
                     ((++errors))
@@ -379,6 +382,83 @@ cleanup_namespaces() {
             print_skip "$ns (not found)"
         fi
     done
+}
+
+# Clean up exam-related resources in default namespace
+cleanup_default_namespace() {
+    print_section "Cleaning up default namespace exam resources..."
+
+    local deleted=0
+
+    # Delete user-created pods in default namespace (exclude system pods)
+    local pods
+    pods=$(kubectl get pods -n default -o name 2>/dev/null | grep -v "^pod/kube-\|^pod/coredns\|^pod/etcd\|^pod/local-path" || true)
+    if [ -n "$pods" ]; then
+        for pod in $pods; do
+            kubectl delete "$pod" -n default --grace-period=0 --force 2>/dev/null
+            print_success "Deleted $pod"
+            ((++deleted))
+        done
+    fi
+
+    # Delete user-created deployments in default namespace
+    local deployments
+    deployments=$(kubectl get deployments -n default -o name 2>/dev/null)
+    if [ -n "$deployments" ]; then
+        for deploy in $deployments; do
+            kubectl delete "$deploy" -n default 2>/dev/null
+            print_success "Deleted $deploy"
+            ((++deleted))
+        done
+    fi
+
+    # Delete user-created services (exclude kubernetes service)
+    local services
+    services=$(kubectl get services -n default -o name 2>/dev/null | grep -v "^service/kubernetes$" || true)
+    if [ -n "$services" ]; then
+        for svc in $services; do
+            kubectl delete "$svc" -n default 2>/dev/null
+            print_success "Deleted $svc"
+            ((++deleted))
+        done
+    fi
+
+    # Delete user-created secrets (exclude default-token and helm releases)
+    local secrets
+    secrets=$(kubectl get secrets -n default -o name 2>/dev/null | grep -v "default-token\|sh.helm.release" || true)
+    if [ -n "$secrets" ]; then
+        for secret in $secrets; do
+            kubectl delete "$secret" -n default 2>/dev/null
+            print_success "Deleted $secret"
+            ((++deleted))
+        done
+    fi
+
+    # Delete user-created configmaps (exclude kube-root-ca.crt)
+    local configmaps
+    configmaps=$(kubectl get configmaps -n default -o name 2>/dev/null | grep -v "kube-root-ca.crt" || true)
+    if [ -n "$configmaps" ]; then
+        for cm in $configmaps; do
+            kubectl delete "$cm" -n default 2>/dev/null
+            print_success "Deleted $cm"
+            ((++deleted))
+        done
+    fi
+
+    # Delete user-created PVCs in default namespace
+    local pvcs
+    pvcs=$(kubectl get pvc -n default -o name 2>/dev/null)
+    if [ -n "$pvcs" ]; then
+        for pvc in $pvcs; do
+            kubectl delete "$pvc" -n default 2>/dev/null
+            print_success "Deleted $pvc"
+            ((++deleted))
+        done
+    fi
+
+    if [ $deleted -eq 0 ]; then
+        print_skip "No exam resources found in default namespace"
+    fi
 }
 
 # Uninstall Helm releases

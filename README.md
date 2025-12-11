@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.2.0-blue" alt="Version 1.2.0">
+  <img src="https://img.shields.io/badge/version-1.3.1-blue" alt="Version 1.3.1">
   <img src="https://img.shields.io/badge/exams-4-blue" alt="4 Exams">
   <img src="https://img.shields.io/badge/questions-85-blue" alt="85 Questions">
   <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
@@ -53,12 +53,13 @@
 
 | Feature | Description |
 |---------|-------------|
-| **4 Exam Sets** | 85 questions total across 4 simulation exams |
+| **4 Dojos** | 85 questions across 4 themed dojos (Shishin - Four Celestial Guardians) |
 | **Unified CLI** | Single `uv run ckad-dojo` command for all operations |
 | **Web Interface** | Modern UI with 120-minute countdown timer |
 | **Auto-Scoring** | 400+ criteria automatically evaluated |
 | **Interactive Menu** | Easy navigation without memorizing commands |
 | **Themes** | Dark and light mode |
+| **Dojo Welcome** | Personalized ASCII banner in embedded terminal |
 
 ### Timer Warnings
 
@@ -68,6 +69,32 @@
 | 15 min | Yellow |
 | 5 min | Orange |
 | 1 min | Red |
+
+---
+
+## The Four Dojos (四神 Shishin)
+
+Each exam is themed after one of the Four Celestial Guardians from East Asian mythology:
+
+### 🐉 Dojo Seiryu — Dragon Azure de l'Est
+> *"Le dragon s'élève avec la tempête. Que ton code déploie ses ailes."*
+
+**22 questions • 113 points** — Planetary theme (Neptune, Saturn, Mars...)
+
+### 🔥 Dojo Suzaku — Phénix Vermillon du Sud
+> *"Le phénix renaît de ses cendres. Chaque erreur forge ta maîtrise."*
+
+**21 questions • 112 points** — Constellation theme (Orion, Andromeda, Pegasus...)
+
+### 🐯 Dojo Byakko — Tigre Blanc de l'Ouest
+> *"Le tigre frappe avec précision. Un manifeste, une solution."*
+
+**20 questions • 105 points** — Greek mythology theme (Olympus, Zeus, Athena...)
+
+### 🐢 Dojo Genbu — Tortue Noire du Nord
+> *"La tortue porte le monde. La patience est la clé du succès."*
+
+**22 questions • 115 points** — Norse mythology theme (Odin, Thor, Asgard...)
 
 ---
 
@@ -310,11 +337,11 @@ ckad-dojo/
 │   ├── ckad-cleanup.sh       # Cleanup
 │   └── lib/                  # Shared functions
 ├── web/                      # Web interface
-├── exams/                    # Exam definitions
-│   ├── ckad-simulation1/     # 22 questions, 113 points (planetary)
-│   ├── ckad-simulation2/     # 21 questions, 112 points (constellation)
-│   ├── ckad-simulation3/     # 20 questions, 105 points (Greek mythology)
-│   └── ckad-simulation4/     # 22 questions, 115 points (Norse mythology)
+├── exams/                    # Exam definitions (Shishin - Four Celestial Guardians)
+│   ├── ckad-simulation1/     # Dojo Seiryu 🐉 - 22 questions, 113 points
+│   ├── ckad-simulation2/     # Dojo Suzaku 🔥 - 21 questions, 112 points
+│   ├── ckad-simulation3/     # Dojo Byakko 🐯 - 20 questions, 105 points
+│   └── ckad-simulation4/     # Dojo Genbu 🐢 - 22 questions, 115 points
 ├── exam/course/              # Your answers (created by setup)
 └── tests/                    # Unit tests
 ```
