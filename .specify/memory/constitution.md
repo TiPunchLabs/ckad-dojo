@@ -176,4 +176,4 @@ This constitution governs all development on the ckad-dojo project:
 - Version updates follow semantic versioning
 - Constitution amendments require updating this file and dependent templates
 
-**Version**: 2.9.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-11
+**Version**: 2.10.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-11

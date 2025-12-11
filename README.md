@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.2.0-blue" alt="Version 1.2.0">
+  <img src="https://img.shields.io/badge/version-1.3.1-blue" alt="Version 1.3.1">
   <img src="https://img.shields.io/badge/exams-4-blue" alt="4 Exams">
   <img src="https://img.shields.io/badge/questions-85-blue" alt="85 Questions">
   <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
