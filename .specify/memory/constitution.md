@@ -130,10 +130,13 @@ ckad-dojo/
 ## Exam Environment
 
 **Exam Sets**: 4 dojos based on Shishin (四神 - Four Celestial Guardians), 85 questions total, 445 points
-- Dojo Seiryu 🐉 (ckad-simulation1): 22 questions, 113 points - Dragon Azure
-- Dojo Suzaku 🔥 (ckad-simulation2): 21 questions, 112 points - Phénix Vermillon
-- Dojo Byakko 🐯 (ckad-simulation3): 20 questions, 105 points - Tigre Blanc
-- Dojo Genbu 🐢 (ckad-simulation4): 22 questions, 115 points - Tortue Noire
+
+| Dojo | Guardian | Questions | Points | Quote |
+|------|----------|-----------|--------|-------|
+| Seiryu 🐉 | Dragon Azure de l'Est | 22 | 113 | *"Le dragon s'élève avec la tempête..."* |
+| Suzaku 🔥 | Phénix Vermillon du Sud | 21 | 112 | *"Le phénix renaît de ses cendres..."* |
+| Byakko 🐯 | Tigre Blanc de l'Ouest | 20 | 105 | *"Le tigre frappe avec précision..."* |
+| Genbu 🐢 | Tortue Noire du Nord | 22 | 115 | *"La tortue porte le monde..."* |
 
 **Duration**: 120 minutes (configurable per exam in exam.conf)
 
@@ -173,4 +176,4 @@ This constitution governs all development on the ckad-dojo project:
 - Version updates follow semantic versioning
 - Constitution amendments require updating this file and dependent templates
 
-**Version**: 2.8.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-11
+**Version**: 2.9.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-11
