@@ -510,7 +510,7 @@ start_web() {
             echo -e "${YELLOW}Continuing without embedded terminal...${NC}"
             no_terminal="true"
         else
-            if ! start_ttyd "$TTYD_PORT" "$PROJECT_DIR"; then
+            if ! start_ttyd "$TTYD_PORT" "$PROJECT_DIR" "$exam_id"; then
                 echo ""
                 echo -e "${YELLOW}Failed to start terminal, continuing without it...${NC}"
                 no_terminal="true"
