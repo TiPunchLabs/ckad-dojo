@@ -53,12 +53,13 @@
 
 | Feature | Description |
 |---------|-------------|
-| **4 Exam Sets** | 85 questions total across 4 simulation exams |
+| **4 Dojos** | 85 questions across 4 themed dojos (Shishin - Four Celestial Guardians) |
 | **Unified CLI** | Single `uv run ckad-dojo` command for all operations |
 | **Web Interface** | Modern UI with 120-minute countdown timer |
 | **Auto-Scoring** | 400+ criteria automatically evaluated |
 | **Interactive Menu** | Easy navigation without memorizing commands |
 | **Themes** | Dark and light mode |
+| **Dojo Welcome** | Personalized ASCII banner in embedded terminal |
 
 ### Timer Warnings
 
@@ -310,11 +311,11 @@ ckad-dojo/
 │   ├── ckad-cleanup.sh       # Cleanup
 │   └── lib/                  # Shared functions
 ├── web/                      # Web interface
-├── exams/                    # Exam definitions
-│   ├── ckad-simulation1/     # 22 questions, 113 points (planetary)
-│   ├── ckad-simulation2/     # 21 questions, 112 points (constellation)
-│   ├── ckad-simulation3/     # 20 questions, 105 points (Greek mythology)
-│   └── ckad-simulation4/     # 22 questions, 115 points (Norse mythology)
+├── exams/                    # Exam definitions (Shishin - Four Celestial Guardians)
+│   ├── ckad-simulation1/     # Dojo Seiryu 🐉 - 22 questions, 113 points
+│   ├── ckad-simulation2/     # Dojo Suzaku 🔥 - 21 questions, 112 points
+│   ├── ckad-simulation3/     # Dojo Byakko 🐯 - 20 questions, 105 points
+│   └── ckad-simulation4/     # Dojo Genbu 🐢 - 22 questions, 115 points
 ├── exam/course/              # Your answers (created by setup)
 └── tests/                    # Unit tests
 ```
