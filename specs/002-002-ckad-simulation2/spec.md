@@ -89,7 +89,7 @@ As a CKAD candidate, I want the exam setup to create all necessary pre-existing 
 - **FR-013**: Exam MUST include questions on Probes (liveness, readiness, startup)
 - **FR-014**: Exam MUST include questions on ServiceAccounts and RBAC concepts
 - **FR-015**: Exam MUST include questions on Helm operations
-- **FR-016**: Exam MUST include questions on container image building (Docker/Podman)
+- **FR-016**: Exam MUST include questions on container image building (Docker)
 - **FR-017**: Exam MUST include questions on InitContainers and Sidecars
 - **FR-018**: Exam MUST include questions on Labels, Annotations, and Selectors
 
@@ -143,7 +143,7 @@ As a CKAD candidate, I want the exam setup to create all necessary pre-existing 
 
 ## Assumptions
 
-- Users have a functioning Kubernetes cluster with kubectl, helm, docker/podman access
+- Users have a functioning Kubernetes cluster with kubectl, helm, docker access
 - The existing exam infrastructure (scripts, web interface) is stable and requires minimal modifications
 - Question difficulty is assessed based on point value and complexity matching simulation1 patterns
 - Solutions will be displayed in read-only mode after exam completion (no editing)

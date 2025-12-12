@@ -17,9 +17,6 @@ helm version
 # Check Docker
 docker --version
 
-# Check Podman
-podman --version
-
 # Check uv
 uv --version
 
@@ -146,12 +143,8 @@ Click the **Stop Exam** button (red) in the footer to:
 Example for Q11:
 ```bash
 # Build with Docker
-docker build -t localhost:5000/sun-cipher:v1-docker ./exam/course/11/image/
-docker push localhost:5000/sun-cipher:v1-docker
-
-# Build with Podman
-podman build -t localhost:5000/sun-cipher:v1-podman ./exam/course/11/image/
-podman push localhost:5000/sun-cipher:v1-podman --tls-verify=false
+docker build -t localhost:5000/sun-cipher:v1 ./exam/course/11/image/
+docker push localhost:5000/sun-cipher:v1
 ```
 
 ## Exam Commands
@@ -321,9 +314,11 @@ docker ps | grep registry
 # Should show registry:2 container on port 5000
 ```
 
-For Podman, use `--tls-verify=false`:
+If push fails, ensure localhost:5000 is in Docker's insecure registries:
 ```bash
-podman push localhost:5000/sun-cipher:v1-podman --tls-verify=false
+# Edit /etc/docker/daemon.json and add:
+# { "insecure-registries": ["localhost:5000"] }
+# Then restart Docker: sudo systemctl restart docker
 ```
 
 ### Scoring shows 0 for completed questions

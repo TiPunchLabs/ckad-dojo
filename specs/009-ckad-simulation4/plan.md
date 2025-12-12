@@ -10,7 +10,7 @@ Create a fourth CKAD simulation exam with 22 questions covering all 5 CKAD domai
 ## Technical Context
 
 **Language/Version**: Bash 4.0+ (scripts), Python 3.8+ (web server), Markdown (questions/solutions)
-**Primary Dependencies**: kubectl, helm, docker/podman (existing tooling)
+**Primary Dependencies**: kubectl, helm, docker (existing tooling)
 **Storage**: N/A (file-based exam content)
 **Testing**: Manual testing via script execution, automated scoring validation
 **Target Platform**: Linux (with Kubernetes cluster access)

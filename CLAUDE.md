@@ -153,7 +153,7 @@ score_q1() {
 - Bash 4.0+ (scripts), Python 3.8+ (web server), JavaScript ES6+ (frontend) + ttyd (external binary for web terminal), existing libs (marked.js, highlight.js) (004-web-terminal-replace)
 - Python 3.8+ (using uv as runner) + Standard library only (argparse, subprocess, os, sys, pathlib) (008-ckad-dojo-cli)
 - N/A (stateless CLI wrapper) (008-ckad-dojo-cli)
-- Bash 4.0+ (scripts), Python 3.8+ (web server), Markdown (questions/solutions) + kubectl, helm, docker/podman (existing tooling) (009-ckad-simulation4)
+- Bash 4.0+ (scripts), Python 3.8+ (web server), Markdown (questions/solutions) + kubectl, helm, docker (existing tooling) (009-ckad-simulation4)
 - N/A (file-based exam content) (009-ckad-simulation4)
 - Python 3.8+ (server), JavaScript ES6+ (frontend), Bash 4.0+ (scoring scripts) + Python standard library only (http.server, json, re), vanilla JavaScript, marked.js, highlight.js (011-score-details)
 - N/A (in-memory state only) (011-score-details)
@@ -164,7 +164,7 @@ score_q1() {
 - Bash 4.0+ (scripts)
 - Python 3.8+ (web server, standard library only)
 - JavaScript ES6+ (frontend, vanilla JS)
-- kubectl, helm, docker/podman
+- kubectl, helm, docker
 - uv (Python runner)
 
 ## Recent Changes
