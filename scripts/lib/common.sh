@@ -127,9 +127,9 @@ check_prerequisites() {
         missing+=("helm")
     fi
 
-    # Check for docker OR podman (at least one is required)
-    if ! command_exists docker && ! command_exists podman; then
-        missing+=("docker or podman")
+    # Check for docker (required)
+    if ! command_exists docker; then
+        missing+=("docker")
     fi
 
     if [ ${#missing[@]} -gt 0 ]; then
@@ -197,19 +197,9 @@ docker_container_running() {
     docker ps --format '{{.Names}}' 2>/dev/null | grep -q "^$1$"
 }
 
-# Check if Podman container is running
-podman_container_running() {
-    podman ps --format '{{.Names}}' 2>/dev/null | grep -q "^$1$"
-}
-
 # Check if Docker image exists
 docker_image_exists() {
     docker images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | grep -q "^$1$"
-}
-
-# Check if Podman image exists
-podman_image_exists() {
-    podman images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | grep -q "^$1$"
 }
 
 # ============================================================================

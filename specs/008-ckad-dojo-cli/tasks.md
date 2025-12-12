@@ -28,7 +28,7 @@
 - [x] T005 Implement exam discovery function (scan exams/ directory) in ckad_dojo.py
 - [x] T006 Implement exam config parser (read exam.conf files) in ckad_dojo.py
 - [x] T007 Implement script runner wrapper (subprocess calls to bash scripts) in ckad_dojo.py
-- [x] T008 Implement prerequisite checker (kubectl, helm, docker/podman) in ckad_dojo.py
+- [x] T008 Implement prerequisite checker (kubectl, helm, docker) in ckad_dojo.py
 - [x] T009 Implement ASCII banner display in ckad_dojo.py
 - [x] T010 Implement signal handler for Ctrl+C graceful shutdown in ckad_dojo.py
 
