@@ -122,5 +122,5 @@ A user wants to review correct solutions after completing the exam to learn from
 - Python 3.8+ and uv are available for web interface
 - kubectl is configured with cluster access
 - Helm 3.x is installed for Helm-related questions
-- Docker or Podman is available for container image questions
+- Docker is available for container image questions
 - User has permissions to create/delete namespaces and cluster resources

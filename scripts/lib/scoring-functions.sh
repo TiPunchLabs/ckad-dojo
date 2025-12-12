@@ -385,7 +385,7 @@ score_q10() {
 
 # ============================================================================
 # QUESTION 11 - Working with Containers (7 points)
-# NOTE: This question does NOT use kubectl - only docker/podman commands
+# NOTE: This question does NOT use kubectl - only docker commands
 # ============================================================================
 score_q11() {
     local score=0
@@ -402,29 +402,31 @@ score_q11() {
     fi
 
     # Check Docker image built with tag
-    local docker_image=$(sudo docker images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | grep -q "localhost:5000/sun-cipher:v1-docker" && echo true || echo false)
+    local docker_image=$(sudo docker images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | grep -q "localhost:5000/sun-cipher:v1" && echo true || echo false)
     check_criterion "Docker image built with tag" "$docker_image" && ((score++))
 
     # Check Docker image pushed to registry
-    # We check if the image exists in the registry by trying to pull it
-    local docker_pushed=$(curl -s http://localhost:5000/v2/sun-cipher/tags/list 2>/dev/null | grep -q "v1-docker" && echo true || echo false)
-    check_criterion "Docker image pushed to registry with tag" "$docker_pushed" && ((score++))
+    local docker_pushed=$(curl -s http://localhost:5000/v2/sun-cipher/tags/list 2>/dev/null | grep -q "v1" && echo true || echo false)
+    check_criterion "Docker image pushed to registry" "$docker_pushed" && ((score++))
 
-    # Check Podman image built with tag
-    local podman_image=$(sudo podman images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | grep -q "localhost:5000/sun-cipher:v1-podman" && echo true || echo false)
-    check_criterion "Podman image built with tag" "$podman_image" && ((score++))
+    # Check Docker container is running
+    local container_running=$(sudo docker ps --format '{{.Names}}' 2>/dev/null | grep -q "sun-cipher" && echo true || echo false)
+    check_criterion "Docker container is running" "$container_running" && ((score++))
 
-    # Check Podman image pushed to registry
-    local podman_pushed=$(curl -s http://localhost:5000/v2/sun-cipher/tags/list 2>/dev/null | grep -q "v1-podman" && echo true || echo false)
-    check_criterion "Podman image pushed to registry with tag" "$podman_pushed" && ((score++))
-
-    # Check Podman container is running
-    local container_running=$(sudo podman ps --format '{{.Names}}' 2>/dev/null | grep -q "sun-cipher" && echo true || echo false)
-    check_criterion "Podman container is running" "$container_running" && ((score++))
+    # Check container uses correct image
+    local container_image=$(sudo docker inspect sun-cipher --format '{{.Config.Image}}' 2>/dev/null | grep -q "sun-cipher" && echo true || echo false)
+    check_criterion "Docker container uses correct image" "$container_image" && ((score++))
 
     # Check logs file exists
     local logs_file="$EXAM_DIR/11/logs"
-    check_criterion "Podman container produces correct logs and export is in file /exam/course/11/logs" "$([ -s "$logs_file" ] && echo true || echo false)" && ((score++))
+    check_criterion "Docker container logs exported to /exam/course/11/logs" "$([ -s "$logs_file" ] && echo true || echo false)" && ((score++))
+
+    # Check logs file has content
+    if [ -f "$logs_file" ]; then
+        check_criterion "Logs file has content" "$([ -s "$logs_file" ] && echo true || echo false)" && ((score++))
+    else
+        check_criterion "Logs file has content" "false"
+    fi
 
     echo "$score/$total"
     return $score

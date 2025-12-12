@@ -43,9 +43,14 @@
 **ckad-dojo** is a local CKAD exam simulator that lets you practice under realistic exam conditions with:
 
 - **Automated environment setup** - All namespaces, resources, and Helm releases pre-configured
+
 - **Real-time scoring** - Instant feedback on 100+ criteria
+
 - **Modern web interface** - Timer, question navigation, and dark mode
+
 - **Idempotent scripts** - Safe to re-run at any time
+
+  
 
 ---
 
@@ -125,7 +130,6 @@ Opens `http://localhost:9090` with the exam interface.
 | `kubectl` | 1.28+ | Kubernetes CLI | `curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"` |
 | `helm` | 3.x | Package manager | `curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \| bash` |
 | `docker` | 20.x+ | Container runtime | [docs.docker.com](https://docs.docker.com/engine/install/) |
-| `podman` | 4.x+ | Container runtime (Q11) | `apt install podman` or [podman.io](https://podman.io/getting-started/installation) |
 | `ttyd` | 1.7+ | Embedded web terminal | `apt install ttyd` or [github.com/tsl0922/ttyd](https://github.com/tsl0922/ttyd) |
 | `uv` | 0.4+ | Python package manager | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
 | `bash` | 4.0+ | Script execution | Pre-installed on Linux |
@@ -140,31 +144,9 @@ kubectl cluster-info
 kubectl version --client
 helm version
 docker --version
-podman --version
 ttyd --version
 uv --version
 bash --version
-```
-
-### Podman Configuration
-
-Podman requires registry configuration to pull images with short names (e.g., `alpine:3.18`). Without this, you'll get errors like:
-
-```
-Error: short-name "alpine:3.18" did not resolve to an alias
-```
-
-**Configure podman to search docker.io:**
-
-```bash
-# Create or edit the registries configuration
-sudo mkdir -p /etc/containers
-echo 'unqualified-search-registries = ["docker.io"]' | sudo tee /etc/containers/registries.conf
-```
-
-Alternatively, use fully-qualified image names in your commands:
-```bash
-podman build -t localhost:5000/myapp:v1 --from docker.io/library/alpine:3.18 .
 ```
 
 ---
@@ -375,8 +357,10 @@ lsof -i :9090                             # Check port availability
 <summary><strong>Q11 registry push fails</strong></summary>
 
 ```bash
-# For Podman, disable TLS verification
-podman push localhost:5000/image:tag --tls-verify=false
+# For Docker, ensure the registry is in the insecure registries list
+# Edit /etc/docker/daemon.json and add:
+# { "insecure-registries": ["localhost:5000"] }
+# Then restart Docker: sudo systemctl restart docker
 ```
 </details>
 

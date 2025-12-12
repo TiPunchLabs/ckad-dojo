@@ -112,20 +112,19 @@ As a CKAD candidate, I want the Helm-based questions (Q4) to be properly configu
 
 ---
 
-### User Story 7 - Docker/Podman Question Environment (Priority: P7)
+### User Story 7 - Docker Question Environment (Priority: P7)
 
-As a CKAD candidate, I want the container-based question (Q11) to be properly configured with required files and a local registry, so that I can practice container image building and pushing with both Docker and Podman.
+As a CKAD candidate, I want the container-based question (Q11) to be properly configured with required files and a local registry, so that I can practice container image building and pushing with Docker.
 
 **Why this priority**: This is a single question requiring specific infrastructure; important but lower priority than core Kubernetes questions.
 
-**Independent Test**: Can be fully tested by verifying Dockerfile exists, registry is accessible, and images can be pushed/pulled with both Docker and Podman.
+**Independent Test**: Can be fully tested by verifying Dockerfile exists, registry is accessible, and images can be pushed/pulled with Docker.
 
 **Acceptance Scenarios**:
 
 1. **Given** setup has run, **When** I check `./exam/course/11/image/`, **Then** I find the Dockerfile and Go application source files
-2. **Given** a local registry is deployed, **When** I push an image with Docker to `localhost:5000/sun-cipher:v1-docker`, **Then** the push succeeds
-3. **Given** a local registry is deployed, **When** I push an image with Podman to `localhost:5000/sun-cipher:v1-podman`, **Then** the push succeeds
-4. **Given** I build and run a container with Podman, **When** I check its logs, **Then** the application output is visible
+2. **Given** a local registry is deployed, **When** I push an image with Docker to `localhost:5000/sun-cipher:v1`, **Then** the push succeeds
+3. **Given** I build and run a container with Docker, **When** I check its logs, **Then** the application output is visible
 
 ---
 
@@ -242,7 +241,6 @@ As a CKAD candidate, I want the container-based question (Q11) to be properly co
 - User has a working kubeadm cluster with kubectl configured
 - User has Helm 3.x installed and configured
 - User has Docker installed and accessible
-- User has Podman installed and accessible
 - User has Python 3.x installed (for web interface)
 - User has bash 4.0+ available
 - Cluster has sufficient resources for exam workloads (standard single-node cluster is sufficient)

@@ -296,7 +296,7 @@ Save the NetworkPolicy YAML to `./exam/course/11/networkpolicy.yaml`.
 
 There are files to build a container image located at `./exam/course/12/image/`. The directory contains a Dockerfile and a simple Python application.
 
-> Use `sudo docker` or `sudo podman` for container operations.
+> Use `sudo docker` for container operations.
 
 Perform the following tasks:
 

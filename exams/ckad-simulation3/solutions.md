@@ -535,22 +535,20 @@ kubectl annotate pod lightning-pod -n zeus \
 # Step 1: Modify Dockerfile
 echo 'ENV APP_VERSION=3.0.0' >> ./exam/course/20/image/Dockerfile
 
-# Step 2: Build and push with Docker
+# Step 2: Build the image
 cd ./exam/course/20/image
-sudo docker build -t localhost:5000/olympus-app:v1-docker .
-sudo docker push localhost:5000/olympus-app:v1-docker
+sudo docker build -t localhost:5000/olympus-app:v1 .
 
-# Step 3: Build and push with Podman
-sudo podman build -t localhost:5000/olympus-app:v1-podman .
-sudo podman push localhost:5000/olympus-app:v1-podman
+# Step 3: Push to registry
+sudo docker push localhost:5000/olympus-app:v1
 
 # Step 4: Run container
-sudo podman run -d --name olympus-runner localhost:5000/olympus-app:v1-podman
+sudo docker run -d --name olympus-runner localhost:5000/olympus-app:v1
 
 # Step 5: Get logs
-sudo podman logs olympus-runner > ./exam/course/20/container-logs.txt
+sudo docker logs olympus-runner > ./exam/course/20/container-logs.txt
 ```
 
-**Explanation:** Both Docker and Podman can build OCI-compliant images. The local registry at localhost:5000 stores the images.
+**Explanation:** Docker builds OCI-compliant images. The local registry at localhost:5000 stores the images.
 
 ---

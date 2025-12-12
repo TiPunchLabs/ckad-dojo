@@ -10,7 +10,7 @@ Create a third CKAD exam simulation (ckad-simulation3) with Greek mythology them
 ## Technical Context
 
 **Language/Version**: Bash 4.0+ (scripts), Markdown (content)
-**Primary Dependencies**: kubectl, helm, docker, podman
+**Primary Dependencies**: kubectl, helm, docker
 **Storage**: File-based (YAML manifests, markdown files)
 **Testing**: Manual testing via scoring scripts, unit tests in tests/
 **Target Platform**: Linux with Kubernetes cluster (kubeadm)
@@ -26,7 +26,7 @@ Create a third CKAD exam simulation (ckad-simulation3) with Greek mythology them
 | Principle | Status | Notes |
 |-----------|--------|-------|
 | I. Script-First Automation | PASS | Follows existing setup/score/cleanup pattern |
-| II. Kubernetes-Native Tooling | PASS | Uses kubectl, helm, docker, podman only |
+| II. Kubernetes-Native Tooling | PASS | Uses kubectl, helm, docker only |
 | III. Automated Scoring | PASS | scoring-functions.sh implements score_q1-q20 |
 | IV. Exam Fidelity | PASS | Questions follow CKAD exam format |
 | V. Idempotent Operations | PASS | Inherits from existing scripts |
