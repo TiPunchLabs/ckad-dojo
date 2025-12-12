@@ -160,17 +160,17 @@
 
 ---
 
-## Phase 9: User Story 7 - Docker/Podman Question Environment ✅ COMPLETED
+## Phase 9: User Story 7 - Docker Question Environment ✅ COMPLETED
 
 **Goal**: Configure local registry and Q11 files
 
 - [x] T093 [US7] Add registry container start function to scripts/lib/setup-functions.sh
 - [x] T094 [US7] Update ckad-setup.sh to start registry
 - [x] T095 [US7] Ensure Q11 templates are copied correctly during setup
-- [x] T096 [US7] Update score_q11() to use docker/podman commands
+- [x] T096 [US7] Update score_q11() to use docker commands
 - [x] T097 [US7] Add registry cleanup to ckad-cleanup.sh
 
-**Checkpoint**: ✅ Q11 Docker/Podman environment fully functional
+**Checkpoint**: ✅ Q11 Docker environment fully functional
 
 ---
 
@@ -252,7 +252,7 @@
 | US4 Web Interface | Web UI with timer | ✅ Completed |
 | US5 Multi-Exam | Exam architecture | ✅ Completed |
 | US6 Helm | Helm environment | ✅ Completed |
-| US7 Docker | Docker/Podman environment | ✅ Completed |
+| US7 Docker | Docker environment | ✅ Completed |
 | Polish | Documentation | ✅ Completed |
 | Stop Exam | Scoring integration in web UI | ✅ Completed |
 | Interactive Selection | Exam & question selection menu | ✅ Completed |

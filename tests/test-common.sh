@@ -158,14 +158,12 @@ fi
 assert_true '! load_exam "nonexistent-exam" 2>/dev/null' "load_exam should fail for nonexistent exam"
 
 # ----------------------------------------------------------------------------
-# Test: Docker/Podman functions exist
+# Test: Docker functions exist
 # ----------------------------------------------------------------------------
-test_case "Docker/Podman utility functions are defined"
+test_case "Docker utility functions are defined"
 
 assert_function_exists "docker_container_running" "docker_container_running function should exist"
-assert_function_exists "podman_container_running" "podman_container_running function should exist"
 assert_function_exists "docker_image_exists" "docker_image_exists function should exist"
-assert_function_exists "podman_image_exists" "podman_image_exists function should exist"
 
 # ----------------------------------------------------------------------------
 # Test: ttyd functions exist

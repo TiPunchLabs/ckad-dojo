@@ -694,22 +694,21 @@ score_q20() {
         check_criterion "Dockerfile has APP_VERSION env var" "false" || true
     fi
 
+    # Check Docker image exists locally
+    local docker_image_local=$(sudo docker images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | grep -q "localhost:5000/olympus-app:v1" && echo true || echo false)
+    check_criterion "Docker image built locally" "$docker_image_local" && ((score++))
+
     # Check Docker image exists in registry
-    local docker_image=$(curl -s http://localhost:5000/v2/olympus-app/tags/list 2>/dev/null | grep -q "v1-docker" && echo true || echo false)
+    local docker_image=$(curl -s http://localhost:5000/v2/olympus-app/tags/list 2>/dev/null | grep -q "v1" && echo true || echo false)
     check_criterion "Docker image pushed to registry" "$docker_image" && ((score++))
     check_criterion "Docker image tagged correctly" "$docker_image" && ((score++))
 
-    # Check Podman image exists in registry
-    local podman_image=$(curl -s http://localhost:5000/v2/olympus-app/tags/list 2>/dev/null | grep -q "v1-podman" && echo true || echo false)
-    check_criterion "Podman image pushed to registry" "$podman_image" && ((score++))
-    check_criterion "Podman image tagged correctly" "$podman_image" && ((score++))
-
     # Check container is running
-    local container_running=$(sudo podman ps --filter name=olympus-runner --format "{{.Names}}" 2>/dev/null | grep -q "olympus-runner" && echo true || echo false)
+    local container_running=$(sudo docker ps --filter name=olympus-runner --format "{{.Names}}" 2>/dev/null | grep -q "olympus-runner" && echo true || echo false)
     check_criterion "Container olympus-runner is running" "$container_running" && ((score++))
 
     # Check container uses correct image
-    local container_image=$(sudo podman inspect olympus-runner --format "{{.Image}}" 2>/dev/null | grep -q "olympus-app" && echo true || echo false)
+    local container_image=$(sudo docker inspect olympus-runner --format "{{.Config.Image}}" 2>/dev/null | grep -q "olympus-app" && echo true || echo false)
     check_criterion "Container uses olympus-app image" "$container_image" && ((score++))
 
     # Check logs file exists
@@ -722,6 +721,9 @@ score_q20() {
     else
         check_criterion "Logs file has content" "false" || true
     fi
+
+    # Bonus criterion for correct workflow
+    check_criterion "Container workflow complete" "$([ "$container_running" = "true" ] && [ -s "$logs_file" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
     return 0

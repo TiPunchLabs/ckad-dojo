@@ -7,7 +7,7 @@
 
 - Kubernetes cluster accessible via kubectl
 - Helm 3.x installed
-- Docker and/or Podman installed
+- Docker installed
 - Python 3.8+ with uv package manager
 - Bash 4.0+
 
@@ -31,7 +31,7 @@
 - Navigate questions using arrow keys or navigation bar
 - Flag questions for review with 'F' key
 - Answer questions in `./exam/course/N/` directories
-- Use kubectl, helm, docker/podman as needed
+- Use kubectl, helm, docker as needed
 
 ### 3. View Your Score
 
