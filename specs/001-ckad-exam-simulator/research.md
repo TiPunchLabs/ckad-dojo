@@ -24,19 +24,18 @@
 
 **Rationale**: Q11 requires pushing images to a registry. Using `localhost:5000` is the standard local registry approach.
 
-**IMPORTANT**: Q11 is purely container-based (Docker/Podman) and does NOT involve Kubernetes cluster operations. All scoring for Q11 uses docker/podman commands, not kubectl.
+**IMPORTANT**: Q11 is purely container-based (Docker) and does NOT involve Kubernetes cluster operations. All scoring for Q11 uses docker commands, not kubectl.
 
 **Alternatives considered**:
 - Use DockerHub: Rejected - requires authentication, network dependency
 - Use in-cluster registry (K8s deployment): Rejected - Q11 doesn't use K8s at all
-- Use insecure localhost registry: Chosen - simplest, works with Docker and Podman
+- Use insecure localhost registry: Chosen - simplest, works with Docker
 
 **Implementation**: Run `docker run -d -p 5000:5000 --restart=always --name registry registry:2` during setup.
 
 **Q11 Scoring (no kubectl)**:
 - `docker images | grep localhost:5000/sun-cipher` - check Docker image
-- `podman images | grep localhost:5000/sun-cipher` - check Podman image
-- `podman ps | grep sun-cipher` - check running container
+- `docker ps | grep sun-cipher` - check running container
 - File `./exam/course/11/logs` exists and contains expected output
 
 ### 3. Scoring Script Architecture
@@ -99,7 +98,6 @@ kubectl apply -f manifests/setup/ --server-side
 | kubectl | K8s operations | `kubectl version --client` |
 | helm | Helm questions | `helm version` |
 | docker | Container operations | `docker --version` |
-| podman | Container operations | `podman --version` |
 | bash | Script execution | `bash --version` (4.0+) |
 
 ### Cluster Requirements
