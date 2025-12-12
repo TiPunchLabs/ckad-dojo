@@ -40,7 +40,7 @@ Scripts MUST be idempotent and safe to re-run. Manual intervention MUST NOT be r
 All Kubernetes operations MUST use native tooling:
 - `kubectl` for all cluster operations
 - `helm` for Helm-based questions
-- `docker` and `podman` for container image operations
+- `docker` for container image operations
 
 Scripts MUST NOT introduce external dependencies beyond standard CKAD exam tools. This ensures users practice with the same tools available during the real exam.
 
@@ -88,7 +88,7 @@ The web interface is served locally via Python HTTP server using `uv run` and re
 ## Technical Constraints
 
 **Cluster Type**: kubeadm (user's existing cluster)
-**Required Tools**: kubectl, helm, docker, podman, ttyd, bash 4.0+, uv
+**Required Tools**: kubectl, helm, docker, ttyd, bash 4.0+, uv
 **File Structure**:
 ```
 ckad-dojo/
@@ -176,4 +176,4 @@ This constitution governs all development on the ckad-dojo project:
 - Version updates follow semantic versioning
 - Constitution amendments require updating this file and dependent templates
 
-**Version**: 2.10.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-11
+**Version**: 2.11.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-12

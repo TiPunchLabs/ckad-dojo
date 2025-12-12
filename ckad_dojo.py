@@ -243,8 +243,7 @@ def check_command(cmd: str) -> bool:
 
 def check_prerequisites(verbose: bool = True) -> bool:
     """Check all prerequisites are installed."""
-    required = ["kubectl", "helm"]
-    optional = ["docker", "podman"]
+    required = ["kubectl", "helm", "docker"]
 
     all_ok = True
 
@@ -256,18 +255,6 @@ def check_prerequisites(verbose: bool = True) -> bool:
             if verbose:
                 print_error(f"{cmd} is NOT available (required)")
             all_ok = False
-
-    # At least one container runtime
-    has_container_runtime = False
-    for cmd in optional:
-        if check_command(cmd):
-            has_container_runtime = True
-            if verbose:
-                print_success(f"{cmd} is available")
-            break
-
-    if not has_container_runtime and verbose:
-        print_warning("No container runtime (docker/podman) found")
 
     return all_ok
 

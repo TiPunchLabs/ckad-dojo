@@ -10,7 +10,7 @@ Create a new complete CKAD exam simulation (ckad-simulation2) with 21 questions 
 ## Technical Context
 
 **Language/Version**: Bash 4.0+ (scripts), Python 3.8+ (web server), JavaScript ES6+ (frontend)
-**Primary Dependencies**: kubectl, helm, docker/podman, uv (Python runner)
+**Primary Dependencies**: kubectl, helm, docker, uv (Python runner)
 **Storage**: File-based (YAML manifests, markdown files)
 **Testing**: Manual testing + automated scoring verification
 **Target Platform**: Linux (bash scripts, kubeadm cluster)
@@ -26,7 +26,7 @@ Create a new complete CKAD exam simulation (ckad-simulation2) with 21 questions 
 | Principle | Compliance | Notes |
 |-----------|------------|-------|
 | I. Script-First Automation | PASS | All exam operations via bash scripts |
-| II. Kubernetes-Native Tooling | PASS | Uses kubectl, helm, docker, podman only |
+| II. Kubernetes-Native Tooling | PASS | Uses kubectl, helm, docker only |
 | III. Automated Scoring | PASS | scoring-functions.sh follows established pattern |
 | IV. Exam Fidelity | PASS | Questions match CKAD exam style and difficulty |
 | V. Idempotent Operations | PASS | Setup/cleanup scripts will be idempotent |

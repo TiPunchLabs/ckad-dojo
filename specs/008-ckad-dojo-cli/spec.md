@@ -104,7 +104,7 @@ A user wants to understand available commands and options without leaving the te
 - **FR-004**: CLI MUST display ASCII banner consistent with existing scripts
 - **FR-005**: CLI MUST support exam selection via `-e/--exam` option for all relevant commands
 - **FR-006**: CLI MUST provide colored output for better readability (with `--no-color` option for automation)
-- **FR-007**: CLI MUST validate prerequisites (kubectl, helm, docker/podman) before operations
+- **FR-007**: CLI MUST validate prerequisites (kubectl, helm, docker) before operations
 - **FR-008**: CLI MUST work with `uv run` without requiring package installation
 - **FR-009**: CLI MUST discover available exams dynamically from the exams/ directory
 - **FR-010**: CLI MUST handle keyboard interrupts gracefully with cleanup prompts
@@ -132,4 +132,4 @@ A user wants to understand available commands and options without leaving the te
 - `uv` is installed and available in PATH
 - Existing bash scripts in scripts/ directory will be called by the Python CLI (wrapper approach)
 - Terminal supports ANSI color codes (with fallback for `--no-color`)
-- User has appropriate permissions to run kubectl, helm, and docker/podman commands
+- User has appropriate permissions to run kubectl, helm, and docker commands

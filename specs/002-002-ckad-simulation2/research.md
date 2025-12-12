@@ -150,7 +150,7 @@ score_qN() {
 |------------|---------|---------|
 | kubectl | 1.28+ | Kubernetes CLI for scoring |
 | helm | 3.x | Helm operations questions |
-| docker/podman | latest | Container building questions |
+| docker | latest | Container building questions |
 | Python 3.x | 3.8+ | Web server (standard library) |
 | bash | 4.0+ | Script execution |
 

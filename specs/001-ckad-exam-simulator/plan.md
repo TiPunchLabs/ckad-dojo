@@ -17,7 +17,7 @@ The simulator configures a kubeadm cluster with all pre-requisites for 24 exam q
 ## Technical Context
 
 **Language/Version**: Bash 4.0+, Python 3.x, JavaScript (ES6+)
-**Primary Dependencies**: kubectl, helm 3.x, docker, podman, uv
+**Primary Dependencies**: kubectl, helm 3.x, docker, uv
 **Storage**: Kubernetes cluster (in-memory), local filesystem (`./exam/course/`)
 **Testing**: Manual verification, scoring script self-validates
 **Target Platform**: Linux (kubeadm cluster)
@@ -33,7 +33,7 @@ The simulator configures a kubeadm cluster with all pre-requisites for 24 exam q
 | Principle | Status | Notes |
 |-----------|--------|-------|
 | I. Script-First Automation | PASS | All operations via bash scripts |
-| II. Kubernetes-Native Tooling | PASS | Only kubectl, helm, docker, podman |
+| II. Kubernetes-Native Tooling | PASS | Only kubectl, helm, docker |
 | III. Automated Scoring | PASS | All 113+ criteria automatically evaluated |
 | IV. Exam Fidelity | PASS | Questions from simulation1.md, paths mapped |
 | V. Idempotent Operations | PASS | All scripts designed for safe re-run |
@@ -129,7 +129,7 @@ Automated evaluation of 113+ criteria:
 - Per-question scoring functions
 - File content verification
 - Kubernetes resource state checks
-- Docker/Podman image verification (Q11)
+- Docker image verification (Q11)
 
 ## Implementation Phases
 

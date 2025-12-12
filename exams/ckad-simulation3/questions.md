@@ -432,14 +432,14 @@ Add the following **annotations** to this Pod:
 
 There are files to build a container image at `./exam/course/20/image/`. The container runs a simple application.
 
-> Use `sudo docker` and `sudo podman` or become root with `sudo -i`
+> Use `sudo docker` or become root with `sudo -i`
 
 | # | Task |
 |---|------|
 | 1 | Modify the **Dockerfile**: add ENV variable `APP_VERSION` with value `3.0.0` |
-| 2 | **Build** with Docker, tag `localhost:5000/olympus-app:v1-docker` and **push** |
-| 3 | **Build** with Podman, tag `localhost:5000/olympus-app:v1-podman` and **push** |
-| 4 | **Run** a detached container with Podman named `olympus-runner` using image `localhost:5000/olympus-app:v1-podman` |
+| 2 | **Build** the image with tag `localhost:5000/olympus-app:v1` |
+| 3 | **Push** the image to the local registry |
+| 4 | **Run** a detached container named `olympus-runner` using image `localhost:5000/olympus-app:v1` |
 | 5 | Write the container **logs** to `./exam/course/20/container-logs.txt` |
 
 ---
