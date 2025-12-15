@@ -30,20 +30,20 @@ check_criterion() {
 }
 
 # ============================================================================
-# QUESTION 1 - Namespaces (1 point)
+# QUESTION 1 - Nodes (1 point)
 # ============================================================================
 score_q1() {
     local score=0
     local total=1
 
-    echo "Question 1 | Namespaces"
+    echo "Question 1 | Nodes"
 
-    # Check if file exists and contains namespaces
-    local file="$EXAM_DIR/1/namespaces"
-    if [ -f "$file" ] && grep -q "default" "$file" 2>/dev/null; then
-        check_criterion "File contains namespace list" "true" && ((score++))
+    # Check if file exists and contains node list (Ready or NotReady status)
+    local file="$EXAM_DIR/1/nodes"
+    if [ -f "$file" ] && grep -qE "Ready|NotReady" "$file" 2>/dev/null; then
+        check_criterion "File contains node list" "true" && ((score++))
     else
-        check_criterion "File contains namespace list" "false" || true
+        check_criterion "File contains node list" "false" || true
     fi
 
     echo "$score/$total"

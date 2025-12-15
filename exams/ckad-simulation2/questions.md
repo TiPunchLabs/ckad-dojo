@@ -11,21 +11,21 @@
 
 ---
 
-## Question 1 | Namespaces
+## Question 1 | Nodes
 
 | | |
 |---|---|
 | **Points** | 1/112 (1%) |
 | **Namespace** | - |
-| **File to create** | `./exam/course/1/namespaces` |
+| **File to create** | `./exam/course/1/nodes` |
 
 ### Task
 
-The DevOps team in the Andromeda cluster would like to get the list of all **Namespaces** in the cluster.
+The DevOps team in the Andromeda cluster would like to get the list of all **Nodes** in the cluster.
 
-The list can contain other columns like STATUS or AGE.
+The list can contain other columns like STATUS, ROLES, or AGE.
 
-Save the list to `./exam/course/1/namespaces`.
+Save the list to `./exam/course/1/nodes`.
 
 ---
 

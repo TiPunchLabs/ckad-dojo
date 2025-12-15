@@ -4,16 +4,16 @@ This document contains the solutions for all questions in CKAD Simulation 2.
 
 ---
 
-## Question 1 | Namespaces
+## Question 1 | Nodes
 
 **Solution:**
 
 ```bash
-# List all namespaces and save to file
-kubectl get namespaces > ./exam/course/1/namespaces
+# List all nodes and save to file
+kubectl get nodes > ./exam/course/1/nodes
 ```
 
-**Explanation:** The `kubectl get namespaces` command lists all namespaces in the cluster. The output includes the NAME, STATUS, and AGE columns by default.
+**Explanation:** The `kubectl get nodes` command lists all nodes in the cluster. The output includes the NAME, STATUS, ROLES, AGE, and VERSION columns by default.
 
 ---
 

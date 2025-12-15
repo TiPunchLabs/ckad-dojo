@@ -254,42 +254,31 @@ score_q7() {
 }
 
 # ============================================================================
-# QUESTION 8 - Deployment Rollback (6 points)
+# QUESTION 8 - Deployment Update Strategy (6 points)
 # ============================================================================
 score_q8() {
     local score=0
     local total=6
 
-    echo "Question 8 | Deployment Rollback"
+    echo "Question 8 | Deployment Update Strategy"
 
-    # Check Deployment exists
+    # Check Deployment exists (1 pt)
     local deploy_exists=$(kubectl get deployment battle-app -n ares 2>/dev/null && echo true || echo false)
     check_criterion "Deployment battle-app exists" "$deploy_exists" && ((score++))
 
-    # Check Deployment is available
-    local available=$(kubectl get deployment battle-app -n ares -o jsonpath='{.status.availableReplicas}' 2>/dev/null)
-    check_criterion "Deployment has available replicas" "$([ "$available" -gt 0 ] 2>/dev/null && echo true || echo false)" && ((score++))
+    # Check strategy type is RollingUpdate (1 pt)
+    local strategy_type=$(kubectl get deployment battle-app -n ares -o jsonpath='{.spec.strategy.type}' 2>/dev/null)
+    check_criterion "Strategy type is RollingUpdate" "$([ "$strategy_type" = "RollingUpdate" ] && echo true || echo false)" && ((score++))
 
-    # Check rollback-info.txt exists
-    local file="$EXAM_DIR/8/rollback-info.txt"
-    check_criterion "File /exam/course/8/rollback-info.txt exists" "$([ -f "$file" ] && echo true || echo false)" && ((score++))
+    # Check maxSurge is 2 (2 pts)
+    local max_surge=$(kubectl get deployment battle-app -n ares -o jsonpath='{.spec.strategy.rollingUpdate.maxSurge}' 2>/dev/null)
+    check_criterion "maxSurge is 2" "$([ "$max_surge" = "2" ] && echo true || echo false)" && ((score++))
+    check_criterion "maxSurge configured correctly" "$([ "$max_surge" = "2" ] && echo true || echo false)" && ((score++))
 
-    # Check file contains revision number
-    if [ -f "$file" ]; then
-        local content=$(cat "$file" 2>/dev/null)
-        check_criterion "File contains revision number" "$(echo "$content" | grep -qE "^[0-9]+$" && echo true || echo false)" && ((score++))
-    else
-        check_criterion "File contains revision number" "false" || true
-    fi
-
-    # Check deployment uses working image (nginx, not broken)
-    local image=$(kubectl get deployment battle-app -n ares -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
-    check_criterion "Deployment uses working nginx image" "$(echo "$image" | grep -q "nginx" && ! echo "$image" | grep -q "broken" && echo true || echo false)" && ((score++))
-
-    # Check deployment is ready
-    local ready=$(kubectl get deployment battle-app -n ares -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
-    local desired=$(kubectl get deployment battle-app -n ares -o jsonpath='{.spec.replicas}' 2>/dev/null)
-    check_criterion "All replicas are ready" "$([ "$ready" = "$desired" ] && echo true || echo false)" && ((score++))
+    # Check maxUnavailable is 1 (2 pts)
+    local max_unavailable=$(kubectl get deployment battle-app -n ares -o jsonpath='{.spec.strategy.rollingUpdate.maxUnavailable}' 2>/dev/null)
+    check_criterion "maxUnavailable is 1" "$([ "$max_unavailable" = "1" ] && echo true || echo false)" && ((score++))
+    check_criterion "maxUnavailable configured correctly" "$([ "$max_unavailable" = "1" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
     return 0
