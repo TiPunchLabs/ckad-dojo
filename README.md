@@ -34,7 +34,7 @@
 
 
 
-![](./img/view001.png)
+![](./img/ckad-dojo.png)
 
 
 
