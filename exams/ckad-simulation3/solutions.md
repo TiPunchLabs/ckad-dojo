@@ -201,25 +201,33 @@ EOF
 
 ---
 
-## Question 8 | Deployment Rollback
+## Question 8 | Deployment Update Strategy
 
 **Solution:**
 
 ```bash
-# Check rollout history
-kubectl rollout history deployment battle-app -n ares
+# Configure RollingUpdate strategy with kubectl patch
+kubectl patch deployment battle-app -n ares -p '{
+  "spec": {
+    "strategy": {
+      "type": "RollingUpdate",
+      "rollingUpdate": {
+        "maxSurge": 2,
+        "maxUnavailable": 1
+      }
+    }
+  }
+}'
 
-# Rollback to previous revision
-kubectl rollout undo deployment battle-app -n ares
+# Verify the configuration
+kubectl get deployment battle-app -n ares -o jsonpath='{.spec.strategy}'
 
-# Get the current revision number
-kubectl rollout history deployment battle-app -n ares | grep -v REVISION | tail -1 | awk '{print $1}' > ./exam/course/8/rollback-info.txt
-
-# Verify deployment is running
-kubectl rollout status deployment battle-app -n ares
+# Alternative: Use kubectl edit
+kubectl edit deployment battle-app -n ares
+# Then modify the spec.strategy section
 ```
 
-**Explanation:** `kubectl rollout undo` reverts to the previous revision. Use `rollout history` to see available revisions.
+**Explanation:** The RollingUpdate strategy controls how Pods are replaced during updates. `maxSurge` specifies the maximum number of Pods that can be created above the desired count, while `maxUnavailable` specifies the maximum number of Pods that can be unavailable during the update.
 
 ---
 
