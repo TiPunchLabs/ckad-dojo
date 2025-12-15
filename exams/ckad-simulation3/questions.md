@@ -155,22 +155,26 @@ Create a **Pod** named `thunder-pod` in namespace `zeus` using image `nginx:1.21
 
 ---
 
-## Question 8 | Deployment Rollback
+## Question 8 | Deployment Update Strategy
 
 | | |
 |---|---|
 | **Points** | 6/105 (6%) |
 | **Namespace** | `ares` |
 | **Resources** | Deployment `battle-app` |
-| **File to create** | `./exam/course/8/rollback-info.txt` |
 
 ### Task
 
-There is a **Deployment** named `battle-app` in namespace `ares`. It was recently updated with a broken image.
+There is a **Deployment** named `battle-app` in namespace `ares`. The team wants to configure its update strategy for safer rollouts.
 
-1. **Rollback** the deployment to the previous working revision
-2. Write the **revision number** you rolled back to into `./exam/course/8/rollback-info.txt`
-3. Ensure the deployment is running successfully
+Configure the Deployment to use a **RollingUpdate** strategy with the following settings:
+
+| Setting | Value |
+|---------|-------|
+| `maxSurge` | `2` |
+| `maxUnavailable` | `1` |
+
+Ensure the deployment continues to run successfully after the configuration change.
 
 ---
 
