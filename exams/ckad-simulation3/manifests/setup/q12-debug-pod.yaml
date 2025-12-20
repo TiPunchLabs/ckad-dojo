@@ -1,0 +1,38 @@
+# Q12 - Pod for exec troubleshooting exercise
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-pod
+  namespace: stalker
+  labels:
+    app: config-pod
+spec:
+  containers:
+  - name: app
+    image: nginx:1.21
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: config
+      mountPath: /etc/nginx/conf.d
+  volumes:
+  - name: config
+    configMap:
+      name: nginx-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: stalker
+data:
+  custom.conf: |
+    server {
+        listen 8080;
+        server_name custom.local;
+        location / {
+            return 200 'Custom config loaded\n';
+            add_header Content-Type text/plain;
+        }
+    }

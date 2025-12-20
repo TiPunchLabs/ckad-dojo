@@ -1,0 +1,25 @@
+# Q11 - Backend pod for NetworkPolicy testing
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend-pod
+  namespace: corona
+  labels:
+    app: backend
+    tier: api
+    exam: ckad-simulation2
+spec:
+  containers:
+  - name: backend
+    image: nginx:1.21
+    ports:
+    - containerPort: 80
+      name: http
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "100m"
+      limits:
+        memory: "128Mi"
+        cpu: "200m"

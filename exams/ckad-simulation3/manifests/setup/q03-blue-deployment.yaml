@@ -1,0 +1,45 @@
+# Q3 - Blue-Green Deployment Setup
+# Existing "blue" version deployment for Blue-Green switch exercise
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stable-blue
+  namespace: stripe
+  labels:
+    app: web-app
+    version: blue
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-app
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: web-app
+        version: blue
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+        env:
+        - name: VERSION
+          value: "blue"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+  namespace: stripe
+spec:
+  type: ClusterIP
+  selector:
+    app: web-app
+    version: blue
+  ports:
+  - port: 80
+    targetPort: 80

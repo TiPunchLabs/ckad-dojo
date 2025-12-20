@@ -1,0 +1,21 @@
+# Q10 - Pod for kubectl debug exercise
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: troubled-app
+  namespace: anchor
+  labels:
+    app: troubled-app
+spec:
+  containers:
+  - name: app
+    image: nginx:1.21
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: data
+      mountPath: /data
+  volumes:
+  - name: data
+    emptyDir: {}

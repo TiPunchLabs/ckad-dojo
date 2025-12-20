@@ -58,7 +58,13 @@
       "Bash(git rev-parse:*)",
       "Bash(kubectl cluster-info:*)",
       "Bash(timeout 10 ./scripts/ckad-exam.sh:*)",
-      "Bash(timeout 5 ./scripts/ckad-exam.sh:*)"
+      "Bash(timeout 5 ./scripts/ckad-exam.sh:*)",
+      "Skill(speckit.plan)",
+      "Skill(speckit.plan:*)",
+      "Skill(speckit.tasks)",
+      "Skill(speckit.tasks:*)",
+      "Bash(paste:*)",
+      "Bash(bc:*)"
     ],
     "deny": [],
     "ask": []

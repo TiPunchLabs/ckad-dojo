@@ -1,83 +1,81 @@
-# CKAD Simulation 4 - Norse Mythology Namespaces
-# These namespaces are created during exam setup
-
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: odin
-  labels:
-    exam: ckad-simulation4
-    theme: norse-mythology
-    realm: allfather
+# Namespaces for CKAD Simulation 4 - Dojo Genbu (Ocean/Water theme)
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: thor
+  name: shell
   labels:
     exam: ckad-simulation4
-    theme: norse-mythology
-    realm: thunder
+    theme: genbu
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: loki
+  name: ocean
   labels:
     exam: ckad-simulation4
-    theme: norse-mythology
-    realm: trickster
+    theme: genbu
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: freya
+  name: reef
   labels:
     exam: ckad-simulation4
-    theme: norse-mythology
-    realm: love
+    theme: genbu
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: heimdall
+  name: deep
   labels:
     exam: ckad-simulation4
-    theme: norse-mythology
-    realm: guardian
+    theme: genbu
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: baldur
+  name: tide
   labels:
     exam: ckad-simulation4
-    theme: norse-mythology
-    realm: light
+    theme: genbu
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: tyr
+  name: wave
   labels:
     exam: ckad-simulation4
-    theme: norse-mythology
-    realm: war
+    theme: genbu
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: njord
+  name: coral
   labels:
     exam: ckad-simulation4
-    theme: norse-mythology
-    realm: sea
+    theme: genbu
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: asgard
+  name: lagoon
   labels:
     exam: ckad-simulation4
-    theme: norse-mythology
-    realm: divine
+    theme: genbu
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: current
+  labels:
+    exam: ckad-simulation4
+    theme: genbu
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: anchor
+  labels:
+    exam: ckad-simulation4
+    theme: genbu

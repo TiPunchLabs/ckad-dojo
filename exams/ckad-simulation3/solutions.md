@@ -1,18 +1,173 @@
-# CKAD Exam Simulator - Solutions
+# CKAD Simulation 3 - Dojo Byakko 🐯 - Solutions
 
-## Question 1 | Namespaces
+*「白虎は精密に狩る」 - Le tigre blanc chasse avec précision*
+
+This document contains the solutions for all 20 questions in CKAD Simulation 3.
+
+---
+
+## Question 1 | kubectl explain
 
 **Solution:**
 
 ```bash
-kubectl get ns | grep a > ./exam/course/1/namespaces
+# Navigate the API documentation
+kubectl explain pod.spec.containers.resources
+
+# Save to file
+kubectl explain pod.spec.containers.resources --recursive > ./exam/course/1/pod-spec-fields.txt
 ```
 
-**Explanation:** Use `grep` to filter namespaces containing the letter "a".
+**Explanation:** `kubectl explain` provides built-in documentation for Kubernetes API resources. Use dot notation to navigate nested fields. The `--recursive` flag shows all sub-fields.
 
 ---
 
-## Question 2 | Multi-container Pod
+## Question 2 | Pod Anti-Affinity
+
+**Solution:**
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spread-pods
+  namespace: tiger
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: spread-pods
+  template:
+    metadata:
+      labels:
+        app: spread-pods
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - spread-pods
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - name: web
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+EOF
+```
+
+**Explanation:** Pod anti-affinity with `requiredDuringSchedulingIgnoredDuringExecution` enforces hard constraints. The topology key `kubernetes.io/hostname` ensures pods are scheduled on different nodes. If there aren't enough nodes, pods will remain Pending.
+
+---
+
+## Question 3 | Blue-Green Deployment
+
+**Solution:**
+
+```bash
+# Step 1: Create the green deployment
+kubectl apply -f - <<EOF
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stable-green
+  namespace: stripe
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-app
+      version: green
+  template:
+    metadata:
+      labels:
+        app: web-app
+        version: green
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.22
+        ports:
+        - containerPort: 80
+EOF
+
+# Step 2: Wait for green pods to be ready
+kubectl rollout status deployment/stable-green -n stripe
+
+# Step 3: Switch the service to green
+kubectl patch service web-service -n stripe -p '{"spec":{"selector":{"version":"green"}}}'
+
+# Verify
+kubectl get endpoints web-service -n stripe
+```
+
+**Explanation:** Blue-Green deployment maintains two identical environments. Unlike canary (gradual rollout), Blue-Green is a complete switch. The service selector change routes 100% of traffic to the new version instantly.
+
+---
+
+## Question 4 | CronJob Advanced
+
+**Solution:**
+
+```bash
+# Suspend the CronJob first
+kubectl patch cronjob data-sync -n prowl -p '{"spec":{"suspend":true}}'
+
+# Add startingDeadlineSeconds and concurrencyPolicy
+kubectl patch cronjob data-sync -n prowl -p '{
+  "spec": {
+    "startingDeadlineSeconds": 200,
+    "concurrencyPolicy": "Forbid"
+  }
+}'
+
+# Resume the CronJob
+kubectl patch cronjob data-sync -n prowl -p '{"spec":{"suspend":false}}'
+
+# Verify
+kubectl get cronjob data-sync -n prowl -o yaml | grep -E "suspend|startingDeadline|concurrency"
+```
+
+**Explanation:**
+- `suspend: true` pauses scheduling without deleting the CronJob
+- `startingDeadlineSeconds` sets a deadline for starting jobs if missed
+- `concurrencyPolicy: Forbid` prevents concurrent job executions
+
+---
+
+## Question 5 | Immutable ConfigMap
+
+**Solution:**
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: locked-config
+  namespace: hunt
+data:
+  DB_HOST: postgres.hunt.svc
+  DB_PORT: "5432"
+  LOG_LEVEL: info
+immutable: true
+EOF
+
+# Try to modify (should fail)
+# kubectl patch configmap locked-config -n hunt -p '{"data":{"LOG_LEVEL":"debug"}}'
+# Error: ConfigMap is immutable
+```
+
+**Explanation:** Immutable ConfigMaps cannot be modified after creation. This improves cluster performance (no watches needed) and prevents accidental changes. To update, delete and recreate.
+
+---
+
+## Question 6 | Projected Volume
 
 **Solution:**
 
@@ -21,158 +176,226 @@ kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Pod
 metadata:
-  name: wisdom-pod
-  namespace: athena
+  name: config-aggregator
+  namespace: hunt
 spec:
+  serviceAccountName: hunt-sa
   containers:
-  - name: main
-    image: nginx:1.21-alpine
-    ports:
-    - containerPort: 80
+  - name: aggregator
+    image: busybox:1.36
+    command: ["sleep", "3600"]
     volumeMounts:
-    - name: shared-logs
-      mountPath: /usr/share/nginx/html
-  - name: sidecar
-    image: busybox:1.35
-    command: ["/bin/sh", "-c"]
-    args: ["while true; do echo \"$(date) - Wisdom shared\" >> /var/log/wisdom.log; sleep 5; done"]
-    volumeMounts:
-    - name: shared-logs
-      mountPath: /var/log
+    - name: combined-config
+      mountPath: /etc/config
   volumes:
-  - name: shared-logs
+  - name: combined-config
+    projected:
+      sources:
+      - serviceAccountToken:
+          path: token
+          expirationSeconds: 3600
+      - configMap:
+          name: app-config
+EOF
+```
+
+**Explanation:** Projected volumes combine multiple sources into a single volume mount. This allows mounting a ServiceAccount token with custom expiration alongside a ConfigMap in the same directory.
+
+---
+
+## Question 7 | PodDisruptionBudget
+
+**Solution:**
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: critical-pdb
+  namespace: jungle
+spec:
+  minAvailable: 3
+  selector:
+    matchLabels:
+      app: critical-app
+EOF
+
+# Verify
+kubectl get pdb critical-pdb -n jungle
+```
+
+**Explanation:** PodDisruptionBudgets protect applications during voluntary disruptions (node drains, cluster upgrades). With `minAvailable: 3` on a 5-replica deployment, only 2 pods can be evicted at a time.
+
+---
+
+## Question 8 | Service ExternalName
+
+**Solution:**
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-api
+  namespace: fang
+spec:
+  type: ExternalName
+  externalName: api.external-service.com
+EOF
+
+# Test DNS resolution from a pod
+# nslookup external-api.fang.svc.cluster.local
+```
+
+**Explanation:** ExternalName services create CNAME DNS records pointing to external hostnames. No proxying occurs - it's purely DNS aliasing. Useful for referencing external services with internal names.
+
+---
+
+## Question 9 | LimitRange
+
+**Solution:**
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: container-limits
+  namespace: pounce
+spec:
+  limits:
+  - type: Container
+    default:
+      cpu: "500m"
+      memory: "256Mi"
+    defaultRequest:
+      cpu: "100m"
+      memory: "64Mi"
+    min:
+      cpu: "50m"
+      memory: "32Mi"
+    max:
+      cpu: "1"
+      memory: "512Mi"
+EOF
+
+# Verify
+kubectl describe limitrange container-limits -n pounce
+```
+
+**Explanation:** LimitRanges enforce resource constraints at namespace level. Containers without explicit resources get defaults. Min/max prevent over or under-provisioning.
+
+---
+
+## Question 10 | Pod Security Context
+
+**Solution:**
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secure-pod
+  namespace: stalker
+spec:
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 3000
+    fsGroup: 2000
+  containers:
+  - name: secure-nginx
+    image: nginx:1.21
+    securityContext:
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+    volumeMounts:
+    - name: tmp-volume
+      mountPath: /tmp
+    - name: cache-volume
+      mountPath: /var/cache/nginx
+    - name: run-volume
+      mountPath: /var/run
+  volumes:
+  - name: tmp-volume
+    emptyDir: {}
+  - name: cache-volume
+    emptyDir: {}
+  - name: run-volume
     emptyDir: {}
 EOF
 ```
 
-**Explanation:** Multi-container pods share volumes using emptyDir. Both containers mount the same volume at different paths.
+**Explanation:** Security contexts control pod/container privileges. `runAsUser/Group` sets the user identity. `fsGroup` sets group ownership for volumes. `readOnlyRootFilesystem` prevents writes to the container filesystem (requires writable volumes for temp files).
 
 ---
 
-## Question 3 | CronJob
+## Question 11 | Deployment Rollout Control
 
 **Solution:**
 
 ```bash
-kubectl apply -f - <<EOF
-apiVersion: batch/v1
-kind: CronJob
-metadata:
-  name: sun-check
-  namespace: apollo
-spec:
-  schedule: "*/15 * * * *"
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 1
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          containers:
-          - name: sun-check
-            image: busybox:1.35
-            command: ["/bin/sh", "-c", "echo \"Apollo sun check: $(date)\""]
-          restartPolicy: OnFailure
-EOF
+# Step 1: Pause the rollout
+kubectl rollout pause deployment/rolling-app -n pounce
+
+# Step 2: Update the image
+kubectl set image deployment/rolling-app app=nginx:1.22 -n pounce
+
+# Step 3: Set revisionHistoryLimit
+kubectl patch deployment rolling-app -n pounce -p '{"spec":{"revisionHistoryLimit":5}}'
+
+# Step 4: Resume the rollout
+kubectl rollout resume deployment/rolling-app -n pounce
+
+# Verify
+kubectl rollout status deployment/rolling-app -n pounce
 ```
 
-**Explanation:** CronJobs schedule periodic tasks. The schedule "*/15 * * * *" runs every 15 minutes.
+**Explanation:** Pausing a rollout allows batching multiple changes before triggering an update. `revisionHistoryLimit` controls how many ReplicaSets are kept for rollback.
 
 ---
 
-## Question 4 | Helm Management
+## Question 12 | kubectl exec Troubleshooting
 
 **Solution:**
 
 ```bash
-# Step 1: Delete release olympus-web-v1
-helm uninstall olympus-web-v1 -n olympus
+# Read the nginx config
+kubectl exec config-pod -n stalker -- cat /etc/nginx/conf.d/custom.conf > ./exam/course/12/nginx-config.txt
 
-# Step 2: Upgrade olympus-web-v2
-helm repo update
-helm upgrade olympus-web-v2 bitnami/nginx -n olympus
-
-# Step 3: Install olympus-apache with 3 replicas
-helm install olympus-apache bitnami/apache -n olympus --set replicaCount=3
-
-# Step 4: Find and delete broken release
-helm list -n olympus -a  # Find pending-install releases
-helm uninstall broken-release -n olympus
+# Test the config works on port 8080
+kubectl exec config-pod -n stalker -- curl -s localhost:8080
 ```
 
-**Explanation:** Helm manages Kubernetes applications. Use `-a` flag to see all releases including failed ones.
+**Explanation:** `kubectl exec` runs commands inside containers for debugging. Use `--` to separate kubectl arguments from the command to run.
 
 ---
 
-## Question 5 | ConfigMap and Environment Variables
+## Question 13 | Resource Metrics
 
 **Solution:**
 
 ```bash
-# Create ConfigMap
-kubectl create configmap messenger-config -n hermes \
-  --from-literal=SPEED=fast \
-  --from-literal=DESTINATION=olympus \
-  --from-literal=MESSAGE_COUNT=100
+# Get pod metrics (requires metrics-server)
+kubectl top pods -n jungle > ./exam/course/13/pod-resources.txt 2>&1
 
-# Create Pod with all ConfigMap keys as env vars
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Pod
-metadata:
-  name: messenger-pod
-  namespace: hermes
-spec:
-  containers:
-  - name: messenger
-    image: nginx:1.21-alpine
-    envFrom:
-    - configMapRef:
-        name: messenger-config
-EOF
+# Find top CPU consumer
+kubectl top pods -n jungle --sort-by=cpu 2>/dev/null | head -2 | tail -1 | awk '{print $1}' > ./exam/course/13/top-cpu-pod.txt
+
+# If metrics-server not available, document it
+if ! kubectl top pods -n jungle 2>/dev/null; then
+  echo "Metrics server not available" > ./exam/course/13/pod-resources.txt
+  echo "unknown" > ./exam/course/13/top-cpu-pod.txt
+fi
 ```
 
-**Explanation:** Using `envFrom` with `configMapRef` imports all keys from the ConfigMap as environment variables.
+**Explanation:** `kubectl top` requires metrics-server to be installed. It shows real-time CPU and memory usage. The `--sort-by` flag orders results.
 
 ---
 
-## Question 6 | Secret Volume Mount
-
-**Solution:**
-
-```bash
-# Create Secret
-kubectl create secret generic underworld-creds -n hades \
-  --from-literal=username=hades \
-  --from-literal=password=3headed-dog
-
-# Create Pod with secret volume
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Pod
-metadata:
-  name: cerberus-pod
-  namespace: hades
-spec:
-  containers:
-  - name: cerberus
-    image: nginx:1.21-alpine
-    volumeMounts:
-    - name: secret-volume
-      mountPath: /etc/secrets
-      readOnly: true
-  volumes:
-  - name: secret-volume
-    secret:
-      secretName: underworld-creds
-EOF
-```
-
-**Explanation:** Secrets can be mounted as volumes. The `readOnly: true` ensures the secret files cannot be modified.
-
----
-
-## Question 7 | Pod with Resource Limits
+## Question 14 | Downward API
 
 **Solution:**
 
@@ -181,298 +404,38 @@ kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Pod
 metadata:
-  name: thunder-pod
-  namespace: zeus
+  name: metadata-pod
+  namespace: claw
 spec:
   containers:
-  - name: thunder
-    image: nginx:1.21-alpine
-    resources:
-      requests:
-        cpu: "100m"
-        memory: "64Mi"
-      limits:
-        cpu: "200m"
-        memory: "128Mi"
+  - name: info
+    image: busybox:1.36
+    command: ["sh", "-c", "env | grep POD && env | grep NODE && sleep 3600"]
+    env:
+    - name: POD_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.name
+    - name: POD_NAMESPACE
+      valueFrom:
+        fieldRef:
+          fieldPath: metadata.namespace
+    - name: POD_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.podIP
+    - name: NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
 EOF
 ```
 
-**Explanation:** Resource requests guarantee minimum resources, while limits cap maximum usage.
+**Explanation:** The Downward API exposes pod and container metadata to running containers. Use `fieldRef` for pod fields and `resourceFieldRef` for resource fields.
 
 ---
 
-## Question 8 | Deployment Update Strategy
-
-**Solution:**
-
-```bash
-# Configure RollingUpdate strategy with kubectl patch
-kubectl patch deployment battle-app -n ares -p '{
-  "spec": {
-    "strategy": {
-      "type": "RollingUpdate",
-      "rollingUpdate": {
-        "maxSurge": 2,
-        "maxUnavailable": 1
-      }
-    }
-  }
-}'
-
-# Verify the configuration
-kubectl get deployment battle-app -n ares -o jsonpath='{.spec.strategy}'
-
-# Alternative: Use kubectl edit
-kubectl edit deployment battle-app -n ares
-# Then modify the spec.strategy section
-```
-
-**Explanation:** The RollingUpdate strategy controls how Pods are replaced during updates. `maxSurge` specifies the maximum number of Pods that can be created above the desired count, while `maxUnavailable` specifies the maximum number of Pods that can be unavailable during the update.
-
----
-
-## Question 9 | Service ClusterIP
-
-**Solution:**
-
-```bash
-# Create Pod
-kubectl run hunter-api -n artemis --image=nginx:1.21-alpine --labels=app=hunter
-
-# Create Service
-kubectl expose pod hunter-api -n artemis --name=hunter-svc --port=8080 --target-port=80
-
-# Test service and save output
-kubectl run test-curl --rm -i --restart=Never -n artemis --image=nginx:alpine -- curl -s hunter-svc:8080 > ./exam/course/9/service-test.txt
-```
-
-**Explanation:** ClusterIP services provide internal cluster connectivity. The service redirects port 8080 to container port 80.
-
----
-
-## Question 10 | NetworkPolicy
-
-**Solution:**
-
-```bash
-kubectl apply -f - <<EOF
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: sea-wall
-  namespace: poseidon
-spec:
-  podSelector:
-    matchLabels:
-      zone: deep-sea
-  policyTypes:
-  - Ingress
-  - Egress
-  ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          trusted: "true"
-  egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          zone: surface
-    ports:
-    - protocol: TCP
-      port: 80
-EOF
-```
-
-**Explanation:** NetworkPolicies control traffic flow. This policy restricts both ingress and egress based on pod labels.
-
----
-
-## Question 11 | PersistentVolume and PVC
-
-**Solution:**
-
-```bash
-# Create PV
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: hera-pv
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-  - ReadWriteOnce
-  hostPath:
-    path: /data/hera
-  storageClassName: ""
-EOF
-
-# Create PVC
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: hera-pvc
-  namespace: hera
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 500Mi
-  storageClassName: ""
-EOF
-
-# Create Pod with PVC
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Pod
-metadata:
-  name: hera-storage-pod
-  namespace: hera
-spec:
-  containers:
-  - name: storage-container
-    image: nginx:1.21-alpine
-    volumeMounts:
-    - name: data-volume
-      mountPath: /data
-  volumes:
-  - name: data-volume
-    persistentVolumeClaim:
-      claimName: hera-pvc
-EOF
-```
-
-**Explanation:** PVs provide cluster storage, PVCs request storage from PVs. Empty storageClassName binds without dynamic provisioning.
-
----
-
-## Question 12 | Init Container
-
-**Solution:**
-
-```bash
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Pod
-metadata:
-  name: titan-init-pod
-  namespace: titan
-spec:
-  initContainers:
-  - name: init-setup
-    image: busybox:1.35
-    command: ["/bin/sh", "-c", "echo 'Titan awakening...' && sleep 5"]
-  containers:
-  - name: titan-main
-    image: nginx:1.21-alpine
-EOF
-```
-
-**Explanation:** Init containers run before main containers and must complete successfully. Useful for setup tasks.
-
----
-
-## Question 13 | Probes (Liveness and Readiness)
-
-**Solution:**
-
-```bash
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Pod
-metadata:
-  name: oracle-pod
-  namespace: apollo
-spec:
-  containers:
-  - name: oracle
-    image: nginx:1.21-alpine
-    ports:
-    - containerPort: 80
-    livenessProbe:
-      httpGet:
-        path: /healthz
-        port: 80
-      initialDelaySeconds: 10
-      periodSeconds: 5
-    readinessProbe:
-      httpGet:
-        path: /ready
-        port: 80
-      initialDelaySeconds: 5
-      periodSeconds: 3
-EOF
-```
-
-**Explanation:** Liveness probes restart unhealthy containers. Readiness probes control service traffic routing.
-
----
-
-## Question 14 | ServiceAccount
-
-**Solution:**
-
-```bash
-# Create ServiceAccount
-kubectl create serviceaccount messenger-sa -n hermes
-
-# Create Pod with ServiceAccount
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Pod
-metadata:
-  name: messenger-runner
-  namespace: hermes
-spec:
-  serviceAccountName: messenger-sa
-  automountServiceAccountToken: false
-  containers:
-  - name: runner
-    image: nginx:1.21-alpine
-EOF
-```
-
-**Explanation:** ServiceAccounts provide pod identity. Setting `automountServiceAccountToken: false` prevents automatic token mounting for security.
-
----
-
-## Question 15 | Labels and Selectors
-
-**Solution:**
-
-```bash
-# Find pods with label role=god and save names
-kubectl get pods -n olympus -l role=god -o jsonpath='{.items[*].metadata.name}' | tr ' ' '\n' > ./exam/course/15/gods-pods.txt
-
-# Add label to all matching pods
-kubectl label pods -n olympus -l role=god power=divine
-```
-
-**Explanation:** Labels organize resources. Use `-l` selector to filter and `kubectl label` to add labels to multiple resources.
-
----
-
-## Question 16 | Deployment Scaling
-
-**Solution:**
-
-```bash
-# Scale deployment
-kubectl scale deployment warrior-squad -n ares --replicas=5
-
-# Patch update strategy
-kubectl patch deployment warrior-squad -n ares -p '{"spec":{"strategy":{"type":"RollingUpdate","rollingUpdate":{"maxSurge":2,"maxUnavailable":1}}}}'
-```
-
-**Explanation:** Scaling adjusts replica count. RollingUpdate strategy controls how updates are rolled out.
-
----
-
-## Question 17 | Job with Completions
+## Question 15 | Job TTL
 
 **Solution:**
 
@@ -481,82 +444,194 @@ kubectl apply -f - <<EOF
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: wisdom-task
-  namespace: athena
+  name: cleanup-job
+  namespace: stripe
 spec:
-  completions: 4
-  parallelism: 2
-  backoffLimit: 3
+  ttlSecondsAfterFinished: 60
+  backoffLimit: 2
   template:
-    metadata:
-      labels:
-        task: wisdom
     spec:
       containers:
-      - name: wisdom-container
-        image: busybox:1.35
-        command: ["/bin/sh", "-c", "echo 'Task completed by Athena' && sleep 2"]
+      - name: cleanup
+        image: busybox:1.36
+        command: ["sh", "-c", "echo 'Cleanup complete' && sleep 5"]
       restartPolicy: Never
+EOF
+
+# Watch the job (it will be deleted 60 seconds after completion)
+kubectl get jobs -n stripe -w
+```
+
+**Explanation:** `ttlSecondsAfterFinished` automatically cleans up completed Jobs. This prevents resource accumulation from many short-lived jobs. The job and its pods are deleted after the TTL expires.
+
+---
+
+## Question 16 | Container Capabilities
+
+**Solution:**
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hardened-pod
+  namespace: predator
+spec:
+  containers:
+  - name: secure-app
+    image: nginx:1.21
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 101
+      capabilities:
+        drop:
+        - ALL
+        add:
+        - NET_BIND_SERVICE
 EOF
 ```
 
-**Explanation:** Jobs with completions run multiple times. Parallelism controls concurrent executions. BackoffLimit sets retry attempts.
+**Explanation:** Linux capabilities provide fine-grained privilege control. Dropping ALL capabilities and adding only what's needed follows the principle of least privilege. `NET_BIND_SERVICE` allows binding to privileged ports (<1024) without full root.
 
 ---
 
-## Question 18 | Pod Logs and Debugging
+## Question 17 | Service Session Affinity
 
 **Solution:**
 
 ```bash
-# Get last 50 lines of logs
-kubectl logs shadow-app -n hades --tail=50 > ./exam/course/18/shadow-logs.txt
+# Patch the existing service
+kubectl patch service backend-svc -n claw -p '{
+  "spec": {
+    "sessionAffinity": "ClientIP",
+    "sessionAffinityConfig": {
+      "clientIP": {
+        "timeoutSeconds": 3600
+      }
+    }
+  }
+}'
 
-# Count ERROR messages
-kubectl logs shadow-app -n hades | grep -c "ERROR" > ./exam/course/18/error-count.txt
+# Verify
+kubectl get service backend-svc -n claw -o yaml | grep -A5 sessionAffinity
 ```
 
-**Explanation:** Use `--tail` to limit log lines. Combine with `grep -c` to count pattern occurrences.
+**Explanation:** Session affinity (sticky sessions) routes requests from the same client IP to the same pod. The timeout (1 hour) defines how long the affinity persists. Useful for stateful applications.
 
 ---
 
-## Question 19 | Annotations
+## Question 18 | Deployment Safe Rollout
 
 **Solution:**
 
 ```bash
-kubectl annotate pod lightning-pod -n zeus \
-  description="Primary lightning generator" \
-  maintainer="zeus-team@olympus.io" \
-  version="2.0"
+# Configure safe rollout settings
+kubectl patch deployment safe-deploy -n fang -p '{
+  "spec": {
+    "minReadySeconds": 30,
+    "progressDeadlineSeconds": 120
+  }
+}'
+
+# Update the image
+kubectl set image deployment/safe-deploy app=nginx:1.22 -n fang
+
+# Watch the rollout (should take at least 30 seconds per pod)
+kubectl rollout status deployment/safe-deploy -n fang
 ```
 
-**Explanation:** Annotations store non-identifying metadata. Unlike labels, they're not used for selection.
+**Explanation:**
+- `minReadySeconds`: New pods must be ready for this duration before being considered available
+- `progressDeadlineSeconds`: Maximum time for a rollout to progress before it's considered failed
+
+These settings slow down rollouts to catch issues early.
 
 ---
 
-## Question 20 | Container Image Build
+## Question 19 | Container Lifecycle Hook
 
 **Solution:**
 
 ```bash
-# Step 1: Modify Dockerfile
-echo 'ENV APP_VERSION=3.0.0' >> ./exam/course/20/image/Dockerfile
-
-# Step 2: Build the image
-cd ./exam/course/20/image
-sudo docker build -t localhost:5000/olympus-app:v1 .
-
-# Step 3: Push to registry
-sudo docker push localhost:5000/olympus-app:v1
-
-# Step 4: Run container
-sudo docker run -d --name olympus-runner localhost:5000/olympus-app:v1
-
-# Step 5: Get logs
-sudo docker logs olympus-runner > ./exam/course/20/container-logs.txt
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: graceful-pod
+  namespace: tiger
+spec:
+  terminationGracePeriodSeconds: 30
+  containers:
+  - name: main
+    image: nginx:1.21
+    ports:
+    - containerPort: 80
+    lifecycle:
+      preStop:
+        exec:
+          command: ["/bin/sh", "-c", "nginx -s quit && sleep 5"]
+EOF
 ```
 
-**Explanation:** Docker builds OCI-compliant images. The local registry at localhost:5000 stores the images.
+**Explanation:** preStop hooks run before container termination. `nginx -s quit` gracefully shuts down nginx, allowing in-flight requests to complete. The sleep ensures the hook completes before SIGKILL.
+
+---
+
+## Question 20 | NetworkPolicy Default Deny
+
+**Solution:**
+
+```bash
+# Step 1: Create default deny-all policy
+kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: predator
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+EOF
+
+# Step 2: Create allow policy for frontend to backend
+kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-to-api
+  namespace: predator
+spec:
+  podSelector:
+    matchLabels:
+      tier: backend
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          tier: frontend
+    ports:
+    - protocol: TCP
+      port: 80
+  egress:
+  - to: []
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+EOF
+
+# Test connectivity
+# kubectl exec -n predator <frontend-pod> -- curl api-svc:80
+```
+
+**Explanation:** The "default deny" pattern first blocks all traffic, then explicitly allows only necessary connections. Empty `podSelector: {}` matches all pods. DNS egress (port 53) is essential for service discovery.
 
 ---

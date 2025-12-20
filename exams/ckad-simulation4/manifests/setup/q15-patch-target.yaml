@@ -1,0 +1,27 @@
+# Q15 - Deployment for kubectl patch exercise
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: patch-demo
+  namespace: tide
+  labels:
+    app: patch-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: patch-demo
+  template:
+    metadata:
+      labels:
+        app: patch-demo
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.20
+        ports:
+        - containerPort: 80
+        env:
+        - name: ENV_MODE
+          value: "development"

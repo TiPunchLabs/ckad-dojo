@@ -1,6 +1,8 @@
-# CKAD Exam Simulator - Questions
+# CKAD Exam Simulator - Dojo Byakko 🐯
 
 > **Total Score**: 105 points | **Passing Score**: ~66% (69 points)
+>
+> *「白虎は精密に狩る」 - Le tigre blanc chasse avec précision*
 >
 > **Local Simulator Adaptations**:
 > | Original | Local Simulator |
@@ -11,439 +13,488 @@
 
 ---
 
-## Question 1 | Namespaces
+## Question 1 | kubectl explain
 
 | | |
 |---|---|
-| **Points** | 1/105 (1%) |
+| **Points** | 2 |
 | **Namespace** | - |
-| **File to create** | `./exam/course/1/namespaces` |
+| **File to create** | `./exam/course/1/pod-spec-fields.txt` |
 
 ### Task
 
-The DevOps team would like to get the list of all **Namespaces** in the cluster that contain the word "a" in their name.
+Use `kubectl explain` to explore the Kubernetes API documentation.
 
-Save the filtered list to `./exam/course/1/namespaces`.
+1. Find the **full path** to document the `containers` field under Pod spec
+2. Save the complete documentation output for `pod.spec.containers.resources` to `./exam/course/1/pod-spec-fields.txt`
+
+The output should show all available sub-fields and their descriptions.
 
 ---
 
-## Question 2 | Multi-container Pod
+## Question 2 | Pod Anti-Affinity
 
 | | |
 |---|---|
-| **Points** | 6/105 (6%) |
-| **Namespace** | `athena` |
-| **Resources** | Pod `wisdom-pod` |
+| **Points** | 7 |
+| **Namespace** | `tiger` |
+| **Resources** | Deployment `spread-pods` |
 
 ### Task
 
-In Namespace `athena`, create a Pod named `wisdom-pod` with **two containers**:
-
-| Container | Image | Configuration |
-|-----------|-------|---------------|
-| `main` | `nginx:1.21-alpine` | Expose port `80` |
-| `sidecar` | `busybox:1.35` | Run command: `while true; do echo "$(date) - Wisdom shared" >> /var/log/wisdom.log; sleep 5; done` |
-
-Both containers should share an **emptyDir** volume named `shared-logs`:
-- `main` container mounts it at `/usr/share/nginx/html`
-- `sidecar` container mounts it at `/var/log`
-
----
-
-## Question 3 | CronJob
-
-| | |
-|---|---|
-| **Points** | 5/105 (5%) |
-| **Namespace** | `apollo` |
-| **Resources** | CronJob `sun-check` |
-
-### Task
-
-Team Apollo needs a **CronJob** named `sun-check` in namespace `apollo` that runs every **15 minutes**.
+Create a **Deployment** named `spread-pods` in namespace `tiger` with:
 
 | Configuration | Value |
 |---------------|-------|
-| Image | `busybox:1.35` |
-| Command | `echo "Apollo sun check: $(date)"` |
-| Restart Policy | `OnFailure` |
-| Successful Jobs History | `3` |
-| Failed Jobs History | `1` |
+| Image | `nginx:1.21` |
+| Replicas | `3` |
+| Container name | `web` |
+| Labels | `app: spread-pods` |
+
+Configure **requiredDuringSchedulingIgnoredDuringExecution** pod anti-affinity to ensure:
+- Pods are scheduled on **different nodes** (topology key: `kubernetes.io/hostname`)
+- Anti-affinity matches pods with label `app: spread-pods`
+
+**Note**: If the cluster has fewer nodes than replicas, some pods may remain Pending. This is expected behavior.
 
 ---
 
-## Question 4 | Helm Management
+## Question 3 | Blue-Green Deployment
 
 | | |
 |---|---|
-| **Points** | 5/105 (5%) |
-| **Namespace** | `olympus` |
-| **Resources** | Helm releases |
+| **Points** | 7 |
+| **Namespace** | `stripe` |
+| **Resources** | Deployment `stable-green`, Service `web-service` |
 
 ### Task
 
-Team Olympus asked you to perform some operations using Helm, all in Namespace `olympus`:
+A Deployment named `stable-blue` already exists in namespace `stripe` with its corresponding Service `web-service`.
 
-| # | Task |
-|---|------|
-| 1 | **Delete** release `olympus-web-v1` |
-| 2 | **Upgrade** release `olympus-web-v2` to any newer version of chart `bitnami/nginx` available |
-| 3 | **Install** a new release `olympus-apache` of chart `bitnami/apache` with **3 replicas** |
-| 4 | Find and **delete** a broken release stuck in `pending-install` state |
+Implement a **Blue-Green deployment switch**:
+
+1. Create a new Deployment named `stable-green`:
+   - Image: `nginx:1.22`
+   - Replicas: 3
+   - Labels: `app: web-app`, `version: green`
+
+2. Update the Service `web-service` to route **all traffic** to the green deployment
+   - Change the selector to match `version: green`
+
+3. Verify the switch is complete by ensuring green pods receive traffic
+
+**Note**: Blue-Green differs from Canary - it's a complete switch, not gradual.
 
 ---
 
-## Question 5 | ConfigMap and Environment Variables
+## Question 4 | CronJob Advanced
 
 | | |
 |---|---|
-| **Points** | 5/105 (5%) |
-| **Namespace** | `hermes` |
-| **Resources** | ConfigMap `messenger-config`, Pod `messenger-pod` |
+| **Points** | 6 |
+| **Namespace** | `prowl` |
+| **Resources** | CronJob `data-sync` |
 
 ### Task
 
-Create a **ConfigMap** named `messenger-config` in namespace `hermes` with the following data:
+A CronJob named `data-sync` exists in namespace `prowl`. Modify it with the following settings:
 
-| Key | Value |
-|-----|-------|
-| `SPEED` | `fast` |
-| `DESTINATION` | `olympus` |
-| `MESSAGE_COUNT` | `100` |
+| Configuration | Value |
+|---------------|-------|
+| **suspend** | `true` (pause the CronJob) |
+| **startingDeadlineSeconds** | `200` |
+| **concurrencyPolicy** | `Forbid` |
 
-Then create a **Pod** named `messenger-pod` using image `nginx:1.21-alpine` that uses **all keys** from this ConfigMap as environment variables.
+After making changes, **resume** the CronJob by setting `suspend: false`.
+
+The CronJob should now:
+- Never run concurrent jobs
+- Have a 200-second deadline window
+- Be actively scheduling
 
 ---
 
-## Question 6 | Secret Volume Mount
+## Question 5 | Immutable ConfigMap
 
 | | |
 |---|---|
-| **Points** | 6/105 (6%) |
-| **Namespace** | `hades` |
-| **Resources** | Secret `underworld-creds`, Pod `cerberus-pod` |
+| **Points** | 4 |
+| **Namespace** | `hunt` |
+| **Resources** | ConfigMap `locked-config` |
 
 ### Task
 
-Create a **Secret** named `underworld-creds` in namespace `hades` with:
+Create a **ConfigMap** named `locked-config` in namespace `hunt` that:
 
-| Key | Value |
-|-----|-------|
-| `username` | `hades` |
-| `password` | `3headed-dog` |
+1. Contains the following data:
+   | Key | Value |
+   |-----|-------|
+   | `DB_HOST` | `postgres.hunt.svc` |
+   | `DB_PORT` | `5432` |
+   | `LOG_LEVEL` | `info` |
 
-Create a **Pod** named `cerberus-pod` using image `nginx:1.21-alpine` that mounts this secret at `/etc/secrets` as a **read-only** volume.
+2. Is **immutable** (cannot be modified after creation)
+
+**Hint**: Use the `immutable: true` field.
 
 ---
 
-## Question 7 | Pod with Resource Limits
+## Question 6 | Projected Volume
 
 | | |
 |---|---|
-| **Points** | 5/105 (5%) |
-| **Namespace** | `zeus` |
-| **Resources** | Pod `thunder-pod` |
+| **Points** | 6 |
+| **Namespace** | `hunt` |
+| **Resources** | Pod `config-aggregator` |
 
 ### Task
 
-Create a **Pod** named `thunder-pod` in namespace `zeus` using image `nginx:1.21-alpine` with the following resource configuration:
+A ServiceAccount `hunt-sa` and ConfigMap `app-config` already exist in namespace `hunt`.
 
-| Type | CPU | Memory |
-|------|-----|--------|
-| **Requests** | `100m` | `64Mi` |
-| **Limits** | `200m` | `128Mi` |
+Create a **Pod** named `config-aggregator` that uses a **projected volume** combining:
+
+1. **ServiceAccount token** with 1 hour expiration (3600 seconds)
+2. The existing **ConfigMap** `app-config`
+
+| Configuration | Value |
+|---------------|-------|
+| Image | `busybox:1.36` |
+| Command | `["sleep", "3600"]` |
+| Container name | `aggregator` |
+| Volume name | `combined-config` |
+| Mount path | `/etc/config` |
+
+The projected volume should expose both the token and ConfigMap at the same mount path.
 
 ---
 
-## Question 8 | Deployment Update Strategy
+## Question 7 | PodDisruptionBudget
 
 | | |
 |---|---|
-| **Points** | 6/105 (6%) |
-| **Namespace** | `ares` |
-| **Resources** | Deployment `battle-app` |
+| **Points** | 6 |
+| **Namespace** | `jungle` |
+| **Resources** | PodDisruptionBudget `critical-pdb` |
 
 ### Task
 
-There is a **Deployment** named `battle-app` in namespace `ares`. The team wants to configure its update strategy for safer rollouts.
+A Deployment named `critical-app` with 5 replicas exists in namespace `jungle`.
 
-Configure the Deployment to use a **RollingUpdate** strategy with the following settings:
+Create a **PodDisruptionBudget** named `critical-pdb` that:
+
+1. Targets pods with label `app: critical-app`
+2. Ensures **at least 3 pods** are always available during voluntary disruptions
+3. Uses `minAvailable: 3`
+
+Verify the PDB is correctly applied with `kubectl get pdb`.
+
+---
+
+## Question 8 | Service ExternalName
+
+| | |
+|---|---|
+| **Points** | 4 |
+| **Namespace** | `fang` |
+| **Resources** | Service `external-api` |
+
+### Task
+
+Create an **ExternalName Service** named `external-api` in namespace `fang` that:
+
+1. Type: `ExternalName`
+2. Points to external hostname: `api.external-service.com`
+
+This allows pods to access the external service using the internal DNS name `external-api.fang.svc.cluster.local`.
+
+---
+
+## Question 9 | LimitRange
+
+| | |
+|---|---|
+| **Points** | 5 |
+| **Namespace** | `pounce` |
+| **Resources** | LimitRange `container-limits` |
+
+### Task
+
+Create a **LimitRange** named `container-limits` in namespace `pounce` that sets:
+
+**Default limits for containers:**
+| Resource | Default | Default Request |
+|----------|---------|-----------------|
+| CPU | `500m` | `100m` |
+| Memory | `256Mi` | `64Mi` |
+
+**Min/Max constraints:**
+| Resource | Min | Max |
+|----------|-----|-----|
+| CPU | `50m` | `1` |
+| Memory | `32Mi` | `512Mi` |
+
+---
+
+## Question 10 | Pod Security Context
+
+| | |
+|---|---|
+| **Points** | 7 |
+| **Namespace** | `stalker` |
+| **Resources** | Pod `secure-pod` |
+
+### Task
+
+Create a **Pod** named `secure-pod` in namespace `stalker` with comprehensive security settings:
+
+| Configuration | Value |
+|---------------|-------|
+| Image | `nginx:1.21` |
+| Container name | `secure-nginx` |
+
+**Pod-level security context:**
+| Setting | Value |
+|---------|-------|
+| `runAsUser` | `1000` |
+| `runAsGroup` | `3000` |
+| `fsGroup` | `2000` |
+
+**Container-level security context:**
+| Setting | Value |
+|---------|-------|
+| `readOnlyRootFilesystem` | `true` |
+| `allowPrivilegeEscalation` | `false` |
+
+Add an **emptyDir** volume mounted at `/tmp` to allow the container to write temporary files.
+
+---
+
+## Question 11 | Deployment Rollout Control
+
+| | |
+|---|---|
+| **Points** | 5 |
+| **Namespace** | `pounce` |
+| **Resources** | Deployment `rolling-app` |
+
+### Task
+
+A Deployment named `rolling-app` exists in namespace `pounce`.
+
+1. **Pause** the deployment rollout
+2. Update the image to `nginx:1.22`
+3. Set `revisionHistoryLimit` to `5`
+4. **Resume** the rollout
+
+Verify the rollout completes successfully with `kubectl rollout status`.
+
+---
+
+## Question 12 | kubectl exec Troubleshooting
+
+| | |
+|---|---|
+| **Points** | 4 |
+| **Namespace** | `stalker` |
+| **Resources** | Pod `config-pod` |
+| **File to create** | `./exam/course/12/nginx-config.txt` |
+
+### Task
+
+A Pod named `config-pod` exists in namespace `stalker` running nginx with a custom configuration.
+
+1. Use `kubectl exec` to read the content of `/etc/nginx/conf.d/custom.conf` inside the container
+2. Save the configuration content to `./exam/course/12/nginx-config.txt`
+3. Verify nginx is listening on port **8080** by running `curl localhost:8080` inside the container
+
+---
+
+## Question 13 | Resource Metrics
+
+| | |
+|---|---|
+| **Points** | 3 |
+| **Namespace** | `jungle` |
+| **File to create** | `./exam/course/13/pod-resources.txt` |
+
+### Task
+
+Use `kubectl top` to analyze resource usage:
+
+1. Get the CPU and memory usage of all pods in namespace `jungle`
+2. Save the output to `./exam/course/13/pod-resources.txt`
+3. Identify the pod consuming the most **CPU** and write its name to `./exam/course/13/top-cpu-pod.txt`
+
+**Note**: If metrics-server is not available, the command will show an error. Document this in the file.
+
+---
+
+## Question 14 | Downward API
+
+| | |
+|---|---|
+| **Points** | 6 |
+| **Namespace** | `claw` |
+| **Resources** | Pod `metadata-pod` |
+
+### Task
+
+Create a **Pod** named `metadata-pod` in namespace `claw` that exposes pod metadata as environment variables:
+
+| Env Variable | Source Field |
+|--------------|--------------|
+| `POD_NAME` | `metadata.name` |
+| `POD_NAMESPACE` | `metadata.namespace` |
+| `POD_IP` | `status.podIP` |
+| `NODE_NAME` | `spec.nodeName` |
+
+| Configuration | Value |
+|---------------|-------|
+| Image | `busybox:1.36` |
+| Command | `["sh", "-c", "env | grep POD && env | grep NODE && sleep 3600"]` |
+| Container name | `info` |
+
+---
+
+## Question 15 | Job TTL
+
+| | |
+|---|---|
+| **Points** | 5 |
+| **Namespace** | `stripe` |
+| **Resources** | Job `cleanup-job` |
+
+### Task
+
+Create a **Job** named `cleanup-job` in namespace `stripe` that:
+
+| Configuration | Value |
+|---------------|-------|
+| Image | `busybox:1.36` |
+| Command | `["sh", "-c", "echo 'Cleanup complete' && sleep 5"]` |
+| Container name | `cleanup` |
+| `ttlSecondsAfterFinished` | `60` |
+| `backoffLimit` | `2` |
+
+The Job should automatically delete itself **60 seconds** after completion.
+
+---
+
+## Question 16 | Container Capabilities
+
+| | |
+|---|---|
+| **Points** | 6 |
+| **Namespace** | `predator` |
+| **Resources** | Pod `hardened-pod` |
+
+### Task
+
+Create a **Pod** named `hardened-pod` in namespace `predator` with security hardening:
+
+| Configuration | Value |
+|---------------|-------|
+| Image | `nginx:1.21` |
+| Container name | `secure-app` |
+
+**Security Context:**
+- Drop **ALL** capabilities
+- Add only: `NET_BIND_SERVICE`
+- Set `runAsNonRoot: true`
+- Set `runAsUser: 101` (nginx user)
+
+---
+
+## Question 17 | Service Session Affinity
+
+| | |
+|---|---|
+| **Points** | 5 |
+| **Namespace** | `claw` |
+| **Resources** | Service `backend-svc` |
+
+### Task
+
+A Service named `backend-svc` exists in namespace `claw` fronting a Deployment with 3 replicas.
+
+Modify the Service to enable **session affinity**:
+
+1. Set `sessionAffinity: ClientIP`
+2. Configure `sessionAffinityConfig.clientIP.timeoutSeconds: 3600`
+
+This ensures requests from the same client IP are routed to the same pod for 1 hour.
+
+---
+
+## Question 18 | Deployment Safe Rollout
+
+| | |
+|---|---|
+| **Points** | 5 |
+| **Namespace** | `fang` |
+| **Resources** | Deployment `safe-deploy` |
+
+### Task
+
+A Deployment named `safe-deploy` exists in namespace `fang`.
+
+Configure it for **safe rollouts**:
 
 | Setting | Value |
 |---------|-------|
-| `maxSurge` | `2` |
-| `maxUnavailable` | `1` |
+| `minReadySeconds` | `30` |
+| `progressDeadlineSeconds` | `120` |
 
-Ensure the deployment continues to run successfully after the configuration change.
-
----
-
-## Question 9 | Service ClusterIP
-
-| | |
-|---|---|
-| **Points** | 5/105 (5%) |
-| **Namespace** | `artemis` |
-| **Resources** | Pod `hunter-api`, Service `hunter-svc` |
-| **File to create** | `./exam/course/9/service-test.txt` |
-
-### Task
-
-Create a **Pod** named `hunter-api` in namespace `artemis` using image `nginx:1.21-alpine` with label `app: hunter`.
-
-Create a **ClusterIP Service** named `hunter-svc` that exposes this Pod on port `8080` targeting container port `80`.
-
-Use `curl` from a temporary Pod to test the service and write the response to `./exam/course/9/service-test.txt`.
+Update the image to `nginx:1.22` and verify the rollout respects the minReadySeconds delay.
 
 ---
 
-## Question 10 | NetworkPolicy
+## Question 19 | Container Lifecycle Hook
 
 | | |
 |---|---|
-| **Points** | 7/105 (7%) |
-| **Namespace** | `poseidon` |
-| **Resources** | NetworkPolicy `sea-wall` |
+| **Points** | 5 |
+| **Namespace** | `tiger` |
+| **Resources** | Pod `graceful-pod` |
 
 ### Task
 
-Create a **NetworkPolicy** named `sea-wall` in namespace `poseidon` that:
-
-1. Applies to all Pods with label `zone: deep-sea`
-2. **Allows ingress** only from Pods with label `trusted: true` in the same namespace
-3. **Allows egress** only to Pods with label `zone: surface` on port `80`
-
----
-
-## Question 11 | PersistentVolume and PVC
-
-| | |
-|---|---|
-| **Points** | 6/105 (6%) |
-| **Namespace** | `hera` |
-| **Resources** | PV `hera-pv`, PVC `hera-pvc`, Pod `hera-storage-pod` |
-
-### Task
-
-Create a **PersistentVolume** named `hera-pv`:
+Create a **Pod** named `graceful-pod` in namespace `tiger` with a graceful shutdown mechanism:
 
 | Configuration | Value |
 |---------------|-------|
-| Capacity | `1Gi` |
-| AccessMode | `ReadWriteOnce` |
-| HostPath | `/data/hera` |
-| StorageClassName | (none - empty string) |
+| Image | `nginx:1.21` |
+| Container name | `main` |
 
-Create a **PersistentVolumeClaim** named `hera-pvc` in namespace `hera`:
+Add a **preStop** lifecycle hook that:
+- Executes: `/bin/sh -c "nginx -s quit && sleep 5"`
+- Allows nginx to finish handling requests before termination
 
-| Configuration | Value |
-|---------------|-------|
-| Storage request | `500Mi` |
-| AccessMode | `ReadWriteOnce` |
-| StorageClassName | (none - empty string) |
-
-Create a **Pod** named `hera-storage-pod` using image `nginx:1.21-alpine` that mounts this PVC at `/data`.
+Also set `terminationGracePeriodSeconds: 30` at pod level.
 
 ---
 
-## Question 12 | Init Container
+## Question 20 | NetworkPolicy Default Deny
 
 | | |
 |---|---|
-| **Points** | 6/105 (6%) |
-| **Namespace** | `titan` |
-| **Resources** | Pod `titan-init-pod` |
+| **Points** | 7 |
+| **Namespace** | `predator` |
+| **Resources** | NetworkPolicy `default-deny-all`, `allow-frontend-to-api` |
 
 ### Task
 
-Create a **Pod** named `titan-init-pod` in namespace `titan` with:
+Implement a **default deny** network security model in namespace `predator`:
 
-**Init Container:**
-| Configuration | Value |
-|---------------|-------|
-| Name | `init-setup` |
-| Image | `busybox:1.35` |
-| Command | `echo "Titan awakening..." && sleep 5` |
+1. Create NetworkPolicy `default-deny-all` that:
+   - Applies to **all pods** in the namespace
+   - Denies all **ingress** and **egress** traffic by default
 
-**Main Container:**
-| Configuration | Value |
-|---------------|-------|
-| Name | `titan-main` |
-| Image | `nginx:1.21-alpine` |
+2. Create NetworkPolicy `allow-frontend-to-api` that:
+   - Applies to pods with label `tier: backend`
+   - Allows ingress from pods with label `tier: frontend` on port `80`
+   - Allows egress to DNS (port `53` UDP/TCP)
 
----
-
-## Question 13 | Probes (Liveness and Readiness)
-
-| | |
-|---|---|
-| **Points** | 7/105 (7%) |
-| **Namespace** | `apollo` |
-| **Resources** | Pod `oracle-pod` |
-
-### Task
-
-Create a **Pod** named `oracle-pod` in namespace `apollo` using image `nginx:1.21-alpine` with:
-
-**Liveness Probe:**
-| Configuration | Value |
-|---------------|-------|
-| Type | HTTP GET |
-| Path | `/healthz` |
-| Port | `80` |
-| Initial Delay | `10` seconds |
-| Period | `5` seconds |
-
-**Readiness Probe:**
-| Configuration | Value |
-|---------------|-------|
-| Type | HTTP GET |
-| Path | `/ready` |
-| Port | `80` |
-| Initial Delay | `5` seconds |
-| Period | `3` seconds |
-
----
-
-## Question 14 | ServiceAccount
-
-| | |
-|---|---|
-| **Points** | 4/105 (4%) |
-| **Namespace** | `hermes` |
-| **Resources** | ServiceAccount `messenger-sa`, Pod `messenger-runner` |
-
-### Task
-
-Create a **ServiceAccount** named `messenger-sa` in namespace `hermes`.
-
-Create a **Pod** named `messenger-runner` using image `nginx:1.21-alpine` that uses this ServiceAccount.
-
-The Pod should have `automountServiceAccountToken: false`.
-
----
-
-## Question 15 | Labels and Selectors
-
-| | |
-|---|---|
-| **Points** | 5/105 (5%) |
-| **Namespace** | `olympus` |
-| **File to create** | `./exam/course/15/gods-pods.txt` |
-
-### Task
-
-In namespace `olympus`, there are several Pods with various labels.
-
-1. Find all Pods that have the label `role=god`
-2. Write the **names** of these Pods to `./exam/course/15/gods-pods.txt` (one per line)
-3. Add the label `power=divine` to all these Pods
-
----
-
-## Question 16 | Deployment Scaling
-
-| | |
-|---|---|
-| **Points** | 4/105 (4%) |
-| **Namespace** | `ares` |
-| **Resources** | Deployment `warrior-squad` |
-
-### Task
-
-There is a **Deployment** named `warrior-squad` in namespace `ares`.
-
-1. **Scale** the deployment to **5 replicas**
-2. Set the deployment's **update strategy** to `RollingUpdate` with `maxSurge: 2` and `maxUnavailable: 1`
-
----
-
-## Question 17 | Job with Completions
-
-| | |
-|---|---|
-| **Points** | 5/105 (5%) |
-| **Namespace** | `athena` |
-| **Resources** | Job `wisdom-task` |
-
-### Task
-
-Create a **Job** named `wisdom-task` in namespace `athena`:
-
-| Configuration | Value |
-|---------------|-------|
-| Image | `busybox:1.35` |
-| Command | `echo "Task completed by Athena" && sleep 2` |
-| Completions | `4` |
-| Parallelism | `2` |
-| Backoff Limit | `3` |
-| Container name | `wisdom-container` |
-| Pod label | `task: wisdom` |
-
----
-
-## Question 18 | Pod Logs and Debugging
-
-| | |
-|---|---|
-| **Points** | 5/105 (5%) |
-| **Namespace** | `hades` |
-| **Resources** | Pod `shadow-app` |
-| **File to create** | `./exam/course/18/shadow-logs.txt` |
-
-### Task
-
-There is a Pod named `shadow-app` in namespace `hades` that has been running for a while.
-
-1. Get the **last 50 lines** of logs from this Pod
-2. Write these logs to `./exam/course/18/shadow-logs.txt`
-3. Find any **ERROR** messages in the logs and count them. Write the count to `./exam/course/18/error-count.txt`
-
----
-
-## Question 19 | Annotations
-
-| | |
-|---|---|
-| **Points** | 3/105 (3%) |
-| **Namespace** | `zeus` |
-| **Resources** | Pod `lightning-pod` |
-
-### Task
-
-There is a Pod named `lightning-pod` in namespace `zeus`.
-
-Add the following **annotations** to this Pod:
-
-| Key | Value |
-|-----|-------|
-| `description` | `Primary lightning generator` |
-| `maintainer` | `zeus-team@olympus.io` |
-| `version` | `2.0` |
-
----
-
-## Question 20 | Container Image Build
-
-| | |
-|---|---|
-| **Points** | 9/105 (9%) |
-| **Registry** | `localhost:5000` |
-| **Source files** | `./exam/course/20/image/` |
-| **File to create** | `./exam/course/20/container-logs.txt` |
-
-### Task
-
-There are files to build a container image at `./exam/course/20/image/`. The container runs a simple application.
-
-> Use `sudo docker` or become root with `sudo -i`
-
-| # | Task |
-|---|------|
-| 1 | Modify the **Dockerfile**: add ENV variable `APP_VERSION` with value `3.0.0` |
-| 2 | **Build** the image with tag `localhost:5000/olympus-app:v1` |
-| 3 | **Push** the image to the local registry |
-| 4 | **Run** a detached container named `olympus-runner` using image `localhost:5000/olympus-app:v1` |
-| 5 | Write the container **logs** to `./exam/course/20/container-logs.txt` |
+Test by verifying frontend pods can reach backend pods, but not external services.
 
 ---

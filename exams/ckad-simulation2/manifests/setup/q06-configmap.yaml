@@ -1,0 +1,16 @@
+# Q6 - ConfigMap with multiple keys for selective mounting
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-settings
+  namespace: flame
+  labels:
+    exam: ckad-simulation2
+data:
+  database.host: "db.flame.svc.cluster.local"
+  database.port: "5432"
+  cache.host: "redis.flame.svc.cluster.local"
+  cache.port: "6379"
+  log.level: "info"
+  app.name: "phoenix-app"

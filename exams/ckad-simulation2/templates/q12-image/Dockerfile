@@ -1,9 +1,12 @@
-FROM docker.io/library/python:3.9-alpine
+# Q12 - Dockerfile with ARG
+# Task: Add ARG for APP_VERSION and use it in the image
+FROM nginx:1.21
 
-WORKDIR /app
+# TODO: Add ARG APP_VERSION=1.0.0
+# TODO: Add LABEL version=${APP_VERSION}
 
-COPY app.py .
+COPY index.html /usr/share/nginx/html/index.html
 
-EXPOSE 8080
+EXPOSE 80
 
-CMD ["python", "app.py"]
+CMD ["nginx", "-g", "daemon off;"]
