@@ -1,37 +1,54 @@
 #!/bin/bash
 # scoring-functions.sh - CKAD Simulation 4 Scoring Functions
-# Norse Mythology Theme - 22 questions, 115 points total
+# Dojo Genbu (Ocean/Water theme) - 20 questions, 105 points total
 
 # Source common utilities
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../../scripts/lib/common.sh" 2>/dev/null || true
 
-# Q1: Multi-container Pod (5 points)
+# Helper function to check a condition and return result
+check_criterion() {
+    if eval "$1" &>/dev/null; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Q1: ResourceQuota (5 points)
 score_q1() {
     local score=0
     local max_points=5
 
-    # Check pod exists
-    if kubectl get pod ravens-pod -n odin &>/dev/null; then
+    # Check ResourceQuota exists
+    if kubectl get resourcequota namespace-limits -n shell &>/dev/null; then
         ((score++))
 
-        # Check container huginn exists with correct image
-        if kubectl get pod ravens-pod -n odin -o jsonpath='{.spec.containers[*].name}' | grep -q "huginn"; then
+        # Check pods limit
+        local pods_limit
+        pods_limit=$(kubectl get resourcequota namespace-limits -n shell -o jsonpath='{.spec.hard.pods}' 2>/dev/null)
+        if [ "$pods_limit" = "10" ]; then
             ((score++))
         fi
 
-        # Check container muninn exists
-        if kubectl get pod ravens-pod -n odin -o jsonpath='{.spec.containers[*].name}' | grep -q "muninn"; then
+        # Check CPU requests limit
+        local cpu_req
+        cpu_req=$(kubectl get resourcequota namespace-limits -n shell -o jsonpath='{.spec.hard.requests\.cpu}' 2>/dev/null)
+        if [ "$cpu_req" = "4" ]; then
             ((score++))
         fi
 
-        # Check emptyDir volume
-        if kubectl get pod ravens-pod -n odin -o jsonpath='{.spec.volumes[*].emptyDir}' | grep -q "{}"; then
+        # Check memory requests limit
+        local mem_req
+        mem_req=$(kubectl get resourcequota namespace-limits -n shell -o jsonpath='{.spec.hard.requests\.memory}' 2>/dev/null)
+        if [ "$mem_req" = "4Gi" ]; then
             ((score++))
         fi
 
-        # Check pod is running
-        if kubectl get pod ravens-pod -n odin -o jsonpath='{.status.phase}' | grep -q "Running"; then
+        # Check configmaps limit
+        local cm_limit
+        cm_limit=$(kubectl get resourcequota namespace-limits -n shell -o jsonpath='{.spec.hard.configmaps}' 2>/dev/null)
+        if [ "$cm_limit" = "10" ]; then
             ((score++))
         fi
     fi
@@ -39,32 +56,47 @@ score_q1() {
     echo "$score/$max_points"
 }
 
-# Q2: Job (5 points)
+# Q2: HorizontalPodAutoscaler (6 points)
 score_q2() {
     local score=0
-    local max_points=5
+    local max_points=6
 
-    # Check job exists
-    if kubectl get job mjolnir-forge -n thor &>/dev/null; then
+    # Check HPA exists
+    if kubectl get hpa web-app-hpa -n ocean &>/dev/null; then
         ((score++))
 
-        # Check completions = 4
-        if [ "$(kubectl get job mjolnir-forge -n thor -o jsonpath='{.spec.completions}')" = "4" ]; then
+        # Check target deployment
+        local target
+        target=$(kubectl get hpa web-app-hpa -n ocean -o jsonpath='{.spec.scaleTargetRef.name}' 2>/dev/null)
+        if [ "$target" = "web-app" ]; then
             ((score++))
         fi
 
-        # Check parallelism = 2
-        if [ "$(kubectl get job mjolnir-forge -n thor -o jsonpath='{.spec.parallelism}')" = "2" ]; then
+        # Check min replicas
+        local min_rep
+        min_rep=$(kubectl get hpa web-app-hpa -n ocean -o jsonpath='{.spec.minReplicas}' 2>/dev/null)
+        if [ "$min_rep" = "2" ]; then
             ((score++))
         fi
 
-        # Check label on pod template
-        if kubectl get job mjolnir-forge -n thor -o jsonpath='{.spec.template.metadata.labels.dwarf}' | grep -q "brokkr"; then
+        # Check max replicas
+        local max_rep
+        max_rep=$(kubectl get hpa web-app-hpa -n ocean -o jsonpath='{.spec.maxReplicas}' 2>/dev/null)
+        if [ "$max_rep" = "10" ]; then
             ((score++))
         fi
 
-        # Check yaml file exists
-        if [ -f "./exam/course/2/job.yaml" ]; then
+        # Check CPU target (70%)
+        local cpu_target
+        cpu_target=$(kubectl get hpa web-app-hpa -n ocean -o jsonpath='{.spec.metrics[0].resource.target.averageUtilization}' 2>/dev/null)
+        if [ "$cpu_target" = "70" ]; then
+            ((score++))
+        fi
+
+        # Check HPA is active (has reference)
+        local ref_kind
+        ref_kind=$(kubectl get hpa web-app-hpa -n ocean -o jsonpath='{.spec.scaleTargetRef.kind}' 2>/dev/null)
+        if [ "$ref_kind" = "Deployment" ]; then
             ((score++))
         fi
     fi
@@ -72,32 +104,177 @@ score_q2() {
     echo "$score/$max_points"
 }
 
-# Q3: Init Container (5 points)
+# Q3: StatefulSet (8 points)
 score_q3() {
+    local score=0
+    local max_points=8
+
+    # Check StatefulSet exists
+    if kubectl get statefulset db-cluster -n reef &>/dev/null; then
+        ((score++))
+
+        # Check replicas
+        local replicas
+        replicas=$(kubectl get statefulset db-cluster -n reef -o jsonpath='{.spec.replicas}' 2>/dev/null)
+        if [ "$replicas" = "3" ]; then
+            ((score++))
+        fi
+
+        # Check image
+        local image
+        image=$(kubectl get statefulset db-cluster -n reef -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
+        if [[ "$image" == *"redis"* ]]; then
+            ((score++))
+        fi
+
+        # Check serviceName
+        local svc_name
+        svc_name=$(kubectl get statefulset db-cluster -n reef -o jsonpath='{.spec.serviceName}' 2>/dev/null)
+        if [ "$svc_name" = "db-headless" ]; then
+            ((score++))
+        fi
+
+        # Check volumeClaimTemplates exist
+        if kubectl get statefulset db-cluster -n reef -o jsonpath='{.spec.volumeClaimTemplates[0].metadata.name}' | grep -q "data"; then
+            ((score++))
+        fi
+    fi
+
+    # Check headless service exists
+    if kubectl get service db-headless -n reef &>/dev/null; then
+        ((score++))
+
+        # Check clusterIP is None
+        local cluster_ip
+        cluster_ip=$(kubectl get service db-headless -n reef -o jsonpath='{.spec.clusterIP}' 2>/dev/null)
+        if [ "$cluster_ip" = "None" ]; then
+            ((score++))
+        fi
+
+        # Check port
+        local port
+        port=$(kubectl get service db-headless -n reef -o jsonpath='{.spec.ports[0].port}' 2>/dev/null)
+        if [ "$port" = "6379" ]; then
+            ((score++))
+        fi
+    fi
+
+    echo "$score/$max_points"
+}
+
+# Q4: DaemonSet (6 points)
+score_q4() {
+    local score=0
+    local max_points=6
+
+    # Check DaemonSet exists
+    if kubectl get daemonset node-monitor -n deep &>/dev/null; then
+        ((score++))
+
+        # Check image
+        local image
+        image=$(kubectl get daemonset node-monitor -n deep -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
+        if [[ "$image" == *"busybox"* ]]; then
+            ((score++))
+        fi
+
+        # Check container name
+        local container_name
+        container_name=$(kubectl get daemonset node-monitor -n deep -o jsonpath='{.spec.template.spec.containers[0].name}' 2>/dev/null)
+        if [ "$container_name" = "monitor" ]; then
+            ((score++))
+        fi
+
+        # Check NODE_NAME env var exists with fieldRef
+        if kubectl get daemonset node-monitor -n deep -o jsonpath='{.spec.template.spec.containers[0].env[*].valueFrom.fieldRef.fieldPath}' | grep -q "spec.nodeName"; then
+            ((score++))
+        fi
+
+        # Check toleration for control-plane
+        if kubectl get daemonset node-monitor -n deep -o jsonpath='{.spec.template.spec.tolerations[*].key}' | grep -q "node-role.kubernetes.io/control-plane"; then
+            ((score++))
+        fi
+
+        # Check DaemonSet is running on nodes
+        local desired
+        desired=$(kubectl get daemonset node-monitor -n deep -o jsonpath='{.status.desiredNumberScheduled}' 2>/dev/null)
+        if [ "$desired" -ge 1 ] 2>/dev/null; then
+            ((score++))
+        fi
+    fi
+
+    echo "$score/$max_points"
+}
+
+# Q5: PriorityClass (5 points)
+score_q5() {
     local score=0
     local max_points=5
 
-    # Check pod exists
-    if kubectl get pod shapeshifter -n loki &>/dev/null; then
+    # Check PriorityClass exists
+    if kubectl get priorityclass critical-priority &>/dev/null; then
         ((score++))
 
-        # Check init container exists
-        if kubectl get pod shapeshifter -n loki -o jsonpath='{.spec.initContainers[*].name}' | grep -q "prepare-disguise"; then
+        # Check value
+        local value
+        value=$(kubectl get priorityclass critical-priority -o jsonpath='{.value}' 2>/dev/null)
+        if [ "$value" = "1000000" ]; then
             ((score++))
         fi
 
-        # Check main container exists
-        if kubectl get pod shapeshifter -n loki -o jsonpath='{.spec.containers[*].name}' | grep -q "loki-main"; then
+        # Check not global default
+        local default
+        default=$(kubectl get priorityclass critical-priority -o jsonpath='{.globalDefault}' 2>/dev/null)
+        if [ "$default" != "true" ]; then
+            ((score++))
+        fi
+    fi
+
+    # Check Pod exists with priority class
+    if kubectl get pod critical-pod -n tide &>/dev/null; then
+        ((score++))
+
+        # Check pod uses priority class
+        local pod_priority
+        pod_priority=$(kubectl get pod critical-pod -n tide -o jsonpath='{.spec.priorityClassName}' 2>/dev/null)
+        if [ "$pod_priority" = "critical-priority" ]; then
+            ((score++))
+        fi
+    fi
+
+    echo "$score/$max_points"
+}
+
+# Q6: startupProbe (5 points)
+score_q6() {
+    local score=0
+    local max_points=5
+
+    # Check Pod exists
+    if kubectl get pod slow-starter -n wave &>/dev/null; then
+        ((score++))
+
+        # Check startupProbe exists
+        if kubectl get pod slow-starter -n wave -o jsonpath='{.spec.containers[0].startupProbe}' | grep -q "httpGet"; then
             ((score++))
         fi
 
-        # Check shared volume
-        if kubectl get pod shapeshifter -n loki -o jsonpath='{.spec.volumes[*].name}' | grep -q "shared-data"; then
+        # Check startupProbe failureThreshold
+        local failure
+        failure=$(kubectl get pod slow-starter -n wave -o jsonpath='{.spec.containers[0].startupProbe.failureThreshold}' 2>/dev/null)
+        if [ "$failure" = "30" ]; then
+            ((score++))
+        fi
+
+        # Check livenessProbe exists
+        if kubectl get pod slow-starter -n wave -o jsonpath='{.spec.containers[0].livenessProbe}' | grep -q "httpGet"; then
             ((score++))
         fi
 
         # Check pod is running
-        if kubectl get pod shapeshifter -n loki -o jsonpath='{.status.phase}' | grep -q "Running"; then
+        local phase
+        phase=$(kubectl get pod slow-starter -n wave -o jsonpath='{.status.phase}' 2>/dev/null)
+        if [ "$phase" = "Running" ]; then
             ((score++))
         fi
     fi
@@ -105,419 +282,334 @@ score_q3() {
     echo "$score/$max_points"
 }
 
-# Q4: CronJob (5 points)
-score_q4() {
-    local score=0
-    local max_points=5
-
-    # Check cronjob exists
-    if kubectl get cronjob blessing-ritual -n freya &>/dev/null; then
-        ((score++))
-
-        # Check schedule
-        if kubectl get cronjob blessing-ritual -n freya -o jsonpath='{.spec.schedule}' | grep -q "*/15"; then
-            ((score++))
-        fi
-
-        # Check successfulJobsHistoryLimit
-        if [ "$(kubectl get cronjob blessing-ritual -n freya -o jsonpath='{.spec.successfulJobsHistoryLimit}')" = "3" ]; then
-            ((score++))
-        fi
-
-        # Check failedJobsHistoryLimit
-        if [ "$(kubectl get cronjob blessing-ritual -n freya -o jsonpath='{.spec.failedJobsHistoryLimit}')" = "1" ]; then
-            ((score++))
-        fi
-
-        # Check yaml file exists
-        if [ -f "./exam/course/4/cronjob.yaml" ]; then
-            ((score++))
-        fi
-    fi
-
-    echo "$score/$max_points"
-}
-
-# Q5: PV and PVC (6 points)
-score_q5() {
-    local score=0
-    local max_points=6
-
-    # Check PV exists
-    if kubectl get pv bifrost-storage &>/dev/null; then
-        ((score++))
-
-        # Check PV capacity
-        if kubectl get pv bifrost-storage -o jsonpath='{.spec.capacity.storage}' | grep -q "500Mi"; then
-            ((score++))
-        fi
-    fi
-
-    # Check PVC exists
-    if kubectl get pvc bifrost-claim -n heimdall &>/dev/null; then
-        ((score++))
-
-        # Check PVC request
-        if kubectl get pvc bifrost-claim -n heimdall -o jsonpath='{.spec.resources.requests.storage}' | grep -q "200Mi"; then
-            ((score++))
-        fi
-
-        # Check PVC is bound
-        if kubectl get pvc bifrost-claim -n heimdall -o jsonpath='{.status.phase}' | grep -q "Bound"; then
-            ((score++))
-        fi
-    fi
-
-    # Check template file exists
-    if [ -f "./exam/course/5/pv-pvc.yaml" ]; then
-        ((score++))
-    fi
-
-    echo "$score/$max_points"
-}
-
-# Q6: StorageClass (4 points)
-score_q6() {
-    local score=0
-    local max_points=4
-
-    # Check storageclass exists
-    if kubectl get storageclass light-storage &>/dev/null; then
-        ((score++))
-
-        # Check provisioner
-        if kubectl get storageclass light-storage -o jsonpath='{.provisioner}' | grep -q "kubernetes.io/no-provisioner"; then
-            ((score++))
-        fi
-
-        # Check volumeBindingMode
-        if kubectl get storageclass light-storage -o jsonpath='{.volumeBindingMode}' | grep -q "WaitForFirstConsumer"; then
-            ((score++))
-        fi
-    fi
-
-    # Check yaml file exists
-    if [ -f "./exam/course/6/storageclass.yaml" ]; then
-        ((score++))
-    fi
-
-    echo "$score/$max_points"
-}
-
-# Q7: Deployment with Strategy (5 points)
+# Q7: Pod Affinity (6 points)
 score_q7() {
     local score=0
-    local max_points=5
+    local max_points=6
 
-    # Check deployment exists
-    if kubectl get deployment warrior-legion -n tyr &>/dev/null; then
+    # Check Deployment exists
+    if kubectl get deployment web-frontend -n coral &>/dev/null; then
         ((score++))
 
-        # Check replicas = 4
-        if [ "$(kubectl get deployment warrior-legion -n tyr -o jsonpath='{.spec.replicas}')" = "4" ]; then
+        # Check replicas
+        local replicas
+        replicas=$(kubectl get deployment web-frontend -n coral -o jsonpath='{.spec.replicas}' 2>/dev/null)
+        if [ "$replicas" = "3" ]; then
             ((score++))
         fi
 
-        # Check strategy type
-        if kubectl get deployment warrior-legion -n tyr -o jsonpath='{.spec.strategy.type}' | grep -q "RollingUpdate"; then
+        # Check labels
+        if kubectl get deployment web-frontend -n coral -o jsonpath='{.spec.template.metadata.labels.app}' | grep -q "web-frontend"; then
             ((score++))
         fi
 
-        # Check maxSurge
-        if kubectl get deployment warrior-legion -n tyr -o jsonpath='{.spec.strategy.rollingUpdate.maxSurge}' | grep -q "1"; then
+        # Check preferredDuringSchedulingIgnoredDuringExecution affinity exists
+        if kubectl get deployment web-frontend -n coral -o jsonpath='{.spec.template.spec.affinity.podAffinity.preferredDuringSchedulingIgnoredDuringExecution}' | grep -q "weight"; then
             ((score++))
         fi
-    fi
 
-    # Check yaml file exists
-    if [ -f "./exam/course/7/deployment.yaml" ]; then
-        ((score++))
+        # Check topology key
+        if kubectl get deployment web-frontend -n coral -o jsonpath='{.spec.template.spec.affinity.podAffinity.preferredDuringSchedulingIgnoredDuringExecution[0].podAffinityTerm.topologyKey}' | grep -q "kubernetes.io/hostname"; then
+            ((score++))
+        fi
+
+        # Check label selector for cache
+        if kubectl get deployment web-frontend -n coral -o yaml | grep -q "app: cache"; then
+            ((score++))
+        fi
     fi
 
     echo "$score/$max_points"
 }
 
-# Q8: Scale Deployment (5 points)
+# Q8: Ingress with Path Routing (6 points)
 score_q8() {
     local score=0
-    local max_points=5
-
-    # Check deployment has 5 replicas
-    if kubectl get deployment sea-fleet -n njord &>/dev/null; then
-        local replicas=$(kubectl get deployment sea-fleet -n njord -o jsonpath='{.spec.replicas}')
-        if [ "$replicas" = "5" ]; then
-            ((score+=2))
-        fi
-
-        # Check 5 pods are running
-        local ready=$(kubectl get deployment sea-fleet -n njord -o jsonpath='{.status.readyReplicas}')
-        if [ "$ready" = "5" ]; then
-            ((score+=2))
-        fi
-    fi
-
-    # Check command file exists
-    if [ -f "./exam/course/8/scale-command.sh" ]; then
-        ((score++))
-    fi
-
-    echo "$score/$max_points"
-}
-
-# Q9: Rollback Deployment (6 points)
-score_q9() {
-    local score=0
     local max_points=6
 
-    # Check deployment exists and is healthy
-    if kubectl get deployment voyage-app -n njord &>/dev/null; then
-        # Check deployment is available
-        local available=$(kubectl get deployment voyage-app -n njord -o jsonpath='{.status.availableReplicas}')
-        if [ -n "$available" ] && [ "$available" -gt 0 ]; then
-            ((score+=3))
-        fi
-
-        # Check image is working (not nginx:broken-image)
-        local image=$(kubectl get deployment voyage-app -n njord -o jsonpath='{.spec.template.spec.containers[0].image}')
-        if [[ ! "$image" =~ "broken" ]]; then
-            ((score+=2))
-        fi
-    fi
-
-    # Check command file exists
-    if [ -f "./exam/course/9/rollback-command.sh" ]; then
-        ((score++))
-    fi
-
-    echo "$score/$max_points"
-}
-
-# Q10: Helm Management (5 points)
-score_q10() {
-    local score=0
-    local max_points=5
-
-    # Check asgard-web-v1 is deleted
-    if ! helm status asgard-web-v1 -n asgard &>/dev/null; then
-        ((score++))
-    fi
-
-    # Check asgard-web-v2 exists (upgraded)
-    if helm status asgard-web-v2 -n asgard &>/dev/null; then
-        ((score++))
-    fi
-
-    # Check asgard-gateway is installed
-    if helm status asgard-gateway -n asgard &>/dev/null; then
-        ((score++))
-
-        # Check it has 2 replicas
-        local replicas=$(kubectl get deployment -n asgard -l app.kubernetes.io/instance=asgard-gateway -o jsonpath='{.items[0].spec.replicas}' 2>/dev/null)
-        if [ "$replicas" = "2" ]; then
-            ((score++))
-        fi
-    fi
-
-    # Check broken release is deleted
-    if ! helm list -n asgard -a 2>/dev/null | grep -q "pending-install"; then
-        ((score++))
-    fi
-
-    echo "$score/$max_points"
-}
-
-# Q11: ClusterIP Service (5 points)
-score_q11() {
-    local score=0
-    local max_points=5
-
-    # Check service exists
-    if kubectl get service thunder-svc -n thor &>/dev/null; then
-        ((score++))
-
-        # Check type is ClusterIP
-        if kubectl get service thunder-svc -n thor -o jsonpath='{.spec.type}' | grep -qE "^ClusterIP$|^$"; then
-            ((score++))
-        fi
-
-        # Check port is 8080
-        if kubectl get service thunder-svc -n thor -o jsonpath='{.spec.ports[0].port}' | grep -q "8080"; then
-            ((score++))
-        fi
-
-        # Check has endpoints
-        local endpoints=$(kubectl get endpoints thunder-svc -n thor -o jsonpath='{.subsets[*].addresses}' 2>/dev/null)
-        if [ -n "$endpoints" ]; then
-            ((score++))
-        fi
-    fi
-
-    # Check yaml file exists
-    if [ -f "./exam/course/11/service.yaml" ]; then
-        ((score++))
-    fi
-
-    echo "$score/$max_points"
-}
-
-# Q12: NetworkPolicy (6 points)
-score_q12() {
-    local score=0
-    local max_points=6
-
-    # Check networkpolicy exists
-    if kubectl get networkpolicy love-protection -n freya &>/dev/null; then
-        ((score++))
-
-        # Check podSelector for role: lover
-        if kubectl get networkpolicy love-protection -n freya -o jsonpath='{.spec.podSelector.matchLabels.role}' | grep -q "lover"; then
-            ((score++))
-        fi
-
-        # Check ingress rules exist
-        if kubectl get networkpolicy love-protection -n freya -o jsonpath='{.spec.ingress}' | grep -q "protector"; then
-            ((score++))
-        fi
-
-        # Check egress rules exist
-        if kubectl get networkpolicy love-protection -n freya -o jsonpath='{.spec.egress}' | grep -q "."; then
-            ((score+=2))
-        fi
-    fi
-
-    # Check yaml file exists
-    if [ -f "./exam/course/12/networkpolicy.yaml" ]; then
-        ((score++))
-    fi
-
-    echo "$score/$max_points"
-}
-
-# Q13: Ingress (5 points)
-score_q13() {
-    local score=0
-    local max_points=5
-
-    # Check ingress exists
-    if kubectl get ingress light-gateway -n baldur &>/dev/null; then
+    # Check Ingress exists
+    if kubectl get ingress api-routing -n lagoon &>/dev/null; then
         ((score++))
 
         # Check host
-        if kubectl get ingress light-gateway -n baldur -o jsonpath='{.spec.rules[0].host}' | grep -q "baldur.asgard.local"; then
+        local host
+        host=$(kubectl get ingress api-routing -n lagoon -o jsonpath='{.spec.rules[0].host}' 2>/dev/null)
+        if [ "$host" = "api.lagoon.local" ]; then
             ((score++))
         fi
 
-        # Check path
-        if kubectl get ingress light-gateway -n baldur -o jsonpath='{.spec.rules[0].http.paths[0].path}' | grep -q "/shine"; then
+        # Check /v1 path exists
+        if kubectl get ingress api-routing -n lagoon -o yaml | grep -q "/v1"; then
             ((score++))
         fi
 
-        # Check backend service
-        if kubectl get ingress light-gateway -n baldur -o jsonpath='{.spec.rules[0].http.paths[0].backend.service.name}' | grep -q "radiance-svc"; then
+        # Check /v2 path exists
+        if kubectl get ingress api-routing -n lagoon -o yaml | grep -q "/v2"; then
             ((score++))
         fi
-    fi
 
-    # Check template file exists
-    if [ -f "./exam/course/13/ingress.yaml" ]; then
-        ((score++))
+        # Check api-v1-svc backend
+        if kubectl get ingress api-routing -n lagoon -o yaml | grep -q "api-v1-svc"; then
+            ((score++))
+        fi
+
+        # Check api-v2-svc backend
+        if kubectl get ingress api-routing -n lagoon -o yaml | grep -q "api-v2-svc"; then
+            ((score++))
+        fi
     fi
 
     echo "$score/$max_points"
 }
 
-# Q14: NodePort Service (5 points)
-score_q14() {
+# Q9: Job with Completions and Parallelism (5 points)
+score_q9() {
     local score=0
     local max_points=5
 
-    # Check service exists
-    if kubectl get service realm-gateway -n asgard &>/dev/null; then
+    # Check Job exists
+    if kubectl get job parallel-processor -n current &>/dev/null; then
         ((score++))
 
-        # Check type is NodePort
-        if kubectl get service realm-gateway -n asgard -o jsonpath='{.spec.type}' | grep -q "NodePort"; then
+        # Check completions
+        local completions
+        completions=$(kubectl get job parallel-processor -n current -o jsonpath='{.spec.completions}' 2>/dev/null)
+        if [ "$completions" = "6" ]; then
             ((score++))
         fi
 
-        # Check nodePort is 30080
-        if kubectl get service realm-gateway -n asgard -o jsonpath='{.spec.ports[0].nodePort}' | grep -q "30080"; then
+        # Check parallelism
+        local parallelism
+        parallelism=$(kubectl get job parallel-processor -n current -o jsonpath='{.spec.parallelism}' 2>/dev/null)
+        if [ "$parallelism" = "3" ]; then
             ((score++))
         fi
 
-        # Check selector
-        if kubectl get service realm-gateway -n asgard -o jsonpath='{.spec.selector.app}' | grep -q "bifrost"; then
+        # Check backoffLimit
+        local backoff
+        backoff=$(kubectl get job parallel-processor -n current -o jsonpath='{.spec.backoffLimit}' 2>/dev/null)
+        if [ "$backoff" = "4" ]; then
             ((score++))
         fi
-    fi
 
-    # Check yaml file exists
-    if [ -f "./exam/course/14/nodeport-service.yaml" ]; then
-        ((score++))
+        # Check container name
+        local container
+        container=$(kubectl get job parallel-processor -n current -o jsonpath='{.spec.template.spec.containers[0].name}' 2>/dev/null)
+        if [ "$container" = "processor" ]; then
+            ((score++))
+        fi
     fi
 
     echo "$score/$max_points"
 }
 
-# Q15: RBAC (5 points)
+# Q10: kubectl debug (4 points)
+score_q10() {
+    local score=0
+    local max_points=4
+
+    # Check original pod exists
+    if kubectl get pod troubled-app -n anchor &>/dev/null; then
+        ((score++))
+    fi
+
+    # Check output file exists
+    if [ -f "./exam/course/10/debug-output.txt" ]; then
+        ((score++))
+
+        # Check file has content
+        if [ -s "./exam/course/10/debug-output.txt" ]; then
+            ((score++))
+        fi
+
+        # Check file contains directory listing
+        if grep -q "data" "./exam/course/10/debug-output.txt" 2>/dev/null || grep -q "total" "./exam/course/10/debug-output.txt" 2>/dev/null; then
+            ((score++))
+        fi
+    fi
+
+    echo "$score/$max_points"
+}
+
+# Q11: EndpointSlice (3 points)
+score_q11() {
+    local score=0
+    local max_points=3
+
+    # Check service exists
+    if kubectl get service backend-svc -n shell &>/dev/null; then
+        ((score++))
+    fi
+
+    # Check output file exists
+    if [ -f "./exam/course/11/endpoints-info.txt" ]; then
+        ((score++))
+
+        # Check file has endpoint information
+        if [ -s "./exam/course/11/endpoints-info.txt" ]; then
+            ((score++))
+        fi
+    fi
+
+    echo "$score/$max_points"
+}
+
+# Q12: Service internalTrafficPolicy (4 points)
+score_q12() {
+    local score=0
+    local max_points=4
+
+    # Check Service exists
+    if kubectl get service local-svc -n ocean &>/dev/null; then
+        ((score++))
+
+        # Check internalTrafficPolicy is Local
+        local policy
+        policy=$(kubectl get service local-svc -n ocean -o jsonpath='{.spec.internalTrafficPolicy}' 2>/dev/null)
+        if [ "$policy" = "Local" ]; then
+            ((score+=3))
+        fi
+    fi
+
+    echo "$score/$max_points"
+}
+
+# Q13: EmptyDir with sizeLimit (4 points)
+score_q13() {
+    local score=0
+    local max_points=4
+
+    # Check Pod exists
+    if kubectl get pod cache-pod -n reef &>/dev/null; then
+        ((score++))
+
+        # Check emptyDir volume with sizeLimit
+        if kubectl get pod cache-pod -n reef -o jsonpath='{.spec.volumes[*].emptyDir.sizeLimit}' | grep -q "100Mi"; then
+            ((score++))
+        fi
+
+        # Check medium is Memory
+        if kubectl get pod cache-pod -n reef -o jsonpath='{.spec.volumes[*].emptyDir.medium}' | grep -q "Memory"; then
+            ((score++))
+        fi
+
+        # Check mount path
+        if kubectl get pod cache-pod -n reef -o jsonpath='{.spec.containers[0].volumeMounts[*].mountPath}' | grep -q "/cache"; then
+            ((score++))
+        fi
+    fi
+
+    echo "$score/$max_points"
+}
+
+# Q14: Secret with stringData (4 points)
+score_q14() {
+    local score=0
+    local max_points=4
+
+    # Check Secret exists
+    if kubectl get secret app-credentials -n deep &>/dev/null; then
+        ((score++))
+
+        # Check immutable
+        local immutable
+        immutable=$(kubectl get secret app-credentials -n deep -o jsonpath='{.immutable}' 2>/dev/null)
+        if [ "$immutable" = "true" ]; then
+            ((score++))
+        fi
+    fi
+
+    # Check Pod exists
+    if kubectl get pod secret-consumer -n deep &>/dev/null; then
+        ((score++))
+
+        # Check secret is mounted
+        if kubectl get pod secret-consumer -n deep -o jsonpath='{.spec.volumes[*].secret.secretName}' | grep -q "app-credentials"; then
+            ((score++))
+        fi
+    fi
+
+    echo "$score/$max_points"
+}
+
+# Q15: kubectl patch (5 points)
 score_q15() {
     local score=0
     local max_points=5
 
-    # Check serviceaccount exists
-    if kubectl get serviceaccount mimir-sa -n odin &>/dev/null; then
-        ((score++))
-    fi
-
-    # Check role exists
-    if kubectl get role wisdom-role -n odin &>/dev/null; then
+    # Check Deployment exists
+    if kubectl get deployment patch-demo -n tide &>/dev/null; then
         ((score++))
 
-        # Check role has correct permissions
-        if kubectl get role wisdom-role -n odin -o jsonpath='{.rules[*].verbs}' | grep -q "get"; then
+        # Check image is updated
+        local image
+        image=$(kubectl get deployment patch-demo -n tide -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
+        if [ "$image" = "nginx:1.22" ]; then
+            ((score++))
+        fi
+
+        # Check replicas
+        local replicas
+        replicas=$(kubectl get deployment patch-demo -n tide -o jsonpath='{.spec.replicas}' 2>/dev/null)
+        if [ "$replicas" = "4" ]; then
+            ((score++))
+        fi
+
+        # Check ENV_MODE env var
+        if kubectl get deployment patch-demo -n tide -o yaml | grep -q "production"; then
             ((score++))
         fi
     fi
 
-    # Check rolebinding exists
-    if kubectl get rolebinding wisdom-binding -n odin &>/dev/null; then
+    # Check patch commands file exists
+    if [ -f "./exam/course/15/patch-commands.sh" ]; then
         ((score++))
-
-        # Check rolebinding references correct serviceaccount
-        if kubectl get rolebinding wisdom-binding -n odin -o jsonpath='{.subjects[*].name}' | grep -q "mimir-sa"; then
-            ((score++))
-        fi
     fi
 
     echo "$score/$max_points"
 }
 
-# Q16: Secret (5 points)
+# Q16: NetworkPolicy with IPBlock (8 points)
 score_q16() {
     local score=0
-    local max_points=5
+    local max_points=8
 
-    # Check secret exists
-    if kubectl get secret trick-secret -n loki &>/dev/null; then
+    # Check NetworkPolicy exists
+    if kubectl get networkpolicy external-access -n wave &>/dev/null; then
         ((score++))
 
-        # Check secret has username key
-        if kubectl get secret trick-secret -n loki -o jsonpath='{.data.username}' | grep -q "."; then
-            ((score++))
-        fi
-    fi
-
-    # Check pod exists
-    if kubectl get pod trickster-pod -n loki &>/dev/null; then
-        ((score++))
-
-        # Check volume mount
-        if kubectl get pod trickster-pod -n loki -o jsonpath='{.spec.containers[0].volumeMounts[*].mountPath}' | grep -q "/etc/tricks"; then
+        # Check podSelector
+        if kubectl get networkpolicy external-access -n wave -o jsonpath='{.spec.podSelector.matchLabels.tier}' | grep -q "api"; then
             ((score++))
         fi
 
-        # Check env var
-        if kubectl get pod trickster-pod -n loki -o jsonpath='{.spec.containers[0].env[*].name}' | grep -q "TRICK_USER"; then
+        # Check ingress rule exists
+        if kubectl get networkpolicy external-access -n wave -o jsonpath='{.spec.ingress}' | grep -q "from"; then
+            ((score++))
+        fi
+
+        # Check ipBlock in ingress
+        if kubectl get networkpolicy external-access -n wave -o yaml | grep -q "ipBlock"; then
+            ((score++))
+        fi
+
+        # Check except block
+        if kubectl get networkpolicy external-access -n wave -o yaml | grep -q "except"; then
+            ((score++))
+        fi
+
+        # Check egress rule exists
+        if kubectl get networkpolicy external-access -n wave -o jsonpath='{.spec.egress}' | grep -q "to"; then
+            ((score++))
+        fi
+
+        # Check DNS port 53
+        if kubectl get networkpolicy external-access -n wave -o yaml | grep -q "53"; then
+            ((score++))
+        fi
+
+        # Check HTTPS port 443
+        if kubectl get networkpolicy external-access -n wave -o yaml | grep -q "443"; then
             ((score++))
         fi
     fi
@@ -525,103 +617,40 @@ score_q16() {
     echo "$score/$max_points"
 }
 
-# Q17: SecurityContext (6 points)
+# Q17: Pod with hostNetwork (5 points)
 score_q17() {
     local score=0
-    local max_points=6
-
-    # Check pod exists
-    if kubectl get pod guardian-pod -n heimdall &>/dev/null; then
-        ((score++))
-
-        # Check runAsUser
-        if [ "$(kubectl get pod guardian-pod -n heimdall -o jsonpath='{.spec.containers[0].securityContext.runAsUser}')" = "1000" ]; then
-            ((score++))
-        fi
-
-        # Check runAsGroup
-        if [ "$(kubectl get pod guardian-pod -n heimdall -o jsonpath='{.spec.containers[0].securityContext.runAsGroup}')" = "3000" ]; then
-            ((score++))
-        fi
-
-        # Check allowPrivilegeEscalation
-        if [ "$(kubectl get pod guardian-pod -n heimdall -o jsonpath='{.spec.containers[0].securityContext.allowPrivilegeEscalation}')" = "false" ]; then
-            ((score++))
-        fi
-
-        # Check capabilities add
-        if kubectl get pod guardian-pod -n heimdall -o jsonpath='{.spec.containers[0].securityContext.capabilities.add}' | grep -q "NET_BIND_SERVICE"; then
-            ((score++))
-        fi
-    fi
-
-    # Check yaml file exists
-    if [ -f "./exam/course/17/secure-pod.yaml" ]; then
-        ((score++))
-    fi
-
-    echo "$score/$max_points"
-}
-
-# Q18: ResourceQuota (5 points)
-score_q18() {
-    local score=0
     local max_points=5
 
-    # Check resourcequota exists
-    if kubectl get resourcequota war-limits -n tyr &>/dev/null; then
+    # Check Pod exists
+    if kubectl get pod network-diagnostic -n coral &>/dev/null; then
         ((score++))
 
-        # Check pods limit
-        if kubectl get resourcequota war-limits -n tyr -o jsonpath='{.spec.hard.pods}' | grep -q "10"; then
+        # Check hostNetwork
+        local host_net
+        host_net=$(kubectl get pod network-diagnostic -n coral -o jsonpath='{.spec.hostNetwork}' 2>/dev/null)
+        if [ "$host_net" = "true" ]; then
             ((score++))
         fi
 
-        # Check cpu requests
-        if kubectl get resourcequota war-limits -n tyr -o jsonpath='{.spec.hard.requests\.cpu}' | grep -q "2"; then
+        # Check hostPID
+        local host_pid
+        host_pid=$(kubectl get pod network-diagnostic -n coral -o jsonpath='{.spec.hostPID}' 2>/dev/null)
+        if [ "$host_pid" = "true" ]; then
             ((score++))
         fi
 
-        # Check memory limits
-        if kubectl get resourcequota war-limits -n tyr -o jsonpath='{.spec.hard.limits\.memory}' | grep -q "4Gi"; then
-            ((score++))
-        fi
-    fi
-
-    # Check yaml file exists
-    if [ -f "./exam/course/18/quota.yaml" ]; then
-        ((score++))
-    fi
-
-    echo "$score/$max_points"
-}
-
-# Q19: ConfigMap (5 points)
-score_q19() {
-    local score=0
-    local max_points=5
-
-    # Check configmap exists
-    if kubectl get configmap navigation-config -n njord &>/dev/null; then
-        ((score++))
-
-        # Check configmap has destination key
-        if kubectl get configmap navigation-config -n njord -o jsonpath='{.data.destination}' | grep -q "midgard"; then
-            ((score++))
-        fi
-    fi
-
-    # Check pod exists
-    if kubectl get pod navigator-pod -n njord &>/dev/null; then
-        ((score++))
-
-        # Check envFrom configMapRef
-        if kubectl get pod navigator-pod -n njord -o jsonpath='{.spec.containers[0].envFrom[*].configMapRef.name}' | grep -q "navigation-config"; then
+        # Check container name
+        local container
+        container=$(kubectl get pod network-diagnostic -n coral -o jsonpath='{.spec.containers[0].name}' 2>/dev/null)
+        if [ "$container" = "netshoot" ]; then
             ((score++))
         fi
 
         # Check pod is running
-        if kubectl get pod navigator-pod -n njord -o jsonpath='{.status.phase}' | grep -q "Running"; then
+        local phase
+        phase=$(kubectl get pod network-diagnostic -n coral -o jsonpath='{.status.phase}' 2>/dev/null)
+        if [ "$phase" = "Running" ]; then
             ((score++))
         fi
     fi
@@ -629,92 +658,106 @@ score_q19() {
     echo "$score/$max_points"
 }
 
-# Q20: Probes (6 points)
+# Q18: ClusterRole and ClusterRoleBinding (6 points)
+score_q18() {
+    local score=0
+    local max_points=6
+
+    # Check ServiceAccount exists
+    if kubectl get serviceaccount node-monitor-sa -n lagoon &>/dev/null; then
+        ((score++))
+    fi
+
+    # Check ClusterRole exists
+    if kubectl get clusterrole node-reader &>/dev/null; then
+        ((score++))
+
+        # Check nodes permission
+        if kubectl get clusterrole node-reader -o yaml | grep -q "nodes"; then
+            ((score++))
+        fi
+
+        # Check namespaces permission
+        if kubectl get clusterrole node-reader -o yaml | grep -q "namespaces"; then
+            ((score++))
+        fi
+    fi
+
+    # Check ClusterRoleBinding exists
+    if kubectl get clusterrolebinding node-reader-binding &>/dev/null; then
+        ((score++))
+
+        # Check binding to correct SA
+        if kubectl get clusterrolebinding node-reader-binding -o yaml | grep -q "node-monitor-sa"; then
+            ((score++))
+        fi
+    fi
+
+    echo "$score/$max_points"
+}
+
+# Q19: kubectl auth can-i (4 points)
+score_q19() {
+    local score=0
+    local max_points=4
+
+    # Check ServiceAccount exists
+    if kubectl get serviceaccount app-deployer -n current &>/dev/null; then
+        ((score++))
+    fi
+
+    # Check permissions file exists
+    if [ -f "./exam/course/19/permissions.txt" ]; then
+        ((score++))
+
+        # Check file has content
+        if [ -s "./exam/course/19/permissions.txt" ]; then
+            ((score++))
+        fi
+
+        # Check file has correct format
+        if grep -q "deployments" "./exam/course/19/permissions.txt" 2>/dev/null; then
+            ((score++))
+        fi
+    fi
+
+    echo "$score/$max_points"
+}
+
+# Q20: Multi-Container with Shared Volume (6 points)
 score_q20() {
     local score=0
     local max_points=6
 
-    # Check pod exists
-    if kubectl get pod watchman-pod -n asgard &>/dev/null; then
+    # Check Pod exists
+    if kubectl get pod data-pipeline -n anchor &>/dev/null; then
         ((score++))
 
-        # Check readiness probe exists
-        if kubectl get pod watchman-pod -n asgard -o jsonpath='{.spec.containers[0].readinessProbe}' | grep -q "httpGet"; then
+        # Check producer container
+        if kubectl get pod data-pipeline -n anchor -o jsonpath='{.spec.containers[*].name}' | grep -q "producer"; then
             ((score++))
         fi
 
-        # Check liveness probe exists
-        if kubectl get pod watchman-pod -n asgard -o jsonpath='{.spec.containers[0].livenessProbe}' | grep -q "httpGet"; then
+        # Check consumer container
+        if kubectl get pod data-pipeline -n anchor -o jsonpath='{.spec.containers[*].name}' | grep -q "consumer"; then
             ((score++))
         fi
 
-        # Check readiness initialDelaySeconds
-        if [ "$(kubectl get pod watchman-pod -n asgard -o jsonpath='{.spec.containers[0].readinessProbe.initialDelaySeconds}')" = "5" ]; then
+        # Check monitor container
+        if kubectl get pod data-pipeline -n anchor -o jsonpath='{.spec.containers[*].name}' | grep -q "monitor"; then
             ((score++))
         fi
 
-        # Check liveness initialDelaySeconds
-        if [ "$(kubectl get pod watchman-pod -n asgard -o jsonpath='{.spec.containers[0].livenessProbe.initialDelaySeconds}')" = "15" ]; then
-            ((score++))
-        fi
-    fi
-
-    # Check yaml file exists
-    if [ -f "./exam/course/20/probe-pod.yaml" ]; then
-        ((score++))
-    fi
-
-    echo "$score/$max_points"
-}
-
-# Q21: Debug Pod (5 points)
-score_q21() {
-    local score=0
-    local max_points=5
-
-    # Check logs file exists
-    if [ -f "./exam/course/21/logs.txt" ]; then
-        ((score++))
-    fi
-
-    # Check fix explanation file exists
-    if [ -f "./exam/course/21/fix.txt" ]; then
-        ((score++))
-    fi
-
-    # Check pod is now running (fixed)
-    if kubectl get pod broken-valkyrie -n asgard &>/dev/null; then
-        local phase=$(kubectl get pod broken-valkyrie -n asgard -o jsonpath='{.status.phase}')
-        if [ "$phase" = "Running" ]; then
-            ((score+=3))
-        fi
-    fi
-
-    echo "$score/$max_points"
-}
-
-# Q22: Container Image Build (6 points)
-score_q22() {
-    local score=0
-    local max_points=6
-
-    # Check image was pushed to registry
-    if curl -s http://localhost:5000/v2/runescript/tags/list 2>/dev/null | grep -q "v1"; then
-        ((score+=2))
-    fi
-
-    # Check pod exists
-    if kubectl get pod runescript-pod -n asgard &>/dev/null; then
-        ((score++))
-
-        # Check pod uses correct image
-        if kubectl get pod runescript-pod -n asgard -o jsonpath='{.spec.containers[0].image}' | grep -q "localhost:5000/runescript:v1"; then
+        # Check emptyDir volume
+        if kubectl get pod data-pipeline -n anchor -o jsonpath='{.spec.volumes[*].emptyDir}' | grep -q "{}"; then
             ((score++))
         fi
 
         # Check pod is running
-        if kubectl get pod runescript-pod -n asgard -o jsonpath='{.status.phase}' | grep -q "Running"; then
-            ((score+=2))
+        local phase
+        phase=$(kubectl get pod data-pipeline -n anchor -o jsonpath='{.status.phase}' 2>/dev/null)
+        if [ "$phase" = "Running" ]; then
+            ((score++))
         fi
     fi
 
