@@ -1,0 +1,35 @@
+# Q18 - Deployment for minReadySeconds exercise
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: safe-deploy
+  namespace: fang
+  labels:
+    app: safe-deploy
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: safe-deploy
+  template:
+    metadata:
+      labels:
+        app: safe-deploy
+    spec:
+      containers:
+      - name: app
+        image: nginx:1.20
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 3

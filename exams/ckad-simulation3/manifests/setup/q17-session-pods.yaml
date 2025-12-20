@@ -1,0 +1,42 @@
+# Q17 - Pods and Service for session affinity exercise
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deploy
+  namespace: claw
+  labels:
+    app: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-svc
+  namespace: claw
+spec:
+  type: ClusterIP
+  selector:
+    app: backend
+  ports:
+  - port: 80
+    targetPort: 80
