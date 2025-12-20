@@ -1,54 +1,5 @@
 # CKAD Simulation 2 - Namespaces
-# Galaxy/Constellation themed namespaces for exam isolation
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: andromeda
-  labels:
-    exam: ckad-simulation2
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: orion
-  labels:
-    exam: ckad-simulation2
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: pegasus
-  labels:
-    exam: ckad-simulation2
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: cygnus
-  labels:
-    exam: ckad-simulation2
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: lyra
-  labels:
-    exam: ckad-simulation2
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: aquila
-  labels:
-    exam: ckad-simulation2
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: draco
-  labels:
-    exam: ckad-simulation2
+# Fire/Phoenix themed namespaces for Dojo Suzaku
 ---
 apiVersion: v1
 kind: Namespace
@@ -56,24 +7,76 @@ metadata:
   name: phoenix
   labels:
     exam: ckad-simulation2
+    theme: fire
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: hydra
+  name: ember
   labels:
     exam: ckad-simulation2
+    theme: fire
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: centaurus
+  name: blaze
   labels:
     exam: ckad-simulation2
+    theme: fire
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: cassiopeia
+  name: inferno
   labels:
     exam: ckad-simulation2
+    theme: fire
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flame
+  labels:
+    exam: ckad-simulation2
+    theme: fire
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: spark
+  labels:
+    exam: ckad-simulation2
+    theme: fire
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: solar
+  labels:
+    exam: ckad-simulation2
+    theme: fire
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: corona
+  labels:
+    exam: ckad-simulation2
+    theme: fire
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flare
+  labels:
+    exam: ckad-simulation2
+    theme: fire
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: magma
+  labels:
+    exam: ckad-simulation2
+    theme: fire

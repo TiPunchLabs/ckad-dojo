@@ -1,54 +1,83 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: olympus
+# CKAD Simulation 3 - Dojo Byakko - Namespaces
+# Tiger/predator themed namespaces
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: athena
+  name: tiger
+  labels:
+    exam: ckad-simulation3
+    theme: byakko
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: apollo
+  name: claw
+  labels:
+    exam: ckad-simulation3
+    theme: byakko
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: artemis
+  name: stripe
+  labels:
+    exam: ckad-simulation3
+    theme: byakko
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: hermes
+  name: prowl
+  labels:
+    exam: ckad-simulation3
+    theme: byakko
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: poseidon
+  name: hunt
+  labels:
+    exam: ckad-simulation3
+    theme: byakko
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: hades
+  name: jungle
+  labels:
+    exam: ckad-simulation3
+    theme: byakko
+    name: jungle
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: zeus
+  name: fang
+  labels:
+    exam: ckad-simulation3
+    theme: byakko
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: hera
+  name: pounce
+  labels:
+    exam: ckad-simulation3
+    theme: byakko
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ares
+  name: stalker
+  labels:
+    exam: ckad-simulation3
+    theme: byakko
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: titan
+  name: predator
+  labels:
+    exam: ckad-simulation3
+    theme: byakko
