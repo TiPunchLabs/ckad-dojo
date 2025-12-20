@@ -1,0 +1,18 @@
+# Q4 - CronJob for suspend/startingDeadlineSeconds exercise
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: data-sync
+  namespace: prowl
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: sync
+            image: busybox:1.36
+            command: ["sh", "-c", "echo 'Syncing data...' && sleep 10"]
+          restartPolicy: OnFailure

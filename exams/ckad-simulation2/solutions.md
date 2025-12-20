@@ -1,380 +1,339 @@
-# CKAD Simulation 2 - Solutions
+# CKAD Simulation 2 - Dojo Suzaku 🔥 - Solutions
 
-This document contains the solutions for all questions in CKAD Simulation 2.
+*「朱雀は灰から蘇る」 - Le phénix renaît de ses cendres*
+
+This document contains the solutions for all 21 questions in CKAD Simulation 2.
 
 ---
 
-## Question 1 | Nodes
+## Question 1 | API Resources
 
 **Solution:**
 
 ```bash
-# List all nodes and save to file
-kubectl get nodes > ./exam/course/1/nodes
+# List all API resources and save to file
+kubectl api-resources > ./exam/course/1/api-resources
 ```
 
-**Explanation:** The `kubectl get nodes` command lists all nodes in the cluster. The output includes the NAME, STATUS, ROLES, AGE, and VERSION columns by default.
+**Explanation:** The `kubectl api-resources` command lists all available API resources in the cluster, including their shortnames, API group, and whether they are namespaced. This is useful for discovering what resources are available.
 
 ---
 
-## Question 2 | Multi-container Pod
+## Question 2 | Deployment Recreate Strategy
 
 **Solution:**
 
 ```bash
-# Create the multi-container pod
+# Create the deployment with Recreate strategy
+cat <<EOF > ./exam/course/2/fire-app.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fire-app
+  namespace: blaze
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: fire-app
+  template:
+    metadata:
+      labels:
+        app: fire-app
+    spec:
+      containers:
+      - name: fire-container
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+EOF
+
+kubectl apply -f ./exam/course/2/fire-app.yaml
+```
+
+**Explanation:** The Recreate strategy terminates all existing pods before creating new ones. This is useful when you can't have multiple versions running simultaneously (unlike RollingUpdate which maintains availability during updates).
+
+---
+
+## Question 3 | Job with Timeout
+
+**Solution:**
+
+```bash
+# Copy template and modify
+cp ./exam/course/3/job.yaml ./exam/course/3/job.yaml.bak
+
+# Edit the job to add activeDeadlineSeconds
+cat <<EOF > ./exam/course/3/job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: data-processor
+  namespace: spark
+spec:
+  activeDeadlineSeconds: 60
+  backoffLimit: 2
+  template:
+    spec:
+      containers:
+      - name: processor
+        image: busybox:1.36
+        command: ["sh", "-c", "echo 'Processing data...' && sleep 30 && echo 'Done'"]
+      restartPolicy: Never
+EOF
+
+kubectl apply -f ./exam/course/3/job.yaml
+```
+
+**Explanation:** `activeDeadlineSeconds` sets the maximum duration for a Job. If the Job runs longer than this, it will be terminated. This prevents runaway jobs from consuming resources indefinitely.
+
+---
+
+## Question 4 | Helm Template Debug
+
+**Solution:**
+
+```bash
+# Get the values from the installed release and render templates
+helm get values phoenix-web -n flare -o yaml > /tmp/phoenix-values.yaml
+helm template phoenix-web bitnami/nginx -n flare -f /tmp/phoenix-values.yaml > ./exam/course/4/rendered.yaml
+
+# Alternative: use helm get manifest for already installed release
+helm get manifest phoenix-web -n flare > ./exam/course/4/rendered.yaml
+```
+
+**Explanation:** `helm template` renders chart templates locally without installing. `helm get manifest` retrieves the rendered manifests from an installed release. Both are useful for debugging Helm deployments.
+
+---
+
+## Question 5 | Fix CrashLoopBackOff
+
+**Solution:**
+
+```bash
+# Check the pod status and logs
+kubectl describe pod crash-app -n ember
+kubectl logs crash-app -n ember
+
+# The issue is the command "sleepx" which doesn't exist - should be "sleep"
+# Delete and recreate with correct command
+kubectl delete pod crash-app -n ember
+
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Pod
 metadata:
-  name: multi-container-pod
-  namespace: andromeda
+  name: crash-app
+  namespace: ember
+  labels:
+    app: crash-app
 spec:
   containers:
-  - name: nginx
-    image: nginx:1.21-alpine
-    ports:
-    - containerPort: 80
-  - name: busybox
-    image: busybox:1.35
+  - name: app
+    image: busybox:1.36
     command: ["sleep", "3600"]
+    resources:
+      requests:
+        memory: "32Mi"
+        cpu: "50m"
+      limits:
+        memory: "64Mi"
+        cpu: "100m"
 EOF
-```
-
-**Explanation:** Multi-container pods share the same network namespace, so containers can communicate via localhost. The nginx container serves web content while the busybox container runs as a sidecar.
-
----
-
-## Question 3 | CronJob
-
-**Solution:**
-
-```bash
-# Create the CronJob
-kubectl apply -f - <<EOF
-apiVersion: batch/v1
-kind: CronJob
-metadata:
-  name: galaxy-backup
-  namespace: orion
-spec:
-  schedule: "*/5 * * * *"
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          containers:
-          - name: backup
-            image: busybox:1.35
-            command: ["/bin/sh", "-c", "echo Backup check completed at \$(date)"]
-          restartPolicy: OnFailure
-EOF
-
-# Save to file
-kubectl get cronjob galaxy-backup -n orion -o yaml > ./exam/course/3/cronjob.yaml
-```
-
-**Explanation:** CronJobs run on a schedule using cron syntax. `*/5 * * * *` means every 5 minutes. The job creates pods that execute the backup check command.
-
----
-
-## Question 4 | Deployment Scaling
-
-**Solution:**
-
-```bash
-# Scale the deployment to 5 replicas
-kubectl scale deployment star-app -n pegasus --replicas=5
-
-# Save the command to file
-echo 'kubectl scale deployment star-app -n pegasus --replicas=5' > ./exam/course/4/scale-command.sh
 
 # Verify
-kubectl get deployment star-app -n pegasus
+kubectl get pod crash-app -n ember
 ```
 
-**Explanation:** The `kubectl scale` command adjusts the replica count of a deployment. The deployment controller automatically creates or removes pods to match the desired replica count.
+**Explanation:** CrashLoopBackOff indicates the container is crashing repeatedly. In this case, the command `sleepx` doesn't exist. The fix is to use the correct command `sleep`.
 
 ---
 
-## Question 5 | Deployment Troubleshooting
+## Question 6 | ConfigMap Items Mount
 
 **Solution:**
 
 ```bash
-# Investigate the issue
-kubectl describe deployment broken-app -n cygnus
-kubectl get pods -n cygnus
-
-# The issue is a typo in the image name: "ngnix" instead of "nginx"
-# Fix by editing the deployment
-kubectl set image deployment/broken-app web=nginx:1.21-alpine -n cygnus
-
-# Or edit directly
-kubectl edit deployment broken-app -n cygnus
-# Change image from "ngnix:1.21-alpine" to "nginx:1.21-alpine"
-
-# Document the fix
-echo "The image name had a typo: 'ngnix' instead of 'nginx'. Fixed by correcting the image name to nginx:1.21-alpine" > ./exam/course/5/fix-reason.txt
-
-# Verify rollout
-kubectl rollout status deployment/broken-app -n cygnus
-```
-
-**Explanation:** Common deployment issues include typos in image names, incorrect ports, or missing resources. Always check pod events with `kubectl describe pod` and deployment status.
-
----
-
-## Question 6 | ConfigMap Volume Mount
-
-**Solution:**
-
-```bash
-# Create the ConfigMap
-kubectl create configmap app-config -n lyra \
-  --from-literal=app.properties='database.host=galaxy-db.lyra
-database.port=5432
-app.name=GalaxyApp'
-
-# Or using a file approach
-cat > /tmp/app.properties <<EOF
-database.host=galaxy-db.lyra
-database.port=5432
-app.name=GalaxyApp
-EOF
-kubectl create configmap app-config -n lyra --from-file=app.properties=/tmp/app.properties
-
-# Create the Pod with ConfigMap volume
+# Create pod with selective ConfigMap mount
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Pod
 metadata:
-  name: config-pod
-  namespace: lyra
+  name: config-reader
+  namespace: flame
 spec:
   containers:
-  - name: nginx
-    image: nginx:1.21-alpine
+  - name: reader
+    image: busybox:1.36
+    command: ["sleep", "3600"]
     volumeMounts:
     - name: config-volume
-      mountPath: /etc/config
+      mountPath: /config
   volumes:
   - name: config-volume
     configMap:
-      name: app-config
+      name: app-settings
+      items:
+      - key: database.host
+        path: database.host
+      - key: database.port
+        path: database.port
 EOF
-
-# Verify
-kubectl exec config-pod -n lyra -- cat /etc/config/app.properties
 ```
 
-**Explanation:** ConfigMaps store non-sensitive configuration data. When mounted as a volume, each key becomes a file. This allows applications to read configuration from files without rebuilding images.
+**Explanation:** Using `items` in a ConfigMap volume mount allows you to selectively mount specific keys rather than all keys. Each item maps a key to a file path within the mount directory.
 
 ---
 
-## Question 7 | Secret Environment Variables
+## Question 7 | Secret from File
 
 **Solution:**
 
 ```bash
-# Create the Secret
-kubectl create secret generic db-credentials -n aquila \
-  --from-literal=DB_USER=admin \
-  --from-literal=DB_PASSWORD=galaxy-secret-2024
+# Create the password file (without trailing newline)
+mkdir -p ./exam/course/7
+echo -n 'FirePhoenix2024!' > ./exam/course/7/password.txt
 
-# Create the Pod with Secret environment variables
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Pod
-metadata:
-  name: secret-pod
-  namespace: aquila
-spec:
-  containers:
-  - name: busybox
-    image: busybox:1.35
-    command: ["sleep", "3600"]
-    env:
-    - name: DB_USER
-      valueFrom:
-        secretKeyRef:
-          name: db-credentials
-          key: DB_USER
-    - name: DB_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: db-credentials
-          key: DB_PASSWORD
-EOF
-
-# Verify
-kubectl exec secret-pod -n aquila -- env | grep DB_
+# Create secret from file
+kubectl create secret generic db-credentials \
+  --from-file=password.txt=./exam/course/7/password.txt \
+  -n magma
 ```
 
-**Explanation:** Secrets store sensitive data like passwords. Using `secretKeyRef` injects secret values as environment variables without exposing them in pod specs.
+**Explanation:** `kubectl create secret generic --from-file` creates a secret from a file. The key in the secret will be the filename (or the specified key name). Using `echo -n` avoids adding a trailing newline.
 
 ---
 
-## Question 8 | Service NodePort
+## Question 8 | Headless Service
 
 **Solution:**
 
 ```bash
-# Create the NodePort Service
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Service
 metadata:
-  name: web-service
-  namespace: draco
+  name: backend-headless
+  namespace: corona
 spec:
-  type: NodePort
+  clusterIP: None
   selector:
-    app: web-app
+    app: backend
   ports:
   - port: 80
+    protocol: TCP
     targetPort: 80
 EOF
-
-# Or using kubectl expose
-kubectl expose deployment web-app -n draco --name=web-service --type=NodePort --port=80
-
-# Verify
-kubectl get svc web-service -n draco
 ```
 
-**Explanation:** NodePort services expose pods on a port on every node in the cluster (30000-32767 range). This allows external access without a load balancer.
+**Explanation:** A headless service (clusterIP: None) doesn't allocate a cluster IP. Instead, DNS returns the IP addresses of all pods matching the selector. This is commonly used with StatefulSets for direct pod addressing.
 
 ---
 
-## Question 9 | Pod to Deployment Conversion
+## Question 9 | Canary Deployment
 
 **Solution:**
 
 ```bash
-# First, export the existing pod as a template
-kubectl get pod galaxy-api -n phoenix -o yaml > /tmp/pod.yaml
-
-# Create the Deployment
+# Create canary deployment
 kubectl apply -f - <<EOF
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: galaxy-api
-  namespace: phoenix
+  name: canary-v2
+  namespace: blaze
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: galaxy-api
+      app: web-frontend
+      version: v2
   template:
     metadata:
       labels:
-        app: galaxy-api
+        app: web-frontend
+        version: v2
     spec:
       containers:
-      - name: api
-        image: nginx:1.21-alpine
+      - name: nginx
+        image: nginx:1.22
         ports:
         - containerPort: 80
-        securityContext:
-          allowPrivilegeEscalation: false
-          privileged: false
 EOF
 
-# Delete the original pod
-kubectl delete pod galaxy-api -n phoenix
-
-# Save the deployment YAML
-kubectl get deployment galaxy-api -n phoenix -o yaml > ./exam/course/9/galaxy-api-deployment.yaml
-
-# Verify
-kubectl get deployment galaxy-api -n phoenix
-kubectl get pods -n phoenix -l app=galaxy-api
+# Create service that routes to both stable and canary
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-svc
+  namespace: blaze
+spec:
+  type: ClusterIP
+  selector:
+    app: web-frontend
+  ports:
+  - port: 80
+    targetPort: 80
+EOF
 ```
 
-**Explanation:** Converting a Pod to a Deployment adds self-healing and scaling capabilities. The security context settings enhance container security by preventing privilege escalation.
+**Explanation:** Canary deployment introduces a new version alongside the stable version. The service selector (app: web-frontend) matches both deployments. With 3 stable replicas and 1 canary replica, traffic is split approximately 75%/25%.
 
 ---
 
-## Question 10 | PV/PVC Creation
+## Question 10 | Sidecar Data Processing
 
 **Solution:**
 
 ```bash
-# Create the PersistentVolume
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: galaxy-pv
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-  - ReadWriteOnce
-  hostPath:
-    path: /data/galaxy
-  storageClassName: manual
-EOF
-
-# Create the PersistentVolumeClaim
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: galaxy-pvc
-  namespace: hydra
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: manual
-EOF
-
-# Create the Pod with PVC
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Pod
 metadata:
-  name: storage-pod
-  namespace: hydra
+  name: data-transform
+  namespace: phoenix
 spec:
   containers:
-  - name: nginx
-    image: nginx:1.21-alpine
+  - name: producer
+    image: busybox:1.36
+    command: ["sh", "-c", "while true; do echo \$(date) >> /data/input.log; sleep 5; done"]
     volumeMounts:
-    - name: storage
-      mountPath: /usr/share/nginx/html
+    - name: shared-data
+      mountPath: /data
+  - name: transformer
+    image: busybox:1.36
+    command: ["sh", "-c", "tail -f /data/input.log | while read line; do echo \"PROCESSED: \$line\" >> /data/output.log; done"]
+    volumeMounts:
+    - name: shared-data
+      mountPath: /data
   volumes:
-  - name: storage
-    persistentVolumeClaim:
-      claimName: galaxy-pvc
+  - name: shared-data
+    emptyDir: {}
 EOF
-
-# Verify
-kubectl get pv galaxy-pv
-kubectl get pvc galaxy-pvc -n hydra
 ```
 
-**Explanation:** PersistentVolumes provide storage abstraction. The PVC requests storage from available PVs matching its requirements. The storageClassName must match between PV and PVC.
+**Explanation:** The sidecar pattern uses multiple containers in a pod sharing a volume. The producer writes data, and the transformer processes it. emptyDir provides ephemeral storage that exists for the pod's lifetime.
 
 ---
 
-## Question 11 | NetworkPolicy
+## Question 11 | Cross-Namespace NetworkPolicy
 
 **Solution:**
 
 ```bash
+# First, label the flame namespace
+kubectl label namespace flame name=flame --overwrite
+
 # Create the NetworkPolicy
 kubectl apply -f - <<EOF
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-internal
-  namespace: centaurus
+  name: allow-from-flame
+  namespace: corona
 spec:
   podSelector:
     matchLabels:
@@ -383,394 +342,300 @@ spec:
   - Ingress
   ingress:
   - from:
-    - podSelector:
+    - namespaceSelector:
         matchLabels:
-          app: frontend
-EOF
-
-# Save to file
-kubectl get networkpolicy allow-internal -n centaurus -o yaml > ./exam/course/11/networkpolicy.yaml
-```
-
-**Explanation:** NetworkPolicies control traffic flow between pods. Without a policy, all traffic is allowed. Once a policy is applied, only explicitly allowed traffic is permitted.
-
----
-
-## Question 12 | Container Image Build
-
-**Solution:**
-
-```bash
-# Navigate to the image directory
-cd ./exam/course/12/image/
-
-# Build the image with Docker
-sudo docker build -t localhost:5000/galaxy-app:v1 .
-
-# Push to local registry
-sudo docker push localhost:5000/galaxy-app:v1
-
-# Create the Pod
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Pod
-metadata:
-  name: image-test-pod
-  namespace: cassiopeia
-spec:
-  containers:
-  - name: galaxy-app
-    image: localhost:5000/galaxy-app:v1
+          name: flame
     ports:
-    - containerPort: 8080
+    - protocol: TCP
+      port: 80
+EOF
+```
+
+**Explanation:** To allow traffic from a specific namespace, use `namespaceSelector`. The namespace must have a label that the selector can match. This policy allows ingress only from pods in the flame namespace on port 80.
+
+---
+
+## Question 12 | Docker Build with ARG
+
+**Solution:**
+
+```bash
+# Copy template
+mkdir -p ./exam/course/12
+cp ./templates/q12-image/* ./exam/course/12/
+
+# Modify Dockerfile
+cat <<EOF > ./exam/course/12/Dockerfile
+FROM nginx:1.21
+
+ARG APP_VERSION=1.0.0
+LABEL version=\${APP_VERSION}
+
+COPY index.html /usr/share/nginx/html/index.html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
 EOF
 
-# Wait for pod to be running
-kubectl wait --for=condition=Ready pod/image-test-pod -n cassiopeia --timeout=60s
+# Build with custom ARG value
+cd ./exam/course/12
+sudo docker build --build-arg APP_VERSION=2.0.0 -t localhost:5000/phoenix-app:2.0.0 .
 
-# Get logs
-kubectl logs image-test-pod -n cassiopeia > ./exam/course/12/logs
+# Push to registry
+sudo docker push localhost:5000/phoenix-app:2.0.0
 ```
 
-**Explanation:** Building custom images is essential for deploying applications. The local registry at localhost:5000 allows pushing and pulling images without internet access.
+**Explanation:** ARG defines build-time variables. They can have default values and be overridden with `--build-arg`. LABEL adds metadata to the image. Using `${ARG_NAME}` in LABEL allows dynamic labeling during build.
 
 ---
 
-## Question 13 | Helm Operations
+## Question 13 | Helm Values File
 
 **Solution:**
 
 ```bash
-# Delete the release galaxy-nginx-v1
-helm uninstall galaxy-nginx-v1 -n andromeda
+# Copy values template
+mkdir -p ./exam/course/13
+cp ./templates/q13-values.yaml ./exam/course/13/values.yaml
 
-# Upgrade galaxy-nginx-v2
-helm repo update
-helm upgrade galaxy-nginx-v2 bitnami/nginx -n andromeda
-
-# Install galaxy-redis with 2 replicas
-helm install galaxy-redis bitnami/redis -n andromeda \
-  --set replica.replicaCount=2
-
-# Find and delete broken release
-helm list -n andromeda -a  # Find releases in pending-install state
-helm uninstall <broken-release-name> -n andromeda
-
-# Verify
-helm list -n andromeda
+# Install with values file
+helm install phoenix-api bitnami/nginx \
+  -n flare \
+  -f ./exam/course/13/values.yaml
 ```
 
-**Explanation:** Helm manages Kubernetes applications as charts. Use `helm list -a` to see all releases including failed ones. Values can be set during install with `--set`.
+**Explanation:** Helm values files override default chart values. Using `-f` applies values from a file, which is more maintainable than multiple `--set` flags and allows version control of configuration.
 
 ---
 
-## Question 14 | InitContainer
+## Question 14 | PostStart Lifecycle Hook
 
 **Solution:**
 
 ```bash
-# Apply the deployment with InitContainer
-kubectl apply -f - <<EOF
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: init-app
-  namespace: orion
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: init-app
-  template:
-    metadata:
-      labels:
-        app: init-app
-    spec:
-      initContainers:
-      - name: init-data
-        image: busybox:1.35
-        command: ['sh', '-c', 'echo "Welcome to Galaxy!" > /data/index.html']
-        volumeMounts:
-        - name: data-volume
-          mountPath: /data
-      containers:
-      - name: nginx
-        image: nginx:1.21-alpine
-        ports:
-        - containerPort: 80
-        volumeMounts:
-        - name: data-volume
-          mountPath: /usr/share/nginx/html
-      volumes:
-      - name: data-volume
-        emptyDir: {}
-EOF
-
-# Verify
-kubectl get pods -n orion -l app=init-app
-kubectl exec -n orion deploy/init-app -- cat /usr/share/nginx/html/index.html
-```
-
-**Explanation:** InitContainers run before the main container starts. They're useful for initialization tasks like populating data, waiting for services, or setting up configurations.
-
----
-
-## Question 15 | Sidecar Logging
-
-**Solution:**
-
-```bash
-# Update the deployment with sidecar
-kubectl apply -f - <<EOF
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: logger-app
-  namespace: pegasus
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: logger-app
-  template:
-    metadata:
-      labels:
-        app: logger-app
-    spec:
-      containers:
-      - name: app
-        image: busybox:1.35
-        command: ["/bin/sh", "-c"]
-        args:
-        - |
-          while true; do
-            echo "\$(date): Application log entry" >> /var/log/app.log
-            sleep 5
-          done
-        volumeMounts:
-        - name: log-volume
-          mountPath: /var/log
-      - name: log-sidecar
-        image: busybox:1.35
-        command: ["tail", "-f", "/var/log/app.log"]
-        volumeMounts:
-        - name: log-volume
-          mountPath: /var/log
-      volumes:
-      - name: log-volume
-        emptyDir: {}
-EOF
-
-# Save YAML
-kubectl get deployment logger-app -n pegasus -o yaml > ./exam/course/15/logger-app.yaml
-
-# View logs
-kubectl logs -n pegasus deploy/logger-app -c log-sidecar
-```
-
-**Explanation:** Sidecar containers complement the main container. A logging sidecar streams log files to stdout, making them accessible via `kubectl logs`.
-
----
-
-## Question 16 | ServiceAccount Token
-
-**Solution:**
-
-```bash
-# Get the ServiceAccount's secret
-SA_SECRET=$(kubectl get serviceaccount galaxy-sa -n cygnus -o jsonpath='{.secrets[0].name}')
-
-# If using Kubernetes 1.24+, create a token
-kubectl create token galaxy-sa -n cygnus > ./exam/course/16/token
-
-# Or for older versions, get from secret
-kubectl get secret galaxy-sa-token -n cygnus -o jsonpath='{.data.token}' | base64 -d > ./exam/course/16/token
-```
-
-**Explanation:** ServiceAccount tokens authenticate pods to the Kubernetes API. In Kubernetes 1.24+, tokens are no longer automatically created as secrets; use `kubectl create token` instead.
-
----
-
-## Question 17 | Liveness Probe
-
-**Solution:**
-
-```bash
-# Create the Pod with liveness probe
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Pod
 metadata:
-  name: liveness-pod
-  namespace: lyra
+  name: lifecycle-pod
+  namespace: phoenix
 spec:
   containers:
-  - name: nginx
-    image: nginx:1.21-alpine
+  - name: main
+    image: nginx:1.21
+    ports:
+    - containerPort: 80
+    lifecycle:
+      postStart:
+        exec:
+          command: ["/bin/sh", "-c", "echo 'Started at \$(date)' > /usr/share/nginx/html/started.txt"]
+EOF
+```
+
+**Explanation:** postStart hooks execute immediately after a container is created (but not necessarily before the container's entrypoint). They're useful for initialization tasks. The hook runs in parallel with the container's main process.
+
+---
+
+## Question 15 | Guaranteed QoS Class
+
+**Solution:**
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: qos-guaranteed
+  namespace: spark
+spec:
+  containers:
+  - name: web
+    image: nginx:1.21
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "128Mi"
+        cpu: "100m"
+EOF
+```
+
+**Explanation:** Guaranteed QoS requires that every container has both memory and CPU requests AND limits set, and requests must equal limits. This ensures the pod gets exactly the resources it requests, making it less likely to be evicted.
+
+---
+
+## Question 16 | ServiceAccount Projected Token
+
+**Solution:**
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: token-pod
+  namespace: magma
+spec:
+  serviceAccountName: fire-sa
+  containers:
+  - name: app
+    image: busybox:1.36
+    command: ["sleep", "3600"]
+    volumeMounts:
+    - name: fire-token
+      mountPath: /var/run/secrets/fire-token
+      readOnly: true
+  volumes:
+  - name: fire-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          path: token
+          expirationSeconds: 3600
+          audience: api
+EOF
+```
+
+**Explanation:** Projected volumes allow mounting ServiceAccount tokens with configurable expiration and audience. This is more secure than the default token mounting as tokens expire and can be scoped to specific audiences.
+
+---
+
+## Question 17 | TCP Liveness Probe
+
+**Solution:**
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tcp-health
+  namespace: ember
+spec:
+  containers:
+  - name: web
+    image: nginx:1.21
     ports:
     - containerPort: 80
     livenessProbe:
-      httpGet:
-        path: /
+      tcpSocket:
         port: 80
       initialDelaySeconds: 10
       periodSeconds: 5
 EOF
-
-# Verify
-kubectl get pod liveness-pod -n lyra
-kubectl describe pod liveness-pod -n lyra | grep -A5 Liveness
 ```
 
-**Explanation:** Liveness probes detect when a container is unhealthy. If the probe fails, Kubernetes restarts the container. HTTP probes check if the application responds to requests.
+**Explanation:** TCP socket probes check if a port is open and accepting connections. They're useful when HTTP probes aren't appropriate (e.g., non-HTTP services). The probe succeeds if the TCP connection is established.
 
 ---
 
-## Question 18 | Readiness Probe
+## Question 18 | Service with Named Ports
 
 **Solution:**
 
 ```bash
-# Create the Pod with readiness probe
 kubectl apply -f - <<EOF
 apiVersion: v1
-kind: Pod
+kind: Service
 metadata:
-  name: readiness-pod
-  namespace: aquila
+  name: web-svc
+  namespace: flame
 spec:
-  containers:
-  - name: busybox
-    image: busybox:1.35
-    command: ["sh", "-c", "touch /tmp/ready && sleep 3600"]
-    readinessProbe:
-      exec:
-        command: ["cat", "/tmp/ready"]
-      initialDelaySeconds: 5
-      periodSeconds: 10
+  type: ClusterIP
+  selector:
+    app: web-app
+  ports:
+  - name: http
+    port: 80
+    targetPort: http-web
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: https-web
+    protocol: TCP
 EOF
-
-# Verify
-kubectl get pod readiness-pod -n aquila
-kubectl describe pod readiness-pod -n aquila | grep -A5 Readiness
 ```
 
-**Explanation:** Readiness probes determine when a pod is ready to receive traffic. Unlike liveness probes, failed readiness probes remove the pod from service endpoints but don't restart it.
+**Explanation:** Named ports allow services to reference ports by name rather than number. This makes configuration more readable and allows pods to change their port numbers without updating service definitions.
 
 ---
 
-## Question 19 | Resource Limits
+## Question 19 | Topology Spread Constraints
 
 **Solution:**
 
 ```bash
-# Update the deployment with resource limits
-kubectl patch deployment resource-app -n draco --type='json' -p='[
-  {"op": "add", "path": "/spec/template/spec/containers/0/resources", "value": {
-    "requests": {"memory": "64Mi", "cpu": "100m"},
-    "limits": {"memory": "128Mi", "cpu": "200m"}
-  }}
-]'
-
-# Or edit directly
-kubectl edit deployment resource-app -n draco
-# Add the resources section under containers
-
-# Verify
-kubectl get deployment resource-app -n draco -o jsonpath='{.spec.template.spec.containers[0].resources}'
-```
-
-**Explanation:** Resource requests guarantee minimum resources for scheduling. Limits cap maximum usage. Setting both helps with capacity planning and prevents resource starvation.
-
----
-
-## Question 20 | Labels and Selectors
-
-**Solution:**
-
-```bash
-# Create the labeled pod
 kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: labeled-pod
-  namespace: phoenix
-  labels:
-    app: galaxy
-    tier: frontend
-    version: v1
+  name: spread-deploy
+  namespace: blaze
 spec:
-  containers:
-  - name: nginx
-    image: nginx:1.21-alpine
+  replicas: 4
+  selector:
+    matchLabels:
+      app: spread-app
+  template:
+    metadata:
+      labels:
+        app: spread-app
+    spec:
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app: spread-app
+      containers:
+      - name: web
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
 EOF
-
-# Find all pods with app=galaxy label
-kubectl get pods --all-namespaces -l app=galaxy > ./exam/course/20/selected-pods.txt
-
-# Verify
-cat ./exam/course/20/selected-pods.txt
 ```
 
-**Explanation:** Labels are key-value pairs for organizing resources. Selectors filter resources by labels. Use `-l key=value` with kubectl to select resources by label.
+**Explanation:** Topology spread constraints control how pods are distributed across topology domains (nodes, zones). `maxSkew: 1` means the difference in pod count between nodes should be at most 1. `ScheduleAnyway` allows scheduling even if constraints can't be fully satisfied.
 
 ---
 
-## Question 21 | Rollback Deployment
+## Question 20 | Field Selectors
 
 **Solution:**
 
 ```bash
-# Check rollout history
-kubectl rollout history deployment/rollback-app -n hydra
-
-# Rollback to previous revision
-kubectl rollout undo deployment/rollback-app -n hydra
-
-# Or rollback to specific revision
-kubectl rollout undo deployment/rollback-app -n hydra --to-revision=1
-
-# Verify
-kubectl rollout status deployment/rollback-app -n hydra
-kubectl get deployment rollback-app -n hydra -o jsonpath='{.spec.template.spec.containers[0].image}'
+# Use field selector to find running pods
+kubectl get pods --all-namespaces --field-selector=status.phase=Running \
+  -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' > ./exam/course/20/running-pods.txt
 ```
 
-**Explanation:** Kubernetes maintains deployment revision history. Use `rollout undo` to revert to a previous working version. The `--to-revision` flag allows rollback to any specific revision.
+**Explanation:** Field selectors filter resources based on resource fields (like status, metadata) rather than labels. `--field-selector=status.phase=Running` finds all pods in Running phase across all namespaces.
 
 ---
 
-## Preview Question 1 | Startup Probe
+## Question 21 | Node Drain
 
 **Solution:**
 
 ```bash
-# Create the Pod with startup probe
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Pod
-metadata:
-  name: startup-pod
-  namespace: centaurus
-spec:
-  containers:
-  - name: nginx
-    image: nginx:1.21-alpine
-    ports:
-    - containerPort: 80
-    startupProbe:
-      httpGet:
-        path: /
-        port: 80
-      failureThreshold: 30
-      periodSeconds: 10
+# Write the drain command to file (do not execute)
+mkdir -p ./exam/course/21
+cat <<'EOF' > ./exam/course/21/drain-command.sh
+kubectl drain worker-node-1 \
+  --ignore-daemonsets \
+  --delete-emptydir-data \
+  --force \
+  --timeout=60s
 EOF
-
-# Verify
-kubectl get pod startup-pod -n centaurus
-kubectl describe pod startup-pod -n centaurus | grep -A5 Startup
 ```
 
-**Explanation:** Startup probes are for slow-starting containers. They disable liveness/readiness probes until the container starts. With failureThreshold=30 and periodSeconds=10, the container has 5 minutes to start.
+**Explanation:** `kubectl drain` safely evicts pods from a node for maintenance. Key flags:
+- `--ignore-daemonsets`: Don't fail if DaemonSet pods exist
+- `--delete-emptydir-data`: Delete pods with emptyDir volumes
+- `--force`: Force deletion of pods not managed by controllers
+- `--timeout`: Maximum time to wait for eviction
 
 ---

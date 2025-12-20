@@ -1,0 +1,24 @@
+# Q5 - CrashLoopBackOff Pod for debugging
+# This pod has a command typo that causes it to crash
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: crash-app
+  namespace: ember
+  labels:
+    app: crash-app
+    exam: ckad-simulation2
+spec:
+  containers:
+  - name: app
+    image: busybox:1.36
+    # BUG: "sleepx" is not a valid command - should be "sleep"
+    command: ["sleepx", "3600"]
+    resources:
+      requests:
+        memory: "32Mi"
+        cpu: "50m"
+      limits:
+        memory: "64Mi"
+        cpu: "100m"

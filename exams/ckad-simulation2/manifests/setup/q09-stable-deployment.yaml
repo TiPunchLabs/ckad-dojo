@@ -1,0 +1,35 @@
+# Q9 - Stable deployment for canary pattern
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stable-v1
+  namespace: blaze
+  labels:
+    app: web-frontend
+    version: v1
+    exam: ckad-simulation2
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-frontend
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: web-frontend
+        version: v1
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
