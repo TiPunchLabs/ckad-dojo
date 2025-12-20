@@ -1,6 +1,8 @@
-# CKAD Exam Simulator - Simulation 4 (Norse Mythology)
+# CKAD Exam Simulator - Dojo Genbu 🐢
 
-> **Total Score**: 115 points | **Passing Score**: ~66% (76 points)
+> **Total Score**: 105 points | **Passing Score**: ~66% (69 points)
+>
+> *「玄武は深海を守る」 - La tortue noire garde les profondeurs*
 >
 > **Local Simulator Adaptations**:
 > | Original | Local Simulator |
@@ -11,519 +13,538 @@
 
 ---
 
-## Question 1 | Multi-Container Pod
+## Question 1 | ResourceQuota
 
 | | |
 |---|---|
-| **Points** | 5/115 (4%) |
-| **Namespace** | `odin` |
-| **Resources** | Pod `ravens-pod` |
-| **Template file** | `./exam/course/1/ravens-pod.yaml` |
+| **Points** | 5 |
+| **Namespace** | `shell` |
+| **Resources** | ResourceQuota `namespace-limits` |
 
 ### Task
 
-Odin, the All-father, has two ravens named Huginn and Muninn who gather information from the nine realms.
+Create a **ResourceQuota** named `namespace-limits` in namespace `shell` that enforces:
 
-Create a **multi-container Pod** named `ravens-pod` in Namespace `odin` with two containers:
+| Resource | Limit |
+|----------|-------|
+| Max pods | `10` |
+| Max CPU requests | `4` |
+| Max memory requests | `4Gi` |
+| Max CPU limits | `8` |
+| Max memory limits | `8Gi` |
+| Max ConfigMaps | `10` |
+| Max Secrets | `10` |
 
-1. **Container `huginn`**: image `nginx:1.21-alpine`, serving content on port 80
-2. **Container `muninn`**: image `busybox:1.35`, running command `while true; do wget -qO- http://localhost:80 >> /var/log/raven.log; sleep 5; done`
-
-Both containers should share an **emptyDir** volume mounted at `/var/log` to share the log file.
-
-Use the template at `./exam/course/1/ravens-pod.yaml` and save your final Pod YAML there.
+Verify the quota is applied with `kubectl describe quota`.
 
 ---
 
-## Question 2 | Job
+## Question 2 | HorizontalPodAutoscaler
 
 | | |
 |---|---|
-| **Points** | 5/115 (4%) |
-| **Namespace** | `thor` |
-| **Resources** | Job `mjolnir-forge` |
-| **File to create** | `./exam/course/2/job.yaml` |
+| **Points** | 6 |
+| **Namespace** | `ocean` |
+| **Resources** | HPA `web-app-hpa` |
 
 ### Task
 
-The dwarves need to forge Mjolnir for Thor. Create a **Job** named `mjolnir-forge` in Namespace `thor`.
+A Deployment named `web-app` already exists in namespace `ocean`.
 
-The Job should:
-- Use image `busybox:1.35`
-- Execute command: `echo "Forging Mjolnir..." && sleep 3 && echo "Mjolnir complete!"`
-- Run a total of **4 completions**
-- Run **2 in parallel**
-- Have container name `forge-container`
-- Have label `dwarf: brokkr` on the Pod template
+Create a **HorizontalPodAutoscaler** named `web-app-hpa` that:
 
-Save the Job YAML to `./exam/course/2/job.yaml` and create the Job.
+| Configuration | Value |
+|---------------|-------|
+| Target Deployment | `web-app` |
+| Min replicas | `2` |
+| Max replicas | `10` |
+| Target CPU utilization | `70%` |
+
+Use `kubectl autoscale` or create the HPA manifest directly.
+
+Verify the HPA is created with `kubectl get hpa`.
+
+**Note**: If metrics-server is not installed, the HPA will show `<unknown>` for current metrics. This is expected.
 
 ---
 
-## Question 3 | Init Container
+## Question 3 | StatefulSet
 
 | | |
 |---|---|
-| **Points** | 5/115 (4%) |
-| **Namespace** | `loki` |
-| **Resources** | Pod `shapeshifter` |
+| **Points** | 8 |
+| **Namespace** | `reef` |
+| **Resources** | StatefulSet `db-cluster`, Headless Service `db-headless` |
 
 ### Task
 
-Loki is a shapeshifter who needs to prepare his disguise before appearing.
+Create a **StatefulSet** named `db-cluster` in namespace `reef` for a database cluster:
 
-Create a **Pod** named `shapeshifter` in Namespace `loki` with:
+| Configuration | Value |
+|---------------|-------|
+| Image | `redis:7-alpine` |
+| Replicas | `3` |
+| Container name | `redis` |
+| Container port | `6379` |
+| Volume claim template | `data` with 100Mi storage |
 
-1. **Init container `prepare-disguise`**: image `busybox:1.35`, runs `echo "Preparing disguise..." && sleep 5 && echo ready > /shared/status`
-2. **Main container `loki-main`**: image `nginx:1.21-alpine`
+Also create a **Headless Service** named `db-headless`:
+- Selector: `app: db-cluster`
+- ClusterIP: `None`
+- Port: `6379`
 
-Both containers should share an **emptyDir** volume named `shared-data` mounted at `/shared`.
-
-The main container should only start after the init container completes successfully.
+Verify pods are created with ordinal names (db-cluster-0, db-cluster-1, db-cluster-2).
 
 ---
 
-## Question 4 | CronJob
+## Question 4 | DaemonSet
 
 | | |
 |---|---|
-| **Points** | 5/115 (4%) |
-| **Namespace** | `freya` |
-| **Resources** | CronJob `blessing-ritual` |
-| **File to create** | `./exam/course/4/cronjob.yaml` |
+| **Points** | 6 |
+| **Namespace** | `deep` |
+| **Resources** | DaemonSet `node-monitor` |
 
 ### Task
 
-Freya performs blessing rituals at regular intervals for love and fertility.
+Create a **DaemonSet** named `node-monitor` in namespace `deep`:
 
-Create a **CronJob** named `blessing-ritual` in Namespace `freya` that:
-- Runs **every 15 minutes** (schedule: `*/15 * * * *`)
-- Uses image `busybox:1.35`
-- Executes: `echo "Freya's blessing at $(date)"`
-- Has container name `ritual-container`
-- Keeps only **3 successful** job histories
-- Keeps only **1 failed** job history
+| Configuration | Value |
+|---------------|-------|
+| Image | `busybox:1.36` |
+| Command | `["sh", "-c", "while true; do echo Node: $NODE_NAME; sleep 60; done"]` |
+| Container name | `monitor` |
 
-Save the CronJob YAML to `./exam/course/4/cronjob.yaml` and create it.
+The container should have an environment variable `NODE_NAME` set via the **Downward API** from `spec.nodeName`.
+
+Add a **toleration** to run on all nodes including control-plane nodes:
+- Key: `node-role.kubernetes.io/control-plane`
+- Operator: `Exists`
+- Effect: `NoSchedule`
 
 ---
 
-## Question 5 | PersistentVolume and PVC
+## Question 5 | PriorityClass
 
 | | |
 |---|---|
-| **Points** | 6/115 (5%) |
-| **Namespace** | `heimdall` |
-| **Resources** | PV `bifrost-storage`, PVC `bifrost-claim` |
-| **Template file** | `./exam/course/5/pv-pvc.yaml` |
+| **Points** | 5 |
+| **Namespace** | `tide` |
+| **Resources** | PriorityClass `critical-priority`, Pod `critical-pod` |
 
 ### Task
 
-Heimdall guards the Bifrost bridge and needs persistent storage for his observations.
+1. Create a **PriorityClass** named `critical-priority`:
+   - Value: `1000000`
+   - Global default: `false`
+   - Description: "Critical workloads priority"
 
-1. Create a **PersistentVolume** named `bifrost-storage`:
-   - Capacity: **500Mi**
-   - Access mode: **ReadWriteOnce**
-   - Host path: `/data/bifrost`
-   - Storage class: `manual`
+2. Create a **Pod** named `critical-pod` in namespace `tide`:
+   - Image: `nginx:1.21`
+   - Container name: `nginx`
+   - Use the `critical-priority` PriorityClass
 
-2. Create a **PersistentVolumeClaim** named `bifrost-claim` in Namespace `heimdall`:
-   - Request: **200Mi**
-   - Access mode: **ReadWriteOnce**
-   - Storage class: `manual`
-
-Verify the PVC is bound to the PV. Use template at `./exam/course/5/pv-pvc.yaml`.
+Verify the pod has the correct priority with `kubectl get pod critical-pod -o yaml | grep priority`.
 
 ---
 
-## Question 6 | StorageClass
+## Question 6 | startupProbe
 
 | | |
 |---|---|
-| **Points** | 4/115 (3%) |
-| **Namespace** | `baldur` |
-| **Resources** | StorageClass `light-storage` |
-| **File to create** | `./exam/course/6/storageclass.yaml` |
+| **Points** | 5 |
+| **Namespace** | `wave` |
+| **Resources** | Pod `slow-starter` |
 
 ### Task
 
-Baldur, the god of light, needs a special storage class for his radiant data.
+Create a **Pod** named `slow-starter` in namespace `wave` for an application that takes a long time to start:
 
-Create a **StorageClass** named `light-storage` with:
-- Provisioner: `kubernetes.io/no-provisioner`
-- Volume binding mode: `WaitForFirstConsumer`
-- Reclaim policy: `Retain`
-- Parameters: `type: local`
+| Configuration | Value |
+|---------------|-------|
+| Image | `nginx:1.21` |
+| Container name | `app` |
 
-Save the YAML to `./exam/course/6/storageclass.yaml` and create the StorageClass.
+Configure a **startupProbe**:
+| Setting | Value |
+|---------|-------|
+| HTTP GET path | `/` |
+| Port | `80` |
+| failureThreshold | `30` |
+| periodSeconds | `10` |
+
+This allows up to 5 minutes (30 * 10 seconds) for the application to start.
+
+Also add a **livenessProbe** with HTTP GET on `/` port `80` with default settings.
 
 ---
 
-## Question 7 | Deployment with Strategy
+## Question 7 | Pod Affinity (Preferred)
 
 | | |
 |---|---|
-| **Points** | 5/115 (4%) |
-| **Namespace** | `tyr` |
-| **Resources** | Deployment `warrior-legion` |
-| **File to create** | `./exam/course/7/deployment.yaml` |
+| **Points** | 6 |
+| **Namespace** | `coral` |
+| **Resources** | Deployment `web-frontend` |
 
 ### Task
 
-Tyr, the god of war, commands a legion of warriors that must be deployed strategically.
+Create a **Deployment** named `web-frontend` in namespace `coral`:
 
-Create a **Deployment** named `warrior-legion` in Namespace `tyr`:
-- Image: `nginx:1.21-alpine`
-- Replicas: **4**
-- Container name: `warrior`
-- Container port: **80**
-- Deployment strategy: **RollingUpdate** with `maxSurge: 1` and `maxUnavailable: 1`
-- Label on pods: `legion: einherjar`
+| Configuration | Value |
+|---------------|-------|
+| Image | `nginx:1.21` |
+| Replicas | `3` |
+| Container name | `frontend` |
+| Labels | `app: web-frontend`, `tier: frontend` |
 
-Save to `./exam/course/7/deployment.yaml` and create the Deployment.
+Configure **preferredDuringSchedulingIgnoredDuringExecution** pod affinity:
+- Weight: `100`
+- Prefer scheduling on the **same node** as pods with label `app: cache`
+- Topology key: `kubernetes.io/hostname`
+
+**Note**: This is a soft preference. Pods will be scheduled even if no cache pods exist.
 
 ---
 
-## Question 8 | Scale Deployment
+## Question 8 | Ingress with Path Routing
 
 | | |
 |---|---|
-| **Points** | 5/115 (4%) |
-| **Namespace** | `njord` |
-| **Resources** | Deployment `sea-fleet` (pre-existing) |
-| **File to create** | `./exam/course/8/scale-command.sh` |
+| **Points** | 6 |
+| **Namespace** | `lagoon` |
+| **Resources** | Ingress `api-routing` |
 
 ### Task
 
-Njord, the god of the sea, has a fleet that needs to be scaled for an upcoming voyage.
+Services `api-v1-svc` and `api-v2-svc` already exist in namespace `lagoon`.
 
-There is an existing **Deployment** named `sea-fleet` in Namespace `njord` with 2 replicas.
+Create an **Ingress** named `api-routing` with path-based routing:
 
-1. **Scale** the Deployment to **5 replicas**
-2. Write the kubectl command used to `./exam/course/8/scale-command.sh`
-3. Verify all 5 pods are running
+| Path | Backend Service | Port |
+|------|-----------------|------|
+| `/v1` | `api-v1-svc` | `80` |
+| `/v2` | `api-v2-svc` | `80` |
+
+Configuration:
+- Host: `api.lagoon.local`
+- PathType: `Prefix`
+- IngressClassName: `nginx`
 
 ---
 
-## Question 9 | Deployment Rollback
+## Question 9 | Job with Completions and Parallelism
 
 | | |
 |---|---|
-| **Points** | 6/115 (5%) |
-| **Namespace** | `njord` |
-| **Resources** | Deployment `voyage-app` (pre-existing, broken) |
-| **File to create** | `./exam/course/9/rollback-command.sh` |
+| **Points** | 5 |
+| **Namespace** | `current` |
+| **Resources** | Job `parallel-processor` |
 
 ### Task
 
-A sailor made an update to the `voyage-app` Deployment in Namespace `njord`, but the new version has a broken image and pods are failing.
+Create a **Job** named `parallel-processor` in namespace `current`:
 
-1. Check the **rollout history** of the Deployment
-2. **Rollback** to the previous working revision
-3. Write the rollback command to `./exam/course/9/rollback-command.sh`
-4. Verify the Deployment is healthy again
+| Configuration | Value |
+|---------------|-------|
+| Image | `busybox:1.36` |
+| Command | `["sh", "-c", "echo Processing batch $RANDOM && sleep 5"]` |
+| Container name | `processor` |
+| Completions | `6` |
+| Parallelism | `3` |
+| backoffLimit | `4` |
+
+The Job should run 6 total completions with 3 running in parallel at a time.
+
+Verify with `kubectl get jobs` that completions reach 6/6.
 
 ---
 
-## Question 10 | Helm Management
+## Question 10 | kubectl debug
 
 | | |
 |---|---|
-| **Points** | 5/115 (4%) |
-| **Namespace** | `asgard` |
-| **Resources** | Helm releases |
+| **Points** | 4 |
+| **Namespace** | `anchor` |
+| **Resources** | Pod `troubled-app` |
+| **File to create** | `./exam/course/10/debug-output.txt` |
 
 ### Task
 
-The Asgardian DevOps team needs help managing Helm releases in Namespace `asgard`:
+A Pod named `troubled-app` exists in namespace `anchor` but you need to debug it.
 
-1. **Delete** release `asgard-web-v1`
-2. **Upgrade** release `asgard-web-v2` to any newer version of chart `bitnami/nginx` available
-3. **Install** a new release `asgard-gateway` of chart `bitnami/apache` with **2 replicas** (set via Helm values)
-4. Find and **delete** a broken release stuck in `pending-install` state
+1. Use `kubectl debug` to create an **ephemeral container** in the running pod:
+   - Image: `busybox:1.36`
+   - Container name: `debugger`
+
+2. From within the ephemeral container, run `ls -la /data` and save the output to `./exam/course/10/debug-output.txt`
+
+**Note**: If your cluster doesn't support ephemeral containers, use `kubectl debug` with `--copy-to` to create a debug copy of the pod instead.
 
 ---
 
-## Question 11 | ClusterIP Service
+## Question 11 | EndpointSlice
 
 | | |
 |---|---|
-| **Points** | 5/115 (4%) |
-| **Namespace** | `thor` |
-| **Resources** | Service `thunder-svc`, Pod `lightning-pod` (pre-existing) |
-| **File to create** | `./exam/course/11/service.yaml` |
+| **Points** | 3 |
+| **Namespace** | `shell` |
+| **File to create** | `./exam/course/11/endpoints-info.txt` |
 
 ### Task
 
-Thor's lightning needs to be accessible within the cluster.
+A Service named `backend-svc` exists in namespace `shell` with multiple pod endpoints.
 
-There is an existing Pod `lightning-pod` in Namespace `thor` with label `app: lightning`.
+1. List all **EndpointSlices** for the service `backend-svc`
+2. Save the following information to `./exam/course/11/endpoints-info.txt`:
+   - Number of endpoints
+   - IP addresses of all endpoints
+   - Ports exposed
 
-Create a **ClusterIP Service** named `thunder-svc` in Namespace `thor`:
-- Selector: `app: lightning`
-- Port: **8080** → targetPort: **80**
-- Protocol: TCP
-
-Save to `./exam/course/11/service.yaml`. Verify the service has endpoints.
+Use `kubectl get endpointslices` and `kubectl describe endpointslice`.
 
 ---
 
-## Question 12 | NetworkPolicy
+## Question 12 | Service internalTrafficPolicy
 
 | | |
 |---|---|
-| **Points** | 6/115 (5%) |
-| **Namespace** | `freya` |
-| **Resources** | NetworkPolicy `love-protection` |
-| **Pre-existing** | Pods with labels `role: lover` and `role: protector` |
+| **Points** | 4 |
+| **Namespace** | `ocean` |
+| **Resources** | Service `local-svc` |
 
 ### Task
 
-Freya's realm needs protection. Only certain pods should be able to communicate.
+A Service named `local-svc` exists in namespace `ocean`.
 
-Create a **NetworkPolicy** named `love-protection` in Namespace `freya`:
+Modify the Service to use **node-local traffic routing**:
 
-1. Apply to all pods with label `role: lover`
-2. **Allow ingress** only from pods with label `role: protector` on port **80**
-3. **Allow egress** to any pod in the same namespace on port **53** (DNS) and to pods with label `role: protector` on port **443**
+1. Set `internalTrafficPolicy: Local`
 
-Save to `./exam/course/12/networkpolicy.yaml`.
+This ensures traffic is only routed to pods on the same node as the client, reducing latency.
+
+Verify the change with `kubectl get svc local-svc -o yaml`.
 
 ---
 
-## Question 13 | Ingress
+## Question 13 | EmptyDir with sizeLimit
 
 | | |
 |---|---|
-| **Points** | 5/115 (4%) |
-| **Namespace** | `baldur` |
-| **Resources** | Ingress `light-gateway` |
-| **Template file** | `./exam/course/13/ingress.yaml` |
-| **Pre-existing** | Service `radiance-svc` on port 80 |
+| **Points** | 4 |
+| **Namespace** | `reef` |
+| **Resources** | Pod `cache-pod` |
 
 ### Task
 
-Baldur's radiance needs to be exposed to the outside world.
+Create a **Pod** named `cache-pod` in namespace `reef`:
 
-Create an **Ingress** named `light-gateway` in Namespace `baldur`:
-- Host: `baldur.asgard.local`
-- Path: `/shine` (pathType: Prefix)
-- Backend: Service `radiance-svc` on port **80**
-- Ingress class: `nginx`
+| Configuration | Value |
+|---------------|-------|
+| Image | `redis:7-alpine` |
+| Container name | `cache` |
 
-Use template at `./exam/course/13/ingress.yaml`.
+Add an **emptyDir** volume with:
+- Name: `cache-volume`
+- sizeLimit: `100Mi`
+- medium: `Memory` (use RAM-backed tmpfs)
+
+Mount the volume at `/cache`.
+
+This creates a memory-backed cache limited to 100Mi.
 
 ---
 
-## Question 14 | NodePort Service
+## Question 14 | Secret with stringData
 
 | | |
 |---|---|
-| **Points** | 5/115 (4%) |
-| **Namespace** | `asgard` |
-| **Resources** | Service `realm-gateway`, Deployment `rainbow-bridge` (pre-existing) |
-| **File to create** | `./exam/course/14/nodeport-service.yaml` |
+| **Points** | 4 |
+| **Namespace** | `deep` |
+| **Resources** | Secret `app-credentials`, Pod `secret-consumer` |
 
 ### Task
 
-The Rainbow Bridge (Bifrost) needs to be accessible from outside the cluster.
+1. Create a **Secret** named `app-credentials` in namespace `deep` using **stringData** (plain text, auto-encoded):
 
-There is an existing Deployment `rainbow-bridge` in Namespace `asgard` with label `app: bifrost`.
+   | Key | Value |
+   |-----|-------|
+   | `api-key` | `super-secret-key-12345` |
+   | `db-password` | `postgres@secure!` |
 
-Create a **NodePort Service** named `realm-gateway`:
-- Selector: `app: bifrost`
-- Port: **80** → targetPort: **80**
-- NodePort: **30080**
+2. Make the Secret **immutable**
 
-Save to `./exam/course/14/nodeport-service.yaml`.
+3. Create a **Pod** named `secret-consumer`:
+   - Image: `busybox:1.36`
+   - Command: `["sh", "-c", "cat /secrets/api-key && sleep 3600"]`
+   - Mount the secret at `/secrets`
 
 ---
 
-## Question 15 | RBAC Role and RoleBinding
+## Question 15 | kubectl patch
 
 | | |
 |---|---|
-| **Points** | 5/115 (4%) |
-| **Namespace** | `odin` |
-| **Resources** | Role `wisdom-role`, RoleBinding `wisdom-binding`, ServiceAccount `mimir-sa` |
+| **Points** | 5 |
+| **Namespace** | `tide` |
+| **Resources** | Deployment `patch-demo` |
+| **File to create** | `./exam/course/15/patch-commands.sh` |
 
 ### Task
 
-Odin drinks from Mimir's well to gain wisdom. Create RBAC to allow Mimir access.
+A Deployment named `patch-demo` exists in namespace `tide`.
 
-1. Create a **ServiceAccount** named `mimir-sa` in Namespace `odin`
+Use `kubectl patch` to make the following changes:
 
-2. Create a **Role** named `wisdom-role` in Namespace `odin` that allows:
-   - `get`, `list`, `watch` on `pods`
-   - `get`, `list` on `secrets`
+1. **Strategic merge patch**: Update the image to `nginx:1.22`
+2. **JSON patch**: Add a new environment variable `ENV_MODE=production`
+3. **JSON patch**: Update replicas to `4`
 
-3. Create a **RoleBinding** named `wisdom-binding` that binds `wisdom-role` to `mimir-sa`
+Save all three patch commands to `./exam/course/15/patch-commands.sh`.
+
+Verify changes with `kubectl describe deployment patch-demo`.
 
 ---
 
-## Question 16 | Secret
+## Question 16 | NetworkPolicy with IPBlock
 
 | | |
 |---|---|
-| **Points** | 5/115 (4%) |
-| **Namespace** | `loki` |
-| **Resources** | Secret `trick-secret`, Pod `trickster-pod` |
+| **Points** | 8 |
+| **Namespace** | `wave` |
+| **Resources** | NetworkPolicy `external-access` |
 
 ### Task
 
-Loki needs to store his tricks securely and use them in a Pod.
+Pods labeled `tier: api` exist in namespace `wave`.
 
-1. Create a **Secret** named `trick-secret` in Namespace `loki` with:
-   - `username: bGtpLXRyaWNrc3Rlcg==` (base64 encoded)
-   - `password: c2hhcGVzaGlmdDEyMw==` (base64 encoded)
+Create a **NetworkPolicy** named `external-access` that:
 
-2. Create a **Pod** named `trickster-pod` with image `nginx:1.21-alpine` that:
-   - Mounts the secret as a volume at `/etc/tricks`
-   - Also exposes `username` as environment variable `TRICK_USER`
+1. Applies to pods with label `tier: api`
+
+2. **Allows ingress** from:
+   - Pods with label `tier: client` on port `80`
+   - External IP range `10.0.0.0/8` on port `80` (using ipBlock)
+   - **Except** block `10.0.1.0/24` (internal restricted subnet)
+
+3. **Allows egress** to:
+   - DNS on port `53` UDP/TCP (any destination)
+   - External IP range `0.0.0.0/0` on port `443` (HTTPS to external APIs)
 
 ---
 
-## Question 17 | SecurityContext
+## Question 17 | Pod with hostNetwork
 
 | | |
 |---|---|
-| **Points** | 6/115 (5%) |
-| **Namespace** | `heimdall` |
-| **Resources** | Pod `guardian-pod` |
-| **File to create** | `./exam/course/17/secure-pod.yaml` |
+| **Points** | 5 |
+| **Namespace** | `coral` |
+| **Resources** | Pod `network-diagnostic` |
 
 ### Task
 
-Heimdall, the guardian, needs a secure Pod with specific capabilities.
+Create a **Pod** named `network-diagnostic` in namespace `coral` for network troubleshooting:
 
-Create a **Pod** named `guardian-pod` in Namespace `heimdall`:
-- Image: `nginx:1.21-alpine`
-- Container name: `guardian`
+| Configuration | Value |
+|---------------|-------|
+| Image | `nicolaka/netshoot:latest` |
+| Command | `["sleep", "3600"]` |
+| Container name | `netshoot` |
 
-With **SecurityContext** at container level:
-- `runAsUser: 1000`
-- `runAsGroup: 3000`
-- `allowPrivilegeEscalation: false`
-- Capabilities: add `NET_BIND_SERVICE`, drop `ALL`
+Configure the pod with:
+- `hostNetwork: true` - Use the host's network namespace
+- `hostPID: true` - Use the host's PID namespace
 
-Save to `./exam/course/17/secure-pod.yaml`.
+**Warning**: This gives the pod elevated access. Only use for debugging.
+
+Verify with `kubectl exec` that the pod can see host network interfaces (`ip addr`).
 
 ---
 
-## Question 18 | ResourceQuota
+## Question 18 | ClusterRole and ClusterRoleBinding
 
 | | |
 |---|---|
-| **Points** | 5/115 (4%) |
-| **Namespace** | `tyr` |
-| **Resources** | ResourceQuota `war-limits` |
-| **File to create** | `./exam/course/18/quota.yaml` |
+| **Points** | 6 |
+| **Namespace** | `lagoon` (ServiceAccount only) |
+| **Resources** | ClusterRole `node-reader`, ClusterRoleBinding `node-reader-binding` |
 
 ### Task
 
-Tyr's war resources must be limited to prevent over-consumption.
+Create cluster-wide RBAC for node monitoring:
 
-Create a **ResourceQuota** named `war-limits` in Namespace `tyr`:
-- Max pods: **10**
-- Max CPU requests: **2** cores
-- Max memory requests: **2Gi**
-- Max CPU limits: **4** cores
-- Max memory limits: **4Gi**
+1. Create a **ServiceAccount** named `node-monitor-sa` in namespace `lagoon`
 
-Save to `./exam/course/18/quota.yaml` and apply it.
+2. Create a **ClusterRole** named `node-reader`:
+   - Allow `get`, `list`, `watch` on `nodes`
+   - Allow `get`, `list` on `namespaces`
+   - Allow `get` on `nodes/status`
+
+3. Create a **ClusterRoleBinding** named `node-reader-binding`:
+   - Bind `node-reader` ClusterRole to `node-monitor-sa` ServiceAccount
+
+Verify with `kubectl auth can-i list nodes --as=system:serviceaccount:lagoon:node-monitor-sa`.
 
 ---
 
-## Question 19 | ConfigMap
+## Question 19 | kubectl auth can-i
 
 | | |
 |---|---|
-| **Points** | 5/115 (4%) |
-| **Namespace** | `njord` |
-| **Resources** | ConfigMap `navigation-config`, Pod `navigator-pod` |
+| **Points** | 4 |
+| **Namespace** | `current` |
+| **File to create** | `./exam/course/19/permissions.txt` |
 
 ### Task
 
-Njord's navigators need configuration for their sea voyages.
+A ServiceAccount named `app-deployer` exists in namespace `current` with specific permissions.
 
-1. Create a **ConfigMap** named `navigation-config` in Namespace `njord` with:
-   - `destination: midgard`
-   - `route: coastal`
-   - `speed: fast`
+Use `kubectl auth can-i` to check and document its permissions:
 
-2. Create a **Pod** named `navigator-pod` with image `busybox:1.35` that:
-   - Uses command: `env && sleep 3600`
-   - Loads ALL ConfigMap keys as environment variables using `envFrom`
+1. Check if it can:
+   - Create deployments in `current` namespace
+   - Delete deployments in `current` namespace
+   - Create pods in `current` namespace
+   - Delete secrets in `current` namespace
+   - List nodes (cluster-wide)
+
+2. Save the results in the following format to `./exam/course/19/permissions.txt`:
+   ```
+   create deployments: yes/no
+   delete deployments: yes/no
+   create pods: yes/no
+   delete secrets: yes/no
+   list nodes: yes/no
+   ```
 
 ---
 
-## Question 20 | Probes
+## Question 20 | Multi-Container with Shared Volume
 
 | | |
 |---|---|
-| **Points** | 6/115 (5%) |
-| **Namespace** | `asgard` |
-| **Resources** | Pod `watchman-pod` |
-| **File to create** | `./exam/course/20/probe-pod.yaml` |
+| **Points** | 6 |
+| **Namespace** | `anchor` |
+| **Resources** | Pod `data-pipeline` |
 
 ### Task
 
-Asgard needs a watchman Pod with proper health checks.
+Create a **Pod** named `data-pipeline` in namespace `anchor` implementing a producer-consumer pattern:
 
-Create a **Pod** named `watchman-pod` in Namespace `asgard`:
-- Image: `nginx:1.21-alpine`
-- Container name: `watchman`
+**Container 1: producer**
+- Image: `busybox:1.36`
+- Command: `["sh", "-c", "while true; do date >> /data/log.txt; sleep 5; done"]`
 
-Configure:
-1. **Readiness Probe**: HTTP GET on path `/` port 80, initialDelaySeconds: 5, periodSeconds: 10
-2. **Liveness Probe**: HTTP GET on path `/` port 80, initialDelaySeconds: 15, periodSeconds: 20
+**Container 2: consumer**
+- Image: `busybox:1.36`
+- Command: `["sh", "-c", "tail -f /data/log.txt"]`
 
-Save to `./exam/course/20/probe-pod.yaml`.
+**Container 3: monitor**
+- Image: `busybox:1.36`
+- Command: `["sh", "-c", "while true; do wc -l /data/log.txt; sleep 10; done"]`
+
+All three containers must share an **emptyDir** volume mounted at `/data`.
+
+Verify all containers are running and check logs of the consumer container.
 
 ---
-
-## Question 21 | Debug Pod
-
-| | |
-|---|---|
-| **Points** | 5/115 (4%) |
-| **Namespace** | `asgard` |
-| **Resources** | Pod `broken-valkyrie` (pre-existing, failing) |
-| **Files to create** | `./exam/course/21/logs.txt`, `./exam/course/21/fix.txt` |
-
-### Task
-
-A Valkyrie Pod is failing and needs debugging.
-
-There is a **Pod** named `broken-valkyrie` in Namespace `asgard` that is not starting correctly.
-
-1. Get the **logs** of the failing Pod and save to `./exam/course/21/logs.txt`
-2. **Describe** the Pod and identify the issue
-3. Write a brief explanation of the problem to `./exam/course/21/fix.txt`
-4. **Fix** the Pod by recreating it with the correct configuration
-
----
-
-## Question 22 | Container Image Build
-
-| | |
-|---|---|
-| **Points** | 6/115 (5%) |
-| **Namespace** | `asgard` |
-| **Resources** | Pod `runescript-pod` |
-| **Template files** | `./exam/course/22/image/Dockerfile`, `./exam/course/22/image/app.sh` |
-
-### Task
-
-The Asgardians need a custom container image for their runescript application.
-
-1. Build a container image using the **Dockerfile** at `./exam/course/22/image/`:
-   - Tag the image as `localhost:5000/runescript:v1`
-
-2. **Push** the image to the local registry at `localhost:5000`
-
-3. Create a **Pod** named `runescript-pod` in Namespace `asgard`:
-   - Image: `localhost:5000/runescript:v1`
-   - Container name: `runescript`
-
-Verify the Pod is running.

@@ -1,5 +1,6 @@
 #!/bin/bash
-# scoring-functions.sh - Scoring functions for CKAD Simulation 2
+# scoring-functions.sh - Scoring functions for CKAD Simulation 2 (Dojo Suzaku 🔥)
+# 21 original questions - 112 points total
 # Each function returns the number of points scored and prints detailed results
 
 # Source common utilities from scripts/lib
@@ -30,20 +31,20 @@ check_criterion() {
 }
 
 # ============================================================================
-# QUESTION 1 - Nodes (1 point)
+# QUESTION 1 - API Resources (1 point)
 # ============================================================================
 score_q1() {
     local score=0
     local total=1
 
-    echo "Question 1 | Nodes"
+    echo "Question 1 | API Resources"
 
-    # Check if file exists and contains node list (Ready or NotReady status)
-    local file="$EXAM_DIR/1/nodes"
-    if [ -f "$file" ] && grep -qE "Ready|NotReady" "$file" 2>/dev/null; then
-        check_criterion "File contains node list" "true" && ((score++))
+    # Check if file exists and contains API resources
+    local file="$EXAM_DIR/1/api-resources"
+    if [ -f "$file" ] && grep -qE "NAME.*SHORTNAMES|pods.*po|deployments.*deploy" "$file" 2>/dev/null; then
+        check_criterion "File contains API resources list" "true" && ((score++))
     else
-        check_criterion "File contains node list" "false" || true
+        check_criterion "File contains API resources list" "false" || true
     fi
 
     echo "$score/$total"
@@ -51,98 +52,96 @@ score_q1() {
 }
 
 # ============================================================================
-# QUESTION 2 - Multi-container Pod (5 points)
+# QUESTION 2 - Deployment Recreate Strategy (6 points)
 # ============================================================================
 score_q2() {
     local score=0
-    local total=5
+    local total=6
 
-    echo "Question 2 | Multi-container Pod"
+    echo "Question 2 | Deployment Recreate Strategy"
 
-    # Check Pod exists
-    local pod_exists=$(kubectl get pod multi-container-pod -n andromeda 2>/dev/null && echo true || echo false)
-    check_criterion "Pod multi-container-pod exists" "$pod_exists" && ((score++))
+    # Check Deployment exists
+    local deploy_exists=$(kubectl get deployment fire-app -n blaze 2>/dev/null && echo true || echo false)
+    check_criterion "Deployment fire-app exists in blaze" "$deploy_exists" && ((score++))
 
-    # Check Pod is running
-    local pod_status=$(kubectl get pod multi-container-pod -n andromeda -o jsonpath='{.status.phase}' 2>/dev/null)
-    check_criterion "Pod is Running" "$([ "$pod_status" = "Running" ] && echo true || echo false)" && ((score++))
+    # Check replica count
+    local replicas=$(kubectl get deployment fire-app -n blaze -o jsonpath='{.spec.replicas}' 2>/dev/null)
+    check_criterion "Deployment has 3 replicas" "$([ "$replicas" = "3" ] && echo true || echo false)" && ((score++))
 
-    # Check container count
-    local container_count=$(kubectl get pod multi-container-pod -n andromeda -o jsonpath='{.spec.containers[*].name}' 2>/dev/null | wc -w)
-    check_criterion "Pod has 2 containers" "$([ "$container_count" = "2" ] && echo true || echo false)" && ((score++))
+    # Check strategy type is Recreate
+    local strategy=$(kubectl get deployment fire-app -n blaze -o jsonpath='{.spec.strategy.type}' 2>/dev/null)
+    check_criterion "Strategy type is Recreate" "$([ "$strategy" = "Recreate" ] && echo true || echo false)" && ((score++))
 
-    # Check first container image
-    local img1=$(kubectl get pod multi-container-pod -n andromeda -o jsonpath='{.spec.containers[0].image}' 2>/dev/null)
-    check_criterion "First container uses nginx image" "$(echo "$img1" | grep -q "nginx" && echo true || echo false)" && ((score++))
+    # Check container name
+    local container_name=$(kubectl get deployment fire-app -n blaze -o jsonpath='{.spec.template.spec.containers[0].name}' 2>/dev/null)
+    check_criterion "Container name is fire-container" "$([ "$container_name" = "fire-container" ] && echo true || echo false)" && ((score++))
 
-    # Check second container image
-    local img2=$(kubectl get pod multi-container-pod -n andromeda -o jsonpath='{.spec.containers[1].image}' 2>/dev/null)
-    check_criterion "Second container uses busybox image" "$(echo "$img2" | grep -q "busybox" && echo true || echo false)" && ((score++))
+    # Check YAML file saved
+    local yaml_file="$EXAM_DIR/2/fire-app.yaml"
+    check_criterion "YAML saved to exam/course/2/fire-app.yaml" "$([ -f "$yaml_file" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
     return 0
 }
 
 # ============================================================================
-# QUESTION 3 - CronJob (5 points)
+# QUESTION 3 - Job with Timeout (6 points)
 # ============================================================================
 score_q3() {
     local score=0
-    local total=5
+    local total=6
 
-    echo "Question 3 | CronJob"
+    echo "Question 3 | Job with Timeout"
 
-    # Check CronJob exists
-    local cronjob_exists=$(kubectl get cronjob galaxy-backup -n orion 2>/dev/null && echo true || echo false)
-    check_criterion "CronJob galaxy-backup exists" "$cronjob_exists" && ((score++))
+    # Check Job exists
+    local job_exists=$(kubectl get job data-processor -n spark 2>/dev/null && echo true || echo false)
+    check_criterion "Job data-processor exists in spark" "$job_exists" && ((score++))
 
-    # Check schedule
-    local schedule=$(kubectl get cronjob galaxy-backup -n orion -o jsonpath='{.spec.schedule}' 2>/dev/null)
-    check_criterion "Schedule is */5 * * * *" "$([ "$schedule" = "*/5 * * * *" ] && echo true || echo false)" && ((score++))
+    # Check activeDeadlineSeconds
+    local deadline=$(kubectl get job data-processor -n spark -o jsonpath='{.spec.activeDeadlineSeconds}' 2>/dev/null)
+    check_criterion "activeDeadlineSeconds is 60" "$([ "$deadline" = "60" ] && echo true || echo false)" && ((score++))
+
+    # Check backoffLimit
+    local backoff=$(kubectl get job data-processor -n spark -o jsonpath='{.spec.backoffLimit}' 2>/dev/null)
+    check_criterion "backoffLimit is 2" "$([ "$backoff" = "2" ] && echo true || echo false)" && ((score++))
 
     # Check image
-    local image=$(kubectl get cronjob galaxy-backup -n orion -o jsonpath='{.spec.jobTemplate.spec.template.spec.containers[0].image}' 2>/dev/null)
+    local image=$(kubectl get job data-processor -n spark -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
     check_criterion "Uses busybox image" "$(echo "$image" | grep -q "busybox" && echo true || echo false)" && ((score++))
 
-    # Check command
-    local cmd=$(kubectl get cronjob galaxy-backup -n orion -o jsonpath='{.spec.jobTemplate.spec.template.spec.containers[0].command}' 2>/dev/null)
-    check_criterion "Command includes echo" "$(echo "$cmd" | grep -q "echo" && echo true || echo false)" && ((score++))
-
-    # Check YAML file exists
-    local yaml_file="$EXAM_DIR/3/cronjob.yaml"
-    check_criterion "YAML file saved to exam/course/3/cronjob.yaml" "$([ -f "$yaml_file" ] && echo true || echo false)" && ((score++))
+    # Check YAML file
+    local yaml_file="$EXAM_DIR/3/job.yaml"
+    check_criterion "YAML saved to exam/course/3/job.yaml" "$([ -f "$yaml_file" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
     return 0
 }
 
 # ============================================================================
-# QUESTION 4 - Deployment Scaling (4 points)
+# QUESTION 4 - Helm Template Debug (5 points)
 # ============================================================================
 score_q4() {
     local score=0
-    local total=4
+    local total=5
 
-    echo "Question 4 | Deployment Scaling"
+    echo "Question 4 | Helm Template Debug"
 
-    # Check Deployment exists
-    local deploy_exists=$(kubectl get deployment star-app -n pegasus 2>/dev/null && echo true || echo false)
-    check_criterion "Deployment star-app exists" "$deploy_exists" && ((score++))
+    local file="$EXAM_DIR/4/rendered.yaml"
 
-    # Check replica count
-    local replicas=$(kubectl get deployment star-app -n pegasus -o jsonpath='{.spec.replicas}' 2>/dev/null)
-    check_criterion "Deployment has 5 replicas" "$([ "$replicas" = "5" ] && echo true || echo false)" && ((score++))
+    # Check file exists
+    check_criterion "File rendered.yaml exists" "$([ -f "$file" ] && echo true || echo false)" && ((score++))
 
-    # Check all pods are ready
-    local ready=$(kubectl get deployment star-app -n pegasus -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
-    check_criterion "All 5 replicas are ready" "$([ "$ready" = "5" ] && echo true || echo false)" && ((score++))
-
-    # Check command file exists
-    local cmd_file="$EXAM_DIR/4/scale-command.sh"
-    if [ -f "$cmd_file" ] && grep -q "kubectl scale" "$cmd_file" 2>/dev/null; then
-        check_criterion "Scale command saved to file" "true" && ((score++))
+    # Check file contains Kubernetes manifests
+    if [ -f "$file" ]; then
+        check_criterion "File contains apiVersion" "$(grep -q "apiVersion:" "$file" && echo true || echo false)" && ((score++))
+        check_criterion "File contains kind" "$(grep -q "kind:" "$file" && echo true || echo false)" && ((score++))
+        check_criterion "File contains metadata" "$(grep -q "metadata:" "$file" && echo true || echo false)" && ((score++))
+        check_criterion "File has substantial content (>50 lines)" "$([ $(wc -l < "$file") -gt 50 ] && echo true || echo false)" && ((score++))
     else
-        check_criterion "Scale command saved to file" "false" || true
+        check_criterion "File contains apiVersion" "false" || true
+        check_criterion "File contains kind" "false" || true
+        check_criterion "File contains metadata" "false" || true
+        check_criterion "File has substantial content" "false" || true
     fi
 
     echo "$score/$total"
@@ -150,418 +149,184 @@ score_q4() {
 }
 
 # ============================================================================
-# QUESTION 5 - Deployment Troubleshooting (6 points)
+# QUESTION 5 - Fix CrashLoopBackOff (6 points)
 # ============================================================================
 score_q5() {
     local score=0
     local total=6
 
-    echo "Question 5 | Deployment Troubleshooting"
+    echo "Question 5 | Fix CrashLoopBackOff"
 
-    # Check Deployment exists
-    local deploy_exists=$(kubectl get deployment broken-app -n cygnus 2>/dev/null && echo true || echo false)
-    check_criterion "Deployment broken-app exists" "$deploy_exists" && ((score++))
+    # Check Pod exists
+    local pod_exists=$(kubectl get pod crash-app -n ember 2>/dev/null && echo true || echo false)
+    check_criterion "Pod crash-app exists in ember" "$pod_exists" && ((score++))
 
-    # Check image is corrected (nginx instead of ngnix)
-    local image=$(kubectl get deployment broken-app -n cygnus -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
-    check_criterion "Image typo fixed (nginx)" "$(echo "$image" | grep -qE "^nginx:" && echo true || echo false)" && ((score++))
+    # Check Pod is Running
+    local pod_status=$(kubectl get pod crash-app -n ember -o jsonpath='{.status.phase}' 2>/dev/null)
+    check_criterion "Pod status is Running" "$([ "$pod_status" = "Running" ] && echo true || echo false)" && ((score++))
 
-    # Check deployment is available
-    local available=$(kubectl get deployment broken-app -n cygnus -o jsonpath='{.status.availableReplicas}' 2>/dev/null)
-    check_criterion "Deployment has available replicas" "$([ -n "$available" ] && [ "$available" -gt 0 ] && echo true || echo false)" && ((score++))
+    # Check container is ready
+    local ready=$(kubectl get pod crash-app -n ember -o jsonpath='{.status.containerStatuses[0].ready}' 2>/dev/null)
+    check_criterion "Container is ready" "$([ "$ready" = "true" ] && echo true || echo false)" && ((score++))
 
-    # Check pods are running
-    local running_pods=$(kubectl get pods -n cygnus -l app=broken-app --field-selector=status.phase=Running 2>/dev/null | grep -c "Running")
-    check_criterion "Pods are Running" "$([ "$running_pods" -gt 0 ] && echo true || echo false)" && ((score++))
+    # Check command is fixed (should use "sleep" not "sleepx")
+    local cmd=$(kubectl get pod crash-app -n ember -o jsonpath='{.spec.containers[0].command[0]}' 2>/dev/null)
+    check_criterion "Command is 'sleep' (not 'sleepx')" "$([ "$cmd" = "sleep" ] && echo true || echo false)" && ((score++))
 
-    # Check reason file exists
-    local reason_file="$EXAM_DIR/5/fix-reason.txt"
-    check_criterion "Fix reason documented" "$([ -f "$reason_file" ] && echo true || echo false)" && ((score++))
+    # Check restart count is low (problem was fixed)
+    local restarts=$(kubectl get pod crash-app -n ember -o jsonpath='{.status.containerStatuses[0].restartCount}' 2>/dev/null)
+    check_criterion "Restart count is reasonable (<5)" "$([ "${restarts:-0}" -lt 5 ] && echo true || echo false)" && ((score++))
 
-    # Check rollout status
-    local rollout=$(kubectl rollout status deployment/broken-app -n cygnus --timeout=5s 2>/dev/null && echo true || echo false)
-    check_criterion "Rollout completed successfully" "$rollout" && ((score++))
+    # Check pod has been running for a while
+    local running_seconds=$(kubectl get pod crash-app -n ember -o jsonpath='{.status.containerStatuses[0].state.running.startedAt}' 2>/dev/null)
+    check_criterion "Pod is currently running" "$([ -n "$running_seconds" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
     return 0
 }
 
 # ============================================================================
-# QUESTION 6 - ConfigMap Volume Mount (5 points)
+# QUESTION 6 - ConfigMap Items Mount (6 points)
 # ============================================================================
 score_q6() {
     local score=0
-    local total=5
+    local total=6
 
-    echo "Question 6 | ConfigMap Volume Mount"
-
-    # Check ConfigMap exists
-    local cm_exists=$(kubectl get configmap app-config -n lyra 2>/dev/null && echo true || echo false)
-    check_criterion "ConfigMap app-config exists" "$cm_exists" && ((score++))
+    echo "Question 6 | ConfigMap Items Mount"
 
     # Check Pod exists
-    local pod_exists=$(kubectl get pod config-pod -n lyra 2>/dev/null && echo true || echo false)
-    check_criterion "Pod config-pod exists" "$pod_exists" && ((score++))
+    local pod_exists=$(kubectl get pod config-reader -n flame 2>/dev/null && echo true || echo false)
+    check_criterion "Pod config-reader exists in flame" "$pod_exists" && ((score++))
 
-    # Check Pod is running
-    local pod_status=$(kubectl get pod config-pod -n lyra -o jsonpath='{.status.phase}' 2>/dev/null)
-    check_criterion "Pod is Running" "$([ "$pod_status" = "Running" ] && echo true || echo false)" && ((score++))
+    # Check Pod is Running
+    local pod_status=$(kubectl get pod config-reader -n flame -o jsonpath='{.status.phase}' 2>/dev/null)
+    check_criterion "Pod status is Running" "$([ "$pod_status" = "Running" ] && echo true || echo false)" && ((score++))
 
-    # Check volume mount exists
-    local mount=$(kubectl get pod config-pod -n lyra -o jsonpath='{.spec.containers[0].volumeMounts[*].mountPath}' 2>/dev/null)
-    check_criterion "ConfigMap mounted as volume" "$(echo "$mount" | grep -q "/etc/config" && echo true || echo false)" && ((score++))
+    # Check volume mount path
+    local mount_path=$(kubectl get pod config-reader -n flame -o jsonpath='{.spec.containers[0].volumeMounts[0].mountPath}' 2>/dev/null)
+    check_criterion "Volume mounted at /config" "$([ "$mount_path" = "/config" ] && echo true || echo false)" && ((score++))
 
-    # Check ConfigMap has correct data
-    local data=$(kubectl get configmap app-config -n lyra -o jsonpath='{.data.app\.properties}' 2>/dev/null)
-    check_criterion "ConfigMap contains app.properties" "$([ -n "$data" ] && echo true || echo false)" && ((score++))
+    # Check ConfigMap reference
+    local cm_name=$(kubectl get pod config-reader -n flame -o jsonpath='{.spec.volumes[0].configMap.name}' 2>/dev/null)
+    check_criterion "Uses ConfigMap app-settings" "$([ "$cm_name" = "app-settings" ] && echo true || echo false)" && ((score++))
+
+    # Check items are specified (selective mounting)
+    local items=$(kubectl get pod config-reader -n flame -o jsonpath='{.spec.volumes[0].configMap.items}' 2>/dev/null)
+    check_criterion "Items specified for selective mount" "$([ -n "$items" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
     return 0
 }
 
 # ============================================================================
-# QUESTION 7 - Secret Environment Variables (5 points)
+# QUESTION 7 - Secret from File (5 points)
 # ============================================================================
 score_q7() {
     local score=0
     local total=5
 
-    echo "Question 7 | Secret Environment Variables"
+    echo "Question 7 | Secret from File"
+
+    # Check password file exists
+    local pwd_file="$EXAM_DIR/7/password.txt"
+    check_criterion "File password.txt exists" "$([ -f "$pwd_file" ] && echo true || echo false)" && ((score++))
+
+    # Check file content
+    if [ -f "$pwd_file" ]; then
+        local content=$(cat "$pwd_file")
+        check_criterion "File contains correct password" "$([ "$content" = "FirePhoenix2024!" ] && echo true || echo false)" && ((score++))
+    else
+        check_criterion "File contains correct password" "false" || true
+    fi
 
     # Check Secret exists
-    local secret_exists=$(kubectl get secret db-credentials -n aquila 2>/dev/null && echo true || echo false)
-    check_criterion "Secret db-credentials exists" "$secret_exists" && ((score++))
+    local secret_exists=$(kubectl get secret db-credentials -n magma 2>/dev/null && echo true || echo false)
+    check_criterion "Secret db-credentials exists in magma" "$secret_exists" && ((score++))
 
-    # Check Pod exists
-    local pod_exists=$(kubectl get pod secret-pod -n aquila 2>/dev/null && echo true || echo false)
-    check_criterion "Pod secret-pod exists" "$pod_exists" && ((score++))
+    # Check Secret type
+    local secret_type=$(kubectl get secret db-credentials -n magma -o jsonpath='{.type}' 2>/dev/null)
+    check_criterion "Secret type is Opaque" "$([ "$secret_type" = "Opaque" ] && echo true || echo false)" && ((score++))
 
-    # Check Pod is running
-    local pod_status=$(kubectl get pod secret-pod -n aquila -o jsonpath='{.status.phase}' 2>/dev/null)
-    check_criterion "Pod is Running" "$([ "$pod_status" = "Running" ] && echo true || echo false)" && ((score++))
-
-    # Check env from secret
-    local env_from=$(kubectl get pod secret-pod -n aquila -o jsonpath='{.spec.containers[0].env[*].valueFrom.secretKeyRef.name}' 2>/dev/null)
-    check_criterion "Environment uses secretKeyRef" "$(echo "$env_from" | grep -q "db-credentials" && echo true || echo false)" && ((score++))
-
-    # Check specific env var DB_PASSWORD exists
-    local db_pass_ref=$(kubectl get pod secret-pod -n aquila -o json 2>/dev/null | grep -q "DB_PASSWORD" && echo true || echo false)
-    check_criterion "DB_PASSWORD env var configured" "$db_pass_ref" && ((score++))
+    # Check Secret has password.txt key
+    local has_key=$(kubectl get secret db-credentials -n magma -o jsonpath='{.data.password\.txt}' 2>/dev/null)
+    check_criterion "Secret has key password.txt" "$([ -n "$has_key" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
     return 0
 }
 
 # ============================================================================
-# QUESTION 8 - Service NodePort (4 points)
+# QUESTION 8 - Headless Service (6 points)
 # ============================================================================
 score_q8() {
     local score=0
-    local total=4
+    local total=6
 
-    echo "Question 8 | Service NodePort"
+    echo "Question 8 | Headless Service"
 
     # Check Service exists
-    local svc_exists=$(kubectl get service web-service -n draco 2>/dev/null && echo true || echo false)
-    check_criterion "Service web-service exists" "$svc_exists" && ((score++))
+    local svc_exists=$(kubectl get service backend-headless -n corona 2>/dev/null && echo true || echo false)
+    check_criterion "Service backend-headless exists in corona" "$svc_exists" && ((score++))
 
-    # Check Service type
-    local svc_type=$(kubectl get service web-service -n draco -o jsonpath='{.spec.type}' 2>/dev/null)
-    check_criterion "Service type is NodePort" "$([ "$svc_type" = "NodePort" ] && echo true || echo false)" && ((score++))
+    # Check clusterIP is None
+    local cluster_ip=$(kubectl get service backend-headless -n corona -o jsonpath='{.spec.clusterIP}' 2>/dev/null)
+    check_criterion "clusterIP is None (headless)" "$([ "$cluster_ip" = "None" ] && echo true || echo false)" && ((score++))
+
+    # Check selector
+    local selector=$(kubectl get service backend-headless -n corona -o jsonpath='{.spec.selector.app}' 2>/dev/null)
+    check_criterion "Selector is app=backend" "$([ "$selector" = "backend" ] && echo true || echo false)" && ((score++))
 
     # Check port
-    local port=$(kubectl get service web-service -n draco -o jsonpath='{.spec.ports[0].port}' 2>/dev/null)
-    check_criterion "Service port is 80" "$([ "$port" = "80" ] && echo true || echo false)" && ((score++))
+    local port=$(kubectl get service backend-headless -n corona -o jsonpath='{.spec.ports[0].port}' 2>/dev/null)
+    check_criterion "Port is 80" "$([ "$port" = "80" ] && echo true || echo false)" && ((score++))
 
-    # Check selector matches Pod
-    local selector=$(kubectl get service web-service -n draco -o jsonpath='{.spec.selector.app}' 2>/dev/null)
-    check_criterion "Service selector configured" "$([ -n "$selector" ] && echo true || echo false)" && ((score++))
+    # Check protocol
+    local protocol=$(kubectl get service backend-headless -n corona -o jsonpath='{.spec.ports[0].protocol}' 2>/dev/null)
+    check_criterion "Protocol is TCP" "$([ "$protocol" = "TCP" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
     return 0
 }
 
 # ============================================================================
-# QUESTION 9 - Pod to Deployment Conversion (8 points)
+# QUESTION 9 - Canary Deployment (7 points)
 # ============================================================================
 score_q9() {
     local score=0
-    local total=8
-
-    echo "Question 9 | Pod to Deployment Conversion"
-
-    # Check original Pod deleted
-    local pod_deleted=$(kubectl get pod galaxy-api -n phoenix 2>/dev/null && echo false || echo true)
-    check_criterion "Original Pod galaxy-api deleted" "$pod_deleted" && ((score++))
-
-    # Check Deployment exists
-    local deploy_exists=$(kubectl get deployment galaxy-api -n phoenix 2>/dev/null && echo true || echo false)
-    check_criterion "Deployment galaxy-api exists" "$deploy_exists" && ((score++))
-
-    # Check replicas
-    local replicas=$(kubectl get deployment galaxy-api -n phoenix -o jsonpath='{.spec.replicas}' 2>/dev/null)
-    check_criterion "Deployment has 3 replicas" "$([ "$replicas" = "3" ] && echo true || echo false)" && ((score++))
-
-    # Check all replicas ready
-    local ready=$(kubectl get deployment galaxy-api -n phoenix -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
-    check_criterion "All 3 replicas ready" "$([ "$ready" = "3" ] && echo true || echo false)" && ((score++))
-
-    # Check security context - allowPrivilegeEscalation
-    local priv_esc=$(kubectl get deployment galaxy-api -n phoenix -o jsonpath='{.spec.template.spec.containers[0].securityContext.allowPrivilegeEscalation}' 2>/dev/null)
-    check_criterion "allowPrivilegeEscalation: false" "$([ "$priv_esc" = "false" ] && echo true || echo false)" && ((score++))
-
-    # Check security context - privileged
-    local privileged=$(kubectl get deployment galaxy-api -n phoenix -o jsonpath='{.spec.template.spec.containers[0].securityContext.privileged}' 2>/dev/null)
-    check_criterion "privileged: false" "$([ "$privileged" = "false" ] && echo true || echo false)" && ((score++))
-
-    # Check YAML file saved
-    local yaml_file="$EXAM_DIR/9/galaxy-api-deployment.yaml"
-    check_criterion "YAML saved to exam/course/9/" "$([ -f "$yaml_file" ] && echo true || echo false)" && ((score++))
-
-    # Check image preserved
-    local image=$(kubectl get deployment galaxy-api -n phoenix -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
-    check_criterion "Original image preserved" "$([ -n "$image" ] && echo true || echo false)" && ((score++))
-
-    echo "$score/$total"
-    return 0
-}
-
-# ============================================================================
-# QUESTION 10 - PV/PVC Creation (6 points)
-# ============================================================================
-score_q10() {
-    local score=0
-    local total=6
-
-    echo "Question 10 | PV/PVC Creation"
-
-    # Check PV exists
-    local pv_exists=$(kubectl get pv galaxy-pv 2>/dev/null && echo true || echo false)
-    check_criterion "PersistentVolume galaxy-pv exists" "$pv_exists" && ((score++))
-
-    # Check PV capacity
-    local pv_cap=$(kubectl get pv galaxy-pv -o jsonpath='{.spec.capacity.storage}' 2>/dev/null)
-    check_criterion "PV capacity is 1Gi" "$([ "$pv_cap" = "1Gi" ] && echo true || echo false)" && ((score++))
-
-    # Check PVC exists
-    local pvc_exists=$(kubectl get pvc galaxy-pvc -n hydra 2>/dev/null && echo true || echo false)
-    check_criterion "PersistentVolumeClaim galaxy-pvc exists" "$pvc_exists" && ((score++))
-
-    # Check PVC is Bound
-    local pvc_status=$(kubectl get pvc galaxy-pvc -n hydra -o jsonpath='{.status.phase}' 2>/dev/null)
-    check_criterion "PVC is Bound" "$([ "$pvc_status" = "Bound" ] && echo true || echo false)" && ((score++))
-
-    # Check Pod exists with PVC
-    local pod_exists=$(kubectl get pod storage-pod -n hydra 2>/dev/null && echo true || echo false)
-    check_criterion "Pod storage-pod exists" "$pod_exists" && ((score++))
-
-    # Check Pod mounts PVC
-    local pvc_mount=$(kubectl get pod storage-pod -n hydra -o jsonpath='{.spec.volumes[*].persistentVolumeClaim.claimName}' 2>/dev/null)
-    check_criterion "Pod mounts galaxy-pvc" "$(echo "$pvc_mount" | grep -q "galaxy-pvc" && echo true || echo false)" && ((score++))
-
-    echo "$score/$total"
-    return 0
-}
-
-# ============================================================================
-# QUESTION 11 - NetworkPolicy (6 points)
-# ============================================================================
-score_q11() {
-    local score=0
-    local total=6
-
-    echo "Question 11 | NetworkPolicy"
-
-    # Check NetworkPolicy exists
-    local np_exists=$(kubectl get networkpolicy allow-internal -n centaurus 2>/dev/null && echo true || echo false)
-    check_criterion "NetworkPolicy allow-internal exists" "$np_exists" && ((score++))
-
-    # Check policy type includes Ingress
-    local ingress=$(kubectl get networkpolicy allow-internal -n centaurus -o jsonpath='{.spec.policyTypes}' 2>/dev/null)
-    check_criterion "Policy includes Ingress" "$(echo "$ingress" | grep -q "Ingress" && echo true || echo false)" && ((score++))
-
-    # Check podSelector
-    local pod_sel=$(kubectl get networkpolicy allow-internal -n centaurus -o jsonpath='{.spec.podSelector.matchLabels}' 2>/dev/null)
-    check_criterion "podSelector configured" "$([ -n "$pod_sel" ] && echo true || echo false)" && ((score++))
-
-    # Check ingress from rules
-    local from_rules=$(kubectl get networkpolicy allow-internal -n centaurus -o jsonpath='{.spec.ingress[0].from}' 2>/dev/null)
-    check_criterion "Ingress from rules defined" "$([ -n "$from_rules" ] && echo true || echo false)" && ((score++))
-
-    # Check YAML file saved
-    local yaml_file="$EXAM_DIR/11/networkpolicy.yaml"
-    check_criterion "YAML saved to exam/course/11/" "$([ -f "$yaml_file" ] && echo true || echo false)" && ((score++))
-
-    # Check pods can communicate (basic test)
-    check_criterion "NetworkPolicy applied successfully" "$np_exists" && ((score++))
-
-    echo "$score/$total"
-    return 0
-}
-
-# ============================================================================
-# QUESTION 12 - Container Image Build (7 points)
-# ============================================================================
-score_q12() {
-    local score=0
     local total=7
 
-    echo "Question 12 | Container Image Build"
+    echo "Question 9 | Canary Deployment"
 
-    # Check Dockerfile exists
-    local dockerfile="$EXAM_DIR/12/image/Dockerfile"
-    check_criterion "Dockerfile exists in exam/course/12/image/" "$([ -f "$dockerfile" ] && echo true || echo false)" && ((score++))
+    # Check stable-v1 exists (pre-existing)
+    local stable_exists=$(kubectl get deployment stable-v1 -n blaze 2>/dev/null && echo true || echo false)
+    check_criterion "Deployment stable-v1 exists" "$stable_exists" && ((score++))
 
-    # Check Dockerfile has FROM
-    check_criterion "Dockerfile has FROM instruction" "$(grep -q "^FROM" "$dockerfile" 2>/dev/null && echo true || echo false)" && ((score++))
+    # Check canary-v2 exists
+    local canary_exists=$(kubectl get deployment canary-v2 -n blaze 2>/dev/null && echo true || echo false)
+    check_criterion "Deployment canary-v2 exists" "$canary_exists" && ((score++))
 
-    # Check image exists in local registry
-    local image_exists=$(curl -s http://localhost:5000/v2/galaxy-app/tags/list 2>/dev/null | grep -q "v1" && echo true || echo false)
-    check_criterion "Image pushed to localhost:5000" "$image_exists" && ((score++))
+    # Check canary has 1 replica
+    local canary_replicas=$(kubectl get deployment canary-v2 -n blaze -o jsonpath='{.spec.replicas}' 2>/dev/null)
+    check_criterion "Canary has 1 replica" "$([ "$canary_replicas" = "1" ] && echo true || echo false)" && ((score++))
 
-    # Check Pod exists using the image
-    local pod_exists=$(kubectl get pod image-test-pod -n cassiopeia 2>/dev/null && echo true || echo false)
-    check_criterion "Pod image-test-pod created" "$pod_exists" && ((score++))
+    # Check canary image
+    local canary_image=$(kubectl get deployment canary-v2 -n blaze -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
+    check_criterion "Canary uses nginx:1.22" "$(echo "$canary_image" | grep -q "nginx:1.22" && echo true || echo false)" && ((score++))
 
-    # Check Pod uses correct image
-    local pod_image=$(kubectl get pod image-test-pod -n cassiopeia -o jsonpath='{.spec.containers[0].image}' 2>/dev/null)
-    check_criterion "Pod uses localhost:5000/galaxy-app:v1" "$(echo "$pod_image" | grep -q "localhost:5000/galaxy-app" && echo true || echo false)" && ((score++))
+    # Check canary has version=v2 label
+    local canary_version=$(kubectl get deployment canary-v2 -n blaze -o jsonpath='{.spec.template.metadata.labels.version}' 2>/dev/null)
+    check_criterion "Canary has version=v2 label" "$([ "$canary_version" = "v2" ] && echo true || echo false)" && ((score++))
 
-    # Check Pod is running
-    local pod_status=$(kubectl get pod image-test-pod -n cassiopeia -o jsonpath='{.status.phase}' 2>/dev/null)
-    check_criterion "Pod is Running" "$([ "$pod_status" = "Running" ] && echo true || echo false)" && ((score++))
+    # Check Service exists
+    local svc_exists=$(kubectl get service frontend-svc -n blaze 2>/dev/null && echo true || echo false)
+    check_criterion "Service frontend-svc exists" "$svc_exists" && ((score++))
 
-    # Check logs file
-    local logs_file="$EXAM_DIR/12/logs"
-    check_criterion "Pod logs saved to exam/course/12/logs" "$([ -f "$logs_file" ] && echo true || echo false)" && ((score++))
-
-    echo "$score/$total"
-    return 0
-}
-
-# ============================================================================
-# QUESTION 13 - Helm Operations (5 points)
-# ============================================================================
-score_q13() {
-    local score=0
-    local total=5
-
-    echo "Question 13 | Helm Operations"
-
-    # Check release galaxy-nginx-v1 deleted
-    local v1_exists=$(helm list -n andromeda -q 2>/dev/null | grep -q "galaxy-nginx-v1" && echo true || echo false)
-    check_criterion "Deleted Helm release galaxy-nginx-v1" "$([ "$v1_exists" = "false" ] && echo true || echo false)" && ((score++))
-
-    # Check release galaxy-nginx-v2 upgraded
-    local v2_history=$(helm history galaxy-nginx-v2 -n andromeda 2>/dev/null | wc -l)
-    check_criterion "Upgraded Helm release galaxy-nginx-v2" "$([ "$v2_history" -gt 1 ] && echo true || echo false)" && ((score++))
-
-    # Check new release installed
-    local new_release=$(helm list -n andromeda -q 2>/dev/null | grep -q "galaxy-redis" && echo true || echo false)
-    check_criterion "Installed new release galaxy-redis" "$new_release" && ((score++))
-
-    # Check new release has correct replicas
-    local redis_replicas=$(kubectl get statefulset -n andromeda -l app.kubernetes.io/instance=galaxy-redis -o jsonpath='{.items[0].spec.replicas}' 2>/dev/null)
-    check_criterion "galaxy-redis has 2 replicas" "$([ "$redis_replicas" = "2" ] && echo true || echo false)" && ((score++))
-
-    # Check broken release deleted
-    local broken=$(helm list -n andromeda -a -o json 2>/dev/null | grep -q "pending-install" && echo true || echo false)
-    check_criterion "Deleted broken release" "$([ "$broken" = "false" ] && echo true || echo false)" && ((score++))
-
-    echo "$score/$total"
-    return 0
-}
-
-# ============================================================================
-# QUESTION 14 - InitContainer (5 points)
-# ============================================================================
-score_q14() {
-    local score=0
-    local total=5
-
-    echo "Question 14 | InitContainer"
-
-    # Check Pod/Deployment exists
-    local deploy_exists=$(kubectl get deployment init-app -n orion 2>/dev/null && echo true || echo false)
-    check_criterion "Deployment init-app exists" "$deploy_exists" && ((score++))
-
-    # Check InitContainer exists
-    local init_name=$(kubectl get deployment init-app -n orion -o jsonpath='{.spec.template.spec.initContainers[0].name}' 2>/dev/null)
-    check_criterion "InitContainer configured" "$([ -n "$init_name" ] && echo true || echo false)" && ((score++))
-
-    # Check InitContainer uses correct image
-    local init_image=$(kubectl get deployment init-app -n orion -o jsonpath='{.spec.template.spec.initContainers[0].image}' 2>/dev/null)
-    check_criterion "InitContainer uses busybox" "$(echo "$init_image" | grep -q "busybox" && echo true || echo false)" && ((score++))
-
-    # Check shared volume exists
-    local volume=$(kubectl get deployment init-app -n orion -o jsonpath='{.spec.template.spec.volumes[*].name}' 2>/dev/null)
-    check_criterion "Shared volume configured" "$([ -n "$volume" ] && echo true || echo false)" && ((score++))
-
-    # Check pods are running
-    local ready=$(kubectl get deployment init-app -n orion -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
-    check_criterion "Deployment is ready" "$([ -n "$ready" ] && [ "$ready" -gt 0 ] && echo true || echo false)" && ((score++))
-
-    echo "$score/$total"
-    return 0
-}
-
-# ============================================================================
-# QUESTION 15 - Sidecar Logging (6 points)
-# ============================================================================
-score_q15() {
-    local score=0
-    local total=6
-
-    echo "Question 15 | Sidecar Logging"
-
-    # Check Deployment exists
-    local deploy_exists=$(kubectl get deployment logger-app -n pegasus 2>/dev/null && echo true || echo false)
-    check_criterion "Deployment logger-app exists" "$deploy_exists" && ((score++))
-
-    # Check container count (should be 2)
-    local containers=$(kubectl get deployment logger-app -n pegasus -o jsonpath='{.spec.template.spec.containers[*].name}' 2>/dev/null | wc -w)
-    check_criterion "Deployment has 2 containers" "$([ "$containers" = "2" ] && echo true || echo false)" && ((score++))
-
-    # Check sidecar container exists
-    local sidecar=$(kubectl get deployment logger-app -n pegasus -o jsonpath='{.spec.template.spec.containers[1].name}' 2>/dev/null)
-    check_criterion "Sidecar container configured" "$([ -n "$sidecar" ] && echo true || echo false)" && ((score++))
-
-    # Check shared volume for logs
-    local volume=$(kubectl get deployment logger-app -n pegasus -o jsonpath='{.spec.template.spec.volumes[*].name}' 2>/dev/null)
-    check_criterion "Shared log volume configured" "$(echo "$volume" | grep -qE "log|shared" && echo true || echo false)" && ((score++))
-
-    # Check YAML file saved
-    local yaml_file="$EXAM_DIR/15/logger-app.yaml"
-    check_criterion "YAML saved to exam/course/15/" "$([ -f "$yaml_file" ] && echo true || echo false)" && ((score++))
-
-    # Check deployment is running
-    local ready=$(kubectl get deployment logger-app -n pegasus -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
-    check_criterion "Deployment is ready" "$([ -n "$ready" ] && [ "$ready" -gt 0 ] && echo true || echo false)" && ((score++))
-
-    echo "$score/$total"
-    return 0
-}
-
-# ============================================================================
-# QUESTION 16 - ServiceAccount Token (2 points)
-# ============================================================================
-score_q16() {
-    local score=0
-    local total=2
-
-    echo "Question 16 | ServiceAccount Token"
-
-    # Check ServiceAccount exists
-    local sa_exists=$(kubectl get serviceaccount galaxy-sa -n cygnus 2>/dev/null && echo true || echo false)
-    check_criterion "ServiceAccount galaxy-sa exists" "$sa_exists" && ((score++))
-
-    # Check token file saved
-    local token_file="$EXAM_DIR/16/token"
-    if [ -f "$token_file" ]; then
-        local token_content=$(cat "$token_file" 2>/dev/null)
-        check_criterion "Token saved (base64 decoded)" "$([ -n "$token_content" ] && echo true || echo false)" && ((score++))
+    # Check Service selects both (app=web-frontend without version)
+    local svc_selector=$(kubectl get service frontend-svc -n blaze -o jsonpath='{.spec.selector}' 2>/dev/null)
+    if echo "$svc_selector" | grep -q "web-frontend" && ! echo "$svc_selector" | grep -q "version"; then
+        check_criterion "Service routes to both stable and canary" "true" && ((score++))
     else
-        check_criterion "Token saved (base64 decoded)" "false" || true
+        check_criterion "Service routes to both stable and canary" "false" || true
     fi
 
     echo "$score/$total"
@@ -569,182 +334,414 @@ score_q16() {
 }
 
 # ============================================================================
-# QUESTION 17 - Liveness Probe (5 points)
+# QUESTION 10 - Sidecar Data Processing (6 points)
+# ============================================================================
+score_q10() {
+    local score=0
+    local total=6
+
+    echo "Question 10 | Sidecar Data Processing"
+
+    # Check Pod exists
+    local pod_exists=$(kubectl get pod data-transform -n phoenix 2>/dev/null && echo true || echo false)
+    check_criterion "Pod data-transform exists in phoenix" "$pod_exists" && ((score++))
+
+    # Check Pod is Running
+    local pod_status=$(kubectl get pod data-transform -n phoenix -o jsonpath='{.status.phase}' 2>/dev/null)
+    check_criterion "Pod status is Running" "$([ "$pod_status" = "Running" ] && echo true || echo false)" && ((score++))
+
+    # Check has 2 containers
+    local container_count=$(kubectl get pod data-transform -n phoenix -o jsonpath='{.spec.containers[*].name}' 2>/dev/null | wc -w)
+    check_criterion "Pod has 2 containers" "$([ "$container_count" = "2" ] && echo true || echo false)" && ((score++))
+
+    # Check producer container
+    local producer=$(kubectl get pod data-transform -n phoenix -o jsonpath='{.spec.containers[?(@.name=="producer")].name}' 2>/dev/null)
+    check_criterion "Container 'producer' exists" "$([ "$producer" = "producer" ] && echo true || echo false)" && ((score++))
+
+    # Check transformer container
+    local transformer=$(kubectl get pod data-transform -n phoenix -o jsonpath='{.spec.containers[?(@.name=="transformer")].name}' 2>/dev/null)
+    check_criterion "Container 'transformer' exists" "$([ "$transformer" = "transformer" ] && echo true || echo false)" && ((score++))
+
+    # Check emptyDir volume
+    local volume_type=$(kubectl get pod data-transform -n phoenix -o jsonpath='{.spec.volumes[0].emptyDir}' 2>/dev/null)
+    check_criterion "Uses emptyDir volume" "$([ -n "$volume_type" ] && echo true || echo false)" && ((score++))
+
+    echo "$score/$total"
+    return 0
+}
+
+# ============================================================================
+# QUESTION 11 - Cross-Namespace NetworkPolicy (6 points)
+# ============================================================================
+score_q11() {
+    local score=0
+    local total=6
+
+    echo "Question 11 | Cross-Namespace NetworkPolicy"
+
+    # Check NetworkPolicy exists
+    local np_exists=$(kubectl get networkpolicy allow-from-flame -n corona 2>/dev/null && echo true || echo false)
+    check_criterion "NetworkPolicy allow-from-flame exists in corona" "$np_exists" && ((score++))
+
+    # Check podSelector
+    local pod_selector=$(kubectl get networkpolicy allow-from-flame -n corona -o jsonpath='{.spec.podSelector.matchLabels.app}' 2>/dev/null)
+    check_criterion "Applies to pods with app=backend" "$([ "$pod_selector" = "backend" ] && echo true || echo false)" && ((score++))
+
+    # Check policyTypes includes Ingress
+    local policy_types=$(kubectl get networkpolicy allow-from-flame -n corona -o jsonpath='{.spec.policyTypes}' 2>/dev/null)
+    check_criterion "Policy type includes Ingress" "$(echo "$policy_types" | grep -q "Ingress" && echo true || echo false)" && ((score++))
+
+    # Check has ingress rules
+    local ingress=$(kubectl get networkpolicy allow-from-flame -n corona -o jsonpath='{.spec.ingress}' 2>/dev/null)
+    check_criterion "Has ingress rules defined" "$([ -n "$ingress" ] && [ "$ingress" != "[]" ] && echo true || echo false)" && ((score++))
+
+    # Check namespaceSelector is used
+    local ns_selector=$(kubectl get networkpolicy allow-from-flame -n corona -o json 2>/dev/null | grep -c "namespaceSelector")
+    check_criterion "Uses namespaceSelector" "$([ "$ns_selector" -gt 0 ] && echo true || echo false)" && ((score++))
+
+    # Check port 80
+    local port=$(kubectl get networkpolicy allow-from-flame -n corona -o jsonpath='{.spec.ingress[0].ports[0].port}' 2>/dev/null)
+    check_criterion "Allows port 80" "$([ "$port" = "80" ] && echo true || echo false)" && ((score++))
+
+    echo "$score/$total"
+    return 0
+}
+
+# ============================================================================
+# QUESTION 12 - Docker Build with ARG (6 points)
+# ============================================================================
+score_q12() {
+    local score=0
+    local total=6
+
+    echo "Question 12 | Docker Build with ARG"
+
+    # Check Dockerfile exists
+    local dockerfile="$EXAM_DIR/12/Dockerfile"
+    check_criterion "Dockerfile exists" "$([ -f "$dockerfile" ] && echo true || echo false)" && ((score++))
+
+    if [ -f "$dockerfile" ]; then
+        # Check ARG instruction
+        check_criterion "Dockerfile has ARG APP_VERSION" "$(grep -q "ARG APP_VERSION" "$dockerfile" && echo true || echo false)" && ((score++))
+
+        # Check LABEL instruction
+        check_criterion "Dockerfile has LABEL version" "$(grep -q "LABEL.*version" "$dockerfile" && echo true || echo false)" && ((score++))
+    else
+        check_criterion "Dockerfile has ARG APP_VERSION" "false" || true
+        check_criterion "Dockerfile has LABEL version" "false" || true
+    fi
+
+    # Check image exists in registry
+    local image_exists=$(docker images localhost:5000/phoenix-app:2.0.0 --format "{{.Repository}}" 2>/dev/null | grep -q "phoenix-app" && echo true || echo false)
+    check_criterion "Image localhost:5000/phoenix-app:2.0.0 built" "$image_exists" && ((score++))
+
+    # Check image label
+    local label=$(docker inspect localhost:5000/phoenix-app:2.0.0 --format '{{index .Config.Labels "version"}}' 2>/dev/null)
+    check_criterion "Image has version=2.0.0 label" "$([ "$label" = "2.0.0" ] && echo true || echo false)" && ((score++))
+
+    # Check pushed to registry (try to pull)
+    local pushed=$(docker manifest inspect localhost:5000/phoenix-app:2.0.0 2>/dev/null && echo true || echo false)
+    check_criterion "Image pushed to localhost:5000" "$pushed" && ((score++))
+
+    echo "$score/$total"
+    return 0
+}
+
+# ============================================================================
+# QUESTION 13 - Helm Values File (5 points)
+# ============================================================================
+score_q13() {
+    local score=0
+    local total=5
+
+    echo "Question 13 | Helm Values File"
+
+    # Check values file exists
+    local values_file="$EXAM_DIR/13/values.yaml"
+    check_criterion "Values file exists" "$([ -f "$values_file" ] && echo true || echo false)" && ((score++))
+
+    # Check Helm release exists
+    local release_exists=$(helm list -n flare 2>/dev/null | grep -q "phoenix-api" && echo true || echo false)
+    check_criterion "Helm release phoenix-api exists in flare" "$release_exists" && ((score++))
+
+    # Check release status
+    local status=$(helm list -n flare -o json 2>/dev/null | grep -o '"status":"[^"]*"' | head -1 | cut -d'"' -f4)
+    check_criterion "Release status is deployed" "$([ "$status" = "deployed" ] && echo true || echo false)" && ((score++))
+
+    # Check replicas (should be 3 from values file)
+    local replicas=$(kubectl get deployment -n flare -l app.kubernetes.io/instance=phoenix-api -o jsonpath='{.items[0].spec.replicas}' 2>/dev/null)
+    check_criterion "Deployment has 3 replicas" "$([ "$replicas" = "3" ] && echo true || echo false)" && ((score++))
+
+    # Check service port (should be 8080 from values file)
+    local svc_port=$(kubectl get service -n flare -l app.kubernetes.io/instance=phoenix-api -o jsonpath='{.items[0].spec.ports[0].port}' 2>/dev/null)
+    check_criterion "Service port is 8080" "$([ "$svc_port" = "8080" ] && echo true || echo false)" && ((score++))
+
+    echo "$score/$total"
+    return 0
+}
+
+# ============================================================================
+# QUESTION 14 - PostStart Lifecycle Hook (6 points)
+# ============================================================================
+score_q14() {
+    local score=0
+    local total=6
+
+    echo "Question 14 | PostStart Lifecycle Hook"
+
+    # Check Pod exists
+    local pod_exists=$(kubectl get pod lifecycle-pod -n phoenix 2>/dev/null && echo true || echo false)
+    check_criterion "Pod lifecycle-pod exists in phoenix" "$pod_exists" && ((score++))
+
+    # Check Pod is Running
+    local pod_status=$(kubectl get pod lifecycle-pod -n phoenix -o jsonpath='{.status.phase}' 2>/dev/null)
+    check_criterion "Pod status is Running" "$([ "$pod_status" = "Running" ] && echo true || echo false)" && ((score++))
+
+    # Check container name
+    local container_name=$(kubectl get pod lifecycle-pod -n phoenix -o jsonpath='{.spec.containers[0].name}' 2>/dev/null)
+    check_criterion "Container name is main" "$([ "$container_name" = "main" ] && echo true || echo false)" && ((score++))
+
+    # Check lifecycle hook exists
+    local lifecycle=$(kubectl get pod lifecycle-pod -n phoenix -o jsonpath='{.spec.containers[0].lifecycle.postStart}' 2>/dev/null)
+    check_criterion "postStart lifecycle hook exists" "$([ -n "$lifecycle" ] && echo true || echo false)" && ((score++))
+
+    # Check file was created by postStart
+    local file_exists=$(kubectl exec lifecycle-pod -n phoenix -c main -- cat /usr/share/nginx/html/started.txt 2>/dev/null && echo true || echo false)
+    check_criterion "started.txt file created by hook" "$file_exists" && ((score++))
+
+    echo "$score/$total"
+    return 0
+}
+
+# ============================================================================
+# QUESTION 15 - Guaranteed QoS Class (5 points)
+# ============================================================================
+score_q15() {
+    local score=0
+    local total=5
+
+    echo "Question 15 | Guaranteed QoS Class"
+
+    # Check Pod exists
+    local pod_exists=$(kubectl get pod qos-guaranteed -n spark 2>/dev/null && echo true || echo false)
+    check_criterion "Pod qos-guaranteed exists in spark" "$pod_exists" && ((score++))
+
+    # Check Pod is Running
+    local pod_status=$(kubectl get pod qos-guaranteed -n spark -o jsonpath='{.status.phase}' 2>/dev/null)
+    check_criterion "Pod status is Running" "$([ "$pod_status" = "Running" ] && echo true || echo false)" && ((score++))
+
+    # Check QoS class
+    local qos=$(kubectl get pod qos-guaranteed -n spark -o jsonpath='{.status.qosClass}' 2>/dev/null)
+    check_criterion "QoS class is Guaranteed" "$([ "$qos" = "Guaranteed" ] && echo true || echo false)" && ((score++))
+
+    # Check requests = limits for memory
+    local mem_req=$(kubectl get pod qos-guaranteed -n spark -o jsonpath='{.spec.containers[0].resources.requests.memory}' 2>/dev/null)
+    local mem_lim=$(kubectl get pod qos-guaranteed -n spark -o jsonpath='{.spec.containers[0].resources.limits.memory}' 2>/dev/null)
+    check_criterion "Memory requests = limits" "$([ "$mem_req" = "$mem_lim" ] && [ -n "$mem_req" ] && echo true || echo false)" && ((score++))
+
+    # Check requests = limits for CPU
+    local cpu_req=$(kubectl get pod qos-guaranteed -n spark -o jsonpath='{.spec.containers[0].resources.requests.cpu}' 2>/dev/null)
+    local cpu_lim=$(kubectl get pod qos-guaranteed -n spark -o jsonpath='{.spec.containers[0].resources.limits.cpu}' 2>/dev/null)
+    check_criterion "CPU requests = limits" "$([ "$cpu_req" = "$cpu_lim" ] && [ -n "$cpu_req" ] && echo true || echo false)" && ((score++))
+
+    echo "$score/$total"
+    return 0
+}
+
+# ============================================================================
+# QUESTION 16 - ServiceAccount Projected Token (4 points)
+# ============================================================================
+score_q16() {
+    local score=0
+    local total=4
+
+    echo "Question 16 | ServiceAccount Projected Token"
+
+    # Check Pod exists
+    local pod_exists=$(kubectl get pod token-pod -n magma 2>/dev/null && echo true || echo false)
+    check_criterion "Pod token-pod exists in magma" "$pod_exists" && ((score++))
+
+    # Check Pod uses ServiceAccount fire-sa
+    local sa=$(kubectl get pod token-pod -n magma -o jsonpath='{.spec.serviceAccountName}' 2>/dev/null)
+    check_criterion "Pod uses ServiceAccount fire-sa" "$([ "$sa" = "fire-sa" ] && echo true || echo false)" && ((score++))
+
+    # Check projected volume exists
+    local projected=$(kubectl get pod token-pod -n magma -o json 2>/dev/null | grep -c "projected")
+    check_criterion "Has projected volume" "$([ "$projected" -gt 0 ] && echo true || echo false)" && ((score++))
+
+    # Check mount path
+    local mount_path=$(kubectl get pod token-pod -n magma -o jsonpath='{.spec.containers[0].volumeMounts[?(@.name=="fire-token")].mountPath}' 2>/dev/null)
+    check_criterion "Token mounted at /var/run/secrets/fire-token/" "$(echo "$mount_path" | grep -q "fire-token" && echo true || echo false)" && ((score++))
+
+    echo "$score/$total"
+    return 0
+}
+
+# ============================================================================
+# QUESTION 17 - TCP Liveness Probe (6 points)
 # ============================================================================
 score_q17() {
     local score=0
-    local total=5
+    local total=6
 
-    echo "Question 17 | Liveness Probe"
+    echo "Question 17 | TCP Liveness Probe"
 
     # Check Pod exists
-    local pod_exists=$(kubectl get pod liveness-pod -n lyra 2>/dev/null && echo true || echo false)
-    check_criterion "Pod liveness-pod exists" "$pod_exists" && ((score++))
+    local pod_exists=$(kubectl get pod tcp-health -n ember 2>/dev/null && echo true || echo false)
+    check_criterion "Pod tcp-health exists in ember" "$pod_exists" && ((score++))
 
-    # Check Pod is running
-    local pod_status=$(kubectl get pod liveness-pod -n lyra -o jsonpath='{.status.phase}' 2>/dev/null)
-    check_criterion "Pod is Running" "$([ "$pod_status" = "Running" ] && echo true || echo false)" && ((score++))
+    # Check Pod is Running
+    local pod_status=$(kubectl get pod tcp-health -n ember -o jsonpath='{.status.phase}' 2>/dev/null)
+    check_criterion "Pod status is Running" "$([ "$pod_status" = "Running" ] && echo true || echo false)" && ((score++))
 
-    # Check livenessProbe configured
-    local liveness=$(kubectl get pod liveness-pod -n lyra -o jsonpath='{.spec.containers[0].livenessProbe}' 2>/dev/null)
-    check_criterion "Liveness probe configured" "$([ -n "$liveness" ] && echo true || echo false)" && ((score++))
+    # Check tcpSocket probe exists
+    local tcp_probe=$(kubectl get pod tcp-health -n ember -o jsonpath='{.spec.containers[0].livenessProbe.tcpSocket}' 2>/dev/null)
+    check_criterion "Has tcpSocket liveness probe" "$([ -n "$tcp_probe" ] && echo true || echo false)" && ((score++))
 
-    # Check httpGet path
-    local path=$(kubectl get pod liveness-pod -n lyra -o jsonpath='{.spec.containers[0].livenessProbe.httpGet.path}' 2>/dev/null)
-    check_criterion "Probe uses httpGet" "$([ -n "$path" ] && echo true || echo false)" && ((score++))
+    # Check port
+    local port=$(kubectl get pod tcp-health -n ember -o jsonpath='{.spec.containers[0].livenessProbe.tcpSocket.port}' 2>/dev/null)
+    check_criterion "Probe targets port 80" "$([ "$port" = "80" ] && echo true || echo false)" && ((score++))
 
     # Check initialDelaySeconds
-    local delay=$(kubectl get pod liveness-pod -n lyra -o jsonpath='{.spec.containers[0].livenessProbe.initialDelaySeconds}' 2>/dev/null)
-    check_criterion "initialDelaySeconds configured" "$([ -n "$delay" ] && echo true || echo false)" && ((score++))
+    local initial_delay=$(kubectl get pod tcp-health -n ember -o jsonpath='{.spec.containers[0].livenessProbe.initialDelaySeconds}' 2>/dev/null)
+    check_criterion "Initial delay is 10 seconds" "$([ "$initial_delay" = "10" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
     return 0
 }
 
 # ============================================================================
-# QUESTION 18 - Readiness Probe (5 points)
+# QUESTION 18 - Service with Named Ports (6 points)
 # ============================================================================
 score_q18() {
     local score=0
-    local total=5
+    local total=6
 
-    echo "Question 18 | Readiness Probe"
+    echo "Question 18 | Service with Named Ports"
 
-    # Check Pod exists
-    local pod_exists=$(kubectl get pod readiness-pod -n aquila 2>/dev/null && echo true || echo false)
-    check_criterion "Pod readiness-pod exists" "$pod_exists" && ((score++))
+    # Check Service exists
+    local svc_exists=$(kubectl get service web-svc -n flame 2>/dev/null && echo true || echo false)
+    check_criterion "Service web-svc exists in flame" "$svc_exists" && ((score++))
 
-    # Check Pod is running
-    local pod_status=$(kubectl get pod readiness-pod -n aquila -o jsonpath='{.status.phase}' 2>/dev/null)
-    check_criterion "Pod is Running" "$([ "$pod_status" = "Running" ] && echo true || echo false)" && ((score++))
+    # Check service type
+    local svc_type=$(kubectl get service web-svc -n flame -o jsonpath='{.spec.type}' 2>/dev/null)
+    check_criterion "Service type is ClusterIP" "$([ "$svc_type" = "ClusterIP" ] && echo true || echo false)" && ((score++))
 
-    # Check readinessProbe configured
-    local readiness=$(kubectl get pod readiness-pod -n aquila -o jsonpath='{.spec.containers[0].readinessProbe}' 2>/dev/null)
-    check_criterion "Readiness probe configured" "$([ -n "$readiness" ] && echo true || echo false)" && ((score++))
+    # Check port 80 exists
+    local port80=$(kubectl get service web-svc -n flame -o jsonpath='{.spec.ports[?(@.port==80)].port}' 2>/dev/null)
+    check_criterion "Service exposes port 80" "$([ "$port80" = "80" ] && echo true || echo false)" && ((score++))
 
-    # Check exec command
-    local exec_cmd=$(kubectl get pod readiness-pod -n aquila -o jsonpath='{.spec.containers[0].readinessProbe.exec.command}' 2>/dev/null)
-    check_criterion "Probe uses exec command" "$([ -n "$exec_cmd" ] && echo true || echo false)" && ((score++))
+    # Check targetPort for port 80 is named
+    local target80=$(kubectl get service web-svc -n flame -o jsonpath='{.spec.ports[?(@.port==80)].targetPort}' 2>/dev/null)
+    check_criterion "Port 80 targets named port http-web" "$([ "$target80" = "http-web" ] && echo true || echo false)" && ((score++))
 
-    # Check periodSeconds
-    local period=$(kubectl get pod readiness-pod -n aquila -o jsonpath='{.spec.containers[0].readinessProbe.periodSeconds}' 2>/dev/null)
-    check_criterion "periodSeconds configured" "$([ -n "$period" ] && echo true || echo false)" && ((score++))
+    # Check port 443
+    local port443=$(kubectl get service web-svc -n flame -o jsonpath='{.spec.ports[?(@.port==443)].port}' 2>/dev/null)
+    check_criterion "Service exposes port 443" "$([ "$port443" = "443" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
     return 0
 }
 
 # ============================================================================
-# QUESTION 19 - Resource Limits (5 points)
+# QUESTION 19 - Topology Spread Constraints (6 points)
 # ============================================================================
 score_q19() {
     local score=0
-    local total=5
+    local total=6
 
-    echo "Question 19 | Resource Limits"
+    echo "Question 19 | Topology Spread Constraints"
 
     # Check Deployment exists
-    local deploy_exists=$(kubectl get deployment resource-app -n draco 2>/dev/null && echo true || echo false)
-    check_criterion "Deployment resource-app exists" "$deploy_exists" && ((score++))
+    local deploy_exists=$(kubectl get deployment spread-deploy -n blaze 2>/dev/null && echo true || echo false)
+    check_criterion "Deployment spread-deploy exists in blaze" "$deploy_exists" && ((score++))
 
-    # Check memory request
-    local mem_req=$(kubectl get deployment resource-app -n draco -o jsonpath='{.spec.template.spec.containers[0].resources.requests.memory}' 2>/dev/null)
-    check_criterion "Memory request: 64Mi" "$([ "$mem_req" = "64Mi" ] && echo true || echo false)" && ((score++))
+    # Check replica count
+    local replicas=$(kubectl get deployment spread-deploy -n blaze -o jsonpath='{.spec.replicas}' 2>/dev/null)
+    check_criterion "Deployment has 4 replicas" "$([ "$replicas" = "4" ] && echo true || echo false)" && ((score++))
 
-    # Check memory limit
-    local mem_limit=$(kubectl get deployment resource-app -n draco -o jsonpath='{.spec.template.spec.containers[0].resources.limits.memory}' 2>/dev/null)
-    check_criterion "Memory limit: 128Mi" "$([ "$mem_limit" = "128Mi" ] && echo true || echo false)" && ((score++))
+    # Check topologySpreadConstraints exists
+    local tsc=$(kubectl get deployment spread-deploy -n blaze -o jsonpath='{.spec.template.spec.topologySpreadConstraints}' 2>/dev/null)
+    check_criterion "Has topologySpreadConstraints" "$([ -n "$tsc" ] && echo true || echo false)" && ((score++))
 
-    # Check CPU request
-    local cpu_req=$(kubectl get deployment resource-app -n draco -o jsonpath='{.spec.template.spec.containers[0].resources.requests.cpu}' 2>/dev/null)
-    check_criterion "CPU request: 100m" "$([ "$cpu_req" = "100m" ] && echo true || echo false)" && ((score++))
+    # Check topologyKey
+    local topology_key=$(kubectl get deployment spread-deploy -n blaze -o jsonpath='{.spec.template.spec.topologySpreadConstraints[0].topologyKey}' 2>/dev/null)
+    check_criterion "topologyKey is kubernetes.io/hostname" "$([ "$topology_key" = "kubernetes.io/hostname" ] && echo true || echo false)" && ((score++))
 
-    # Check CPU limit
-    local cpu_limit=$(kubectl get deployment resource-app -n draco -o jsonpath='{.spec.template.spec.containers[0].resources.limits.cpu}' 2>/dev/null)
-    check_criterion "CPU limit: 200m" "$([ "$cpu_limit" = "200m" ] && echo true || echo false)" && ((score++))
+    # Check maxSkew
+    local max_skew=$(kubectl get deployment spread-deploy -n blaze -o jsonpath='{.spec.template.spec.topologySpreadConstraints[0].maxSkew}' 2>/dev/null)
+    check_criterion "maxSkew is 1" "$([ "$max_skew" = "1" ] && echo true || echo false)" && ((score++))
+
+    # Check whenUnsatisfiable
+    local when_unsat=$(kubectl get deployment spread-deploy -n blaze -o jsonpath='{.spec.template.spec.topologySpreadConstraints[0].whenUnsatisfiable}' 2>/dev/null)
+    check_criterion "whenUnsatisfiable is ScheduleAnyway" "$([ "$when_unsat" = "ScheduleAnyway" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
     return 0
 }
 
 # ============================================================================
-# QUESTION 20 - Labels and Selectors (4 points)
+# QUESTION 20 - Field Selectors (4 points)
 # ============================================================================
 score_q20() {
     local score=0
     local total=4
 
-    echo "Question 20 | Labels and Selectors"
+    echo "Question 20 | Field Selectors"
 
-    # Check Pod has required labels
-    local pod_labels=$(kubectl get pod labeled-pod -n phoenix -o jsonpath='{.metadata.labels}' 2>/dev/null)
-    check_criterion "Pod labeled-pod has labels" "$([ -n "$pod_labels" ] && echo true || echo false)" && ((score++))
+    # Check file exists
+    local file="$EXAM_DIR/20/running-pods.txt"
+    check_criterion "File running-pods.txt exists" "$([ -f "$file" ] && echo true || echo false)" && ((score++))
 
-    # Check specific label app=galaxy
-    local app_label=$(kubectl get pod labeled-pod -n phoenix -o jsonpath='{.metadata.labels.app}' 2>/dev/null)
-    check_criterion "Label app=galaxy exists" "$([ "$app_label" = "galaxy" ] && echo true || echo false)" && ((score++))
+    if [ -f "$file" ]; then
+        # Check file is not empty
+        local line_count=$(wc -l < "$file" 2>/dev/null)
+        check_criterion "File contains pod names" "$([ "$line_count" -gt 0 ] && echo true || echo false)" && ((score++))
 
-    # Check label tier=frontend
-    local tier_label=$(kubectl get pod labeled-pod -n phoenix -o jsonpath='{.metadata.labels.tier}' 2>/dev/null)
-    check_criterion "Label tier=frontend exists" "$([ "$tier_label" = "frontend" ] && echo true || echo false)" && ((score++))
-
-    # Check output file with selector query
-    local output_file="$EXAM_DIR/20/selected-pods.txt"
-    check_criterion "Selected pods saved to file" "$([ -f "$output_file" ] && echo true || echo false)" && ((score++))
+        # Verify content contains actual running pods
+        local actual_running=$(kubectl get pods --all-namespaces --field-selector=status.phase=Running -o jsonpath='{.items[*].metadata.name}' 2>/dev/null | tr ' ' '\n' | sort)
+        local file_pods=$(cat "$file" | sort)
+        # At least some overlap
+        local overlap=$(comm -12 <(echo "$actual_running") <(echo "$file_pods") | wc -l)
+        check_criterion "Content matches running pods" "$([ "$overlap" -gt 0 ] && echo true || echo false)" && ((score++))
+    else
+        check_criterion "File contains pod names" "false" || true
+        check_criterion "Content matches running pods" "false" || true
+    fi
 
     echo "$score/$total"
     return 0
 }
 
 # ============================================================================
-# QUESTION 21 - Rollback Deployment (3 points)
+# QUESTION 21 - Node Drain (4 points)
 # ============================================================================
 score_q21() {
     local score=0
-    local total=3
-
-    echo "Question 21 | Rollback Deployment"
-
-    # Check Deployment exists
-    local deploy_exists=$(kubectl get deployment rollback-app -n hydra 2>/dev/null && echo true || echo false)
-    check_criterion "Deployment rollback-app exists" "$deploy_exists" && ((score++))
-
-    # Check image is rolled back (nginx:1.19 not nginx:broken)
-    local image=$(kubectl get deployment rollback-app -n hydra -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
-    check_criterion "Image rolled back (not :broken)" "$(echo "$image" | grep -qv "broken" && echo true || echo false)" && ((score++))
-
-    # Check deployment is available
-    local ready=$(kubectl get deployment rollback-app -n hydra -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
-    check_criterion "Deployment is ready after rollback" "$([ -n "$ready" ] && [ "$ready" -gt 0 ] && echo true || echo false)" && ((score++))
-
-    echo "$score/$total"
-    return 0
-}
-
-# ============================================================================
-# PREVIEW QUESTION 1 - Startup Probe (4 points)
-# ============================================================================
-score_preview_q1() {
-    local score=0
     local total=4
 
-    echo "Preview Question 1 | Startup Probe"
+    echo "Question 21 | Node Drain"
 
-    # Check Pod exists
-    local pod_exists=$(kubectl get pod startup-pod -n centaurus 2>/dev/null && echo true || echo false)
-    check_criterion "Pod startup-pod exists" "$pod_exists" && ((score++))
+    # Check file exists
+    local file="$EXAM_DIR/21/drain-command.sh"
+    check_criterion "File drain-command.sh exists" "$([ -f "$file" ] && echo true || echo false)" && ((score++))
 
-    # Check startupProbe configured
-    local startup=$(kubectl get pod startup-pod -n centaurus -o jsonpath='{.spec.containers[0].startupProbe}' 2>/dev/null)
-    check_criterion "Startup probe configured" "$([ -n "$startup" ] && echo true || echo false)" && ((score++))
+    if [ -f "$file" ]; then
+        local content=$(cat "$file")
 
-    # Check failureThreshold
-    local threshold=$(kubectl get pod startup-pod -n centaurus -o jsonpath='{.spec.containers[0].startupProbe.failureThreshold}' 2>/dev/null)
-    check_criterion "failureThreshold configured" "$([ -n "$threshold" ] && echo true || echo false)" && ((score++))
+        # Check contains kubectl drain
+        check_criterion "Command contains 'kubectl drain'" "$(echo "$content" | grep -q "kubectl drain" && echo true || echo false)" && ((score++))
 
-    # Check periodSeconds
-    local period=$(kubectl get pod startup-pod -n centaurus -o jsonpath='{.spec.containers[0].startupProbe.periodSeconds}' 2>/dev/null)
-    check_criterion "periodSeconds configured" "$([ -n "$period" ] && echo true || echo false)" && ((score++))
+        # Check has required flags
+        local has_flags=true
+        if ! echo "$content" | grep -q "ignore-daemonsets"; then has_flags=false; fi
+        if ! echo "$content" | grep -q "delete-emptydir-data\|delete-local-data"; then has_flags=false; fi
+        if ! echo "$content" | grep -q "force"; then has_flags=false; fi
+        check_criterion "Command has required flags" "$([ "$has_flags" = true ] && echo true || echo false)" && ((score++))
+    else
+        check_criterion "Command contains 'kubectl drain'" "false" || true
+        check_criterion "Command has required flags" "false" || true
+    fi
 
     echo "$score/$total"
     return 0

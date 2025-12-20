@@ -1,0 +1,19 @@
+# Q13 - Helm Values Override File
+# Task: Use this file to override default nginx chart values
+---
+replicaCount: 3
+
+image:
+  tag: "1.22"
+
+service:
+  type: ClusterIP
+  port: 8080
+
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "100m"
+  limits:
+    memory: "128Mi"
+    cpu: "200m"
