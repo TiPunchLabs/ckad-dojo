@@ -184,12 +184,13 @@ Enable tab completion for commands, options, and exam IDs.
 
 **Recommended: Create a shell function (Bash)**
 
-Add this to your `~/.bashrc`:
+Add this to your `~/.bashrc` (adjust the path to your installation):
 
 ```bash
 # ckad-dojo function with auto-completion
+# Replace /path/to/ckad-dojo with your actual installation path
 ckad-dojo() {
-    uv run --project ~/Workspace/01-projets/tools/ckad-dojo ckad-dojo "$@"
+    uv run --project /path/to/ckad-dojo ckad-dojo "$@"
 }
 eval "$(register-python-argcomplete ckad-dojo)"
 ```
@@ -202,8 +203,6 @@ ckad-dojo <TAB>           # → setup, exam, score, cleanup, list
 ckad-dojo exam <TAB>      # → start, --exam, --help
 ckad-dojo -e <TAB>        # → ckad-simulation1, ckad-simulation2, ...
 ```
-
-> **Note**: Adjust the `--project` path to your ckad-dojo installation directory.
 
 **Alternative: Built-in completion scripts**
 
