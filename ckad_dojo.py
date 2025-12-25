@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# PYTHON_ARGCOMPLETE_OK
 """
 CKAD-Dojo CLI - Centralized command-line interface for CKAD Exam Simulator.
 
@@ -6,6 +7,7 @@ This CLI unifies all exam operations (setup, exam, score, cleanup) into a single
 entry point with both interactive menu and direct command-line access.
 """
 
+import argcomplete
 import argparse
 import os
 import re
@@ -1102,6 +1104,7 @@ def main() -> int:
     signal.signal(signal.SIGINT, signal_handler)
 
     parser = create_parser()
+    argcomplete.autocomplete(parser)
     args = parser.parse_args()
 
     # Handle --no-color

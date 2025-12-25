@@ -180,39 +180,63 @@ uv run ckad-dojo status                         # Check environment status
 
 ### Shell Autocompletion
 
-Enable tab completion for commands, options, and exam IDs:
+Enable tab completion for commands, options, and exam IDs.
 
-**Bash:**
+**Recommended: Create a shell function (Bash)**
+
+Add this to your `~/.bashrc`:
+
 ```bash
-# Option 1: Add to ~/.bashrc (loads on each shell start)
-echo 'eval "$(uv run ckad-dojo completion bash)"' >> ~/.bashrc
-source ~/.bashrc
+# ckad-dojo function with auto-completion
+ckad-dojo() {
+    uv run --project ~/Workspace/01-projets/tools/ckad-dojo ckad-dojo "$@"
+}
+eval "$(register-python-argcomplete ckad-dojo)"
+```
 
-# Option 2: Save to completions directory (recommended, loads once)
+Then reload: `source ~/.bashrc`
+
+Now you can use:
+```bash
+ckad-dojo <TAB>           # → setup, exam, score, cleanup, list
+ckad-dojo exam <TAB>      # → start, --exam, --help
+ckad-dojo -e <TAB>        # → ckad-simulation1, ckad-simulation2, ...
+```
+
+> **Note**: Adjust the `--project` path to your ckad-dojo installation directory.
+
+**Alternative: Built-in completion scripts**
+
+<details>
+<summary>Bash (without function wrapper)</summary>
+
+```bash
+# Save to completions directory
 mkdir -p ~/.local/share/bash-completion/completions
 uv run ckad-dojo completion bash > ~/.local/share/bash-completion/completions/ckad-dojo
 ```
+</details>
 
-**Zsh:**
+<details>
+<summary>Zsh</summary>
+
 ```bash
-# Create completions directory and add to fpath (one-time setup)
 mkdir -p ~/.zfunc
 echo 'fpath=(~/.zfunc $fpath)' >> ~/.zshrc
 echo 'autoload -Uz compinit && compinit' >> ~/.zshrc
-
-# Generate completion file
 uv run ckad-dojo completion zsh > ~/.zfunc/_ckad-dojo
 source ~/.zshrc
 ```
+</details>
 
-**Fish:**
+<details>
+<summary>Fish</summary>
+
 ```bash
-# Create completions directory and generate file
 mkdir -p ~/.config/fish/completions
 uv run ckad-dojo completion fish > ~/.config/fish/completions/ckad-dojo.fish
 ```
-
-After setup, press `Tab` to autocomplete commands, options, and exam IDs.
+</details>
 
 ---
 
