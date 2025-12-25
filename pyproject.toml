@@ -19,7 +19,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Topic :: Education",
 ]
-dependencies = []
+dependencies = ["argcomplete>=3.0"]
 
 [project.scripts]
 ckad-server = "web.server:main"
