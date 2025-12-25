@@ -28,7 +28,6 @@ ENV/
 # Exam answers (user-specific)
 exam/
 
-# Killershell-based exam (local only, not for distribution)
 exams/ckad-simulation1/
 
 # IDE
