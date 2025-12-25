@@ -64,7 +64,16 @@
       "Skill(speckit.tasks)",
       "Skill(speckit.tasks:*)",
       "Bash(paste:*)",
-      "Bash(bc:*)"
+      "Bash(bc:*)",
+      "Bash(printf:*)",
+      "Bash(./tests/test-setup-functions.sh:*)",
+      "Bash(./tests/test-timer.sh:*)",
+      "Bash(timeout 30 ./tests/test-timer.sh:*)",
+      "Bash(./tests/test-banner.sh:*)",
+      "Bash(./tests/test-scoring.sh:*)",
+      "Bash(done)",
+      "Bash(for exam in ckad-simulation1 ckad-simulation2 ckad-simulation3 ckad-simulation4)",
+      "Bash(do echo \"=== $exam ===\" grep 'echo \"\"\\\\$score/' \"exams/$exam/scoring-functions.sh\")"
     ],
     "deny": [],
     "ask": []

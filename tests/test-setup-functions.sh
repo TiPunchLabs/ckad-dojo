@@ -61,7 +61,7 @@ assert_contains "${EXAM_NAMESPACES[*]}" "neptune" "simulation1 should have neptu
 load_exam "ckad-simulation2"
 
 assert_contains "$CURRENT_MANIFESTS_DIR" "ckad-simulation2" "Manifests dir should contain exam id"
-assert_contains "${EXAM_NAMESPACES[*]}" "andromeda" "simulation2 should have andromeda namespace"
+assert_contains "${EXAM_NAMESPACES[*]}" "blaze" "simulation2 should have blaze namespace"
 
 # ----------------------------------------------------------------------------
 # Test: Exam directory structure
