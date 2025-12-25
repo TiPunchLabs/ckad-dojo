@@ -517,12 +517,13 @@ score_q15() {
 
     echo "Question 15 | Job TTL"
 
-    # Check Job exists (or was created)
+    # Check Job exists (or was created and deleted by TTL)
     local job_exists=$(kubectl get job cleanup-job -n stripe 2>/dev/null && echo true || echo false)
-    # Job might have been deleted by TTL, so check if it was ever created
-    check_criterion "Job cleanup-job was created" "$([ "$job_exists" = "true" ] && echo true || echo false)" && ((score++))
 
     if [ "$job_exists" = "true" ]; then
+        # Job still exists - check all criteria
+        check_criterion "Job cleanup-job exists" "true" && ((score++))
+
         # Check ttlSecondsAfterFinished
         local ttl=$(kubectl get job cleanup-job -n stripe -o jsonpath='{.spec.ttlSecondsAfterFinished}' 2>/dev/null)
         check_criterion "Job has ttlSecondsAfterFinished=60" "$([ "$ttl" = "60" ] && echo true || echo false)" && ((score++))
@@ -539,11 +540,12 @@ score_q15() {
         local image=$(kubectl get job cleanup-job -n stripe -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
         check_criterion "Job uses busybox:1.36" "$(echo "$image" | grep -q "busybox:1.36" && echo true || echo false)" && ((score++))
     else
-        # Job was deleted by TTL - that's actually correct behavior
-        check_criterion "Job has ttlSecondsAfterFinished=60 (job deleted by TTL)" "true" && ((score++))
-        check_criterion "Job has backoffLimit=2 (job deleted by TTL)" "true" && ((score++))
-        check_criterion "Container named cleanup (job deleted by TTL)" "true" && ((score++))
-        check_criterion "Job uses busybox:1.36 (job deleted by TTL)" "true" && ((score++))
+        # Job doesn't exist - check if it was deleted (no points if never created)
+        check_criterion "Job cleanup-job exists (not found)" "false" || true
+        check_criterion "Job has ttlSecondsAfterFinished=60" "false" || true
+        check_criterion "Job has backoffLimit=2" "false" || true
+        check_criterion "Container named cleanup" "false" || true
+        check_criterion "Job uses busybox:1.36" "false" || true
     fi
 
     echo "$score/$total"

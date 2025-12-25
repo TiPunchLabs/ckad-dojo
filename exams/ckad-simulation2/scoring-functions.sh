@@ -64,6 +64,10 @@ score_q2() {
     local deploy_exists=$(kubectl get deployment fire-app -n blaze 2>/dev/null && echo true || echo false)
     check_criterion "Deployment fire-app exists in blaze" "$deploy_exists" && ((score++))
 
+    # Check image
+    local image=$(kubectl get deployment fire-app -n blaze -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
+    check_criterion "Image is nginx:1.21" "$([ "$image" = "nginx:1.21" ] && echo true || echo false)" && ((score++))
+
     # Check replica count
     local replicas=$(kubectl get deployment fire-app -n blaze -o jsonpath='{.spec.replicas}' 2>/dev/null)
     check_criterion "Deployment has 3 replicas" "$([ "$replicas" = "3" ] && echo true || echo false)" && ((score++))
@@ -108,6 +112,10 @@ score_q3() {
     # Check image
     local image=$(kubectl get job data-processor -n spark -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
     check_criterion "Uses busybox image" "$(echo "$image" | grep -q "busybox" && echo true || echo false)" && ((score++))
+
+    # Check container name
+    local container_name=$(kubectl get job data-processor -n spark -o jsonpath='{.spec.template.spec.containers[0].name}' 2>/dev/null)
+    check_criterion "Container name is processor" "$([ "$container_name" = "processor" ] && echo true || echo false)" && ((score++))
 
     # Check YAML file
     local yaml_file="$EXAM_DIR/3/job.yaml"
@@ -202,6 +210,10 @@ score_q6() {
     local pod_status=$(kubectl get pod config-reader -n flame -o jsonpath='{.status.phase}' 2>/dev/null)
     check_criterion "Pod status is Running" "$([ "$pod_status" = "Running" ] && echo true || echo false)" && ((score++))
 
+    # Check image
+    local image=$(kubectl get pod config-reader -n flame -o jsonpath='{.spec.containers[0].image}' 2>/dev/null)
+    check_criterion "Uses busybox image" "$(echo "$image" | grep -q "busybox" && echo true || echo false)" && ((score++))
+
     # Check volume mount path
     local mount_path=$(kubectl get pod config-reader -n flame -o jsonpath='{.spec.containers[0].volumeMounts[0].mountPath}' 2>/dev/null)
     check_criterion "Volume mounted at /config" "$([ "$mount_path" = "/config" ] && echo true || echo false)" && ((score++))
@@ -279,6 +291,10 @@ score_q8() {
     # Check port
     local port=$(kubectl get service backend-headless -n corona -o jsonpath='{.spec.ports[0].port}' 2>/dev/null)
     check_criterion "Port is 80" "$([ "$port" = "80" ] && echo true || echo false)" && ((score++))
+
+    # Check targetPort
+    local target_port=$(kubectl get service backend-headless -n corona -o jsonpath='{.spec.ports[0].targetPort}' 2>/dev/null)
+    check_criterion "TargetPort is 80" "$([ "$target_port" = "80" ] && echo true || echo false)" && ((score++))
 
     # Check protocol
     local protocol=$(kubectl get service backend-headless -n corona -o jsonpath='{.spec.ports[0].protocol}' 2>/dev/null)
@@ -497,6 +513,10 @@ score_q14() {
     local pod_status=$(kubectl get pod lifecycle-pod -n phoenix -o jsonpath='{.status.phase}' 2>/dev/null)
     check_criterion "Pod status is Running" "$([ "$pod_status" = "Running" ] && echo true || echo false)" && ((score++))
 
+    # Check image
+    local image=$(kubectl get pod lifecycle-pod -n phoenix -o jsonpath='{.spec.containers[0].image}' 2>/dev/null)
+    check_criterion "Image is nginx:1.21" "$([ "$image" = "nginx:1.21" ] && echo true || echo false)" && ((score++))
+
     # Check container name
     local container_name=$(kubectl get pod lifecycle-pod -n phoenix -o jsonpath='{.spec.containers[0].name}' 2>/dev/null)
     check_criterion "Container name is main" "$([ "$container_name" = "main" ] && echo true || echo false)" && ((score++))
@@ -606,6 +626,10 @@ score_q17() {
     local initial_delay=$(kubectl get pod tcp-health -n ember -o jsonpath='{.spec.containers[0].livenessProbe.initialDelaySeconds}' 2>/dev/null)
     check_criterion "Initial delay is 10 seconds" "$([ "$initial_delay" = "10" ] && echo true || echo false)" && ((score++))
 
+    # Check periodSeconds
+    local period=$(kubectl get pod tcp-health -n ember -o jsonpath='{.spec.containers[0].livenessProbe.periodSeconds}' 2>/dev/null)
+    check_criterion "Period is 5 seconds" "$([ "$period" = "5" ] && echo true || echo false)" && ((score++))
+
     echo "$score/$total"
     return 0
 }
@@ -638,6 +662,10 @@ score_q18() {
     # Check port 443
     local port443=$(kubectl get service web-svc -n flame -o jsonpath='{.spec.ports[?(@.port==443)].port}' 2>/dev/null)
     check_criterion "Service exposes port 443" "$([ "$port443" = "443" ] && echo true || echo false)" && ((score++))
+
+    # Check targetPort for port 443 is named
+    local target443=$(kubectl get service web-svc -n flame -o jsonpath='{.spec.ports[?(@.port==443)].targetPort}' 2>/dev/null)
+    check_criterion "Port 443 targets named port https-web" "$([ "$target443" = "https-web" ] && echo true || echo false)" && ((score++))
 
     echo "$score/$total"
     return 0
@@ -698,6 +726,10 @@ score_q20() {
         local line_count=$(wc -l < "$file" 2>/dev/null)
         check_criterion "File contains pod names" "$([ "$line_count" -gt 0 ] && echo true || echo false)" && ((score++))
 
+        # Check format is one pod per line (no spaces in lines)
+        local valid_format=$(grep -v ' ' "$file" 2>/dev/null | wc -l)
+        check_criterion "Format is one pod name per line" "$([ "$valid_format" -eq "$line_count" ] && echo true || echo false)" && ((score++))
+
         # Verify content contains actual running pods
         local actual_running=$(kubectl get pods --all-namespaces --field-selector=status.phase=Running -o jsonpath='{.items[*].metadata.name}' 2>/dev/null | tr ' ' '\n' | sort)
         local file_pods=$(cat "$file" | sort)
@@ -706,6 +738,7 @@ score_q20() {
         check_criterion "Content matches running pods" "$([ "$overlap" -gt 0 ] && echo true || echo false)" && ((score++))
     else
         check_criterion "File contains pod names" "false" || true
+        check_criterion "Format is one pod name per line" "false" || true
         check_criterion "Content matches running pods" "false" || true
     fi
 
@@ -738,9 +771,13 @@ score_q21() {
         if ! echo "$content" | grep -q "delete-emptydir-data\|delete-local-data"; then has_flags=false; fi
         if ! echo "$content" | grep -q "force"; then has_flags=false; fi
         check_criterion "Command has required flags" "$([ "$has_flags" = true ] && echo true || echo false)" && ((score++))
+
+        # Check has timeout flag
+        check_criterion "Command has timeout flag" "$(echo "$content" | grep -qE "timeout[= ]*[0-9]+" && echo true || echo false)" && ((score++))
     else
         check_criterion "Command contains 'kubectl drain'" "false" || true
         check_criterion "Command has required flags" "false" || true
+        check_criterion "Command has timeout flag" "false" || true
     fi
 
     echo "$score/$total"
