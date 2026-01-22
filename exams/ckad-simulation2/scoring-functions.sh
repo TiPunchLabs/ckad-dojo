@@ -61,7 +61,7 @@ score_q2() {
     echo "Question 2 | Deployment Recreate Strategy"
 
     # Check Deployment exists
-    local deploy_exists=$(kubectl get deployment fire-app -n blaze 2>/dev/null && echo true || echo false)
+    local deploy_exists=$(kubectl get deployment fire-app -n blaze >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Deployment fire-app exists in blaze" "$deploy_exists" && ((score++))
 
     # Check image
@@ -98,7 +98,7 @@ score_q3() {
     echo "Question 3 | Job with Timeout"
 
     # Check Job exists
-    local job_exists=$(kubectl get job data-processor -n spark 2>/dev/null && echo true || echo false)
+    local job_exists=$(kubectl get job data-processor -n spark >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Job data-processor exists in spark" "$job_exists" && ((score++))
 
     # Check activeDeadlineSeconds
@@ -166,7 +166,7 @@ score_q5() {
     echo "Question 5 | Fix CrashLoopBackOff"
 
     # Check Pod exists
-    local pod_exists=$(kubectl get pod crash-app -n ember 2>/dev/null && echo true || echo false)
+    local pod_exists=$(kubectl get pod crash-app -n ember >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Pod crash-app exists in ember" "$pod_exists" && ((score++))
 
     # Check Pod is Running
@@ -181,9 +181,9 @@ score_q5() {
     local cmd=$(kubectl get pod crash-app -n ember -o jsonpath='{.spec.containers[0].command[0]}' 2>/dev/null)
     check_criterion "Command is 'sleep' (not 'sleepx')" "$([ "$cmd" = "sleep" ] && echo true || echo false)" && ((score++))
 
-    # Check restart count is low (problem was fixed)
+    # Check restart count is low (problem was fixed) - only if pod exists
     local restarts=$(kubectl get pod crash-app -n ember -o jsonpath='{.status.containerStatuses[0].restartCount}' 2>/dev/null)
-    check_criterion "Restart count is reasonable (<5)" "$([ "${restarts:-0}" -lt 5 ] && echo true || echo false)" && ((score++))
+    check_criterion "Restart count is reasonable (<5)" "$([ -n "$restarts" ] && [ "$restarts" -lt 5 ] && echo true || echo false)" && ((score++))
 
     # Check pod has been running for a while
     local running_seconds=$(kubectl get pod crash-app -n ember -o jsonpath='{.status.containerStatuses[0].state.running.startedAt}' 2>/dev/null)
@@ -203,7 +203,7 @@ score_q6() {
     echo "Question 6 | ConfigMap Items Mount"
 
     # Check Pod exists
-    local pod_exists=$(kubectl get pod config-reader -n flame 2>/dev/null && echo true || echo false)
+    local pod_exists=$(kubectl get pod config-reader -n flame >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Pod config-reader exists in flame" "$pod_exists" && ((score++))
 
     # Check Pod is Running
@@ -252,7 +252,7 @@ score_q7() {
     fi
 
     # Check Secret exists
-    local secret_exists=$(kubectl get secret db-credentials -n magma 2>/dev/null && echo true || echo false)
+    local secret_exists=$(kubectl get secret db-credentials -n magma >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Secret db-credentials exists in magma" "$secret_exists" && ((score++))
 
     # Check Secret type
@@ -277,7 +277,7 @@ score_q8() {
     echo "Question 8 | Headless Service"
 
     # Check Service exists
-    local svc_exists=$(kubectl get service backend-headless -n corona 2>/dev/null && echo true || echo false)
+    local svc_exists=$(kubectl get service backend-headless -n corona >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Service backend-headless exists in corona" "$svc_exists" && ((score++))
 
     # Check clusterIP is None
@@ -314,11 +314,11 @@ score_q9() {
     echo "Question 9 | Canary Deployment"
 
     # Check stable-v1 exists (pre-existing)
-    local stable_exists=$(kubectl get deployment stable-v1 -n blaze 2>/dev/null && echo true || echo false)
+    local stable_exists=$(kubectl get deployment stable-v1 -n blaze >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Deployment stable-v1 exists" "$stable_exists" && ((score++))
 
     # Check canary-v2 exists
-    local canary_exists=$(kubectl get deployment canary-v2 -n blaze 2>/dev/null && echo true || echo false)
+    local canary_exists=$(kubectl get deployment canary-v2 -n blaze >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Deployment canary-v2 exists" "$canary_exists" && ((score++))
 
     # Check canary has 1 replica
@@ -334,7 +334,7 @@ score_q9() {
     check_criterion "Canary has version=v2 label" "$([ "$canary_version" = "v2" ] && echo true || echo false)" && ((score++))
 
     # Check Service exists
-    local svc_exists=$(kubectl get service frontend-svc -n blaze 2>/dev/null && echo true || echo false)
+    local svc_exists=$(kubectl get service frontend-svc -n blaze >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Service frontend-svc exists" "$svc_exists" && ((score++))
 
     # Check Service selects both (app=web-frontend without version)
@@ -359,7 +359,7 @@ score_q10() {
     echo "Question 10 | Sidecar Data Processing"
 
     # Check Pod exists
-    local pod_exists=$(kubectl get pod data-transform -n phoenix 2>/dev/null && echo true || echo false)
+    local pod_exists=$(kubectl get pod data-transform -n phoenix >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Pod data-transform exists in phoenix" "$pod_exists" && ((score++))
 
     # Check Pod is Running
@@ -396,7 +396,7 @@ score_q11() {
     echo "Question 11 | Cross-Namespace NetworkPolicy"
 
     # Check NetworkPolicy exists
-    local np_exists=$(kubectl get networkpolicy allow-from-flame -n corona 2>/dev/null && echo true || echo false)
+    local np_exists=$(kubectl get networkpolicy allow-from-flame -n corona >/dev/null 2>&1 && echo true || echo false)
     check_criterion "NetworkPolicy allow-from-flame exists in corona" "$np_exists" && ((score++))
 
     # Check podSelector
@@ -506,7 +506,7 @@ score_q14() {
     echo "Question 14 | PostStart Lifecycle Hook"
 
     # Check Pod exists
-    local pod_exists=$(kubectl get pod lifecycle-pod -n phoenix 2>/dev/null && echo true || echo false)
+    local pod_exists=$(kubectl get pod lifecycle-pod -n phoenix >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Pod lifecycle-pod exists in phoenix" "$pod_exists" && ((score++))
 
     # Check Pod is Running
@@ -543,7 +543,7 @@ score_q15() {
     echo "Question 15 | Guaranteed QoS Class"
 
     # Check Pod exists
-    local pod_exists=$(kubectl get pod qos-guaranteed -n spark 2>/dev/null && echo true || echo false)
+    local pod_exists=$(kubectl get pod qos-guaranteed -n spark >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Pod qos-guaranteed exists in spark" "$pod_exists" && ((score++))
 
     # Check Pod is Running
@@ -578,7 +578,7 @@ score_q16() {
     echo "Question 16 | ServiceAccount Projected Token"
 
     # Check Pod exists
-    local pod_exists=$(kubectl get pod token-pod -n magma 2>/dev/null && echo true || echo false)
+    local pod_exists=$(kubectl get pod token-pod -n magma >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Pod token-pod exists in magma" "$pod_exists" && ((score++))
 
     # Check Pod uses ServiceAccount fire-sa
@@ -607,7 +607,7 @@ score_q17() {
     echo "Question 17 | TCP Liveness Probe"
 
     # Check Pod exists
-    local pod_exists=$(kubectl get pod tcp-health -n ember 2>/dev/null && echo true || echo false)
+    local pod_exists=$(kubectl get pod tcp-health -n ember >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Pod tcp-health exists in ember" "$pod_exists" && ((score++))
 
     # Check Pod is Running
@@ -644,7 +644,7 @@ score_q18() {
     echo "Question 18 | Service with Named Ports"
 
     # Check Service exists
-    local svc_exists=$(kubectl get service web-svc -n flame 2>/dev/null && echo true || echo false)
+    local svc_exists=$(kubectl get service web-svc -n flame >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Service web-svc exists in flame" "$svc_exists" && ((score++))
 
     # Check service type
@@ -681,7 +681,7 @@ score_q19() {
     echo "Question 19 | Topology Spread Constraints"
 
     # Check Deployment exists
-    local deploy_exists=$(kubectl get deployment spread-deploy -n blaze 2>/dev/null && echo true || echo false)
+    local deploy_exists=$(kubectl get deployment spread-deploy -n blaze >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Deployment spread-deploy exists in blaze" "$deploy_exists" && ((score++))
 
     # Check replica count

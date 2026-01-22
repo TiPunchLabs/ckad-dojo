@@ -52,17 +52,25 @@ def run_cleanup_script(exam_id: str = None) -> dict:
     """Run ckad-cleanup.sh to clean up exam resources"""
     script_path = SCRIPTS_DIR / "ckad-cleanup.sh"
 
+    print(f"\n{'='*60}")
+    print(f"  Cleaning up exam resources...")
+    if exam_id:
+        print(f"  Exam: {exam_id}")
+    print(f"{'='*60}\n")
+
     if not script_path.exists():
+        print("  [ERROR] Cleanup script not found")
         return {
             "success": False,
             "error": "Cleanup script not found"
         }
 
     try:
-        cmd = [str(script_path)]
+        cmd = [str(script_path), "-y"]  # -y to skip confirmation
         if exam_id:
             cmd.extend(["-e", exam_id])
 
+        # Run with real-time output to terminal
         result = subprocess.run(
             cmd,
             capture_output=True,
@@ -71,6 +79,17 @@ def run_cleanup_script(exam_id: str = None) -> dict:
             timeout=120
         )
 
+        # Print output to terminal
+        if result.stdout:
+            print(result.stdout)
+        if result.stderr:
+            print(result.stderr)
+
+        if result.returncode == 0:
+            print("  [OK] Cleanup completed successfully\n")
+        else:
+            print("  [ERROR] Cleanup failed\n")
+
         return {
             "success": result.returncode == 0,
             "output": result.stdout,
@@ -78,11 +97,13 @@ def run_cleanup_script(exam_id: str = None) -> dict:
         }
 
     except subprocess.TimeoutExpired:
+        print("  [ERROR] Cleanup script timed out\n")
         return {
             "success": False,
             "error": "Cleanup script timed out"
         }
     except Exception as e:
+        print(f"  [ERROR] {str(e)}\n")
         return {
             "success": False,
             "error": str(e)
@@ -597,7 +618,13 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
 
             # Run the scoring script
             exam_id = timer_state.get("exam_id") or data.get("exam_id")
+            print(f"\n{'='*60}")
+            print(f"  Scoring exam: {exam_id or 'unknown'}")
+            print(f"{'='*60}\n")
             score_result = run_scoring_script(exam_id)
+            if score_result.get("success"):
+                print(f"  Score: {score_result.get('total_score')}/{score_result.get('max_score')} ({score_result.get('percentage')}%)")
+                print(f"  Status: {'PASSED' if score_result.get('passed') else 'FAILED'}\n")
 
             # Add timer info to result
             if timer_state["start_time"]:
@@ -626,6 +653,13 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
             # Signal shutdown
             shutdown_requested = True
             self.send_json({"status": "shutdown_initiated"})
+
+            # Log shutdown
+            print(f"\n{'='*60}")
+            print(f"  Shutting down server...")
+            print(f"{'='*60}")
+            print(f"\n  Server stopped.\n")
+
             # Schedule shutdown after response is sent
             import threading
             def delayed_shutdown():
