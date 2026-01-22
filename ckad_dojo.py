@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-__version__ = "1.2.0"
+__version__ = "1.5.0"
 
 
 # =============================================================================
