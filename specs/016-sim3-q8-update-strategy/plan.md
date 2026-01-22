@@ -76,6 +76,7 @@ exams/ckad-simulation3/
 
 **Task**:
 Configure the Deployment `battle-app` in namespace `ares` to use a RollingUpdate strategy with:
+
 - `maxSurge: 2`
 - `maxUnavailable: 1`
 

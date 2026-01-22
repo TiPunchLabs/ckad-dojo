@@ -39,6 +39,7 @@
 | HELM_RELEASES | array[string] | Pre-installed Helm releases |
 
 **Example (ckad-simulation2)**:
+
 ```bash
 EXAM_NAME="CKAD Simulation 2"
 EXAM_ID="ckad-simulation2"
@@ -71,6 +72,7 @@ EXAM_NAMESPACES=(
 | content | string | Full markdown task description |
 
 **Validation Rules**:
+
 - id: Required, unique within exam
 - points: 1-10 range
 - namespace: Must exist in EXAM_NAMESPACES or be "default"
@@ -89,6 +91,7 @@ EXAM_NAMESPACES=(
 | yaml_snippets | array[object] | YAML manifests with descriptions |
 
 **Format**:
+
 ```markdown
 ## Solution N | Topic
 
@@ -114,6 +117,7 @@ apiVersion: v1
 kind: Pod
 ...
 ```
+
 ```
 
 ### ScoringFunction
@@ -162,6 +166,7 @@ kind: Pod
 ### Exam Directory Structure
 
 ```
+
 exams/ckad-simulation2/
 ├── exam.conf                    # Exam configuration
 ├── questions.md                 # 21 questions + 1 preview
@@ -180,17 +185,20 @@ exams/ckad-simulation2/
     │   ├── Dockerfile
     │   └── app.py
     └── ...
+
 ```
 
 ### Student Answer Directory
 
 ```
+
 exam/course/
 ├── 1/                   # Question 1 answers
 ├── 2/                   # Question 2 answers
 ├── ...
 ├── 21/                  # Question 21 answers
 └── p1/                  # Preview question 1 answers
+
 ```
 
 ## State Transitions
@@ -198,6 +206,7 @@ exam/course/
 ### Exam Session States
 
 ```
+
 ┌──────────┐   select    ┌──────────┐   start    ┌─────────┐
 │  IDLE    │────────────▶│ SELECTED │───────────▶│ RUNNING │
 └──────────┘             └──────────┘            └─────────┘
@@ -214,15 +223,18 @@ exam/course/
                          ┌──────────┐   view     ┌───────────┐
                          │ SCORED   │───────────▶│ SOLUTIONS │
                          └──────────┘            └───────────┘
+
 ```
 
 ### Question States (per session)
 
 ```
+
 UNANSWERED ──▶ ATTEMPTED ──▶ FLAGGED ──▶ REVIEWED
      │              │            │           │
      └──────────────┴────────────┴───────────┘
                       (navigation)
+
 ```
 
 ## CKAD Simulation 2 Questions Overview

@@ -81,6 +81,7 @@ Global Options:
 ### Script Integration
 
 The CLI calls existing scripts via subprocess:
+
 - `scripts/ckad-setup.sh -e {exam}`
 - `scripts/ckad-exam.sh web -e {exam}`
 - `scripts/ckad-score.sh -e {exam}`

@@ -10,11 +10,13 @@
 Retrieves all solutions for a specific exam.
 
 **Request**:
+
 ```
 GET /api/exam/ckad-simulation2/solutions
 ```
 
 **Response** (200 OK):
+
 ```json
 {
   "exam_id": "ckad-simulation2",
@@ -42,6 +44,7 @@ GET /api/exam/ckad-simulation2/solutions
 ```
 
 **Response** (404 Not Found):
+
 ```json
 {
   "error": "Solutions not available for this exam"
@@ -53,11 +56,13 @@ GET /api/exam/ckad-simulation2/solutions
 Retrieves solution for a specific question.
 
 **Request**:
+
 ```
 GET /api/exam/ckad-simulation2/solutions/1
 ```
 
 **Response** (200 OK):
+
 ```json
 {
   "id": "1",
@@ -73,18 +78,23 @@ GET /api/exam/ckad-simulation2/solutions/1
 ## Existing Endpoints (Reference)
 
 ### GET /api/exams
+
 Lists all available exams.
 
 ### GET /api/exam/{exam_id}/config
+
 Returns exam configuration.
 
 ### GET /api/exam/{exam_id}/questions
+
 Returns all questions for an exam.
 
 ### POST /api/score
+
 Runs scoring and returns results.
 
 **Enhanced Response** (with solutions reference):
+
 ```json
 {
   "success": true,

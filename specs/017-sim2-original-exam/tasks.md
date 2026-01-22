@@ -184,6 +184,7 @@ Phase 6: T056-T058 can run in parallel (different sections)
 ### Batch Implementation
 
 For each question batch:
+
 1. Write all questions in batch
 2. Implement all scoring functions in batch
 3. Create required templates

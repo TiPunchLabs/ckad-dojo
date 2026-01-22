@@ -101,6 +101,7 @@
 ### Parallel Opportunities
 
 After Phase 2 (Foundational):
+
 - T005, T006, T007, T008 can all run in parallel (different exam.conf files)
 
 ---

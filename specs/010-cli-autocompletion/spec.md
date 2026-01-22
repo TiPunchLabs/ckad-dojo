@@ -10,6 +10,7 @@
 Currently, users must remember and type all CLI commands, subcommands, and options manually. This is error-prone and slows down the workflow, especially for new users discovering the available commands.
 
 Adding shell autocompletion improves:
+
 - **Discoverability**: Users can explore commands by pressing Tab
 - **Efficiency**: Faster command entry without looking up documentation
 - **Accuracy**: Reduces typos and invalid command combinations
@@ -27,8 +28,8 @@ As a user with bash shell, I want to generate and install a completion script so
 **Acceptance Scenarios**:
 
 1. **Given** I run `uv run ckad-dojo completion bash`, **When** the command completes, **Then** a valid bash completion script is printed to stdout.
-2. **Given** I have installed the bash completion script, **When** I type `uv run ckad-dojo ` and press Tab, **Then** I see available commands (exam, setup, score, cleanup, list, info, status, completion).
-3. **Given** I have installed the bash completion script, **When** I type `uv run ckad-dojo exam ` and press Tab, **Then** I see available subcommands (start, stop).
+2. **Given** I have installed the bash completion script, **When** I type `uv run ckad-dojo` and press Tab, **Then** I see available commands (exam, setup, score, cleanup, list, info, status, completion).
+3. **Given** I have installed the bash completion script, **When** I type `uv run ckad-dojo exam` and press Tab, **Then** I see available subcommands (start, stop).
 4. **Given** I have installed the bash completion script, **When** I type `uv run ckad-dojo score -` and press Tab, **Then** I see available options (-e, --exam, --help).
 
 ---
@@ -44,7 +45,7 @@ As a user with zsh shell, I want to generate a completion script so that I can a
 **Acceptance Scenarios**:
 
 1. **Given** I run `uv run ckad-dojo completion zsh`, **When** the command completes, **Then** a valid zsh completion script is printed to stdout.
-2. **Given** I have installed the zsh completion script, **When** I type `ckad-dojo ` and press Tab, **Then** I see available commands with descriptions.
+2. **Given** I have installed the zsh completion script, **When** I type `ckad-dojo` and press Tab, **Then** I see available commands with descriptions.
 
 ---
 
@@ -83,11 +84,11 @@ As a user, I want the `-e/--exam` option to autocomplete with available exam IDs
 
 **Why this priority**: This is the most commonly used option, and exam IDs can be long (e.g., ckad-simulation1).
 
-**Independent Test**: Type `uv run ckad-dojo score -e ` and press Tab to see available exam IDs.
+**Independent Test**: Type `uv run ckad-dojo score -e` and press Tab to see available exam IDs.
 
 **Acceptance Scenarios**:
 
-1. **Given** I have completion installed and exam directories exist, **When** I type `uv run ckad-dojo score -e ` and press Tab, **Then** I see available exam IDs (ckad-simulation1, ckad-simulation2, etc.).
+1. **Given** I have completion installed and exam directories exist, **When** I type `uv run ckad-dojo score -e` and press Tab, **Then** I see available exam IDs (ckad-simulation1, ckad-simulation2, etc.).
 2. **Given** I type `uv run ckad-dojo exam start -e ckad-s` and press Tab, **Then** the partial text completes to matching exam IDs.
 
 ---
@@ -127,6 +128,7 @@ As a user, I want the `-e/--exam` option to autocomplete with available exam IDs
 ### Current CLI Structure (from ckad_dojo.py)
 
 Commands and their options:
+
 - `exam start [-e/--exam]`
 - `exam stop`
 - `setup [-e/--exam]`
@@ -138,6 +140,7 @@ Commands and their options:
 - `completion <shell>` (new)
 
 Global options:
+
 - `--version`, `-V`
 - `--no-color`
 

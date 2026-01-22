@@ -16,12 +16,14 @@
 ### Decision: Replace sim2 Q1 with Node Listing
 
 **Rationale**:
+
 - `kubectl get nodes` is a valid CKAD operation
 - Equivalent difficulty (1 point, single command)
 - Provides variety from namespace operations
 - Matches exam warm-up pattern
 
 **Alternatives Considered**:
+
 - List pods in default namespace - rejected (too similar to other questions)
 - List services - rejected (less fundamental)
 - Cluster info - rejected (not typically a CKAD question format)
@@ -44,6 +46,7 @@
 ## Scoring Function Pattern
 
 Current sim1 score_q1():
+
 ```bash
 score_q1() {
     local score=0
@@ -59,6 +62,7 @@ score_q1() {
 ```
 
 New sim2 score_q1() pattern:
+
 ```bash
 score_q1() {
     local score=0

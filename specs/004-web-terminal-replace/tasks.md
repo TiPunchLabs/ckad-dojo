@@ -145,27 +145,32 @@
 ### Parallel Opportunities
 
 **Phase 1 (Setup)**:
+
 ```
 T001, T002 (same file - sequential)
 T003 (different file - parallel with T001-T002)
 ```
 
 **Phase 3 (US1)**:
+
 ```
 T008 + T009 (different files - parallel)
 ```
 
 **Phase 5 (US3)**:
+
 ```
 T018 + T019 (different files - parallel)
 ```
 
 **Phase 6 (US4)**:
+
 ```
 T024 + T025 + T026 (different files - parallel)
 ```
 
 **Phase 7 (Polish)**:
+
 ```
 T030 + T031 + T032 + T033 (all parallel - different files)
 ```
