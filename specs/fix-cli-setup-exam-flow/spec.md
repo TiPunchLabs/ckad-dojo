@@ -15,6 +15,7 @@ When users run `uv run ckad-dojo exam start`, the following happens:
 4. User is prompted to choose: cleanup, continue, or cancel
 
 This is **redundant and confusing** because:
+
 - The resources were JUST created intentionally
 - The user already made the decision to start the exam
 - Asking again breaks the user flow
@@ -85,6 +86,7 @@ As a user running `ckad-exam.sh` directly (not via CLI), I still want to see the
 ### Implementation Approach
 
 The `--skip-detection` flag should:
+
 - Be parsed in the argument handling section of `ckad-exam.sh`
 - Set a variable like `SKIP_DETECTION=true`
 - Check this variable before the "EXISTING EXAM DETECTED" block

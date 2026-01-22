@@ -310,6 +310,7 @@ Create a Pod named `lifecycle-pod` in namespace `phoenix` that:
 - Uses image `nginx:1.21`
 - Container name: `main`
 - Has a **postStart** lifecycle hook that executes:
+
   ```
   /bin/sh -c "echo 'Started at $(date)' > /usr/share/nginx/html/started.txt"
   ```

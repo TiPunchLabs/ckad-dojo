@@ -73,6 +73,7 @@ ckad-dojo/
 ## Multi-Exam Architecture
 
 Each exam is self-contained in `exams/{exam-id}/` with:
+
 - `exam.conf` - Configuration (namespaces, points, duration, helm releases)
 - `questions.md` - Questions in markdown format
 - `solutions.md` - Solutions for post-exam review
@@ -104,6 +105,7 @@ HELM_RELEASES=(...)         # Array of helm release names
 ## Topics Covered
 
 The questions cover core CKAD exam domains:
+
 - Namespaces, Pods, Jobs, Deployments
 - Helm management
 - ServiceAccounts and Secrets
@@ -150,6 +152,7 @@ score_q1() {
 ```
 
 ## Active Technologies
+
 - Bash 4.0+ (scripts), Python 3.8+ (web server), JavaScript ES6+ (frontend) + ttyd (external binary for web terminal), existing libs (marked.js, highlight.js) (004-web-terminal-replace)
 - Python 3.8+ (using uv as runner) + Standard library only (argparse, subprocess, os, sys, pathlib) (008-ckad-dojo-cli)
 - N/A (stateless CLI wrapper) (008-ckad-dojo-cli)
@@ -171,4 +174,5 @@ score_q1() {
 - uv (Python runner)
 
 ## Recent Changes
+
 - 004-web-terminal-replace: Added Bash 4.0+ (scripts), Python 3.8+ (web server), JavaScript ES6+ (frontend) + ttyd (external binary for web terminal), existing libs (marked.js, highlight.js)

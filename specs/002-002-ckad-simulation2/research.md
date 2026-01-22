@@ -10,11 +10,13 @@
 **Decision**: Use identical markdown format as ckad-simulation1/questions.md
 
 **Rationale**: Consistent format ensures:
+
 - Web parser compatibility (parse_questions_md in server.py)
 - Familiar user experience
 - Reuse of existing rendering logic
 
 **Format Structure**:
+
 ```markdown
 ## Question N | Topic
 
@@ -35,11 +37,13 @@
 **Decision**: Create solutions.md with paired question-solution format
 
 **Rationale**:
+
 - Mirrors questions.md structure for consistency
 - Enables reuse of markdown parser
 - Supports syntax highlighting via existing code block rendering
 
 **Format Structure**:
+
 ```markdown
 ## Solution N | Topic
 
@@ -58,10 +62,12 @@
 **Decision**: Galaxy/Constellation theme (distinct from simulation1's planetary theme)
 
 **Namespaces Selected**:
+
 - andromeda, orion, pegasus, cygnus, lyra
 - aquila, draco, phoenix, hydra, centaurus, cassiopeia
 
 **Rationale**:
+
 - Thematic consistency within exam
 - Clear differentiation from simulation1 (neptune, saturn, mars, etc.)
 - 11 namespaces match simulation1's count
@@ -71,6 +77,7 @@
 **Decision**: Follow established pattern from scoring-functions.sh
 
 **Pattern**:
+
 ```bash
 score_qN() {
     local score=0
@@ -95,6 +102,7 @@ score_qN() {
 **Decision**: Add new API endpoint `/api/exam/{exam_id}/solutions` and UI components
 
 **Implementation Approach**:
+
 1. Parse solutions.md similarly to questions.md
 2. Add "View Solutions" button in score modal
 3. Create solutions view with navigation
@@ -107,6 +115,7 @@ score_qN() {
 **Decision**: 21 questions, ~110 total points, matching simulation1 difficulty curve
 
 **Distribution**:
+
 | Points | Count | Total |
 |--------|-------|-------|
 | 1-2    | 3     | 5     |

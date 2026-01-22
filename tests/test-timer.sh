@@ -16,12 +16,12 @@ source "$PROJECT_DIR/scripts/lib/timer.sh"
 
 # Cleanup function
 cleanup_timer_tests() {
-    # Kill any timer processes
-    if [ -f "$TIMER_PID_FILE" ]; then
-        _pid=$(cat "$TIMER_PID_FILE" 2>/dev/null)
-        [ -n "$_pid" ] && kill "$_pid" 2>/dev/null
-    fi
-    rm -rf "$TIMER_STATE_DIR"
+	# Kill any timer processes
+	if [ -f "$TIMER_PID_FILE" ]; then
+		_pid=$(cat "$TIMER_PID_FILE" 2>/dev/null)
+		[ -n "$_pid" ] && kill "$_pid" 2>/dev/null
+	fi
+	rm -rf "$TIMER_STATE_DIR"
 }
 trap cleanup_timer_tests EXIT
 
@@ -107,15 +107,15 @@ test_case "get_time_color returns correct colors based on remaining time"
 _warning=15
 
 # Normal time (more than warning threshold) - green
-_color_normal=$(get_time_color 1800 $_warning)  # 30 min remaining
+_color_normal=$(get_time_color 1800 $_warning) # 30 min remaining
 assert_contains "$_color_normal" "32m" "Should be green when time > warning"
 
 # Warning time (less than warning but more than 1 min) - yellow
-_color_warning=$(get_time_color 600 $_warning)  # 10 min remaining
+_color_warning=$(get_time_color 600 $_warning) # 10 min remaining
 assert_contains "$_color_warning" "33m" "Should be yellow during warning period"
 
 # Critical time (1 min or less) - red with blink
-_color_critical=$(get_time_color 45 $_warning)  # 45 sec remaining
+_color_critical=$(get_time_color 45 $_warning) # 45 sec remaining
 assert_contains "$_color_critical" "31m" "Should be red in last minute"
 
 # ----------------------------------------------------------------------------
@@ -218,7 +218,7 @@ test_case "timer_reset removes state directory"
 
 # Create state dir and file
 timer_init
-echo "TEST=value" > "$TIMER_STATE_FILE"
+echo "TEST=value" >"$TIMER_STATE_FILE"
 
 # Reset should remove everything
 timer_reset >/dev/null 2>&1
