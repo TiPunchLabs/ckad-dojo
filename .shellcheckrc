@@ -1,0 +1,51 @@
+# Shellcheck configuration for ckad-dojo
+
+# Disable warnings that are not critical for this project:
+
+# SC1090: Can't follow non-constant source (dynamic sourcing is intentional)
+disable=SC1090
+
+# SC1091: Not following sourced file (external files not in scope)
+disable=SC1091
+
+# SC2155: Declare and assign separately (style preference, not a bug)
+disable=SC2155
+
+# SC2034: Variable appears unused (many are exported or used externally)
+disable=SC2034
+
+# SC2016: Expressions don't expand in single quotes (intentional in test assertions)
+disable=SC2016
+
+# SC2329: Function never invoked (functions called indirectly via scoring)
+disable=SC2329
+
+# SC2153: Possible misspelling (false positives for variables in sourced files)
+disable=SC2153
+
+# SC2086: Double quote to prevent globbing (too many false positives)
+disable=SC2086
+
+# SC2128: Expanding array without index (false positive when capturing function output)
+disable=SC2128
+
+# SC2178: Variable used as array but assigned string (false positive with function output)
+disable=SC2178
+
+# SC2001: See if you can use ${variable//search/replace} (style suggestion)
+disable=SC2001
+
+# SC2046: Quote this to prevent word splitting (covered by SC2086)
+disable=SC2046
+
+# SC2126: Consider using grep -c (style suggestion)
+disable=SC2126
+
+# SC2129: Consider using { cmd1; cmd2; } >> file (style suggestion)
+disable=SC2129
+
+# SC2207: Prefer mapfile or read -a (style suggestion)
+disable=SC2207
+
+# Enable external sources for better analysis
+external-sources=true

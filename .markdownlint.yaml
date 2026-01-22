@@ -1,0 +1,40 @@
+---
+# Markdown lint configuration for ckad-dojo
+
+# Line length - disabled (many kubectl commands and descriptions are long)
+MD013: false
+
+# Allow inline HTML (useful for formatting)
+MD033: false
+
+# Allow duplicate headings in different sections (common in Q&A format)
+MD024:
+  siblings_only: true
+
+# Allow trailing punctuation in headings
+MD026:
+  punctuation: ".,;:!"
+
+# Allow multiple consecutive blank lines
+MD012: false
+
+# Allow bare URLs
+MD034: false
+
+# First line doesn't need to be a top-level heading
+MD041: false
+
+# Allow emphasis used instead of heading
+MD036: false
+
+# Allow code blocks without language specified
+MD040: false
+
+# Allow images without alt text
+MD045: false
+
+# Ordered list prefix - disabled (specs use various styles)
+MD029: false
+
+# Table column count - disabled for complex tables
+MD056: false

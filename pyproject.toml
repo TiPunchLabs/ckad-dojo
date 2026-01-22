@@ -33,4 +33,4 @@ build-backend = "hatchling.build"
 packages = ["web"]
 
 [dependency-groups]
-dev = []
+dev = ["pre-commit>=4.0"]
