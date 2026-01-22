@@ -1,0 +1,96 @@
+---
+repos:
+  # =============================================================================
+  # General hooks
+  # =============================================================================
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: end-of-file-fixer
+        exclude: (^\.venv/|^\.specify/)
+      - id: trailing-whitespace
+        exclude: (^\.venv/|^\.specify/)
+      - id: check-merge-conflict
+      - id: check-yaml
+        files: \.(yml|yaml)$
+        exclude: (^\.venv/)
+        args: [--allow-multiple-documents]
+      - id: check-toml
+      - id: check-json
+      - id: detect-private-key
+
+  # =============================================================================
+  # Security
+  # =============================================================================
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.3
+    hooks:
+      - id: gitleaks
+
+  # =============================================================================
+  # Commit message
+  # =============================================================================
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.6.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
+  # =============================================================================
+  # Shell
+  # =============================================================================
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.12.0-2
+    hooks:
+      - id: shfmt
+        exclude: (^\.venv/|^\.specify/)
+
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.11.0
+    hooks:
+      - id: shellcheck
+        exclude: (^\.envrc$|^\.venv/|^\.specify/)
+
+  # =============================================================================
+  # YAML
+  # =============================================================================
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.38.0
+    hooks:
+      - id: yamllint
+        files: \.(yml|yaml)$
+        exclude: (^\.venv/)
+
+  # =============================================================================
+  # Python
+  # =============================================================================
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.3.0
+    hooks:
+      - id: flake8
+        exclude: (^\.venv/)
+        additional_dependencies: [flake8-bugbear]
+
+  # =============================================================================
+  # Markdown
+  # =============================================================================
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.45.0
+    hooks:
+      - id: markdownlint
+        args: ["--fix"]
+        exclude: (^\.venv/|^\.specify/|CHANGELOG\.md)
+
+  # =============================================================================
+  # Spelling
+  # =============================================================================
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+        args:
+          - "--skip"
+          - ".venv,*.lock,*.json,CLAUDE.md,.specify,specs"
+          - "--ignore-words-list"
+          - "nd,ans,aks,iam,ro,ngnix,uptodate"
+        exclude: (^\.venv/|^\.specify/|^specs/|^\.claude/commands/)

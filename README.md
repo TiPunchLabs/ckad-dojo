@@ -50,7 +50,7 @@
 
 - **Idempotent scripts** - Safe to re-run at any time
 
-  
+
 
 ---
 
@@ -82,21 +82,25 @@
 Each exam is themed after one of the Four Celestial Guardians from East Asian mythology:
 
 ### 🐉 Dojo Seiryu — Dragon Azure de l'Est
+>
 > *"Le dragon s'élève avec la tempête. Que ton code déploie ses ailes."*
 
 **22 questions • 113 points** — Planetary theme (Neptune, Saturn, Mars...)
 
 ### 🔥 Dojo Suzaku — Phénix Vermillon du Sud
+>
 > *"Le phénix renaît de ses cendres. Chaque erreur forge ta maîtrise."*
 
 **21 questions • 112 points** — Constellation theme (Orion, Andromeda, Pegasus...)
 
 ### 🐯 Dojo Byakko — Tigre Blanc de l'Ouest
+>
 > *"Le tigre frappe avec précision. Un manifeste, une solution."*
 
 **20 questions • 105 points** — Greek mythology theme (Olympus, Zeus, Athena...)
 
 ### 🐢 Dojo Genbu — Tortue Noire du Nord
+>
 > *"La tortue porte le monde. La patience est la clé du succès."*
 
 **22 questions • 115 points** — Norse mythology theme (Odin, Thor, Asgard...)
@@ -198,6 +202,7 @@ eval "$(register-python-argcomplete ckad-dojo)"
 Then reload: `source ~/.bashrc`
 
 Now you can use:
+
 ```bash
 ckad-dojo <TAB>           # → setup, exam, score, cleanup, list
 ckad-dojo exam <TAB>      # → start, --exam, --help
@@ -214,6 +219,7 @@ ckad-dojo -e <TAB>        # → ckad-simulation1, ckad-simulation2, ...
 mkdir -p ~/.local/share/bash-completion/completions
 uv run ckad-dojo completion bash > ~/.local/share/bash-completion/completions/ckad-dojo
 ```
+
 </details>
 
 <details>
@@ -226,6 +232,7 @@ echo 'autoload -Uz compinit && compinit' >> ~/.zshrc
 uv run ckad-dojo completion zsh > ~/.zfunc/_ckad-dojo
 source ~/.zshrc
 ```
+
 </details>
 
 <details>
@@ -235,6 +242,7 @@ source ~/.zshrc
 mkdir -p ~/.config/fish/completions
 uv run ckad-dojo completion fish > ~/.config/fish/completions/ckad-dojo.fish
 ```
+
 </details>
 
 ---
@@ -374,6 +382,7 @@ uv --version                              # Check uv installed
 lsof -i :9090                             # Check port availability
 ./scripts/ckad-exam.sh web --port 8888    # Use alternative port
 ```
+
 </details>
 
 <details>
@@ -385,6 +394,7 @@ lsof -i :9090                             # Check port availability
 # { "insecure-registries": ["localhost:5000"] }
 # Then restart Docker: sudo systemctl restart docker
 ```
+
 </details>
 
 <details>
@@ -393,6 +403,7 @@ lsof -i :9090                             # Check port availability
 - Verify resources are in correct namespace
 - Check file paths match `./exam/course/N/filename`
 - Ensure resource names match requirements
+
 </details>
 
 ---
@@ -422,6 +433,7 @@ This is an open source project and contributions are welcome!
 ### Report a Bug
 
 Found a bug? Please [open an issue](https://github.com/TiPunchLabs/ckad-dojo/issues/new?template=bug_report.md) with:
+
 - A clear description of the problem
 - Steps to reproduce
 - Expected vs actual behavior
@@ -430,9 +442,40 @@ Found a bug? Please [open an issue](https://github.com/TiPunchLabs/ckad-dojo/iss
 ### Suggest an Improvement
 
 Have an idea to make ckad-dojo better? [Create a feature request](https://github.com/TiPunchLabs/ckad-dojo/issues/new?template=feature_request.md) with:
+
 - Description of the proposed feature
 - Use case and benefits
 - Any implementation ideas (optional)
+
+### Development Setup
+
+This project uses [direnv](https://direnv.net/) and [pre-commit](https://pre-commit.com/) for a consistent development environment.
+
+```bash
+# 1. Install direnv (if not already installed)
+# Ubuntu/Debian: sudo apt install direnv
+# macOS: brew install direnv
+
+# 2. Allow direnv for this project
+direnv allow
+
+# 3. Install pre-commit hooks
+uv sync --group dev
+pre-commit install
+pre-commit install --hook-type commit-msg
+```
+
+**Pre-commit hooks include:**
+
+| Hook | Purpose |
+|------|---------|
+| `shellcheck` | Shell script linting |
+| `shfmt` | Shell script formatting |
+| `flake8` | Python linting |
+| `yamllint` | YAML validation |
+| `markdownlint` | Markdown formatting |
+| `gitleaks` | Secret detection |
+| `commitizen` | Conventional commit messages |
 
 ### Submit a Pull Request
 
@@ -440,8 +483,9 @@ Have an idea to make ckad-dojo better? [Create a feature request](https://github
 2. Create a feature branch (`git checkout -b feature/my-feature`)
 3. Make your changes
 4. Test your changes (`./tests/run-tests.sh`)
-5. Commit with a clear message
-6. Open a Pull Request
+5. Run pre-commit checks (`pre-commit run --all-files`)
+6. Commit with a [conventional message](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, etc.)
+7. Open a Pull Request
 
 All contributions must respect the [CC BY-NC-SA 4.0](LICENSE) license.
 
@@ -452,10 +496,12 @@ All contributions must respect the [CC BY-NC-SA 4.0](LICENSE) license.
 This project is licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International** (CC BY-NC-SA 4.0).
 
 **You are free to:**
+
 - Use, copy, and share this project for personal and educational purposes
 - Modify and create derivative works (under the same license)
 
 **You may NOT:**
+
 - Use this project for commercial purposes without explicit permission
 - Sell or include in paid products/services
 

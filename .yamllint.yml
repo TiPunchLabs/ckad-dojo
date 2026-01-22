@@ -1,0 +1,23 @@
+---
+extends: default
+
+rules:
+  line-length:
+    max: 150
+    level: warning
+    allow-non-breakable-words: true
+    allow-non-breakable-inline-mappings: true
+  truthy:
+    allowed-values: ['true', 'false', 'yes', 'no', 'on', 'off']
+    check-keys: false
+  comments:
+    min-spaces-from-content: 1
+  indentation:
+    spaces: 2
+    indent-sequences: consistent
+  document-start: disable
+  comments-indentation: disable
+
+ignore:
+  - .venv/
+  - .specify/
