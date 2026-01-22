@@ -154,21 +154,33 @@ main() {
     # Step 3: Delete namespaces
     cleanup_namespaces
 
-    # Step 4: Remove exam directories
+    # Step 4: Clean up PersistentVolumes (cluster-scoped)
+    cleanup_persistent_volumes
+
+    # Step 5: Clean up custom StorageClasses (cluster-scoped)
+    cleanup_storage_classes
+
+    # Step 6: Remove exam directories
     if [ "$KEEP_DIRS" = false ]; then
         cleanup_directories
     else
         print_section "Keeping exam directories (--keep-dirs)"
     fi
 
-    # Step 5: Stop registry
+    # Step 7: Stop registry
     if [ "$KEEP_REGISTRY" = false ]; then
         cleanup_registry
     else
         print_section "Keeping local registry (--keep-registry)"
     fi
 
-    # Step 6: Reset timer state
+    # Step 8: Clean up exam Docker containers
+    cleanup_docker_containers
+
+    # Step 9: Clean up exam Docker images (localhost:5000/*)
+    cleanup_docker_images
+
+    # Step 10: Reset timer state
     timer_reset 2>/dev/null || true
 
     # Wait for namespace deletion

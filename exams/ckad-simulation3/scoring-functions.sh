@@ -60,7 +60,7 @@ score_q2() {
     echo "Question 2 | Pod Anti-Affinity"
 
     # Check Deployment exists
-    local deploy_exists=$(kubectl get deployment spread-pods -n tiger 2>/dev/null && echo true || echo false)
+    local deploy_exists=$(kubectl get deployment spread-pods -n tiger >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Deployment spread-pods exists" "$deploy_exists" && ((score++))
 
     # Check replicas
@@ -101,7 +101,7 @@ score_q3() {
     echo "Question 3 | Blue-Green Deployment"
 
     # Check green deployment exists
-    local green_exists=$(kubectl get deployment stable-green -n stripe 2>/dev/null && echo true || echo false)
+    local green_exists=$(kubectl get deployment stable-green -n stripe >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Deployment stable-green exists" "$green_exists" && ((score++))
 
     # Check green deployment image
@@ -117,7 +117,7 @@ score_q3() {
     check_criterion "Green pods have version=green label" "$([ "$green_version" = "green" ] && echo true || echo false)" && ((score++))
 
     # Check service exists
-    local svc_exists=$(kubectl get service web-service -n stripe 2>/dev/null && echo true || echo false)
+    local svc_exists=$(kubectl get service web-service -n stripe >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Service web-service exists" "$svc_exists" && ((score++))
 
     # Check service selector targets green
@@ -142,7 +142,7 @@ score_q4() {
     echo "Question 4 | CronJob Advanced"
 
     # Check CronJob exists
-    local cj_exists=$(kubectl get cronjob data-sync -n prowl 2>/dev/null && echo true || echo false)
+    local cj_exists=$(kubectl get cronjob data-sync -n prowl >/dev/null 2>&1 && echo true || echo false)
     check_criterion "CronJob data-sync exists" "$cj_exists" && ((score++))
 
     # Check startingDeadlineSeconds
@@ -178,7 +178,7 @@ score_q5() {
     echo "Question 5 | Immutable ConfigMap"
 
     # Check ConfigMap exists
-    local cm_exists=$(kubectl get configmap locked-config -n hunt 2>/dev/null && echo true || echo false)
+    local cm_exists=$(kubectl get configmap locked-config -n hunt >/dev/null 2>&1 && echo true || echo false)
     check_criterion "ConfigMap locked-config exists" "$cm_exists" && ((score++))
 
     # Check DB_HOST
@@ -244,7 +244,7 @@ score_q7() {
     echo "Question 7 | PodDisruptionBudget"
 
     # Check PDB exists
-    local pdb_exists=$(kubectl get pdb critical-pdb -n jungle 2>/dev/null && echo true || echo false)
+    local pdb_exists=$(kubectl get pdb critical-pdb -n jungle >/dev/null 2>&1 && echo true || echo false)
     check_criterion "PodDisruptionBudget critical-pdb exists" "$pdb_exists" && ((score++))
 
     # Check minAvailable
@@ -281,7 +281,7 @@ score_q8() {
     echo "Question 8 | Service ExternalName"
 
     # Check Service exists
-    local svc_exists=$(kubectl get service external-api -n fang 2>/dev/null && echo true || echo false)
+    local svc_exists=$(kubectl get service external-api -n fang >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Service external-api exists" "$svc_exists" && ((score++))
 
     # Check Service type
@@ -310,7 +310,7 @@ score_q9() {
     echo "Question 9 | LimitRange"
 
     # Check LimitRange exists
-    local lr_exists=$(kubectl get limitrange container-limits -n pounce 2>/dev/null && echo true || echo false)
+    local lr_exists=$(kubectl get limitrange container-limits -n pounce >/dev/null 2>&1 && echo true || echo false)
     check_criterion "LimitRange container-limits exists" "$lr_exists" && ((score++))
 
     # Check default CPU limit
@@ -343,7 +343,7 @@ score_q10() {
     echo "Question 10 | Pod Security Context"
 
     # Check Pod exists
-    local pod_exists=$(kubectl get pod secure-pod -n stalker 2>/dev/null && echo true || echo false)
+    local pod_exists=$(kubectl get pod secure-pod -n stalker >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Pod secure-pod exists" "$pod_exists" && ((score++))
 
     # Check runAsUser
@@ -384,7 +384,7 @@ score_q11() {
     echo "Question 11 | Deployment Rollout Control"
 
     # Check Deployment exists
-    local deploy_exists=$(kubectl get deployment rolling-app -n pounce 2>/dev/null && echo true || echo false)
+    local deploy_exists=$(kubectl get deployment rolling-app -n pounce >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Deployment rolling-app exists" "$deploy_exists" && ((score++))
 
     # Check image is nginx:1.22
@@ -418,7 +418,7 @@ score_q12() {
     echo "Question 12 | kubectl exec Troubleshooting"
 
     # Check Pod exists
-    local pod_exists=$(kubectl get pod config-pod -n stalker 2>/dev/null && echo true || echo false)
+    local pod_exists=$(kubectl get pod config-pod -n stalker >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Pod config-pod exists" "$pod_exists" && ((score++))
 
     # Check config file exists
@@ -518,7 +518,7 @@ score_q15() {
     echo "Question 15 | Job TTL"
 
     # Check Job exists (or was created and deleted by TTL)
-    local job_exists=$(kubectl get job cleanup-job -n stripe 2>/dev/null && echo true || echo false)
+    local job_exists=$(kubectl get job cleanup-job -n stripe >/dev/null 2>&1 && echo true || echo false)
 
     if [ "$job_exists" = "true" ]; then
         # Job still exists - check all criteria
@@ -562,7 +562,7 @@ score_q16() {
     echo "Question 16 | Container Capabilities"
 
     # Check Pod exists
-    local pod_exists=$(kubectl get pod hardened-pod -n predator 2>/dev/null && echo true || echo false)
+    local pod_exists=$(kubectl get pod hardened-pod -n predator >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Pod hardened-pod exists" "$pod_exists" && ((score++))
 
     # Check capabilities drop ALL
@@ -599,7 +599,7 @@ score_q17() {
     echo "Question 17 | Service Session Affinity"
 
     # Check Service exists
-    local svc_exists=$(kubectl get service backend-svc -n claw 2>/dev/null && echo true || echo false)
+    local svc_exists=$(kubectl get service backend-svc -n claw >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Service backend-svc exists" "$svc_exists" && ((score++))
 
     # Check sessionAffinity
@@ -632,7 +632,7 @@ score_q18() {
     echo "Question 18 | Deployment Safe Rollout"
 
     # Check Deployment exists
-    local deploy_exists=$(kubectl get deployment safe-deploy -n fang 2>/dev/null && echo true || echo false)
+    local deploy_exists=$(kubectl get deployment safe-deploy -n fang >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Deployment safe-deploy exists" "$deploy_exists" && ((score++))
 
     # Check minReadySeconds
@@ -665,7 +665,7 @@ score_q19() {
     echo "Question 19 | Container Lifecycle Hook"
 
     # Check Pod exists
-    local pod_exists=$(kubectl get pod graceful-pod -n tiger 2>/dev/null && echo true || echo false)
+    local pod_exists=$(kubectl get pod graceful-pod -n tiger >/dev/null 2>&1 && echo true || echo false)
     check_criterion "Pod graceful-pod exists" "$pod_exists" && ((score++))
 
     # Check container name
@@ -698,7 +698,7 @@ score_q20() {
     echo "Question 20 | NetworkPolicy Default Deny"
 
     # Check default-deny-all exists
-    local deny_exists=$(kubectl get networkpolicy default-deny-all -n predator 2>/dev/null && echo true || echo false)
+    local deny_exists=$(kubectl get networkpolicy default-deny-all -n predator >/dev/null 2>&1 && echo true || echo false)
     check_criterion "NetworkPolicy default-deny-all exists" "$deny_exists" && ((score++))
 
     # Check default-deny applies to all pods
@@ -711,7 +711,7 @@ score_q20() {
     check_criterion "default-deny-all denies Egress" "$(echo "$deny_types" | grep -q "Egress" && echo true || echo false)" && ((score++))
 
     # Check allow-frontend-to-api exists
-    local allow_exists=$(kubectl get networkpolicy allow-frontend-to-api -n predator 2>/dev/null && echo true || echo false)
+    local allow_exists=$(kubectl get networkpolicy allow-frontend-to-api -n predator >/dev/null 2>&1 && echo true || echo false)
     check_criterion "NetworkPolicy allow-frontend-to-api exists" "$allow_exists" && ((score++))
 
     # Check allow policy targets backend

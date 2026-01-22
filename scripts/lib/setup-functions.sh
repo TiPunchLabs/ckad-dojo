@@ -512,6 +512,162 @@ cleanup_registry() {
     fi
 }
 
+# Clean up exam Docker containers (Q11 sun-cipher, etc.)
+cleanup_docker_containers() {
+    print_section "Cleaning up exam Docker containers..."
+
+    local deleted=0
+
+    # List of exam-specific container names/patterns
+    local exam_containers=("sun-cipher")
+
+    for container in "${exam_containers[@]}"; do
+        if docker ps -a --format '{{.Names}}' | grep -q "^${container}$"; then
+            docker stop "$container" 2>/dev/null || true
+            docker rm "$container" 2>/dev/null || true
+            print_success "Removed container: $container"
+            ((++deleted))
+        fi
+    done
+
+    if [ $deleted -eq 0 ]; then
+        print_skip "No exam containers found"
+    fi
+}
+
+# Clean up Docker images pushed to local registry and local images
+cleanup_docker_images() {
+    print_section "Cleaning up exam Docker images..."
+
+    local deleted=0
+
+    # Clean up local images tagged with localhost:5000
+    local registry_images
+    registry_images=$(docker images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | grep "^localhost:5000/" || true)
+
+    if [ -n "$registry_images" ]; then
+        while read -r image; do
+            [ -z "$image" ] && continue
+            docker rmi "$image" 2>/dev/null || true
+            print_success "Removed local image: $image"
+            ((++deleted))
+        done <<< "$registry_images"
+    fi
+
+    # Also clean up known exam image patterns (without registry prefix)
+    local exam_image_patterns=("sun-cipher" "holy-api" "web-moon")
+
+    for pattern in "${exam_image_patterns[@]}"; do
+        local matching_images
+        matching_images=$(docker images --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | grep "$pattern" || true)
+        if [ -n "$matching_images" ]; then
+            while read -r image; do
+                [ -z "$image" ] && continue
+                docker rmi "$image" 2>/dev/null || true
+                print_success "Removed local image: $image"
+                ((++deleted))
+            done <<< "$matching_images"
+        fi
+    done
+
+    # If registry is running, delete images from registry catalog
+    if docker_container_running "registry"; then
+        # Get list of repositories in the registry
+        local repos
+        repos=$(curl -s http://localhost:5000/v2/_catalog 2>/dev/null | grep -o '"[^"]*"' | tr -d '"' | grep -v "repositories" || true)
+
+        if [ -n "$repos" ]; then
+            print_info "Note: Images in registry will be cleaned when registry restarts"
+        fi
+    fi
+
+    if [ $deleted -eq 0 ]; then
+        print_skip "No exam Docker images found"
+    fi
+}
+
+# Clean up PersistentVolumes created during exam
+cleanup_persistent_volumes() {
+    print_section "Cleaning up PersistentVolumes..."
+
+    local deleted=0
+
+    # Get all PVs that are not bound to system namespaces
+    local pvs
+    pvs=$(kubectl get pv -o jsonpath='{range .items[*]}{.metadata.name}{" "}{.spec.claimRef.namespace}{"\n"}{end}' 2>/dev/null)
+
+    while IFS=' ' read -r pv_name pv_ns; do
+        # Skip if empty
+        [ -z "$pv_name" ] && continue
+
+        # Check if PV belongs to an exam namespace or has no claim
+        local is_exam_pv=false
+
+        # Check against exam namespaces
+        for ns in "${EXAM_NAMESPACES[@]}"; do
+            if [ "$pv_ns" = "$ns" ] || [ -z "$pv_ns" ]; then
+                is_exam_pv=true
+                break
+            fi
+        done
+
+        # Also check for known exam PV patterns
+        if [[ "$pv_name" == *"earth"* ]] || [[ "$pv_name" == *"moon"* ]] || [[ "$pv_name" == *"project"* ]]; then
+            is_exam_pv=true
+        fi
+
+        if [ "$is_exam_pv" = true ]; then
+            kubectl delete pv "$pv_name" --grace-period=0 --force 2>/dev/null || true
+            print_success "Deleted PV: $pv_name"
+            ((++deleted))
+        fi
+    done <<< "$pvs"
+
+    if [ $deleted -eq 0 ]; then
+        print_skip "No exam PersistentVolumes found"
+    fi
+}
+
+# Clean up custom StorageClasses created during exam
+cleanup_storage_classes() {
+    print_section "Cleaning up custom StorageClasses..."
+
+    local deleted=0
+
+    # Known exam StorageClass patterns
+    local exam_sc_patterns=("moon-" "earth-" "banana-" "-retain" "-ckad")
+
+    local scs
+    scs=$(kubectl get sc -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' 2>/dev/null)
+
+    while read -r sc_name; do
+        [ -z "$sc_name" ] && continue
+
+        # Skip default storage classes
+        [[ "$sc_name" == "standard" ]] && continue
+        [[ "$sc_name" == "local-path" ]] && continue
+
+        # Check if SC matches exam patterns
+        local is_exam_sc=false
+        for pattern in "${exam_sc_patterns[@]}"; do
+            if [[ "$sc_name" == *"$pattern"* ]]; then
+                is_exam_sc=true
+                break
+            fi
+        done
+
+        if [ "$is_exam_sc" = true ]; then
+            kubectl delete sc "$sc_name" 2>/dev/null || true
+            print_success "Deleted StorageClass: $sc_name"
+            ((++deleted))
+        fi
+    done <<< "$scs"
+
+    if [ $deleted -eq 0 ]; then
+        print_skip "No exam StorageClasses found"
+    fi
+}
+
 # Wait for namespace deletion to complete
 wait_for_namespace_deletion() {
     print_section "Waiting for namespace deletion..."
