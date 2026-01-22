@@ -5,6 +5,7 @@
 > *「玄武は深海を守る」 - La tortue noire garde les profondeurs*
 >
 > **Local Simulator Adaptations**:
+>
 > | Original | Local Simulator |
 > |----------|-----------------|
 > | `/opt/course/N/` | `./exam/course/N/` |
@@ -89,6 +90,7 @@ Create a **StatefulSet** named `db-cluster` in namespace `reef` for a database c
 | Volume claim template | `data` with 100Mi storage |
 
 Also create a **Headless Service** named `db-headless`:
+
 - Selector: `app: db-cluster`
 - ClusterIP: `None`
 - Port: `6379`
@@ -118,6 +120,7 @@ Create a **DaemonSet** named `node-monitor` in namespace `deep`:
 The container should have an environment variable `NODE_NAME` set via the **Downward API** from `spec.nodeName`.
 
 Add a **toleration** to run on all nodes including control-plane nodes:
+
 - Key: `node-role.kubernetes.io/control-plane`
 - Operator: `Exists`
 - Effect: `NoSchedule`
@@ -166,6 +169,7 @@ Create a **Pod** named `slow-starter` in namespace `wave` for an application tha
 | Container name | `app` |
 
 Configure a **startupProbe**:
+
 | Setting | Value |
 |---------|-------|
 | HTTP GET path | `/` |
@@ -199,6 +203,7 @@ Create a **Deployment** named `web-frontend` in namespace `coral`:
 | Labels | `app: web-frontend`, `tier: frontend` |
 
 Configure **preferredDuringSchedulingIgnoredDuringExecution** pod affinity:
+
 - Weight: `100`
 - Prefer scheduling on the **same node** as pods with label `app: cache`
 - Topology key: `kubernetes.io/hostname`
@@ -227,6 +232,7 @@ Create an **Ingress** named `api-routing` with path-based routing:
 | `/v2` | `api-v2-svc` | `80` |
 
 Configuration:
+
 - Host: `api.lagoon.local`
 - PathType: `Prefix`
 - IngressClassName: `nginx`
@@ -345,6 +351,7 @@ Create a **Pod** named `cache-pod` in namespace `reef`:
 | Container name | `cache` |
 
 Add an **emptyDir** volume with:
+
 - Name: `cache-volume`
 - sizeLimit: `100Mi`
 - medium: `Memory` (use RAM-backed tmpfs)
@@ -452,6 +459,7 @@ Create a **Pod** named `network-diagnostic` in namespace `coral` for network tro
 | Container name | `netshoot` |
 
 Configure the pod with:
+
 - `hostNetwork: true` - Use the host's network namespace
 - `hostPID: true` - Use the host's PID namespace
 
@@ -509,6 +517,7 @@ Use `kubectl auth can-i` to check and document its permissions:
    - List nodes (cluster-wide)
 
 2. Save the results in the following format to `./exam/course/19/permissions.txt`:
+
    ```
    create deployments: yes/no
    delete deployments: yes/no
@@ -532,14 +541,17 @@ Use `kubectl auth can-i` to check and document its permissions:
 Create a **Pod** named `data-pipeline` in namespace `anchor` implementing a producer-consumer pattern:
 
 **Container 1: producer**
+
 - Image: `busybox:1.36`
 - Command: `["sh", "-c", "while true; do date >> /data/log.txt; sleep 5; done"]`
 
 **Container 2: consumer**
+
 - Image: `busybox:1.36`
 - Command: `["sh", "-c", "tail -f /data/log.txt"]`
 
 **Container 3: monitor**
+
 - Image: `busybox:1.36`
 - Command: `["sh", "-c", "while true; do wc -l /data/log.txt; sleep 10; done"]`
 

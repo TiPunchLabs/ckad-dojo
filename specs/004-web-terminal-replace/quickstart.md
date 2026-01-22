@@ -3,6 +3,7 @@
 ## Prerequisites
 
 1. Install ttyd:
+
    ```bash
    # Ubuntu/Debian
    sudo apt install ttyd
@@ -15,6 +16,7 @@
    ```
 
 2. Ensure existing requirements are met:
+
    ```bash
    uv --version
    kubectl cluster-info
@@ -25,6 +27,7 @@
 ### Test 1.1: Launch and View
 
 1. Start the exam:
+
    ```bash
    ./scripts/ckad-exam.sh
    ```
@@ -38,6 +41,7 @@
 ### Test 1.2: Execute Commands
 
 1. In the terminal panel, run:
+
    ```bash
    kubectl get pods -A
    ```
@@ -122,11 +126,13 @@ cd ./exa<TAB>
 ### Test 4.1: ttyd Not Installed
 
 1. Temporarily rename ttyd:
+
    ```bash
    sudo mv /usr/bin/ttyd /usr/bin/ttyd.bak
    ```
 
 2. Try to launch exam:
+
    ```bash
    ./scripts/ckad-exam.sh
    ```
@@ -136,6 +142,7 @@ cd ./exa<TAB>
    - [ ] Installation instructions shown
 
 4. Restore ttyd:
+
    ```bash
    sudo mv /usr/bin/ttyd.bak /usr/bin/ttyd
    ```
@@ -144,6 +151,7 @@ cd ./exa<TAB>
 
 1. Start exam normally
 2. Kill ttyd process:
+
    ```bash
    pkill ttyd
    ```
@@ -155,6 +163,7 @@ cd ./exa<TAB>
 ## Testing --no-terminal Flag
 
 1. Launch with flag:
+
    ```bash
    ./scripts/ckad-exam.sh --no-terminal
    ```
@@ -176,6 +185,7 @@ cd ./exa<TAB>
 ### Shell Exit
 
 1. In terminal, type:
+
    ```bash
    exit
    ```

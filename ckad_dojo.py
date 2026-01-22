@@ -9,7 +9,6 @@ entry point with both interactive menu and direct command-line access.
 
 import argcomplete
 import argparse
-import os
 import re
 import shutil
 import signal
@@ -18,11 +17,13 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-__version__ = "1.2.0"
+__version__ = "1.5.0"
+
 
 # =============================================================================
 # Color Output Utilities (T004)
 # =============================================================================
+
 
 class Colors:
     """ANSI color codes for terminal output."""
@@ -540,7 +541,7 @@ def cmd_setup(args) -> int:
         print()
         print("Next steps:")
         print(f"  - Start exam: uv run ckad-dojo exam start -e {exam_id}")
-        print(f"  - Or use kubectl directly to practice")
+        print("  - Or use kubectl directly to practice")
 
     return returncode
 
@@ -1007,7 +1008,7 @@ def create_parser() -> argparse.ArgumentParser:
     exam_start = exam_subparsers.add_parser("start", help="Start an exam session")
     exam_start.add_argument("-e", "--exam", help="Exam ID (e.g., ckad-simulation1)")
 
-    exam_stop = exam_subparsers.add_parser("stop", help="Stop current exam session")
+    exam_subparsers.add_parser("stop", help="Stop current exam session")
 
     # setup command
     setup_parser = subparsers.add_parser(

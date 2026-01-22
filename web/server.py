@@ -14,7 +14,6 @@ import sys
 import time
 import urllib.parse
 from pathlib import Path
-from datetime import datetime, timedelta
 
 # Configuration
 PORT = 9090
@@ -53,7 +52,7 @@ def run_cleanup_script(exam_id: str = None) -> dict:
     script_path = SCRIPTS_DIR / "ckad-cleanup.sh"
 
     print(f"\n{'='*60}")
-    print(f"  Cleaning up exam resources...")
+    print("  Cleaning up exam resources...")
     if exam_id:
         print(f"  Exam: {exam_id}")
     print(f"{'='*60}\n")
@@ -656,9 +655,9 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
 
             # Log shutdown
             print(f"\n{'='*60}")
-            print(f"  Shutting down server...")
+            print("  Shutting down server...")
             print(f"{'='*60}")
-            print(f"\n  Server stopped.\n")
+            print("\n  Server stopped.\n")
 
             # Schedule shutdown after response is sent
             import threading
@@ -766,10 +765,10 @@ def main():
     socketserver.TCPServer.allow_reuse_address = True
     with socketserver.TCPServer((HOST, PORT), ExamHandler) as httpd:
         print(f"\n{'='*60}")
-        print(f"  ckad-dojo - CKAD Exam Simulator")
+        print("  ckad-dojo - CKAD Exam Simulator")
         print(f"{'='*60}")
         print(f"\n  Server running at: http://{HOST}:{PORT}")
-        print(f"  Press Ctrl+C to stop\n")
+        print("  Press Ctrl+C to stop\n")
 
         if exam_id:
             config = load_exam_config(exam_id)

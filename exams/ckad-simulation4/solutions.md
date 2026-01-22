@@ -37,6 +37,7 @@ kubectl describe quota namespace-limits -n shell
 ### Solution
 
 **Using kubectl autoscale:**
+
 ```bash
 kubectl autoscale deployment web-app -n ocean \
   --name=web-app-hpa \
@@ -46,6 +47,7 @@ kubectl autoscale deployment web-app -n ocean \
 ```
 
 **Or using manifest:**
+
 ```yaml
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -364,6 +366,7 @@ kubectl get pods -n current -l job-name=parallel-processor
 ### Solution
 
 **Using ephemeral containers (K8s 1.25+):**
+
 ```bash
 kubectl debug troubled-app -n anchor -it --image=busybox:1.36 --target=app -c debugger -- sh
 
@@ -373,12 +376,14 @@ exit
 ```
 
 **Alternative using copy-to:**
+
 ```bash
 kubectl debug troubled-app -n anchor -it --copy-to=troubled-app-debug --image=busybox:1.36 -- sh
 ls -la /data
 ```
 
 **Save output:**
+
 ```bash
 kubectl exec troubled-app -n anchor -- ls -la /data > ./exam/course/10/debug-output.txt
 ```
@@ -420,12 +425,14 @@ kubectl patch service local-svc -n ocean \
 ```
 
 **Or edit directly:**
+
 ```bash
 kubectl edit svc local-svc -n ocean
 # Add: internalTrafficPolicy: Local
 ```
 
 **Verification:**
+
 ```bash
 kubectl get svc local-svc -n ocean -o yaml | grep internalTrafficPolicy
 ```
@@ -512,6 +519,7 @@ kubectl exec secret-consumer -n deep -- cat /secrets/api-key
 ### Solution
 
 **patch-commands.sh:**
+
 ```bash
 #!/bin/bash
 
