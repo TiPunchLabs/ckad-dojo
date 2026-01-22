@@ -21,12 +21,14 @@
 ## Decision: Replace with Update Strategy
 
 **Rationale**:
+
 - RollingUpdate strategy configuration is a distinct CKAD skill
 - Tests understanding of `maxSurge` and `maxUnavailable`
 - Same complexity level (6 points)
 - Reuses existing `battle-app` Deployment in `ares` namespace
 
 **Alternatives Considered**:
+
 1. ~~Blue/Green deployment~~ - Too complex for 6 points
 2. ~~Recreate strategy~~ - Too simple (just set type)
 3. **RollingUpdate with constraints** - Perfect balance of difficulty
@@ -48,6 +50,7 @@
 ## Scoring Function Design
 
 Current sim3 score_q8():
+
 ```bash
 score_q8() {
     # Checks: deployment exists, available replicas,
@@ -57,6 +60,7 @@ score_q8() {
 ```
 
 New score_q8():
+
 ```bash
 score_q8() {
     local score=0

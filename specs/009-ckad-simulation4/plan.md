@@ -94,6 +94,7 @@ exams/ckad-simulation4/                # New exam directory
 ### Post-Setup Requirements
 
 Based on existing exams, some questions require post-setup configuration:
+
 - Q9: Deployment with broken revision for rollback exercise (similar to simulation1 Q8, simulation3 Q8)
 - Q10: Helm release in broken state for troubleshooting
 

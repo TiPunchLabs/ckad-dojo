@@ -303,6 +303,7 @@ Task: "Write score_q2() in exams/ckad-simulation2/scoring-functions.sh"
 | **Total** | **101** | |
 
 **Task Distribution by User Story**:
+
 - US1: 60 tasks (exam content)
 - US2: 24 tasks (solutions feature)
 - US3: 3 tasks (pre-existing resources)

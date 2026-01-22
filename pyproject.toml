@@ -1,6 +1,6 @@
 [project]
 name = "ckad-dojo"
-version = "1.0.0"
+version = "1.5.0"
 description = "CKAD Exam Simulator - Practice for Kubernetes certification"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -33,4 +33,4 @@ build-backend = "hatchling.build"
 packages = ["web"]
 
 [dependency-groups]
-dev = []
+dev = ["pre-commit>=4.0"]

@@ -47,6 +47,7 @@ tests/test-setup-functions.sh → Tests pour setup-functions.sh
 ### 1.3 Examens et leurs composants
 
 Pour chaque `exams/*/` :
+
 - Nombre de questions
 - Nombre de scoring functions
 - Nombre de solutions
@@ -89,6 +90,7 @@ score_q1() à score_qN()
 ```
 
 **Critères de couverture scoring** :
+
 - [ ] Fonction existe
 - [ ] `total` ou `max_points` défini
 - [ ] Au moins un critère vérifié
@@ -267,6 +269,7 @@ Chaque action générée contient :
 ```bash
 {Commande pour vérifier que l'action est faite}
 ```
+
 ```
 
 ### Priorités

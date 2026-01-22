@@ -12,6 +12,7 @@
 **Rationale**: The exam uses a Helm repo with nginx/apache charts. We need a local equivalent that can serve charts and allow `helm repo add`, `helm search`, `helm upgrade`, etc.
 
 **Alternatives considered**:
+
 - Use Bitnami public repo: Rejected - different chart structure, not exam-faithful
 - Pre-install charts without repo: Rejected - Q4 requires `helm search` and `helm upgrade`
 - Use OCI registry for Helm: Rejected - exam uses traditional Helm repo
@@ -27,6 +28,7 @@
 **IMPORTANT**: Q11 is purely container-based (Docker) and does NOT involve Kubernetes cluster operations. All scoring for Q11 uses docker commands, not kubectl.
 
 **Alternatives considered**:
+
 - Use DockerHub: Rejected - requires authentication, network dependency
 - Use in-cluster registry (K8s deployment): Rejected - Q11 doesn't use K8s at all
 - Use insecure localhost registry: Chosen - simplest, works with Docker
@@ -34,6 +36,7 @@
 **Implementation**: Run `docker run -d -p 5000:5000 --restart=always --name registry registry:2` during setup.
 
 **Q11 Scoring (no kubectl)**:
+
 - `docker images | grep localhost:5000/sun-cipher` - check Docker image
 - `docker ps | grep sun-cipher` - check running container
 - File `./exam/course/11/logs` exists and contains expected output
@@ -45,6 +48,7 @@
 **Rationale**: Matches the format in `scorring.md`, easy to read, no external dependencies.
 
 **Alternatives considered**:
+
 - Python script: Rejected - adds dependency not in CKAD exam
 - JSON output: Rejected - less human-readable
 - Separate scripts per question: Rejected - harder to maintain total score
@@ -58,11 +62,13 @@
 **Rationale**: Constitution requires idempotent operations. kubectl apply handles existing resources gracefully.
 
 **Alternatives considered**:
+
 - Delete before create: Rejected - destructive, not idempotent
 - Check existence with conditionals: Combined with apply for robustness
 - Use Helm for all resources: Rejected - over-engineering for simple manifests
 
 **Implementation**:
+
 ```bash
 kubectl get ns neptune 2>/dev/null || kubectl create ns neptune
 kubectl apply -f manifests/setup/ --server-side
@@ -75,6 +81,7 @@ kubectl apply -f manifests/setup/ --server-side
 **Rationale**: Exam fidelity principle requires matching original conditions. Over-provisioning would give hints.
 
 **Questions requiring pre-existing resources**:
+
 - Q5: ServiceAccount `neptune-sa-v2` with attached Secret
 - Q7: Pods in `saturn` namespace including `webserver-sat-003`
 - Q8: Deployment `api-new-c32` with broken image

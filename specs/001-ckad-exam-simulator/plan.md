@@ -7,6 +7,7 @@
 ## Summary
 
 Create a local CKAD exam simulator with:
+
 - Three bash scripts for setup, scoring, and cleanup
 - A modern web interface with integrated 120-minute timer
 - Multi-exam support for future expansion
@@ -99,6 +100,7 @@ ckad-dojo/
 ### 1. Exam Launcher (ckad-exam.sh)
 
 Entry point for all exam operations:
+
 - `web` (default): Launch web interface with timer
 - `start`: Terminal-only mode with background timer
 - `list`: Show available exams
@@ -108,6 +110,7 @@ Entry point for all exam operations:
 ### 2. Web Interface (web/)
 
 Modern single-page application:
+
 - Python server for static files and API
 - Real-time 120-minute countdown timer
 - Question navigation (arrows, dropdown, keyboard)
@@ -118,6 +121,7 @@ Modern single-page application:
 ### 3. Multi-Exam Support (exams/)
 
 Extensible exam architecture:
+
 - Each exam in its own directory
 - `exam.conf` defines duration, questions, scoring
 - Exam-specific manifests and templates
@@ -126,6 +130,7 @@ Extensible exam architecture:
 ### 4. Scoring System
 
 Automated evaluation of 113+ criteria:
+
 - Per-question scoring functions
 - File content verification
 - Kubernetes resource state checks
@@ -134,22 +139,26 @@ Automated evaluation of 113+ criteria:
 ## Implementation Phases
 
 ### Phase 1: Core Infrastructure (Completed)
+
 - Directory structure and manifests
 - Setup, score, cleanup scripts
 - Library functions
 
 ### Phase 2: Multi-Exam Architecture (Completed)
+
 - Exam configuration system
 - Exam selection in all scripts
 - Timer library
 
 ### Phase 3: Web Interface (Completed)
+
 - Python server with API
 - HTML/CSS/JS interface
 - Timer integration
 - Question navigation and flagging
 
 ### Phase 4: Stop Exam & Scoring Integration (Completed)
+
 - "Stop Exam" button in web interface
 - API endpoint `/api/score` for scoring
 - Score results modal with detailed breakdown

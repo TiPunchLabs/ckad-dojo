@@ -16,6 +16,7 @@
 ## Path Conventions
 
 This feature modifies existing files in the `web/` directory:
+
 - `web/server.py` - Python backend
 - `web/index.html` - HTML structure
 - `web/css/style.css` - Styles

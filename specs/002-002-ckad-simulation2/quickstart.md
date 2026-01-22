@@ -36,6 +36,7 @@
 ### 3. View Your Score
 
 Click "Stop Exam" when finished to see:
+
 - Total score and percentage
 - Pass/fail status (66% threshold)
 - Per-question breakdown
@@ -43,6 +44,7 @@ Click "Stop Exam" when finished to see:
 ### 4. Review Solutions
 
 Click "View Solutions" in the score modal to:
+
 - See detailed solutions for each question
 - Navigate between solutions
 - View pass/fail status per question
@@ -59,6 +61,7 @@ After completing an exam, you can now view detailed solutions:
 3. **View Solutions** - Click to see detailed solutions
 
 Solutions include:
+
 - Step-by-step approach
 - kubectl/helm commands
 - YAML manifests
@@ -136,6 +139,7 @@ exam/course/
 ### Exam not showing in selection
 
 Verify exam directory exists:
+
 ```bash
 ls -la exams/ckad-simulation2/
 ```
@@ -143,6 +147,7 @@ ls -la exams/ckad-simulation2/
 ### Scoring returns 0 for all questions
 
 Ensure setup was run:
+
 ```bash
 ./scripts/ckad-setup.sh -e ckad-simulation2
 ```
@@ -150,6 +155,7 @@ Ensure setup was run:
 ### Solutions not loading
 
 Check solutions.md exists:
+
 ```bash
 cat exams/ckad-simulation2/solutions.md
 ```

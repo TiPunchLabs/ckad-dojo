@@ -76,14 +76,18 @@ No constitution violations - no complexity justification needed.
 ## Implementation Notes
 
 ### Namespace Theme
+
 Greek mythology namespaces: olympus, athena, apollo, artemis, hermes, poseidon, hades, zeus, hera, ares, titan
 
 ### Helm Configuration
+
 - Helm namespace: olympus
 - Releases: olympus-web-v1, olympus-web-v2, olympus-app (+ broken-release for Q4.4)
 
 ### Post-Setup Configuration
+
 - Q8: Deployment `battle-app` in `ares` needs a broken revision created post-setup for rollback exercise
 
 ### Registry
+
 Local registry at localhost:5000 for Q20 container build question

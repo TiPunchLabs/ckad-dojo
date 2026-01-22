@@ -134,6 +134,7 @@ kubectl get cronjob data-sync -n prowl -o yaml | grep -E "suspend|startingDeadli
 ```
 
 **Explanation:**
+
 - `suspend: true` pauses scheduling without deleting the CronJob
 - `startingDeadlineSeconds` sets a deadline for starting jobs if missed
 - `concurrencyPolicy: Forbid` prevents concurrent job executions
@@ -542,6 +543,7 @@ kubectl rollout status deployment/safe-deploy -n fang
 ```
 
 **Explanation:**
+
 - `minReadySeconds`: New pods must be ready for this duration before being considered available
 - `progressDeadlineSeconds`: Maximum time for a rollout to progress before it's considered failed
 

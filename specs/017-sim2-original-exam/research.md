@@ -78,6 +78,7 @@ Each new question has a distinct learning objective:
 **Theme**: Suzaku (朱雀) - Vermillion Bird / Phoenix of the South
 
 Fire-related namespace names selected for thematic consistency:
+
 - `phoenix` - Rebirth, main namespace
 - `ember` - Small glowing coals (debugging scenarios)
 - `blaze` - Strong fire (deployment scenarios)

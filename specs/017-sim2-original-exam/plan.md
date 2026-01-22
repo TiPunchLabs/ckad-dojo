@@ -76,6 +76,7 @@ exams/ckad-simulation2/
 ### Theme: Suzaku (Phénix Vermillon du Sud) 🔥
 
 **Namespaces** (fire/phoenix themed):
+
 - `phoenix` - Main namespace (rebirth)
 - `ember` - Small fires (debugging)
 - `blaze` - Intense fire (deployments)
@@ -118,11 +119,13 @@ exams/ckad-simulation2/
 ## Implementation Approach
 
 ### Phase 1: Infrastructure
+
 1. Update exam.conf with new namespaces
 2. Create namespace manifests
 3. Create pre-existing resource manifests
 
 ### Phase 2: Questions (7 batches of 3)
+
 - Batch 1: Q1-Q3 (simple, Job, intro)
 - Batch 2: Q4-Q6 (Helm, debug, ConfigMap)
 - Batch 3: Q7-Q9 (Secret, Service, Canary)
@@ -132,10 +135,12 @@ exams/ckad-simulation2/
 - Batch 7: Q19-Q21 (Topology, Selectors, Drain)
 
 ### Phase 3: Scoring Functions
+
 - Implement score_q1() through score_q21()
 - Test each function manually
 
 ### Phase 4: Solutions
+
 - Document all solutions with explanations
 
 ## Complexity Tracking

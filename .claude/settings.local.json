@@ -73,7 +73,10 @@
       "Bash(./tests/test-scoring.sh:*)",
       "Bash(done)",
       "Bash(for exam in ckad-simulation1 ckad-simulation2 ckad-simulation3 ckad-simulation4)",
-      "Bash(do echo \"=== $exam ===\" grep 'echo \"\"\\\\$score/' \"exams/$exam/scoring-functions.sh\")"
+      "Bash(do echo \"=== $exam ===\" grep 'echo \"\"\\\\$score/' \"exams/$exam/scoring-functions.sh\")",
+      "Bash(git -C /home/xgueret/Workspace/01-projets/tools/ckad-dojo log -p --all)",
+      "Bash(pre-commit run:*)",
+      "Bash(test:*)"
     ],
     "deny": [],
     "ask": []

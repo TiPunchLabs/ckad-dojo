@@ -1,14 +1,14 @@
 <!--
   SYNC IMPACT REPORT
   ==================
-  Version change: 1.0.0 → 2.0.0
-
-  Modified principles:
-  - [NEW] VI. Modern UI - Web interface with timer
+  Version change: 2.11.0 → 2.12.0
 
   Modified sections:
-  - Technical Constraints: Added web/ directory structure
-  - Exam Environment: Removed exclusions (timer and web UI now implemented)
+  - Technical Constraints: Added Python 3.10+ requirement, argcomplete dependency
+  - File Structure: Detailed scripts/lib/ contents (banner.sh, scoring-functions.sh, etc.)
+  - File Structure: Added favicon.svg to web/
+  - File Structure: Detailed tests/ contents (7 test files)
+  - Implemented Features: Added shell auto-completion (bash, zsh, fish)
 
   Templates requiring updates:
   - .specify/templates/plan-template.md: ✅ Compatible (no changes needed)
@@ -88,7 +88,8 @@ The web interface is served locally via Python HTTP server using `uv run` and re
 ## Technical Constraints
 
 **Cluster Type**: kubeadm (user's existing cluster)
-**Required Tools**: kubectl, helm, docker, ttyd, bash 4.0+, uv
+**Required Tools**: kubectl, helm, docker, ttyd, bash 4.0+, uv, Python 3.10+
+**Dependencies**: argcomplete>=3.0 (shell auto-completion)
 **File Structure**:
 ```
 ckad-dojo/
@@ -99,17 +100,23 @@ ckad-dojo/
 │   ├── ckad-setup.sh
 │   ├── ckad-score.sh
 │   ├── ckad-cleanup.sh
-│   └── lib/               # Shared functions
+│   └── lib/
+│       ├── banner.sh           # Dojo welcome banner generation
+│       ├── common.sh           # Core utilities
+│       ├── scoring-functions.sh # Shared scoring functions
+│       ├── setup-functions.sh  # Setup/cleanup functions
+│       └── timer.sh            # Timer functions
 ├── web/
 │   ├── server.py          # Python web server with API
 │   ├── index.html
+│   ├── favicon.svg
 │   ├── css/style.css
 │   └── js/app.js
 ├── exams/                 # Shishin (四神) - Four Celestial Guardians
 │   ├── ckad-simulation1/  # Dojo Seiryu 🐉 - 22 questions, 113 points
 │   ├── ckad-simulation2/  # Dojo Suzaku 🔥 - 21 questions, 112 points
 │   ├── ckad-simulation3/  # Dojo Byakko 🐯 - 20 questions, 105 points
-│   └── ckad-simulation4/  # Dojo Genbu 🐢 - 22 questions, 115 points
+│   └── ckad-simulation4/  # Dojo Genbu 🐢 - 20 questions, 105 points
 │       ├── exam.conf
 │       ├── questions.md
 │       ├── solutions.md
@@ -120,7 +127,14 @@ ckad-dojo/
 │   └── course/
 │       ├── 1/ through N/
 │       └── p1/, p2/  (preview questions)
-└── tests/                 # Unit tests
+└── tests/
+    ├── run-tests.sh
+    ├── test-framework.sh
+    ├── test-common.sh
+    ├── test-setup-functions.sh
+    ├── test-banner.sh
+    ├── test-scoring.sh
+    └── test-timer.sh
 ```
 
 **Namespaces Required**: default, neptune, saturn, earth, mars, pluto, jupiter, mercury, venus, moon, sun, shell-intern
@@ -129,14 +143,14 @@ ckad-dojo/
 
 ## Exam Environment
 
-**Exam Sets**: 4 dojos based on Shishin (四神 - Four Celestial Guardians), 85 questions total, 445 points
+**Exam Sets**: 4 dojos based on Shishin (四神 - Four Celestial Guardians), 83 questions total, 435 points
 
 | Dojo | Guardian | Questions | Points | Quote |
 |------|----------|-----------|--------|-------|
 | Seiryu 🐉 | Dragon Azure de l'Est | 22 | 113 | *"Le dragon s'élève avec la tempête..."* |
 | Suzaku 🔥 | Phénix Vermillon du Sud | 21 | 112 | *"Le phénix renaît de ses cendres..."* |
 | Byakko 🐯 | Tigre Blanc de l'Ouest | 20 | 105 | *"Le tigre frappe avec précision..."* |
-| Genbu 🐢 | Tortue Noire du Nord | 22 | 115 | *"La tortue porte le monde..."* |
+| Genbu 🐢 | Tortue Noire du Nord | 20 | 105 | *"La tortue porte le monde..."* |
 
 **Duration**: 120 minutes (configurable per exam in exam.conf)
 
@@ -160,6 +174,7 @@ ckad-dojo/
 - Personalized dojo welcome banner in terminal (ASCII art + dojo name + stats)
 - Graceful cleanup on Close: runs ckad-cleanup.sh and stops server
 - Auto-open K8s and Helm documentation tabs (--no-docs to disable)
+- Shell auto-completion for bash, zsh, and fish via argcomplete
 
 **Not Implemented**:
 - No SSH simulation (single cluster context)
@@ -176,4 +191,4 @@ This constitution governs all development on the ckad-dojo project:
 - Version updates follow semantic versioning
 - Constitution amendments require updating this file and dependent templates
 
-**Version**: 2.11.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2025-12-12
+**Version**: 2.12.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2026-01-22

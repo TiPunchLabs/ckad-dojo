@@ -1,0 +1,37 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Shell scripts
+*.sh text eol=lf
+
+# Python
+*.py text eol=lf
+
+# YAML
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Markdown
+*.md text eol=lf
+
+# JSON
+*.json text eol=lf
+
+# HTML/CSS/JS
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+
+# Configuration
+*.conf text eol=lf
+*.toml text eol=lf
+
+# Images (binary)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+
+# Lock files (generated)
+uv.lock linguist-generated=true

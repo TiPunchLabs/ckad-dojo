@@ -88,7 +88,7 @@ test_case "file_exists_and_not_empty function works correctly"
 
 # Create temp file for testing
 TEMP_FILE=$(mktemp)
-echo "content" > "$TEMP_FILE"
+echo "content" >"$TEMP_FILE"
 EMPTY_FILE=$(mktemp)
 
 assert_true "file_exists_and_not_empty '$TEMP_FILE'" "Non-empty file should return true"
@@ -104,7 +104,7 @@ rm -f "$TEMP_FILE" "$EMPTY_FILE"
 test_case "file_contains function works correctly"
 
 TEMP_FILE=$(mktemp)
-echo "hello world" > "$TEMP_FILE"
+echo "hello world" >"$TEMP_FILE"
 
 assert_true "file_contains '$TEMP_FILE' 'hello'" "Should find 'hello' in file"
 assert_true "file_contains '$TEMP_FILE' 'world'" "Should find 'world' in file"
@@ -137,21 +137,21 @@ test_case "load_exam function works correctly"
 
 # Load simulation1
 if load_exam "ckad-simulation1"; then
-    assert_equals "ckad-simulation1" "$CURRENT_EXAM_ID" "CURRENT_EXAM_ID should be set"
-    assert_not_empty "$EXAM_NAME" "EXAM_NAME should be set"
-    assert_not_empty "$TOTAL_QUESTIONS" "TOTAL_QUESTIONS should be set"
-    assert_not_empty "$TOTAL_POINTS" "TOTAL_POINTS should be set"
-    assert_true '[ ${#EXAM_NAMESPACES[@]} -gt 0 ]' "EXAM_NAMESPACES should have elements"
+	assert_equals "ckad-simulation1" "$CURRENT_EXAM_ID" "CURRENT_EXAM_ID should be set"
+	assert_not_empty "$EXAM_NAME" "EXAM_NAME should be set"
+	assert_not_empty "$TOTAL_QUESTIONS" "TOTAL_QUESTIONS should be set"
+	assert_not_empty "$TOTAL_POINTS" "TOTAL_POINTS should be set"
+	assert_true '[ ${#EXAM_NAMESPACES[@]} -gt 0 ]' "EXAM_NAMESPACES should have elements"
 else
-    assert_true 'false' "load_exam should succeed for ckad-simulation1"
+	assert_true 'false' "load_exam should succeed for ckad-simulation1"
 fi
 
 # Load simulation2
 if load_exam "ckad-simulation2"; then
-    assert_equals "ckad-simulation2" "$CURRENT_EXAM_ID" "CURRENT_EXAM_ID should be set for simulation2"
-    assert_contains "${EXAM_NAMESPACES[*]}" "blaze" "simulation2 should have blaze namespace"
+	assert_equals "ckad-simulation2" "$CURRENT_EXAM_ID" "CURRENT_EXAM_ID should be set for simulation2"
+	assert_contains "${EXAM_NAMESPACES[*]}" "blaze" "simulation2 should have blaze namespace"
 else
-    assert_true 'false' "load_exam should succeed for ckad-simulation2"
+	assert_true 'false' "load_exam should succeed for ckad-simulation2"
 fi
 
 # Try to load nonexistent exam

@@ -19,6 +19,7 @@ Commande d'analyse de qualité pour le projet CKAD-Dojo. Vérifie la cohérence 
 ### 1.1 Documentation projet
 
 Lire `CLAUDE.md` et extraire :
+
 - Structure du projet
 - Conventions de développement
 - Technologies utilisées (Bash, Python, JavaScript)
@@ -27,6 +28,7 @@ Lire `CLAUDE.md` et extraire :
 ### 1.2 Configuration des examens
 
 Scanner `exams/*/` pour chaque simulation :
+
 - `exam.conf` : Configuration (namespaces, points, durée)
 - `questions.md` : Questions et leurs points
 - `solutions.md` : Solutions de référence
@@ -35,6 +37,7 @@ Scanner `exams/*/` pour chaque simulation :
 ### 1.3 Outils disponibles
 
 Détecter les outils de qualité :
+
 - `shellcheck` (linting Bash)
 - `python3 -m py_compile` (syntaxe Python)
 - `./tests/run-tests.sh` (tests unitaires)
@@ -58,6 +61,7 @@ Pour chaque examen dans `exams/*/` :
 ### 2.2 Cohérence Scoring ↔ Questions
 
 Pour chaque fonction `score_qN()` :
+
 - `total` ou `max_points` correspond aux points de la question
 - Nombre de critères (score++) correspond au total déclaré
 - Critères cohérents avec les exigences de la question
@@ -65,12 +69,14 @@ Pour chaque fonction `score_qN()` :
 ### 2.3 Cohérence Solutions ↔ Questions
 
 Vérifier que :
+
 - Chaque question a une solution correspondante
 - Les solutions correspondent aux critères de scoring
 
 ### 2.4 Manifests et Templates
 
 Vérifier la présence des ressources :
+
 - `manifests/setup/*.yaml` : Ressources pré-existantes
 - `templates/*` : Templates fournis aux candidats
 
@@ -246,6 +252,7 @@ Générer un rapport persistant :
 **Fichier** : `./reports/quality-report-{YYYY-MM-DD}.md`
 
 **Contenu** :
+
 - Résumé exécutif
 - Détail par examen
 - Historique des scores (si rapports précédents)
