@@ -15,6 +15,7 @@
 **What it is**: A simple command-line tool for sharing terminal over the web.
 
 **Pros**:
+
 - Single binary (written in C with libwebsockets)
 - No runtime dependencies (Node.js, Python packages, etc.)
 - Very lightweight (~500KB binary)
@@ -24,10 +25,12 @@
 - Easy to start/stop via command line
 
 **Cons**:
+
 - Must be installed separately (not Python-native)
 - Runs on separate port
 
 **Installation**:
+
 ```bash
 # Ubuntu/Debian
 sudo apt install ttyd
@@ -45,6 +48,7 @@ chmod +x ttyd
 **What it is**: JavaScript terminal emulator library.
 
 **Why rejected**:
+
 - Requires a backend (node-pty, Python websocket server)
 - Would need to implement WebSocket server in Python
 - More complex integration
@@ -55,6 +59,7 @@ chmod +x ttyd
 **What it is**: Terminal over HTTP using Node.js.
 
 **Why rejected**:
+
 - Requires Node.js runtime
 - More complex setup
 - Overkill for local-only use
@@ -64,6 +69,7 @@ chmod +x ttyd
 **What it is**: Share terminal as web application (Go).
 
 **Why rejected**:
+
 - Less actively maintained than ttyd
 - Similar feature set but fewer options
 - ttyd has better documentation
@@ -75,12 +81,14 @@ chmod +x ttyd
 **Decision**: Use iframe
 
 **Rationale**:
+
 1. **Isolation**: Terminal runs in isolated context, no interference with exam UI
 2. **Simplicity**: No need to integrate xterm.js directly
 3. **Reliability**: ttyd's built-in frontend is well-tested
 4. **Maintenance**: Updates to ttyd automatically include frontend improvements
 
 **Implementation**:
+
 ```html
 <iframe id="terminal-frame" src="http://localhost:7681"></iframe>
 ```
@@ -147,6 +155,7 @@ stop_ttyd() {
 ### Resizable Divider
 
 Use a draggable divider between panels:
+
 - Minimum panel width: 20%
 - Maximum panel width: 80%
 - Store preference in localStorage

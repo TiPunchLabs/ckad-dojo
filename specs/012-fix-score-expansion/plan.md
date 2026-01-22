@@ -65,9 +65,11 @@ web/
 ### Problem Flow
 
 1. **ckad-score.sh (line 164)**:
+
    ```bash
    score_result=$("score_q$qnum" 2>/dev/null || echo "0/0")
    ```
+
    - Scoring function output is captured in `$score_result`
    - Only `tail -1` (the score) is extracted
    - Criteria lines (✓/✗) are lost - never echoed
@@ -84,6 +86,7 @@ web/
 ### Solution
 
 Modify `ckad-score.sh` to echo the full scoring function output (including criteria lines) so that:
+
 1. Criteria appear in script output
 2. `server.py` can parse them
 3. `app.js` can display them
@@ -93,6 +96,7 @@ Modify `ckad-score.sh` to echo the full scoring function output (including crite
 ### Phase 1: Fix Scoring Script
 
 Modify the scoring loop in `ckad-score.sh` to:
+
 1. Capture full output from scoring functions
 2. Echo the output (including criteria) before extracting score
 3. Ensure criteria lines are visible in final output

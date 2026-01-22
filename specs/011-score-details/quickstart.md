@@ -5,11 +5,13 @@
 ### Scenario 1: View Criteria After Exam Stop
 
 **Setup**:
+
 1. Start exam: `./scripts/ckad-exam.sh -e ckad-simulation2`
 2. Answer some questions partially (intentionally make mistakes)
 3. Click "Stop Exam" button
 
 **Expected Result**:
+
 - Score modal appears with percentage and total score
 - Questions list shows each question with score (e.g., "3/5")
 - Questions with partial scores show warning indicator (orange)
@@ -19,10 +21,12 @@
 ### Scenario 2: Expand Question to See Criteria
 
 **Setup**:
+
 1. From Scenario 1, score modal is displayed
 2. Click on a question row that has partial score (e.g., Q2 with 3/5)
 
 **Expected Result**:
+
 - Question row expands to show criteria list
 - Each criterion shows:
   - ✓ Green for passed (e.g., "✓ Pod exists")
@@ -32,20 +36,24 @@
 ### Scenario 3: Collapse Expanded Question
 
 **Setup**:
+
 1. From Scenario 2, criteria are expanded for Q2
 2. Click on Q2 row again
 
 **Expected Result**:
+
 - Criteria collapse back
 - Only question summary visible (score + topic)
 
 ### Scenario 4: Multiple Questions Expanded
 
 **Setup**:
+
 1. Expand Q2 criteria
 2. Expand Q5 criteria (without collapsing Q2)
 
 **Expected Result**:
+
 - Both Q2 and Q5 show criteria
 - Each question's criteria are independent
 - Scrolling works correctly within modal
@@ -53,10 +61,12 @@
 ### Scenario 5: Dark/Light Theme Support
 
 **Setup**:
+
 1. Display score modal with criteria expanded
 2. Toggle theme using theme button
 
 **Expected Result**:
+
 - Criteria colors remain visible in both themes
 - Green (pass) and red (fail) have sufficient contrast
 - Expand/collapse icons are visible
@@ -64,9 +74,11 @@
 ### Scenario 6: API Response Structure
 
 **Setup**:
+
 1. Run scoring via API: `curl http://localhost:9090/api/score`
 
 **Expected Result**:
+
 ```json
 {
   "success": true,

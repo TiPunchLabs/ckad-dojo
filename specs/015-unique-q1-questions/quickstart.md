@@ -13,6 +13,7 @@ grep -h "## Question 1" exams/*/questions.md
 ```
 
 Expected output:
+
 - sim1: "Question 1 | Namespaces"
 - sim2: "Question 1 | Nodes" (NEW)
 - sim3: "Question 1 | Namespaces" (filtered)

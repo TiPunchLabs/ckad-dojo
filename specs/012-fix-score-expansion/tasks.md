@@ -96,6 +96,7 @@
 ### Parallel Opportunities
 
 After Phase 2 (Foundational fix):
+
 - T003, T004, T005, T006 can be verified in parallel
 - T007, T008 can be verified in parallel
 - Phase 3 and Phase 4 can be worked on in parallel

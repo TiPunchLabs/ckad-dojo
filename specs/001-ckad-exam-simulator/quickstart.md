@@ -40,6 +40,7 @@ cd /path/to/ckad-dojo
 ```
 
 This will:
+
 1. Verify all prerequisites
 2. Set up the exam environment (if not already done)
 3. Launch a local web server at `http://localhost:9090`
@@ -69,6 +70,7 @@ If you prefer to set up manually without the timer:
 ```
 
 The setup will:
+
 1. Create 11 namespaces (neptune, saturn, earth, mars, pluto, jupiter, mercury, venus, moon, sun, shell-intern)
 2. Deploy pre-existing resources for questions that require them
 3. Install Helm releases in mercury namespace for Q4
@@ -86,6 +88,7 @@ The setup will:
 ```
 
 The web interface provides:
+
 - **120-minute countdown timer** - Visual timer with color warnings (yellow at 15 min, orange at 5 min, red at 1 min)
 - **Question navigation** - Arrow keys, dropdown selector, or question dots
 - **Flag for review** - Mark questions to revisit (keyboard: F)
@@ -103,6 +106,7 @@ The web interface provides:
 #### Stop Exam and View Score
 
 Click the **Stop Exam** button (red) in the footer to:
+
 1. Confirm you want to end the exam
 2. Stop the timer
 3. Calculate your score automatically
@@ -134,13 +138,16 @@ Click the **Stop Exam** button (red) in the footer to:
    - Save files to `./exam/course/N/` directories as instructed
 
 **Important paths mapping:**
+
 - Exam says `/opt/course/1/` → Use `./exam/course/1/`
 - Exam says `/opt/course/11/image/` → Use `./exam/course/11/image/`
 
 **Q11 Registry mapping:**
+
 - Use local registry at `localhost:5000`
 
 Example for Q11:
+
 ```bash
 # Build with Docker
 docker build -t localhost:5000/sun-cipher:v1 ./exam/course/11/image/
@@ -180,6 +187,7 @@ docker push localhost:5000/sun-cipher:v1
 ```
 
 **Expected output:**
+
 ```
 ═══════════════════════════════════════════════════════════════════
                            SCORE SUMMARY
@@ -209,6 +217,7 @@ To start fresh:
 ```
 
 Or use the exam launcher:
+
 ```bash
 ./scripts/ckad-exam.sh stop
 ./scripts/ckad-cleanup.sh -y
@@ -216,6 +225,7 @@ Or use the exam launcher:
 ```
 
 The cleanup will:
+
 1. Stop any running timer
 2. Delete all exam namespaces
 3. Uninstall Helm releases
@@ -225,6 +235,7 @@ The cleanup will:
 ## Multi-Exam Support
 
 List available exams:
+
 ```bash
 ./scripts/ckad-exam.sh list
 # Or
@@ -232,6 +243,7 @@ List available exams:
 ```
 
 Work with a specific exam:
+
 ```bash
 # Setup specific exam
 ./scripts/ckad-setup.sh -e ckad-simulation1
@@ -283,38 +295,48 @@ ckad-dojo/
 ## Troubleshooting
 
 ### Setup fails with "namespace already exists"
+
 This is normal if re-running. The script is idempotent - it will skip existing resources.
 
 ### Web interface not loading
+
 Ensure uv is installed and port 9090 is available:
+
 ```bash
 uv --version
 lsof -i :9090  # Check if port is in use
 ```
 
 Use `--port` to specify an alternative port:
+
 ```bash
 ./scripts/ckad-exam.sh web --port 8888
 ```
 
 ### Timer not showing (terminal mode)
+
 Make sure the exam was started with `./scripts/ckad-exam.sh start`. Run `./scripts/ckad-exam.sh status` to check.
 
 ### Q4 Helm commands fail
+
 Ensure the Helm repo is configured:
+
 ```bash
 helm repo list
 # Should show: bitnami https://charts.bitnami.com/bitnami
 ```
 
 ### Q11 push fails
+
 Check registry is running:
+
 ```bash
 docker ps | grep registry
 # Should show registry:2 container on port 5000
 ```
 
 If push fails, ensure localhost:5000 is in Docker's insecure registries:
+
 ```bash
 # Edit /etc/docker/daemon.json and add:
 # { "insecure-registries": ["localhost:5000"] }
@@ -322,7 +344,9 @@ If push fails, ensure localhost:5000 is in Docker's insecure registries:
 ```
 
 ### Scoring shows 0 for completed questions
+
 Verify:
+
 1. Resources are in the correct namespace
 2. File paths match exactly `./exam/course/N/filename`
 3. Resource names match exam requirements
