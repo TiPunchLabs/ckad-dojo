@@ -544,11 +544,14 @@ indent_size = 2
 [*.py]
 indent_size = 4
 
+[*.sh]
+indent_style = tab
+
 [Makefile]
 indent_style = tab
 ```
 
-### 8.9 .github/workflows/ci.yml (Ansible)
+### 8.9 .github/workflows/ci.yml
 
 ```yaml
 name: CI
@@ -568,24 +571,24 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
       - name: Install dependencies
-        run: uv sync
+        run: uv sync --group dev
 
-      - name: Run yamllint
-        run: uv run yamllint .
+      - name: Run pre-commit
+        run: uv run pre-commit run --all-files
 
-      - name: Run ansible-lint
-        run: uv run ansible-lint
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Syntax check
-        run: |
-          uv run ansible-playbook deploy.yml --syntax-check
-          uv run ansible-playbook uninstall.yml --syntax-check
+      - name: Run tests
+        run: ./tests/run-tests.sh
 ```
 
 ---
