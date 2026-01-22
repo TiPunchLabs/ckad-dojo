@@ -1,0 +1,14 @@
+# Default owners for everything in the repo
+* @TiPunchLabs
+
+# Scripts
+/scripts/ @TiPunchLabs
+
+# Exams content
+/exams/ @TiPunchLabs
+
+# Web interface
+/web/ @TiPunchLabs
+
+# Tests
+/tests/ @TiPunchLabs
