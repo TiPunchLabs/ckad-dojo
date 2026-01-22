@@ -365,7 +365,7 @@ mkdir -p ./exam/course/12
 cp ./templates/q12-image/* ./exam/course/12/
 
 # Modify Dockerfile
-cat <<EOF > ./exam/course/12/Dockerfile
+cat <<EOF > ./exam/course/12/image/Dockerfile
 FROM nginx:1.21
 
 ARG APP_VERSION=1.0.0
@@ -633,6 +633,7 @@ EOF
 ```
 
 **Explanation:** `kubectl drain` safely evicts pods from a node for maintenance. Key flags:
+
 - `--ignore-daemonsets`: Don't fail if DaemonSet pods exist
 - `--delete-emptydir-data`: Delete pods with emptyDir volumes
 - `--force`: Force deletion of pods not managed by controllers
