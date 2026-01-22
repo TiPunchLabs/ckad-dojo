@@ -76,6 +76,7 @@ Add DOJO_NAME and DOJO_EMOJI to all 4 exam.conf files with the Shishin guardian 
 ### Phase 2: Banner Script
 
 Create `scripts/lib/banner.sh` with:
+
 - `show_dojo_banner()` function that reads exam config and displays ASCII art + welcome message
 - Reuse existing ASCII art from ckad_dojo.py (convert to bash)
 - Format: Banner + "Bienvenue au {DOJO_NAME} {DOJO_EMOJI}" + exam stats

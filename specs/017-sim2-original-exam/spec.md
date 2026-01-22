@@ -23,6 +23,7 @@ L'examen ckad-simulation2 (Dojo Suzaku) est actuellement une copie de simulation
 ### Objectif
 
 Créer 21 questions **totalement originales** qui:
+
 - Couvrent tous les domaines CKAD
 - Ont le même niveau de difficulté (~112 points)
 - Utilisent des scénarios différents de sim1, sim3, sim4

@@ -5,6 +5,7 @@
 > *「白虎は精密に狩る」 - Le tigre blanc chasse avec précision*
 >
 > **Local Simulator Adaptations**:
+>
 > | Original | Local Simulator |
 > |----------|-----------------|
 > | `/opt/course/N/` | `./exam/course/N/` |
@@ -52,6 +53,7 @@ Create a **Deployment** named `spread-pods` in namespace `tiger` with:
 | Labels | `app: spread-pods` |
 
 Configure **requiredDuringSchedulingIgnoredDuringExecution** pod anti-affinity to ensure:
+
 - Pods are scheduled on **different nodes** (topology key: `kubernetes.io/hostname`)
 - Anti-affinity matches pods with label `app: spread-pods`
 
@@ -108,6 +110,7 @@ A CronJob named `data-sync` exists in namespace `prowl`. Modify it with the foll
 After making changes, **resume** the CronJob by setting `suspend: false`.
 
 The CronJob should now:
+
 - Never run concurrent jobs
 - Have a 200-second deadline window
 - Be actively scheduling
@@ -127,6 +130,7 @@ The CronJob should now:
 Create a **ConfigMap** named `locked-config` in namespace `hunt` that:
 
 1. Contains the following data:
+
    | Key | Value |
    |-----|-------|
    | `DB_HOST` | `postgres.hunt.svc` |
@@ -222,12 +226,14 @@ This allows pods to access the external service using the internal DNS name `ext
 Create a **LimitRange** named `container-limits` in namespace `pounce` that sets:
 
 **Default limits for containers:**
+
 | Resource | Default | Default Request |
 |----------|---------|-----------------|
 | CPU | `500m` | `100m` |
 | Memory | `256Mi` | `64Mi` |
 
 **Min/Max constraints:**
+
 | Resource | Min | Max |
 |----------|-----|-----|
 | CPU | `50m` | `1` |
@@ -253,6 +259,7 @@ Create a **Pod** named `secure-pod` in namespace `stalker` with comprehensive se
 | Container name | `secure-nginx` |
 
 **Pod-level security context:**
+
 | Setting | Value |
 |---------|-------|
 | `runAsUser` | `1000` |
@@ -260,6 +267,7 @@ Create a **Pod** named `secure-pod` in namespace `stalker` with comprehensive se
 | `fsGroup` | `2000` |
 
 **Container-level security context:**
+
 | Setting | Value |
 |---------|-------|
 | `readOnlyRootFilesystem` | `true` |
@@ -398,6 +406,7 @@ Create a **Pod** named `hardened-pod` in namespace `predator` with security hard
 | Container name | `secure-app` |
 
 **Security Context:**
+
 - Drop **ALL** capabilities
 - Add only: `NET_BIND_SERVICE`
 - Set `runAsNonRoot: true`
@@ -467,6 +476,7 @@ Create a **Pod** named `graceful-pod` in namespace `tiger` with a graceful shutd
 | Container name | `main` |
 
 Add a **preStop** lifecycle hook that:
+
 - Executes: `/bin/sh -c "nginx -s quit && sleep 5"`
 - Allows nginx to finish handling requests before termination
 

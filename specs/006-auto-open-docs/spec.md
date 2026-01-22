@@ -39,6 +39,7 @@ When launching the CKAD exam simulator, automatically open browser tabs with the
 ### Browser Detection
 
 Use platform-appropriate commands:
+
 - **Linux**: `xdg-open`
 - **macOS**: `open`
 - **WSL**: `wslview` or `cmd.exe /c start`

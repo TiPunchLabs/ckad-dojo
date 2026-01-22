@@ -122,6 +122,7 @@ ttyd --port 7681 \
 ```
 
 Options:
+
 - `--port 7681`: Default ttyd port (configurable via --terminal-port)
 - `--writable`: Allow input to the terminal
 - `--cwd`: Set working directory to project root

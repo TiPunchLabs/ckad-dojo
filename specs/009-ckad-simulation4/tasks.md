@@ -190,6 +190,7 @@
 ### Parallel Opportunities
 
 All tasks marked [P] within the same phase can run in parallel:
+
 - T006-T027: All 22 questions can be written in parallel
 - T029-T050: All 22 scoring functions can be implemented in parallel
 - T051-T060: All manifests and templates can be created in parallel

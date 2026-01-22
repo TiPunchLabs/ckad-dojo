@@ -7,10 +7,12 @@
 **Rationale**: The existing scoring functions use `print_success` and `print_fail` which output colored text with checkmarks. Parsing this output avoids modifying the bash scripts while extracting all needed data.
 
 **Alternatives considered**:
+
 - JSON output from scoring scripts - Rejected: requires modifying all scoring functions across 4 exams
 - Separate metadata file - Rejected: adds complexity, scoring output already contains all data
 
 **Output Format Analysis**:
+
 ```
 Question 2 | Multi-container Pod
 ✓ Pod multi-container-pod exists
@@ -28,12 +30,14 @@ Pattern to match: `^[✓✗]\s+(.+)$` where `✓` = pass, `✗` = fail
 **Decision**: Expandable/collapsible rows in the score modal questions list.
 
 **Rationale**:
+
 - Keeps summary view clean (question score + topic only)
 - Allows drill-down into details on demand
 - Familiar UX pattern (accordion)
 - No additional libraries needed (vanilla JS)
 
 **Alternatives considered**:
+
 - Inline display of all criteria - Rejected: clutters modal, overwhelming with 20+ questions
 - Separate details page - Rejected: breaks flow, requires navigation
 - Tooltip on hover - Rejected: not mobile-friendly, transient
@@ -41,11 +45,13 @@ Pattern to match: `^[✓✗]\s+(.+)$` where `✓` = pass, `✗` = fail
 ## Decision 3: Visual Indicators
 
 **Decision**: Use existing color scheme with icons:
+
 - Full score (5/5): Green checkmark ✓
 - Partial score (3/5): Orange/yellow warning ⚠
 - Zero score (0/5): Red cross ✗
 
 Individual criteria within expanded row:
+
 - PASS: Green text with ✓
 - FAIL: Red text with ✗
 
