@@ -242,7 +242,13 @@ assert_contains "$EXAM_DIR" "exam/course" "EXAM_DIR should contain exam/course"
 # ----------------------------------------------------------------------------
 test_case "load_exam sets all required paths"
 
-load_exam "ckad-simulation1" >/dev/null 2>&1
+# Use a complete exam for this test (simulation1 may be gitignored)
+_test_exam="ckad-simulation1"
+if ! exam_is_complete "$_test_exam" "$PROJECT_DIR"; then
+	_test_exam="ckad-simulation2"
+fi
+
+load_exam "$_test_exam" >/dev/null 2>&1
 assert_not_empty "$CURRENT_EXAM_DIR" "CURRENT_EXAM_DIR should be set"
 assert_not_empty "$CURRENT_MANIFESTS_DIR" "CURRENT_MANIFESTS_DIR should be set"
 assert_not_empty "$CURRENT_TEMPLATES_DIR" "CURRENT_TEMPLATES_DIR should be set"

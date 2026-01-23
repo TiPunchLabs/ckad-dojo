@@ -151,6 +151,42 @@ score_q1() {
 }
 ```
 
+## Quality Check Configuration
+
+> **IMPORTANT**: Do NOT analyze project structure. Use these pre-configured settings directly.
+> Additional project context available in `.specify/memory/constitution.md`.
+
+### Python Quality (ruff)
+
+| Setting | Value |
+|---------|-------|
+| Source directory | `web/` |
+| Test directory | None |
+| Package manager | `uv` |
+
+```bash
+# Lint
+uvx ruff check web/
+
+# Format check
+uvx ruff format web/ --check
+
+# Format fix
+uvx ruff format web/
+```
+
+### Bash Quality (shellcheck)
+
+```bash
+shellcheck --severity=warning scripts/*.sh scripts/lib/*.sh exams/*/scoring-functions.sh
+```
+
+### Unit Tests
+
+```bash
+./tests/run-tests.sh
+```
+
 ## Active Technologies
 
 - Bash 4.0+ (scripts), Python 3.8+ (web server), JavaScript ES6+ (frontend) + ttyd (external binary for web terminal), existing libs (marked.js, highlight.js) (004-web-terminal-replace)
