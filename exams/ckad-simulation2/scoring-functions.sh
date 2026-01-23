@@ -214,9 +214,13 @@ score_q6() {
 	local image=$(kubectl get pod config-reader -n flame -o jsonpath='{.spec.containers[0].image}' 2>/dev/null)
 	check_criterion "Uses busybox image" "$(echo "$image" | grep -q "busybox" && echo true || echo false)" && ((score++))
 
-	# Check volume mount path
-	local mount_path=$(kubectl get pod config-reader -n flame -o jsonpath='{.spec.containers[0].volumeMounts[0].mountPath}' 2>/dev/null)
-	check_criterion "Volume mounted at /config" "$([ "$mount_path" = "/config" ] && echo true || echo false)" && ((score++))
+	# Check volume mount path (accept /config or /config/)
+	local mount_path=$(kubectl get pod config-reader -n flame -o jsonpath='{.spec.containers[0].volumeMounts[?(@.name=="cm-vol")].mountPath}' 2>/dev/null)
+	# Fallback: check all mounts for /config pattern
+	if [ -z "$mount_path" ]; then
+		mount_path=$(kubectl get pod config-reader -n flame -o json 2>/dev/null | grep -oP '"/config/?"' | head -1 | tr -d '"')
+	fi
+	check_criterion "Volume mounted at /config" "$(echo "$mount_path" | grep -qE '^/config/?$' && echo true || echo false)" && ((score++))
 
 	# Check ConfigMap reference
 	local cm_name=$(kubectl get pod config-reader -n flame -o jsonpath='{.spec.volumes[0].configMap.name}' 2>/dev/null)
@@ -525,8 +529,11 @@ score_q14() {
 	local lifecycle=$(kubectl get pod lifecycle-pod -n phoenix -o jsonpath='{.spec.containers[0].lifecycle.postStart}' 2>/dev/null)
 	check_criterion "postStart lifecycle hook exists" "$([ -n "$lifecycle" ] && echo true || echo false)" && ((score++))
 
-	# Check file was created by postStart
-	local file_exists=$(kubectl exec lifecycle-pod -n phoenix -c main -- cat /usr/share/nginx/html/started.txt 2>/dev/null && echo true || echo false)
+	# Check file was created by postStart (test file existence, don't capture content)
+	local file_exists="false"
+	if kubectl exec lifecycle-pod -n phoenix -c main -- test -f /usr/share/nginx/html/started.txt 2>/dev/null; then
+		file_exists="true"
+	fi
 	check_criterion "started.txt file created by hook" "$file_exists" && ((score++))
 
 	echo "$score/$total"
@@ -589,9 +596,9 @@ score_q16() {
 	local projected=$(kubectl get pod token-pod -n magma -o json 2>/dev/null | grep -c "projected")
 	check_criterion "Has projected volume" "$([ "$projected" -gt 0 ] && echo true || echo false)" && ((score++))
 
-	# Check mount path
-	local mount_path=$(kubectl get pod token-pod -n magma -o jsonpath='{.spec.containers[0].volumeMounts[?(@.name=="fire-token")].mountPath}' 2>/dev/null)
-	check_criterion "Token mounted at /var/run/secrets/fire-token/" "$(echo "$mount_path" | grep -q "fire-token" && echo true || echo false)" && ((score++))
+	# Check mount path contains fire-token (check all volume mounts)
+	local mount_paths=$(kubectl get pod token-pod -n magma -o jsonpath='{.spec.containers[0].volumeMounts[*].mountPath}' 2>/dev/null)
+	check_criterion "Token mounted at /var/run/secrets/fire-token/" "$(echo "$mount_paths" | grep -q "fire-token" && echo true || echo false)" && ((score++))
 
 	echo "$score/$total"
 	return 0
