@@ -182,7 +182,7 @@ const elements = {
     scoreElapsed: document.getElementById('score-elapsed'),
     scoreQuestionsList: document.getElementById('score-questions-list'),
     btnCloseScore: document.getElementById('btn-close-score'),
-    btnBackToSelection: document.getElementById('btn-back-to-selection'),
+    btnEndExam: document.getElementById('btn-end-exam'),
     btnStopExam: document.getElementById('btn-stop-exam'),
     btnViewSolutions: document.getElementById('btn-view-solutions'),
 
@@ -1180,8 +1180,13 @@ function showFlaggedList() {
 }
 
 // ============================================================================
-// Back to Selection
+// Back to Exam / Back to Selection
 // ============================================================================
+
+function closeScoreModal() {
+    // Simply hide the score modal and return to the exam interface
+    elements.scoreModal.classList.add('hidden');
+}
 
 function backToSelection() {
     if (state.examStarted && !state.examEnded) {
@@ -1202,6 +1207,9 @@ function backToSelection() {
     // Switch screens
     elements.examInterface.classList.add('hidden');
     elements.examSelection.classList.remove('hidden');
+
+    // Reload exam list
+    loadExamList();
 }
 
 // ============================================================================
@@ -1295,8 +1303,8 @@ function initEventListeners() {
     }
 
     // Score modal buttons
-    elements.btnCloseScore.addEventListener('click', closeExamAndCleanup);
-    elements.btnBackToSelection.addEventListener('click', cleanupAndGoBack);
+    elements.btnCloseScore.addEventListener('click', closeScoreModal);
+    elements.btnEndExam.addEventListener('click', closeExamAndCleanup);
 
     // View Solutions button
     if (elements.btnViewSolutions) {
