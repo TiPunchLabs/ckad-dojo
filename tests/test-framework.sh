@@ -255,3 +255,18 @@ skip_test() {
 	local reason="${1:-No reason given}"
 	echo -e "  ${YELLOW}○${NC} SKIPPED: $reason"
 }
+
+# Check if an exam has all required files (not gitignored)
+# Usage: exam_is_complete "exam_id" "$PROJECT_DIR"
+# Returns 0 if complete, 1 if incomplete
+exam_is_complete() {
+	local exam_id="$1"
+	local project_dir="$2"
+	local exam_dir="$project_dir/exams/$exam_id"
+
+	# Check for required files
+	[ -f "$exam_dir/scoring-functions.sh" ] &&
+		[ -f "$exam_dir/questions.md" ] &&
+		[ -f "$exam_dir/solutions.md" ] &&
+		[ -d "$exam_dir/manifests/setup" ]
+}
