@@ -20,6 +20,17 @@ test_suite "Scoring Integration Tests"
 # Get list of all exams
 _exams=$(list_available_exams)
 
+# Filter to only complete exams (some may be gitignored like simulation1)
+_complete_exams=""
+for _exam in $_exams; do
+	if exam_is_complete "$_exam" "$PROJECT_DIR"; then
+		_complete_exams="$_complete_exams $_exam"
+	else
+		echo -e "  ${YELLOW}○${NC} Skipping $_exam (incomplete - files may be gitignored)"
+	fi
+done
+_exams=$(echo "$_complete_exams" | xargs)
+
 # ----------------------------------------------------------------------------
 # Test: Each exam has required scoring file
 # ----------------------------------------------------------------------------
@@ -93,15 +104,18 @@ for _exam in $_exams; do
 done
 
 # ----------------------------------------------------------------------------
-# Test: Each exam scoring file sources common.sh
+# Test: Each exam scoring file sources common utilities
 # ----------------------------------------------------------------------------
-test_case "Scoring files source common.sh"
+test_case "Scoring files source common utilities"
 
 for _exam in $_exams; do
 	_scoring_file="$PROJECT_DIR/exams/$_exam/scoring-functions.sh"
 
+	# Accept sourcing common.sh directly or via scoring-functions.sh (which sources common.sh)
 	_sources_common=$(grep -c 'source.*common.sh' "$_scoring_file" 2>/dev/null || echo "0")
-	assert_true "[ $_sources_common -ge 1 ]" "$_exam scoring file should source common.sh"
+	_sources_scoring=$(grep -c 'source.*scoring-functions.sh' "$_scoring_file" 2>/dev/null || echo "0")
+	_total_sources=$((_sources_common + _sources_scoring))
+	assert_true "[ $_total_sources -ge 1 ]" "$_exam scoring file should source common utilities"
 done
 
 # ----------------------------------------------------------------------------

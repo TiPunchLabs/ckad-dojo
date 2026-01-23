@@ -34,7 +34,7 @@ timer_state = {
     "start_question": 1,
     "paused": False,
     "pause_time": None,
-    "total_paused_seconds": 0
+    "total_paused_seconds": 0,
 }
 
 # Server shutdown flag
@@ -51,18 +51,15 @@ def run_cleanup_script(exam_id: str = None) -> dict:
     """Run ckad-cleanup.sh to clean up exam resources"""
     script_path = SCRIPTS_DIR / "ckad-cleanup.sh"
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("  Cleaning up exam resources...")
     if exam_id:
         print(f"  Exam: {exam_id}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     if not script_path.exists():
         print("  [ERROR] Cleanup script not found")
-        return {
-            "success": False,
-            "error": "Cleanup script not found"
-        }
+        return {"success": False, "error": "Cleanup script not found"}
 
     try:
         cmd = [str(script_path), "-y"]  # -y to skip confirmation
@@ -71,11 +68,7 @@ def run_cleanup_script(exam_id: str = None) -> dict:
 
         # Run with real-time output to terminal
         result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            cwd=str(PROJECT_DIR),
-            timeout=120
+            cmd, capture_output=True, text=True, cwd=str(PROJECT_DIR), timeout=120
         )
 
         # Print output to terminal
@@ -92,27 +85,21 @@ def run_cleanup_script(exam_id: str = None) -> dict:
         return {
             "success": result.returncode == 0,
             "output": result.stdout,
-            "error": result.stderr if result.returncode != 0 else None
+            "error": result.stderr if result.returncode != 0 else None,
         }
 
     except subprocess.TimeoutExpired:
         print("  [ERROR] Cleanup script timed out\n")
-        return {
-            "success": False,
-            "error": "Cleanup script timed out"
-        }
+        return {"success": False, "error": "Cleanup script timed out"}
     except Exception as e:
         print(f"  [ERROR] {str(e)}\n")
-        return {
-            "success": False,
-            "error": str(e)
-        }
+        return {"success": False, "error": str(e)}
 
 
 def strip_ansi_codes(text: str) -> str:
     """Remove ANSI escape codes from text."""
-    ansi_pattern = re.compile(r'\x1b\[[0-9;]*m')
-    return ansi_pattern.sub('', text)
+    ansi_pattern = re.compile(r"\x1b\[[0-9;]*m")
+    return ansi_pattern.sub("", text)
 
 
 def parse_criteria_from_output(output: str, question_id: str) -> list:
@@ -129,43 +116,41 @@ def parse_criteria_from_output(output: str, question_id: str) -> list:
     # Find the section for this question
     # Question headers: "Question N | Topic" or just "Question N"
     # Also handle format with "QN" prefix in summary
-    lines = output.split('\n')
+    lines = output.split("\n")
     in_question = False
 
     for line in lines:
         # Check if we're entering a question section
         # Match patterns like "Question 1 |" or "Question 1 "
-        if re.match(rf'^Question\s+{question_id}\s*[\|\s]', line, re.IGNORECASE):
+        if re.match(rf"^Question\s+{question_id}\s*[\|\s]", line, re.IGNORECASE):
             in_question = True
             continue
 
         # Check if we're at the score line (end of question section)
         # Format: "N/N" at end of scoring output for each question
-        if in_question and re.match(r'^\d+/\d+$', line.strip()):
+        if in_question and re.match(r"^\d+/\d+$", line.strip()):
             break
 
         # Check if we've reached a new question (exit current section)
-        if in_question and re.match(r'^Question\s+\d+', line, re.IGNORECASE):
+        if in_question and re.match(r"^Question\s+\d+", line, re.IGNORECASE):
             break
 
         # Parse criteria lines (✓ or ✗ followed by description)
         if in_question:
             # Match PASS criteria: ✓ description
-            pass_match = re.match(r'^[✓✔]\s+(.+)$', line.strip())
+            pass_match = re.match(r"^[✓✔]\s+(.+)$", line.strip())
             if pass_match:
-                criteria.append({
-                    "description": pass_match.group(1).strip(),
-                    "passed": True
-                })
+                criteria.append(
+                    {"description": pass_match.group(1).strip(), "passed": True}
+                )
                 continue
 
             # Match FAIL criteria: ✗ description
-            fail_match = re.match(r'^[✗✘×]\s+(.+)$', line.strip())
+            fail_match = re.match(r"^[✗✘×]\s+(.+)$", line.strip())
             if fail_match:
-                criteria.append({
-                    "description": fail_match.group(1).strip(),
-                    "passed": False
-                })
+                criteria.append(
+                    {"description": fail_match.group(1).strip(), "passed": False}
+                )
 
     return criteria
 
@@ -182,7 +167,7 @@ def run_scoring_script(exam_id: str = None) -> dict:
             "total_score": 0,
             "max_score": 0,
             "percentage": 0,
-            "passed": False
+            "passed": False,
         }
 
     try:
@@ -191,11 +176,7 @@ def run_scoring_script(exam_id: str = None) -> dict:
             cmd.extend(["-e", exam_id])
 
         result = subprocess.run(
-            cmd,
-            capture_output=True,
-            text=True,
-            cwd=str(PROJECT_DIR),
-            timeout=60
+            cmd, capture_output=True, text=True, cwd=str(PROJECT_DIR), timeout=60
         )
 
         output = result.stdout
@@ -205,9 +186,9 @@ def run_scoring_script(exam_id: str = None) -> dict:
 
         # Parse question scores from output
         # Format: Q1       1/1          Namespaces
-        question_pattern = r'^Q(\d+|P\d+)\s+(\d+)/(\d+)\s+(.+)$'
+        question_pattern = r"^Q(\d+|P\d+)\s+(\d+)/(\d+)\s+(.+)$"
 
-        for line in output.split('\n'):
+        for line in output.split("\n"):
             match = re.match(question_pattern, line.strip())
             if match:
                 q_id = match.group(1)
@@ -218,20 +199,22 @@ def run_scoring_script(exam_id: str = None) -> dict:
                 # Parse criteria for this question
                 criteria = parse_criteria_from_output(output, q_id)
 
-                questions.append({
-                    "id": q_id,
-                    "score": scored,
-                    "max_score": possible,
-                    "topic": topic,
-                    "passed": scored == possible,
-                    "criteria": criteria
-                })
+                questions.append(
+                    {
+                        "id": q_id,
+                        "score": scored,
+                        "max_score": possible,
+                        "topic": topic,
+                        "passed": scored == possible,
+                        "criteria": criteria,
+                    }
+                )
                 total_score += scored
                 max_score += possible
 
         # Parse total score if available
         # Format: TOTAL SCORE: 87 / 113 (77%)
-        total_pattern = r'TOTAL SCORE:\s*(\d+)\s*/\s*(\d+)\s*\((\d+)%\)'
+        total_pattern = r"TOTAL SCORE:\s*(\d+)\s*/\s*(\d+)\s*\((\d+)%\)"
         total_match = re.search(total_pattern, output)
         if total_match:
             total_score = int(total_match.group(1))
@@ -250,7 +233,7 @@ def run_scoring_script(exam_id: str = None) -> dict:
             "max_score": max_score,
             "percentage": percentage,
             "passed": passed,
-            "output": output
+            "output": output,
         }
 
     except subprocess.TimeoutExpired:
@@ -261,7 +244,7 @@ def run_scoring_script(exam_id: str = None) -> dict:
             "total_score": 0,
             "max_score": 0,
             "percentage": 0,
-            "passed": False
+            "passed": False,
         }
     except Exception as e:
         return {
@@ -271,7 +254,7 @@ def run_scoring_script(exam_id: str = None) -> dict:
             "total_score": 0,
             "max_score": 0,
             "percentage": 0,
-            "passed": False
+            "passed": False,
         }
 
 
@@ -286,9 +269,9 @@ def parse_solutions_md(exam_id: str) -> list:
     solutions = []
 
     # Split by question headers (## Question N | Topic or ## Preview Question N | Topic)
-    solution_pattern = r'^## (Question|Preview Question) (\d+|P\d+) \| (.+?)$'
+    solution_pattern = r"^## (Question|Preview Question) (\d+|P\d+) \| (.+?)$"
 
-    lines = content.split('\n')
+    lines = content.split("\n")
     current_solution = None
     current_content = []
 
@@ -297,7 +280,7 @@ def parse_solutions_md(exam_id: str) -> list:
         if match:
             # Save previous solution
             if current_solution:
-                current_solution['content'] = '\n'.join(current_content).strip()
+                current_solution["content"] = "\n".join(current_content).strip()
                 solutions.append(current_solution)
 
             # Start new solution
@@ -307,16 +290,16 @@ def parse_solutions_md(exam_id: str) -> list:
 
             # Normalize ID for preview questions
             if q_type == "Preview Question":
-                q_id = f"P{q_num}" if not q_num.startswith('P') else q_num
+                q_id = f"P{q_num}" if not q_num.startswith("P") else q_num
             else:
                 q_id = q_num
 
             current_solution = {
-                'id': q_id,
-                'number': int(q_num) if q_num.isdigit() else q_num,
-                'topic': topic,
-                'content': '',
-                'is_preview': q_type == "Preview Question"
+                "id": q_id,
+                "number": int(q_num) if q_num.isdigit() else q_num,
+                "topic": topic,
+                "content": "",
+                "is_preview": q_type == "Preview Question",
             }
             current_content = []
         elif current_solution:
@@ -324,7 +307,7 @@ def parse_solutions_md(exam_id: str) -> list:
 
     # Save last solution
     if current_solution:
-        current_solution['content'] = '\n'.join(current_content).strip()
+        current_solution["content"] = "\n".join(current_content).strip()
         solutions.append(current_solution)
 
     return solutions
@@ -334,7 +317,7 @@ def get_solution(exam_id: str, question_id: str) -> dict:
     """Get a specific solution by question ID"""
     solutions = parse_solutions_md(exam_id)
     for solution in solutions:
-        if str(solution['id']) == str(question_id):
+        if str(solution["id"]) == str(question_id):
             return solution
     return None
 
@@ -356,10 +339,10 @@ def parse_questions_md(exam_id: str) -> list:
     questions = []
 
     # Split by question headers (## Question N | Topic)
-    question_pattern = r'^## Question (\d+|P\d+) \| (.+?)$'
+    question_pattern = r"^## Question (\d+|P\d+) \| (.+?)$"
 
     # Find all question sections
-    lines = content.split('\n')
+    lines = content.split("\n")
     current_question = None
     current_content = []
 
@@ -368,46 +351,50 @@ def parse_questions_md(exam_id: str) -> list:
         if match:
             # Save previous question
             if current_question:
-                current_question['content'] = '\n'.join(current_content).strip()
+                current_question["content"] = "\n".join(current_content).strip()
                 questions.append(current_question)
 
             # Start new question
             q_num = match.group(1)
             topic = match.group(2)
             current_question = {
-                'id': q_num,
-                'number': int(q_num) if q_num.isdigit() else q_num,
-                'topic': topic,
-                'content': '',
-                'points': 0,
-                'namespace': '',
-                'resources': '',
-                'files': ''
+                "id": q_num,
+                "number": int(q_num) if q_num.isdigit() else q_num,
+                "topic": topic,
+                "content": "",
+                "points": 0,
+                "namespace": "",
+                "resources": "",
+                "files": "",
             }
             current_content = []
         elif current_question:
             # Parse metadata from table (format: | **Key** | value |)
             # Only process as metadata if it's a key-value table row with **bold** key
-            if line.startswith('|'):
-                parts = [p.strip() for p in line.split('|')[1:-1]]
+            if line.startswith("|"):
+                parts = [p.strip() for p in line.split("|")[1:-1]]
                 # Check if this is a metadata row (has **Key** format in first column)
-                if len(parts) >= 2 and parts[0].startswith('**') and parts[0].endswith('**'):
-                    key = parts[0].strip('*').lower()
+                if (
+                    len(parts) >= 2
+                    and parts[0].startswith("**")
+                    and parts[0].endswith("**")
+                ):
+                    key = parts[0].strip("*").lower()
                     value = parts[1]
-                    if key == 'points':
+                    if key == "points":
                         # Extract points from format like "7/113 (6%)"
-                        points_match = re.match(r'(\d+)', value)
+                        points_match = re.match(r"(\d+)", value)
                         if points_match:
-                            current_question['points'] = int(points_match.group(1))
-                    elif key == 'namespace':
-                        current_question['namespace'] = value.strip('`')
-                    elif key == 'resources':
-                        current_question['resources'] = value
-                    elif key in ('file to create', 'files to create', 'files'):
-                        current_question['files'] = value
+                            current_question["points"] = int(points_match.group(1))
+                    elif key == "namespace":
+                        current_question["namespace"] = value.strip("`")
+                    elif key == "resources":
+                        current_question["resources"] = value
+                    elif key in ("file to create", "files to create", "files"):
+                        current_question["files"] = value
                     # Skip metadata rows from content
                     continue
-                elif line.strip() in ('| | |', '|---|---|'):
+                elif line.strip() in ("| | |", "|---|---|"):
                     # Skip empty header and separator rows of metadata table
                     continue
             # Add all other lines (including task tables) to content
@@ -415,7 +402,7 @@ def parse_questions_md(exam_id: str) -> list:
 
     # Save last question
     if current_question:
-        current_question['content'] = '\n'.join(current_content).strip()
+        current_question["content"] = "\n".join(current_content).strip()
         questions.append(current_question)
 
     return questions
@@ -431,17 +418,17 @@ def load_exam_config(exam_id: str) -> dict:
         "warning_time": 15,
         "total_questions": 22,
         "total_points": 113,
-        "passing_percentage": 66
+        "passing_percentage": 66,
     }
 
     if config_file.exists():
         content = config_file.read_text()
         # Parse bash-style config
-        for line in content.split('\n'):
+        for line in content.split("\n"):
             line = line.strip()
-            if line.startswith('#') or '=' not in line:
+            if line.startswith("#") or "=" not in line:
                 continue
-            key, value = line.split('=', 1)
+            key, value = line.split("=", 1)
             key = key.strip()
             value = value.strip().strip('"').strip("'")
 
@@ -468,13 +455,15 @@ def list_exams() -> list:
         for exam_dir in EXAMS_DIR.iterdir():
             if exam_dir.is_dir() and (exam_dir / "exam.conf").exists():
                 config = load_exam_config(exam_dir.name)
-                exams.append({
-                    "id": exam_dir.name,
-                    "name": config["exam_name"],
-                    "duration": config["duration"],
-                    "questions": config["total_questions"],
-                    "points": config["total_points"]
-                })
+                exams.append(
+                    {
+                        "id": exam_dir.name,
+                        "name": config["exam_name"],
+                        "duration": config["duration"],
+                        "questions": config["total_questions"],
+                        "points": config["total_points"],
+                    }
+                )
     return exams
 
 
@@ -509,32 +498,30 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
             no_terminal = os.environ.get("NO_TERMINAL", "false").lower() == "true"
 
             if no_terminal:
-                self.send_json({
-                    "enabled": False,
-                    "running": False,
-                    "port": 0,
-                    "url": None
-                })
+                self.send_json(
+                    {"enabled": False, "running": False, "port": 0, "url": None}
+                )
             else:
                 # Check if ttyd is running
                 ttyd_port = int(os.environ.get("TTYD_PORT", "7681"))
                 ttyd_running = self.check_ttyd_status(ttyd_port)
-                self.send_json({
-                    "enabled": True,
-                    "running": ttyd_running,
-                    "port": ttyd_port,
-                    "url": f"http://localhost:{ttyd_port}"
-                })
+                self.send_json(
+                    {
+                        "enabled": True,
+                        "running": ttyd_running,
+                        "port": ttyd_port,
+                        "url": f"http://localhost:{ttyd_port}",
+                    }
+                )
         elif path.startswith("/api/exam/") and "/solutions" in path:
             parts = path.split("/")
             exam_id = parts[3]
             if path.endswith("/solutions"):
                 # Get all solutions for exam
                 solutions = parse_solutions_md(exam_id)
-                self.send_json({
-                    "available": len(solutions) > 0,
-                    "solutions": solutions
-                })
+                self.send_json(
+                    {"available": len(solutions) > 0, "solutions": solutions}
+                )
             elif len(parts) >= 6:
                 # Get specific solution: /api/exam/{id}/solutions/{question_id}
                 question_id = parts[5]
@@ -554,8 +541,12 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path
 
-        content_length = int(self.headers.get('Content-Length', 0))
-        body = self.rfile.read(content_length).decode('utf-8') if content_length > 0 else '{}'
+        content_length = int(self.headers.get("Content-Length", 0))
+        body = (
+            self.rfile.read(content_length).decode("utf-8")
+            if content_length > 0
+            else "{}"
+        )
 
         try:
             data = json.loads(body) if body else {}
@@ -598,7 +589,9 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
                 if timer_state.get("paused"):
                     # Resume timer
                     paused_duration = time.time() - timer_state["pause_time"]
-                    timer_state["total_paused_seconds"] = timer_state.get("total_paused_seconds", 0) + paused_duration
+                    timer_state["total_paused_seconds"] = (
+                        timer_state.get("total_paused_seconds", 0) + paused_duration
+                    )
                     timer_state["paused"] = False
                     timer_state["pause_time"] = None
                     self.send_json({"paused": False, "timer": self.get_timer_state()})
@@ -617,23 +610,31 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
 
             # Run the scoring script
             exam_id = timer_state.get("exam_id") or data.get("exam_id")
-            print(f"\n{'='*60}")
+            print(f"\n{'=' * 60}")
             print(f"  Scoring exam: {exam_id or 'unknown'}")
-            print(f"{'='*60}\n")
+            print(f"{'=' * 60}\n")
             score_result = run_scoring_script(exam_id)
             if score_result.get("success"):
-                print(f"  Score: {score_result.get('total_score')}/{score_result.get('max_score')} ({score_result.get('percentage')}%)")
-                print(f"  Status: {'PASSED' if score_result.get('passed') else 'FAILED'}\n")
+                print(
+                    f"  Score: {score_result.get('total_score')}/{score_result.get('max_score')} ({score_result.get('percentage')}%)"
+                )
+                print(
+                    f"  Status: {'PASSED' if score_result.get('passed') else 'FAILED'}\n"
+                )
 
             # Add timer info to result
             if timer_state["start_time"]:
                 total_paused = timer_state.get("total_paused_seconds", 0)
                 elapsed = time.time() - timer_state["start_time"] - total_paused
                 score_result["elapsed_seconds"] = int(elapsed)
-                score_result["elapsed_formatted"] = f"{int(elapsed // 60)}:{int(elapsed % 60):02d}"
+                score_result["elapsed_formatted"] = (
+                    f"{int(elapsed // 60)}:{int(elapsed % 60):02d}"
+                )
 
             # Add solutions availability
-            score_result["solutions_available"] = solutions_available(exam_id) if exam_id else False
+            score_result["solutions_available"] = (
+                solutions_available(exam_id) if exam_id else False
+            )
             score_result["exam_id"] = exam_id
 
             self.send_json(score_result)
@@ -654,16 +655,18 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
             self.send_json({"status": "shutdown_initiated"})
 
             # Log shutdown
-            print(f"\n{'='*60}")
+            print(f"\n{'=' * 60}")
             print("  Shutting down server...")
-            print(f"{'='*60}")
+            print(f"{'=' * 60}")
             print("\n  Server stopped.\n")
 
             # Schedule shutdown after response is sent
             import threading
+
             def delayed_shutdown():
                 time.sleep(0.5)
                 os._exit(0)
+
             threading.Thread(target=delayed_shutdown, daemon=True).start()
 
         else:
@@ -680,7 +683,7 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
                 "total_seconds": timer_state["duration_minutes"] * 60,
                 "exam_id": timer_state["exam_id"],
                 "exam_name": timer_state["exam_name"],
-                "start_question": timer_state.get("start_question", 1)
+                "start_question": timer_state.get("start_question", 1),
             }
 
         # Calculate elapsed time, accounting for paused time
@@ -688,7 +691,9 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
 
         if timer_state.get("paused") and timer_state.get("pause_time"):
             # Currently paused - use pause_time as reference
-            elapsed = timer_state["pause_time"] - timer_state["start_time"] - total_paused
+            elapsed = (
+                timer_state["pause_time"] - timer_state["start_time"] - total_paused
+            )
         else:
             # Running - use current time
             elapsed = time.time() - timer_state["start_time"] - total_paused
@@ -707,16 +712,17 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
             "total_seconds": total,
             "exam_id": timer_state["exam_id"],
             "exam_name": timer_state["exam_name"],
-            "start_question": timer_state.get("start_question", 1)
+            "start_question": timer_state.get("start_question", 1),
         }
 
     def check_ttyd_status(self, port: int) -> bool:
         """Check if ttyd is running on the specified port"""
         import socket
+
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(1)
-            result = sock.connect_ex(('localhost', port))
+            result = sock.connect_ex(("localhost", port))
             sock.close()
             return result == 0
         except Exception:
@@ -728,9 +734,9 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Content-Length", len(response.encode('utf-8')))
+        self.send_header("Content-Length", len(response.encode("utf-8")))
         self.end_headers()
-        self.wfile.write(response.encode('utf-8'))
+        self.wfile.write(response.encode("utf-8"))
 
     def log_message(self, format, *args):
         """Suppress default logging"""
@@ -764,9 +770,9 @@ def main():
     # Allow port reuse to avoid "Address already in use" after restart
     socketserver.TCPServer.allow_reuse_address = True
     with socketserver.TCPServer((HOST, PORT), ExamHandler) as httpd:
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print("  ckad-dojo - CKAD Exam Simulator")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
         print(f"\n  Server running at: http://{HOST}:{PORT}")
         print("  Press Ctrl+C to stop\n")
 
