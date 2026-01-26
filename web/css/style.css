@@ -4,23 +4,23 @@
 
 /* CSS Variables for theming */
 :root {
-    /* Dark theme (default) */
-    --bg-primary: #0d1117;
-    --bg-secondary: #161b22;
-    --bg-tertiary: #21262d;
-    --bg-hover: #30363d;
+    /* Dark theme (default) - Developer/Tech palette */
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    --bg-hover: #475569;
 
-    --text-primary: #e6edf3;
-    --text-secondary: #8b949e;
-    --text-muted: #6e7681;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
 
-    --border-color: #30363d;
-    --border-light: #21262d;
+    --border-color: #334155;
+    --border-light: #1e293b;
 
-    --accent-primary: #58a6ff;
-    --accent-success: #3fb950;
-    --accent-warning: #d29922;
-    --accent-danger: #f85149;
+    --accent-primary: #3b82f6;
+    --accent-success: #22c55e;
+    --accent-warning: #f59e0b;
+    --accent-danger: #ef4444;
 
     --timer-normal: var(--accent-success);
     --timer-warning: var(--accent-warning);
@@ -35,29 +35,34 @@
     --radius-lg: 12px;
 
     --transition: 0.2s ease;
+
+    /* Focus ring for accessibility */
+    --focus-ring: 0 0 0 3px rgba(59, 130, 246, 0.5);
 }
 
 [data-theme="light"] {
     --bg-primary: #ffffff;
-    --bg-secondary: #f6f8fa;
-    --bg-tertiary: #eaeef2;
-    --bg-hover: #d0d7de;
+    --bg-secondary: #f1f5f9;
+    --bg-tertiary: #e2e8f0;
+    --bg-hover: #cbd5e1;
 
-    --text-primary: #1f2328;
-    --text-secondary: #656d76;
-    --text-muted: #8c959f;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
 
-    --border-color: #d0d7de;
-    --border-light: #eaeef2;
+    --border-color: #cbd5e1;
+    --border-light: #e2e8f0;
 
-    --accent-primary: #0969da;
-    --accent-success: #1a7f37;
-    --accent-warning: #9a6700;
-    --accent-danger: #cf222e;
+    --accent-primary: #2563eb;
+    --accent-success: #16a34a;
+    --accent-warning: #d97706;
+    --accent-danger: #dc2626;
 
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+    --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.4);
 }
 
 /* ============================================================================
@@ -144,6 +149,20 @@ html, body {
     text-align: left;
     cursor: pointer;
     transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.exam-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-success));
+    opacity: 0;
+    transition: opacity var(--transition);
 }
 
 .exam-card:hover {
@@ -151,6 +170,19 @@ html, body {
     border-color: var(--accent-primary);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
+}
+
+.exam-card:hover::before {
+    opacity: 1;
+}
+
+.exam-card:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.exam-card:active {
+    transform: translateY(0);
 }
 
 .exam-card h3 {
@@ -320,6 +352,15 @@ html, body {
     color: var(--text-primary);
 }
 
+.btn-icon:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.btn-icon:active {
+    transform: scale(0.95);
+}
+
 /* Theme Toggle */
 .theme-toggle {
     position: relative;
@@ -382,8 +423,17 @@ html, body {
     border-color: var(--accent-primary);
 }
 
+.btn-nav:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.btn-nav:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
 .btn-nav:disabled {
-    opacity: 0.4;
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
@@ -410,7 +460,7 @@ html, body {
 .question-selector select:focus {
     outline: none;
     border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+    box-shadow: var(--focus-ring);
 }
 
 /* Question Overview (dots) */
@@ -447,6 +497,11 @@ html, body {
 .question-dot:hover {
     background: var(--bg-hover);
     border-color: var(--accent-primary);
+}
+
+.question-dot:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
 }
 
 .question-dot.current {
@@ -707,6 +762,15 @@ html, body {
     color: var(--accent-warning);
 }
 
+.btn-flag:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.4);
+}
+
+.btn-flag:active {
+    transform: scale(0.97);
+}
+
 .btn-flag.flagged {
     background: rgba(210, 153, 34, 0.15);
     border-color: var(--accent-warning);
@@ -736,6 +800,15 @@ html, body {
     filter: brightness(1.1);
 }
 
+.btn-primary:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.btn-primary:active {
+    transform: scale(0.97);
+}
+
 .btn-secondary {
     display: flex;
     align-items: center;
@@ -752,6 +825,15 @@ html, body {
 
 .btn-secondary:hover {
     background: var(--bg-hover);
+}
+
+.btn-secondary:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.btn-secondary:active {
+    transform: scale(0.97);
 }
 
 .btn-danger {
@@ -771,6 +853,15 @@ html, body {
 
 .btn-danger:hover {
     filter: brightness(1.1);
+}
+
+.btn-danger:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.4);
+}
+
+.btn-danger:active {
+    transform: scale(0.97);
 }
 
 .footer-center {
@@ -1224,6 +1315,34 @@ html, body {
 .cleanup-loader .cleanup-status {
     font-size: 0.875rem;
     color: var(--text-muted);
+}
+
+/* ============================================================================
+   Reduced Motion Support
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .timer.danger {
+        animation: none;
+    }
+
+    .timer.paused {
+        animation: none;
+        opacity: 0.7;
+    }
+
+    .cleanup-loader .spinner {
+        animation: none;
+        border-top-color: var(--accent-primary);
+    }
 }
 
 /* ============================================================================

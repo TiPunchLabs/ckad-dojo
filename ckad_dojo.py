@@ -9,6 +9,7 @@ entry point with both interactive menu and direct command-line access.
 
 import argcomplete
 import argparse
+import os
 import re
 import shutil
 import signal
@@ -17,7 +18,10 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-__version__ = "1.5.0"
+__version__ = "1.7.0"
+
+# Supported browsers for --browser option
+SUPPORTED_BROWSERS = ["firefox", "chrome", "chromium", "brave", "default"]
 
 
 # =============================================================================
@@ -162,6 +166,13 @@ def discover_exams() -> List[str]:
         if item.is_dir() and (item / "exam.conf").exists():
             exams.append(item.name)
     return exams
+
+
+def normalize_exam_id(exam_id: str) -> str:
+    """Normalize exam ID, expanding shortcuts like '1' to 'ckad-simulation1'."""
+    if exam_id and exam_id.isdigit():
+        return f"ckad-simulation{exam_id}"
+    return exam_id
 
 
 # =============================================================================
@@ -381,7 +392,8 @@ def menu_start_exam() -> None:
     # Run exam (skip detection since we just ran setup)
     print()
     print_info("Launching exam interface...")
-    run_script("ckad-exam.sh", ["web", "-e", exam_id, "--skip-detection"])
+    browser = os.environ.get("CKAD_BROWSER", "default")
+    run_script("ckad-exam.sh", ["web", "-e", exam_id, "--skip-detection", "--browser", browser])
 
 
 def menu_score_exam() -> None:
@@ -480,7 +492,7 @@ def run_interactive_menu() -> None:
 
 def cmd_exam_start(args) -> int:
     """Start an exam (setup + web interface)."""
-    exam_id = args.exam
+    exam_id = normalize_exam_id(args.exam) if args.exam else None
     if not exam_id:
         exam_id = select_exam("Select exam to start")
         if not exam_id:
@@ -505,7 +517,11 @@ def cmd_exam_start(args) -> int:
     # Start exam (skip detection since we just ran setup)
     print()
     print_info("Launching exam interface...")
-    returncode, _, _ = run_script("ckad-exam.sh", ["web", "-e", exam_id, "--skip-detection"])
+    browser = getattr(args, 'browser', 'default')
+    script_args = ["web", "-e", exam_id, "--skip-detection", "--browser", browser]
+    if getattr(args, 'no_pause', False):
+        script_args.append("--no-pause")
+    returncode, _, _ = run_script("ckad-exam.sh", script_args)
     return returncode
 
 
@@ -519,7 +535,7 @@ def cmd_exam_stop(args) -> int:
 
 def cmd_setup(args) -> int:
     """Setup exam environment only (no exam launch)."""
-    exam_id = args.exam
+    exam_id = normalize_exam_id(args.exam) if args.exam else None
     if not exam_id:
         exam_id = select_exam("Select exam to setup")
         if not exam_id:
@@ -548,7 +564,7 @@ def cmd_setup(args) -> int:
 
 def cmd_score(args) -> int:
     """Score exam answers."""
-    exam_id = args.exam
+    exam_id = normalize_exam_id(args.exam) if args.exam else None
     if not exam_id:
         exam_id = select_exam("Select exam to score")
         if not exam_id:
@@ -568,7 +584,7 @@ def cmd_score(args) -> int:
 
 def cmd_cleanup(args) -> int:
     """Cleanup exam resources."""
-    exam_id = args.exam
+    exam_id = normalize_exam_id(args.exam) if args.exam else None
     if not exam_id:
         exam_id = select_exam("Select exam to cleanup")
         if not exam_id:
@@ -617,7 +633,7 @@ def cmd_list(args) -> int:
 
 def cmd_info(args) -> int:
     """Show detailed exam information."""
-    exam_id = args.exam
+    exam_id = normalize_exam_id(args.exam) if args.exam else None
     if not exam_id:
         exam_id = select_exam("Select exam to view info")
         if not exam_id:
@@ -915,7 +931,7 @@ def cmd_completion(args) -> int:
 
 def cmd_status(args) -> int:
     """Show exam environment status."""
-    exam_id = args.exam
+    exam_id = normalize_exam_id(args.exam) if args.exam else None
 
     print()
     print(color("Exam Environment Status", Colors.BOLD))
@@ -1007,6 +1023,17 @@ def create_parser() -> argparse.ArgumentParser:
 
     exam_start = exam_subparsers.add_parser("start", help="Start an exam session")
     exam_start.add_argument("-e", "--exam", help="Exam ID (e.g., ckad-simulation1)")
+    exam_start.add_argument(
+        "-b", "--browser",
+        choices=SUPPORTED_BROWSERS,
+        default=os.environ.get("CKAD_BROWSER", "default"),
+        help="Browser to use (default: from CKAD_BROWSER env or 'default')"
+    )
+    exam_start.add_argument(
+        "--no-pause",
+        action="store_true",
+        help="Disable timer pause functionality"
+    )
 
     exam_subparsers.add_parser("stop", help="Stop current exam session")
 
