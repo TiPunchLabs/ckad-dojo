@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.3.1-blue" alt="Version 1.3.1">
+  <img src="https://img.shields.io/badge/version-1.7.0-blue" alt="Version 1.3.1">
   <img src="https://img.shields.io/badge/exams-4-blue" alt="4 Exams">
   <img src="https://img.shields.io/badge/questions-85-blue" alt="85 Questions">
   <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
@@ -124,6 +124,62 @@ Opens `http://localhost:9090` with the exam interface.
 
 ---
 
+## Installation
+
+### Option 1: Global Installation (Recommended)
+
+Install `ckad-dojo` globally to use it from anywhere:
+
+```bash
+# Install globally from PyPI (when published)
+uv tool install ckad-dojo
+
+# Or install from a local clone
+git clone https://github.com/TiPunchLabs/ckad-dojo.git
+uv tool install ./ckad-dojo
+
+# Or install directly from GitHub
+uv tool install git+https://github.com/TiPunchLabs/ckad-dojo.git
+```
+
+After installation, `ckad-dojo` is available system-wide:
+
+```bash
+ckad-dojo              # Interactive menu
+ckad-dojo list         # List exams
+ckad-dojo exam start   # Start an exam
+```
+
+**Manage the installation:**
+
+```bash
+uv tool list           # List installed tools
+uv tool upgrade ckad-dojo   # Upgrade to latest version
+uv tool uninstall ckad-dojo # Remove
+```
+
+### Option 2: Run from Repository
+
+Run directly without global installation:
+
+```bash
+git clone https://github.com/TiPunchLabs/ckad-dojo.git
+cd ckad-dojo
+uv run ckad-dojo       # uv handles dependencies automatically
+```
+
+### Option 3: Bash Scripts Only
+
+If you prefer not to use Python/uv:
+
+```bash
+git clone https://github.com/TiPunchLabs/ckad-dojo.git
+cd ckad-dojo
+./scripts/ckad-exam.sh # Direct bash execution
+```
+
+---
+
 ## Prerequisites
 
 ### Required Tools
@@ -178,21 +234,51 @@ uv run ckad-dojo status                         # Check environment status
 | Option | Description |
 |--------|-------------|
 | `-e, --exam` | Specify exam ID |
+| `-b, --browser` | Browser to use (firefox, chrome, chromium, brave, default) |
 | `--no-color` | Disable colored output |
 | `--help` | Show help |
 | `--version` | Show version |
+
+### Browser Selection
+
+By default, the exam opens in your system's default browser. You can specify a different browser:
+
+```bash
+# Use Firefox
+uv run ckad-dojo exam start -e ckad-simulation1 --browser firefox
+
+# Use Chrome
+uv run ckad-dojo exam start -e ckad-simulation1 --browser chrome
+
+# Or set a default via environment variable
+export CKAD_BROWSER=firefox
+uv run ckad-dojo exam start -e ckad-simulation1
+```
+
+**Supported browsers:** `firefox`, `chrome`, `chromium`, `brave`, `default`
 
 ### Shell Autocompletion
 
 Enable tab completion for commands, options, and exam IDs.
 
-**Recommended: Create a shell function (Bash)**
+#### Global Installation (Recommended)
 
-Add this to your `~/.bashrc` (adjust the path to your installation):
+If you installed with `uv tool install`, autocompletion works automatically after activating argcomplete:
 
 ```bash
-# ckad-dojo function with auto-completion
-# Replace /path/to/ckad-dojo with your actual installation path
+# Bash - add to ~/.bashrc
+eval "$(register-python-argcomplete ckad-dojo)"
+
+# Then reload
+source ~/.bashrc
+```
+
+#### Local Repository Usage
+
+If running with `uv run` from the repository, create a wrapper function:
+
+```bash
+# Add to ~/.bashrc (adjust the path to your installation)
 ckad-dojo() {
     uv run --project /path/to/ckad-dojo ckad-dojo "$@"
 }
@@ -201,7 +287,7 @@ eval "$(register-python-argcomplete ckad-dojo)"
 
 Then reload: `source ~/.bashrc`
 
-Now you can use:
+#### Usage
 
 ```bash
 ckad-dojo <TAB>           # → setup, exam, score, cleanup, list
@@ -265,6 +351,9 @@ uv run ckad-dojo completion fish > ~/.config/fish/completions/ckad-dojo.fish
 | `-q, --question N` | Start at question N |
 | `-y, --yes` | Skip confirmation prompts |
 | `--no-terminal` | Disable embedded terminal panel |
+| `--no-docs` | Don't open K8s/Helm documentation tabs |
+| `--no-pause` | Disable timer pause functionality |
+| `--browser NAME` | Browser to use (firefox, chrome, chromium, brave, default) |
 | `--port PORT` | Use custom port (default: 9090) |
 | `--terminal-port PORT` | Terminal port (default: 7681) |
 

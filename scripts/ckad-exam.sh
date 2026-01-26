@@ -57,9 +57,12 @@ show_help() {
 	echo "  --no-timer       Start exam without timer"
 	echo "  --no-terminal    Disable embedded terminal panel"
 	echo "  --no-docs        Don't open K8s/Helm documentation tabs"
+	echo "  --no-pause       Disable timer pause functionality"
 	echo "  --skip-detection Skip existing exam resource detection"
 	echo "  --port PORT      Web interface port (default: $WEB_PORT)"
 	echo "  --terminal-port PORT  Terminal port (default: 7681)"
+	echo "  --browser NAME   Browser to use (firefox, chrome, chromium, brave, default)"
+	echo "                   Can also be set via CKAD_BROWSER env variable"
 	echo ""
 	echo "EXAMPLES:"
 	echo "  $(basename "$0")                          # Interactive exam selection"
@@ -437,6 +440,8 @@ start_web() {
 	local start_question=${3:-1}
 	local no_terminal=$4
 	local no_docs=$5
+	local browser=${6:-default}
+	local no_pause=$7
 
 	# Setup cleanup trap
 	trap cleanup_web EXIT INT TERM
@@ -545,20 +550,17 @@ start_web() {
 	echo ""
 
 	# Try to open browser
-	if command_exists xdg-open; then
-		(sleep 1 && xdg-open "http://localhost:$WEB_PORT" 2>/dev/null) &
-	elif command_exists open; then
-		(sleep 1 && open "http://localhost:$WEB_PORT" 2>/dev/null) &
-	fi
+	(sleep 1 && open_url_with_browser "http://localhost:$WEB_PORT" "$browser") &
 
 	# Open documentation tabs (unless disabled)
 	if [ "$no_docs" != "true" ]; then
-		(sleep 2 && open_docs_tabs) &
+		(sleep 2 && open_docs_tabs "$browser") &
 	fi
 
 	# Start the web server (blocks until Ctrl+C)
 	cd "$PROJECT_DIR"
 	export NO_TERMINAL="$no_terminal"
+	export NO_PAUSE="$no_pause"
 	export TTYD_PORT="$TTYD_PORT"
 	uv run python web/server.py "$WEB_PORT" "$exam_id" "$start_question"
 }
@@ -745,8 +747,10 @@ SKIP_CONFIRM=false
 NO_TIMER=false
 NO_TERMINAL=false
 NO_DOCS=false
+NO_PAUSE=false
 SKIP_DETECTION=false
 INTERACTIVE_EXAM=true
+BROWSER="${CKAD_BROWSER:-default}"
 
 while [[ $# -gt 0 ]]; do
 	case $1 in
@@ -779,6 +783,10 @@ while [[ $# -gt 0 ]]; do
 		NO_DOCS=true
 		shift
 		;;
+	--no-pause)
+		NO_PAUSE=true
+		shift
+		;;
 	--skip-detection)
 		SKIP_DETECTION=true
 		shift
@@ -790,6 +798,10 @@ while [[ $# -gt 0 ]]; do
 	--terminal-port)
 		TTYD_PORT=$2
 		export TTYD_PORT
+		shift 2
+		;;
+	--browser)
+		BROWSER=$2
 		shift 2
 		;;
 	start | stop | status | list | timer | web)
@@ -865,7 +877,7 @@ fi
 # Execute command
 case $COMMAND in
 web)
-	start_web "$EXAM_ID" "$SKIP_CONFIRM" "$START_QUESTION" "$NO_TERMINAL" "$NO_DOCS"
+	start_web "$EXAM_ID" "$SKIP_CONFIRM" "$START_QUESTION" "$NO_TERMINAL" "$NO_DOCS" "$BROWSER" "$NO_PAUSE"
 	;;
 start)
 	start_exam "$EXAM_ID" "$SKIP_CONFIRM" "$NO_TIMER" "$START_QUESTION"
