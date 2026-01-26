@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ckad-dojo</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts: Fira Code (code) + Fira Sans (UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="stylesheet" href="css/style.css?v=1.7.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" id="hljs-theme">
 </head>
 <body>
@@ -24,8 +30,8 @@
 
             <div class="theme-toggle-container">
                 <button id="theme-toggle-selection" class="theme-toggle" title="Toggle theme">
-                    <span class="icon-sun">&#9728;</span>
-                    <span class="icon-moon">&#9790;</span>
+                    <i data-lucide="sun" class="icon-sun"></i>
+                    <i data-lucide="moon" class="icon-moon"></i>
                 </button>
             </div>
         </div>
@@ -228,6 +234,7 @@
                 <button id="btn-view-solutions" class="btn-primary hidden">View Solutions</button>
                 <button id="btn-close-score" class="btn-secondary">Back to Exam</button>
                 <button id="btn-end-exam" class="btn-secondary">Close</button>
+                <button id="btn-cleanup-exit" class="btn-danger">Cleanup & Exit</button>
             </div>
         </div>
     </div>
@@ -266,6 +273,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
-    <script src="js/app.js?v=1.5.1"></script>
+    <script src="js/app.js?v=1.7.0"></script>
 </body>
 </html>

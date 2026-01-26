@@ -26,7 +26,9 @@ const state = {
     terminalEnabled: true,
     terminalPort: 7681,
     terminalConnected: false,
-    splitRatio: 0.5  // 50% split by default
+    splitRatio: 0.5,  // 50% split by default
+    // Timer pause feature (enabled by default)
+    allowTimerPause: true
 };
 
 // ============================================================================
@@ -444,7 +446,7 @@ async function loadExamList() {
 
 function renderExamList(exams) {
     elements.examList.innerHTML = exams.map(exam => `
-        <div class="exam-card" data-exam-id="${exam.id}">
+        <div class="exam-card" data-exam-id="${exam.id}" tabindex="0" role="button" aria-label="Start ${exam.name}">
             <h3>${exam.name}</h3>
             <div class="exam-card-info">
                 <span>&#9202; ${exam.duration} min</span>
@@ -454,11 +456,18 @@ function renderExamList(exams) {
         </div>
     `).join('');
 
-    // Add click handlers
+    // Add click and keyboard handlers
     document.querySelectorAll('.exam-card').forEach(card => {
         card.addEventListener('click', () => {
             const examId = card.dataset.examId;
             startExam(examId);
+        });
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const examId = card.dataset.examId;
+                startExam(examId);
+            }
         });
     });
 }
@@ -482,6 +491,10 @@ async function startExam(examId) {
         state.flaggedQuestions.clear();
         state.examStarted = true;
         state.examEnded = false;
+        state.allowTimerPause = config.allow_timer_pause === true;
+
+        // Update pause button visibility
+        updatePauseButtonVisibility();
 
         // Start timer
         await api.startTimer(examId);
@@ -578,6 +591,16 @@ function updatePauseUI() {
     }
     if (elements.timer) {
         elements.timer.classList.toggle('paused', state.timerPaused);
+    }
+}
+
+function updatePauseButtonVisibility() {
+    if (elements.btnPause) {
+        if (state.allowTimerPause) {
+            elements.btnPause.classList.remove('hidden');
+        } else {
+            elements.btnPause.classList.add('hidden');
+        }
     }
 }
 
@@ -863,6 +886,40 @@ async function cleanupAndGoBack() {
     }
 }
 
+async function closeExamWithoutCleanup() {
+    // Just shutdown the server without cleanup
+    const scoreContainer = elements.scoreModal.querySelector('.modal-content');
+
+    scoreContainer.innerHTML = `
+        <div class="cleanup-loader">
+            <div class="spinner"></div>
+            <div class="cleanup-message">Closing exam...</div>
+            <div class="cleanup-status">Shutting down server</div>
+        </div>
+    `;
+
+    // Short delay to show message
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    try {
+        await api.shutdown();
+    } catch (e) {
+        // Expected - server stops so request may fail
+    }
+
+    // Show final message
+    elements.scoreModal.classList.add('hidden');
+    document.body.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: center; height: 100vh; background: var(--bg-primary); color: var(--text-primary); font-family: system-ui;">
+            <div style="text-align: center;">
+                <h1 style="margin-bottom: 1rem;">Exam Ended</h1>
+                <p style="color: var(--text-secondary);">You can close this browser tab.</p>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 1rem;">Note: Exam resources were not cleaned up.</p>
+            </div>
+        </div>
+    `;
+}
+
 async function closeExamAndCleanup() {
     // Hide score details and show cleanup loader
     const scoreContainer = elements.scoreModal.querySelector('.modal-content');
@@ -1044,15 +1101,24 @@ function renderQuestionDots() {
     elements.questionDots.innerHTML = state.questions.map((q, index) => `
         <div class="question-dot${index === state.currentQuestionIndex ? ' current' : ''}${state.flaggedQuestions.has(q.id) ? ' flagged' : ''}"
              data-index="${index}"
-             title="Question ${q.id}">
+             title="Question ${q.id}"
+             tabindex="0"
+             role="button"
+             aria-label="Go to question ${q.id}${state.flaggedQuestions.has(q.id) ? ' (flagged)' : ''}">
             ${q.id}
         </div>
     `).join('');
 
-    // Add click handlers
+    // Add click and keyboard handlers
     document.querySelectorAll('.question-dot').forEach(dot => {
         dot.addEventListener('click', () => {
             showQuestion(parseInt(dot.dataset.index));
+        });
+        dot.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                showQuestion(parseInt(dot.dataset.index));
+            }
         });
     });
 }
@@ -1304,7 +1370,13 @@ function initEventListeners() {
 
     // Score modal buttons
     elements.btnCloseScore.addEventListener('click', closeScoreModal);
-    elements.btnEndExam.addEventListener('click', closeExamAndCleanup);
+    elements.btnEndExam.addEventListener('click', closeExamWithoutCleanup);
+
+    // Cleanup & Exit button
+    const btnCleanupExit = document.getElementById('btn-cleanup-exit');
+    if (btnCleanupExit) {
+        btnCleanupExit.addEventListener('click', closeExamAndCleanup);
+    }
 
     // View Solutions button
     if (elements.btnViewSolutions) {
@@ -1398,6 +1470,10 @@ async function resumeExam(examId, startQuestion = 1) {
         state.flaggedQuestions.clear();
         state.examStarted = true;
         state.examEnded = false;
+        state.allowTimerPause = config.allow_timer_pause === true;
+
+        // Update pause button visibility
+        updatePauseButtonVisibility();
 
         // Fetch flagged questions from server
         try {
