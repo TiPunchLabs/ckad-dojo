@@ -168,6 +168,13 @@ def discover_exams() -> List[str]:
     return exams
 
 
+def normalize_exam_id(exam_id: str) -> str:
+    """Normalize exam ID, expanding shortcuts like '1' to 'ckad-simulation1'."""
+    if exam_id and exam_id.isdigit():
+        return f"ckad-simulation{exam_id}"
+    return exam_id
+
+
 # =============================================================================
 # Exam Config Parser (T006)
 # =============================================================================
@@ -485,7 +492,7 @@ def run_interactive_menu() -> None:
 
 def cmd_exam_start(args) -> int:
     """Start an exam (setup + web interface)."""
-    exam_id = args.exam
+    exam_id = normalize_exam_id(args.exam) if args.exam else None
     if not exam_id:
         exam_id = select_exam("Select exam to start")
         if not exam_id:
@@ -528,7 +535,7 @@ def cmd_exam_stop(args) -> int:
 
 def cmd_setup(args) -> int:
     """Setup exam environment only (no exam launch)."""
-    exam_id = args.exam
+    exam_id = normalize_exam_id(args.exam) if args.exam else None
     if not exam_id:
         exam_id = select_exam("Select exam to setup")
         if not exam_id:
@@ -557,7 +564,7 @@ def cmd_setup(args) -> int:
 
 def cmd_score(args) -> int:
     """Score exam answers."""
-    exam_id = args.exam
+    exam_id = normalize_exam_id(args.exam) if args.exam else None
     if not exam_id:
         exam_id = select_exam("Select exam to score")
         if not exam_id:
@@ -577,7 +584,7 @@ def cmd_score(args) -> int:
 
 def cmd_cleanup(args) -> int:
     """Cleanup exam resources."""
-    exam_id = args.exam
+    exam_id = normalize_exam_id(args.exam) if args.exam else None
     if not exam_id:
         exam_id = select_exam("Select exam to cleanup")
         if not exam_id:
@@ -626,7 +633,7 @@ def cmd_list(args) -> int:
 
 def cmd_info(args) -> int:
     """Show detailed exam information."""
-    exam_id = args.exam
+    exam_id = normalize_exam_id(args.exam) if args.exam else None
     if not exam_id:
         exam_id = select_exam("Select exam to view info")
         if not exam_id:
@@ -924,7 +931,7 @@ def cmd_completion(args) -> int:
 
 def cmd_status(args) -> int:
     """Show exam environment status."""
-    exam_id = args.exam
+    exam_id = normalize_exam_id(args.exam) if args.exam else None
 
     print()
     print(color("Exam Environment Status", Colors.BOLD))
