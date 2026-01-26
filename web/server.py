@@ -419,7 +419,7 @@ def load_exam_config(exam_id: str) -> dict:
         "total_questions": 22,
         "total_points": 113,
         "passing_percentage": 66,
-        "allow_timer_pause": False,
+        "allow_timer_pause": True,
     }
 
     if config_file.exists():
@@ -747,12 +747,16 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
     def send_json(self, data):
         """Send JSON response"""
         response = json.dumps(data, ensure_ascii=False)
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Content-Length", len(response.encode("utf-8")))
-        self.end_headers()
-        self.wfile.write(response.encode("utf-8"))
+        try:
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Content-Length", len(response.encode("utf-8")))
+            self.end_headers()
+            self.wfile.write(response.encode("utf-8"))
+        except (BrokenPipeError, ConnectionResetError):
+            # Client disconnected before response was sent (common for long operations)
+            pass
 
     def log_message(self, format, *args):
         """Suppress default logging"""

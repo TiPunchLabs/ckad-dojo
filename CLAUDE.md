@@ -92,6 +92,7 @@ TOTAL_QUESTIONS=22
 PREVIEW_QUESTIONS=1
 TOTAL_POINTS=113
 PASSING_PERCENTAGE=66
+ALLOW_TIMER_PAUSE=false     # Allow pausing the timer (default: false)
 EXAM_NAMESPACES=(...)       # Array of namespace names
 HELM_NAMESPACE="mercury"    # Namespace for helm releases
 HELM_RELEASES=(...)         # Array of helm release names

@@ -302,32 +302,120 @@ stop_ttyd() {
 # BROWSER HELPER FUNCTIONS
 # ============================================================================
 
-# Open a URL in the default browser
-# Usage: open_browser_tab <url>
-open_browser_tab() {
-	local url="$1"
+# Supported browsers (in order of preference for auto-detection)
+SUPPORTED_BROWSERS="firefox chrome chromium brave chromium-browser google-chrome google-chrome-stable"
 
-	if command_exists xdg-open; then
-		xdg-open "$url" 2>/dev/null &
-	elif command_exists open; then
-		open "$url" 2>/dev/null &
-	elif command_exists wslview; then
-		wslview "$url" 2>/dev/null &
+# Open a URL with a specific browser or system default
+# Usage: open_url_with_browser <url> [browser]
+# browser can be: firefox, chrome, chromium, brave, or "default" (uses system default)
+# If browser is not specified, uses CKAD_BROWSER env var or "default"
+open_url_with_browser() {
+	local url="$1"
+	local browser="${2:-${CKAD_BROWSER:-default}}"
+
+	# Normalize browser name
+	case "$browser" in
+	chrome | google-chrome | google-chrome-stable)
+		browser="google-chrome"
+		;;
+	chromium | chromium-browser)
+		browser="chromium"
+		;;
+	firefox | firefox-esr)
+		browser="firefox"
+		;;
+	brave | brave-browser)
+		browser="brave-browser"
+		;;
+	default | "")
+		browser="default"
+		;;
+	esac
+
+	# Open with specific browser or default
+	if [ "$browser" = "default" ]; then
+		if command_exists xdg-open; then
+			xdg-open "$url" 2>/dev/null &
+		elif command_exists open; then
+			open "$url" 2>/dev/null &
+		elif command_exists wslview; then
+			wslview "$url" 2>/dev/null &
+		else
+			return 1
+		fi
 	else
-		return 1
+		# Try the specific browser
+		local browser_cmd=""
+		case "$browser" in
+		firefox)
+			for cmd in firefox firefox-esr; do
+				if command_exists "$cmd"; then
+					browser_cmd="$cmd"
+					break
+				fi
+			done
+			;;
+		google-chrome)
+			for cmd in google-chrome google-chrome-stable chrome; do
+				if command_exists "$cmd"; then
+					browser_cmd="$cmd"
+					break
+				fi
+			done
+			;;
+		chromium)
+			for cmd in chromium chromium-browser; do
+				if command_exists "$cmd"; then
+					browser_cmd="$cmd"
+					break
+				fi
+			done
+			;;
+		brave-browser)
+			for cmd in brave-browser brave; do
+				if command_exists "$cmd"; then
+					browser_cmd="$cmd"
+					break
+				fi
+			done
+			;;
+		*)
+			# Try the browser name directly
+			if command_exists "$browser"; then
+				browser_cmd="$browser"
+			fi
+			;;
+		esac
+
+		if [ -n "$browser_cmd" ]; then
+			"$browser_cmd" "$url" 2>/dev/null &
+		else
+			print_fail "Browser '$browser' not found. Falling back to system default."
+			open_url_with_browser "$url" "default"
+			return $?
+		fi
 	fi
 	return 0
 }
 
+# Open a URL in the default browser (legacy function for compatibility)
+# Usage: open_browser_tab <url>
+open_browser_tab() {
+	local url="$1"
+	open_url_with_browser "$url" "default"
+	return $?
+}
+
 # Open documentation tabs (Kubernetes and Helm)
-# Usage: open_docs_tabs
+# Usage: open_docs_tabs [browser]
 open_docs_tabs() {
+	local browser="${1:-${CKAD_BROWSER:-default}}"
 	local k8s_docs="https://kubernetes.io/docs/home/"
 	local helm_docs="https://helm.sh/docs"
 
 	print_section "Opening documentation tabs..."
 
-	if open_browser_tab "$k8s_docs"; then
+	if open_url_with_browser "$k8s_docs" "$browser"; then
 		print_success "Kubernetes docs: $k8s_docs"
 	else
 		print_fail "Could not open Kubernetes docs"
@@ -336,7 +424,7 @@ open_docs_tabs() {
 	# Small delay between tabs
 	sleep 0.3
 
-	if open_browser_tab "$helm_docs"; then
+	if open_url_with_browser "$helm_docs" "$browser"; then
 		print_success "Helm docs: $helm_docs"
 	else
 		print_fail "Could not open Helm docs"
