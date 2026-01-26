@@ -1,6 +1,6 @@
 [project]
 name = "ckad-dojo"
-version = "1.5.0"
+version = "1.7.0"
 description = "CKAD Exam Simulator - Practice for Kubernetes certification"
 readme = "README.md"
 requires-python = ">=3.10"

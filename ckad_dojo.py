@@ -9,6 +9,7 @@ entry point with both interactive menu and direct command-line access.
 
 import argcomplete
 import argparse
+import os
 import re
 import shutil
 import signal
@@ -17,7 +18,10 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-__version__ = "1.5.0"
+__version__ = "1.7.0"
+
+# Supported browsers for --browser option
+SUPPORTED_BROWSERS = ["firefox", "chrome", "chromium", "brave", "default"]
 
 
 # =============================================================================
@@ -381,7 +385,8 @@ def menu_start_exam() -> None:
     # Run exam (skip detection since we just ran setup)
     print()
     print_info("Launching exam interface...")
-    run_script("ckad-exam.sh", ["web", "-e", exam_id, "--skip-detection"])
+    browser = os.environ.get("CKAD_BROWSER", "default")
+    run_script("ckad-exam.sh", ["web", "-e", exam_id, "--skip-detection", "--browser", browser])
 
 
 def menu_score_exam() -> None:
@@ -505,7 +510,11 @@ def cmd_exam_start(args) -> int:
     # Start exam (skip detection since we just ran setup)
     print()
     print_info("Launching exam interface...")
-    returncode, _, _ = run_script("ckad-exam.sh", ["web", "-e", exam_id, "--skip-detection"])
+    browser = getattr(args, 'browser', 'default')
+    script_args = ["web", "-e", exam_id, "--skip-detection", "--browser", browser]
+    if getattr(args, 'no_pause', False):
+        script_args.append("--no-pause")
+    returncode, _, _ = run_script("ckad-exam.sh", script_args)
     return returncode
 
 
@@ -1007,6 +1016,17 @@ def create_parser() -> argparse.ArgumentParser:
 
     exam_start = exam_subparsers.add_parser("start", help="Start an exam session")
     exam_start.add_argument("-e", "--exam", help="Exam ID (e.g., ckad-simulation1)")
+    exam_start.add_argument(
+        "-b", "--browser",
+        choices=SUPPORTED_BROWSERS,
+        default=os.environ.get("CKAD_BROWSER", "default"),
+        help="Browser to use (default: from CKAD_BROWSER env or 'default')"
+    )
+    exam_start.add_argument(
+        "--no-pause",
+        action="store_true",
+        help="Disable timer pause functionality"
+    )
 
     exam_subparsers.add_parser("stop", help="Stop current exam session")
 

@@ -419,6 +419,7 @@ def load_exam_config(exam_id: str) -> dict:
         "total_questions": 22,
         "total_points": 113,
         "passing_percentage": 66,
+        "allow_timer_pause": False,
     }
 
     if config_file.exists():
@@ -444,6 +445,12 @@ def load_exam_config(exam_id: str) -> dict:
                 config["total_points"] = int(value)
             elif key == "PASSING_PERCENTAGE":
                 config["passing_percentage"] = int(value)
+            elif key == "ALLOW_TIMER_PAUSE":
+                config["allow_timer_pause"] = value.lower() == "true"
+
+    # Environment variable override (NO_PAUSE=true disables pause)
+    if os.environ.get("NO_PAUSE", "").lower() == "true":
+        config["allow_timer_pause"] = False
 
     return config
 
@@ -535,6 +542,15 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
             if path == "/":
                 self.path = "/index.html"
             super().do_GET()
+
+    def end_headers(self):
+        """Add cache control headers for development"""
+        # Disable caching for JS and CSS files to avoid stale code issues
+        if self.path.endswith(('.js', '.css', '.html')):
+            self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            self.send_header('Pragma', 'no-cache')
+            self.send_header('Expires', '0')
+        super().end_headers()
 
     def do_POST(self):
         """Handle POST requests"""
