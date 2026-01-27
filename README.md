@@ -111,6 +111,8 @@ Four dojos are themed after the Shishin (四神) — Four Celestial Guardians fr
 
 **16 questions • 88 points** — River/water theme (stream, pond, marsh, delta...)
 
+*Questions by [@aravind4799](https://github.com/aravind4799)*
+
 ---
 
 ## Quick Start
