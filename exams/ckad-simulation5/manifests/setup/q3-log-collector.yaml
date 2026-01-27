@@ -1,0 +1,12 @@
+# Q3: Pod failing with authorization errors (needs RBAC setup)
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: log-collector
+  namespace: marsh
+spec:
+  containers:
+    - name: collector
+      image: bitnami/kubectl:latest
+      command: ["sleep", "infinity"]
