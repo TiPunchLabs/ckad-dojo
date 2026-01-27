@@ -1,0 +1,14 @@
+# Q16: ResourceQuota for resource limits exercise
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: pond-quota
+  namespace: pond
+spec:
+  hard:
+    limits.cpu: "2"
+    limits.memory: "4Gi"
+    requests.cpu: "1"
+    requests.memory: "2Gi"
+    pods: "10"
