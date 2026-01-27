@@ -1,0 +1,82 @@
+# CKAD Simulation 7 - Dojo Kappa Namespaces
+# River/Water themed namespaces
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: stream
+  labels:
+    exam: ckad-simulation7
+    theme: kappa
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pond
+  labels:
+    exam: ckad-simulation7
+    theme: kappa
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: marsh
+  labels:
+    exam: ckad-simulation7
+    theme: kappa
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: delta
+  labels:
+    exam: ckad-simulation7
+    theme: kappa
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: spring
+  labels:
+    exam: ckad-simulation7
+    theme: kappa
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: brook
+  labels:
+    exam: ckad-simulation7
+    theme: kappa
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rapids
+  labels:
+    exam: ckad-simulation7
+    theme: kappa
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cascade
+  labels:
+    exam: ckad-simulation7
+    theme: kappa
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shoal
+  labels:
+    exam: ckad-simulation7
+    theme: kappa
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: eddy
+  labels:
+    exam: ckad-simulation7
+    theme: kappa
