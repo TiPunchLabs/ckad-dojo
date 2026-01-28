@@ -1,4 +1,5 @@
 # Q3: Pod failing with authorization errors (needs RBAC setup)
+# The pod attempts to list pods and logs the RBAC error
 ---
 apiVersion: v1
 kind: Pod
@@ -9,4 +10,13 @@ spec:
   containers:
     - name: collector
       image: bitnami/kubectl:latest
-      command: ["sleep", "infinity"]
+      command:
+        - /bin/sh
+        - -c
+        - |
+          while true; do
+            echo "Attempting to list pods in namespace marsh..."
+            kubectl get pods -n marsh 2>&1
+            echo "---"
+            sleep 30
+          done
