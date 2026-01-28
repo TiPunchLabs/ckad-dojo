@@ -1,0 +1,27 @@
+# Q1: Deployment with hardcoded environment variables
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-server
+  namespace: stream
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-server
+  template:
+    metadata:
+      labels:
+        app: api-server
+    spec:
+      containers:
+        - name: api
+          image: nginx:alpine
+          ports:
+            - containerPort: 80
+          env:
+            - name: DB_USER
+              value: "admin"
+            - name: DB_PASS
+              value: "Secret123!"
