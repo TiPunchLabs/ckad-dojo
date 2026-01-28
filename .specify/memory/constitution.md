@@ -117,7 +117,7 @@ ckad-dojo/
 │   ├── ckad-simulation2/  # Dojo Suzaku 🔥 - 21 questions, 112 points
 │   ├── ckad-simulation3/  # Dojo Byakko 🐯 - 20 questions, 105 points
 │   ├── ckad-simulation4/  # Dojo Genbu 🐢 - 20 questions, 105 points
-│   └── ckad-simulation5/  # Dojo Kappa 🐸 - 16 questions, 88 points
+│   └── ckad-simulation5/  # Dojo Kappa 🐸 - 17 questions, 91 points
 │       ├── exam.conf
 │       ├── questions.md
 │       ├── solutions.md
@@ -144,7 +144,7 @@ ckad-dojo/
 
 ## Exam Environment
 
-**Exam Sets**: 5 dojos (Shishin 四神 + Kappa), 101 questions total, 533 points
+**Exam Sets**: 5 dojos (Shishin 四神 + Kappa), 102 questions total, 536 points
 
 | Dojo | Guardian | Questions | Points | Quote |
 |------|----------|-----------|--------|-------|
@@ -152,7 +152,7 @@ ckad-dojo/
 | Suzaku 🔥 | Phénix Vermillon du Sud | 21 | 112 | *"Le phénix renaît de ses cendres..."* |
 | Byakko 🐯 | Tigre Blanc de l'Ouest | 20 | 105 | *"Le tigre frappe avec précision..."* |
 | Genbu 🐢 | Tortue Noire du Nord | 20 | 105 | *"La tortue porte le monde..."* |
-| Kappa 🐸 | Kappa des Rivières | 16 | 88 | *「河童は水を知る」 - Le kappa connait les eaux* |
+| Kappa 🐸 | Kappa des Rivières | 17 | 91 | *「河童は水を知る」 - Le kappa connait les eaux* |
 
 **Duration**: 120 minutes (configurable per exam in exam.conf)
 
