@@ -588,7 +588,7 @@ Special thanks to the following contributors whose work has been adapted for thi
 
 | Dojo | Source | Author |
 |------|--------|--------|
-| 🐸 Dojo Kappa (Simulation 5) | [CKAD-Practice-Questions](https://github.com/aravind4799/CKAD-Practice-Questions) | [@aravind4799](https://github.com/aravind4799) |
+| 🐸 Dojo Kappa (Simulation 4) | [CKAD-Practice-Questions](https://github.com/aravind4799/CKAD-Practice-Questions) | [@aravind4799](https://github.com/aravind4799) |
 
 ---
 
