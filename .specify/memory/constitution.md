@@ -1,14 +1,13 @@
 <!--
   SYNC IMPACT REPORT
   ==================
-  Version change: 2.11.0 → 2.12.0
+  Version change: 2.12.0 → 2.13.0
 
   Modified sections:
-  - Technical Constraints: Added Python 3.10+ requirement, argcomplete dependency
-  - File Structure: Detailed scripts/lib/ contents (banner.sh, scoring-functions.sh, etc.)
-  - File Structure: Added favicon.svg to web/
-  - File Structure: Detailed tests/ contents (7 test files)
-  - Implemented Features: Added shell auto-completion (bash, zsh, fish)
+  - File Structure: Removed ckad-simulation1 (Dojo Seiryu) - LOCAL ONLY policy
+  - Exam Environment: Updated to 4 public dojos, 80 questions, 423 points
+  - Exam Environment: Added note about simulation1 being local only
+  - Fixed Genbu stats: 22 questions, 115 points (was incorrectly 20/105)
 
   Templates requiring updates:
   - .specify/templates/plan-template.md: ✅ Compatible (no changes needed)
@@ -57,7 +56,7 @@ Scoring MUST be deterministic: same cluster state = same score.
 ### IV. Exam Fidelity
 
 The simulator MUST faithfully reproduce CKAD exam conditions:
-- Questions match content from `simulation1.md`
+- Questions match content from each exam's `questions.md`
 - Namespaces and resource names match exam specifications
 - Pre-existing resources (Deployments, Pods, Services) are created exactly as expected
 - File paths use local equivalent (`./exam/course/`) of exam paths (`/opt/course/`)
@@ -112,11 +111,10 @@ ckad-dojo/
 │   ├── favicon.svg
 │   ├── css/style.css
 │   └── js/app.js
-├── exams/                 # Shishin (四神) - Four Celestial Guardians + Kappa
-│   ├── ckad-simulation1/  # Dojo Seiryu 🐉 - 22 questions, 113 points
+├── exams/                 # Three Shishin (四神) Celestial Guardians + Kappa (simulation1 is LOCAL ONLY)
 │   ├── ckad-simulation2/  # Dojo Suzaku 🔥 - 21 questions, 112 points
 │   ├── ckad-simulation3/  # Dojo Byakko 🐯 - 20 questions, 105 points
-│   ├── ckad-simulation4/  # Dojo Genbu 🐢 - 20 questions, 105 points
+│   ├── ckad-simulation4/  # Dojo Genbu 🐢 - 22 questions, 115 points
 │   └── ckad-simulation5/  # Dojo Kappa 🐸 - 17 questions, 91 points
 │       ├── exam.conf
 │       ├── questions.md
@@ -144,14 +142,15 @@ ckad-dojo/
 
 ## Exam Environment
 
-**Exam Sets**: 5 dojos (Shishin 四神 + Kappa), 102 questions total, 536 points
+**Exam Sets**: 4 public dojos (3 Shishin 四神 + Kappa), 80 questions total, 423 points
+
+> **Note**: Dojo Seiryu (ckad-simulation1) is LOCAL ONLY and never appears in public documentation.
 
 | Dojo | Guardian | Questions | Points | Quote |
 |------|----------|-----------|--------|-------|
-| Seiryu 🐉 | Dragon Azure de l'Est | 22 | 113 | *"Le dragon s'élève avec la tempête..."* |
 | Suzaku 🔥 | Phénix Vermillon du Sud | 21 | 112 | *"Le phénix renaît de ses cendres..."* |
 | Byakko 🐯 | Tigre Blanc de l'Ouest | 20 | 105 | *"Le tigre frappe avec précision..."* |
-| Genbu 🐢 | Tortue Noire du Nord | 20 | 105 | *"La tortue porte le monde..."* |
+| Genbu 🐢 | Tortue Noire du Nord | 22 | 115 | *"La tortue porte le monde..."* |
 | Kappa 🐸 | Kappa des Rivières | 17 | 91 | *「河童は水を知る」 - Le kappa connait les eaux* |
 
 **Duration**: 120 minutes (configurable per exam in exam.conf)
@@ -193,4 +192,4 @@ This constitution governs all development on the ckad-dojo project:
 - Version updates follow semantic versioning
 - Constitution amendments require updating this file and dependent templates
 
-**Version**: 2.12.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2026-01-22
+**Version**: 2.13.0 | **Ratified**: 2025-12-04 | **Last Amended**: 2026-01-28

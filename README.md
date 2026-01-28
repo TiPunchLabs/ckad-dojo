@@ -24,8 +24,8 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/version-1.7.0-blue" alt="Version 1.7.0">
-  <img src="https://img.shields.io/badge/exams-5-blue" alt="5 Exams">
-  <img src="https://img.shields.io/badge/questions-102-blue" alt="102 Questions">
+  <img src="https://img.shields.io/badge/exams-4-blue" alt="4 Exams">
+  <img src="https://img.shields.io/badge/questions-80-blue" alt="80 Questions">
   <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-lightgrey" alt="License: CC BY-NC-SA 4.0"></a>
 </p>
@@ -58,7 +58,7 @@
 
 | Feature | Description |
 |---------|-------------|
-| **5 Dojos** | 101 questions across 5 themed dojos |
+| **4 Dojos** | 80 questions across 4 themed dojos |
 | **Unified CLI** | Single `uv run ckad-dojo` command for all operations |
 | **Web Interface** | Modern UI with 120-minute countdown timer |
 | **Auto-Scoring** | 400+ criteria automatically evaluated |
@@ -77,15 +77,9 @@
 
 ---
 
-## The Five Dojos
+## The Four Dojos
 
-Four dojos are themed after the Shishin (四神) — Four Celestial Guardians from East Asian mythology. The fifth dojo features the Kappa, a water spirit from Japanese folklore:
-
-### 🐉 Dojo Seiryu — Dragon Azure de l'Est
->
-> *"Le dragon s'élève avec la tempête. Que ton code déploie ses ailes."*
-
-**22 questions • 113 points** — Planetary theme (Neptune, Saturn, Mars...)
+Three dojos are themed after the Shishin (四神) — Celestial Guardians from East Asian mythology. The fourth dojo features the Kappa, a water spirit from Japanese folklore:
 
 ### 🔥 Dojo Suzaku — Phénix Vermillon du Sud
 >
@@ -229,11 +223,11 @@ uv run ckad-dojo
 
 # Direct commands
 uv run ckad-dojo list                           # List all available exams
-uv run ckad-dojo info -e ckad-simulation1       # View exam details
-uv run ckad-dojo exam start -e ckad-simulation1 # Start exam (setup + web UI)
-uv run ckad-dojo setup -e ckad-simulation1      # Setup only (no web UI)
-uv run ckad-dojo score -e ckad-simulation1      # Score your answers
-uv run ckad-dojo cleanup -e ckad-simulation1    # Cleanup resources
+uv run ckad-dojo info -e ckad-simulation2       # View exam details
+uv run ckad-dojo exam start -e ckad-simulation2 # Start exam (setup + web UI)
+uv run ckad-dojo setup -e ckad-simulation2      # Setup only (no web UI)
+uv run ckad-dojo score -e ckad-simulation2      # Score your answers
+uv run ckad-dojo cleanup -e ckad-simulation2    # Cleanup resources
 uv run ckad-dojo status                         # Check environment status
 ```
 
@@ -253,14 +247,14 @@ By default, the exam opens in your system's default browser. You can specify a d
 
 ```bash
 # Use Firefox
-uv run ckad-dojo exam start -e ckad-simulation1 --browser firefox
+uv run ckad-dojo exam start -e ckad-simulation2 --browser firefox
 
 # Use Chrome
-uv run ckad-dojo exam start -e ckad-simulation1 --browser chrome
+uv run ckad-dojo exam start -e ckad-simulation2 --browser chrome
 
 # Or set a default via environment variable
 export CKAD_BROWSER=firefox
-uv run ckad-dojo exam start -e ckad-simulation1
+uv run ckad-dojo exam start -e ckad-simulation2
 ```
 
 **Supported browsers:** `firefox`, `chrome`, `chromium`, `brave`, `default`
@@ -300,7 +294,7 @@ Then reload: `source ~/.bashrc`
 ```bash
 ckad-dojo <TAB>           # → setup, exam, score, cleanup, list
 ckad-dojo exam <TAB>      # → start, --exam, --help
-ckad-dojo -e <TAB>        # → ckad-simulation1, ckad-simulation2, ...
+ckad-dojo -e <TAB>        # → ckad-simulation2, ckad-simulation2, ...
 ```
 
 **Alternative: Built-in completion scripts**
@@ -348,7 +342,7 @@ uv run ckad-dojo completion fish > ~/.config/fish/completions/ckad-dojo.fish
 ```bash
 ./scripts/ckad-exam.sh              # Interactive exam & question selection
 ./scripts/ckad-exam.sh web          # Same as above
-./scripts/ckad-exam.sh -e ckad-simulation1 -q 5   # Start specific exam at question 5
+./scripts/ckad-exam.sh -e ckad-simulation2 -q 5   # Start specific exam at question 5
 ```
 
 **Launch Options:**
@@ -448,7 +442,6 @@ ckad-dojo/
 │   └── lib/                  # Shared functions
 ├── web/                      # Web interface
 ├── exams/                    # Exam definitions
-│   ├── ckad-simulation1/     # Dojo Seiryu 🐉 - 22 questions, 113 points
 │   ├── ckad-simulation2/     # Dojo Suzaku 🔥 - 21 questions, 112 points
 │   ├── ckad-simulation3/     # Dojo Byakko 🐯 - 20 questions, 105 points
 │   ├── ckad-simulation4/     # Dojo Genbu 🐢 - 22 questions, 115 points

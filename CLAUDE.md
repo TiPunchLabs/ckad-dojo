@@ -6,23 +6,31 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a CKAD (Certified Kubernetes Application Developer) exam preparation repository containing practice questions and solutions. It is designed for studying Kubernetes concepts and practicing for the CKAD certification exam.
 
+## IMPORTANT: Simulation 1 (Dojo Seiryu) Policy
+
+**ckad-simulation1 (Dojo Seiryu) is LOCAL ONLY and MUST NEVER appear in:**
+
+- README.md or any public documentation
+- Git commits or remote repository
+- Examples in documentation
+
+This simulation exists only in `.gitignore` and remains on the local machine. All public documentation references simulations 2-5 only (4 dojos total, 80 questions).
+
 ## Structure
 
 ```
 ckad-dojo/
 ├── exams/                      # Exam configurations and content
-│   ├── ckad-simulation1/       # Dojo Seiryu 🐉 (22 questions, 113 points)
+│   ├── ckad-simulation2/       # Dojo Suzaku 🔥 (21 questions, 112 points)
 │   │   ├── exam.conf           # Exam configuration
 │   │   ├── questions.md        # Questions in markdown
 │   │   ├── solutions.md        # Solutions for review
 │   │   ├── scoring-functions.sh # Scoring functions
 │   │   ├── manifests/setup/    # Pre-existing K8s resources
 │   │   └── templates/          # Template files for questions
-│   ├── ckad-simulation2/       # Dojo Suzaku 🔥 (21 questions, 112 points)
 │   ├── ckad-simulation3/       # Dojo Byakko 🐯 (20 questions, 105 points)
 │   ├── ckad-simulation4/       # Dojo Genbu 🐢 (22 questions, 115 points)
 │   └── ckad-simulation5/       # Dojo Kappa 🐸 (17 questions, 91 points)
-│       └── ...                 # Same structure as simulation1
 ├── scripts/                    # Automation scripts
 │   ├── ckad-setup.sh           # Sets up exam environment
 │   ├── ckad-exam.sh            # Launches exam (web or terminal)
@@ -56,10 +64,10 @@ ckad-dojo/
 ./scripts/ckad-exam.sh web -e ckad-simulation2
 
 # Check your score
-./scripts/ckad-score.sh -e ckad-simulation1
+./scripts/ckad-score.sh -e ckad-simulation2
 
 # Reset and retry
-./scripts/ckad-cleanup.sh -e ckad-simulation1
+./scripts/ckad-cleanup.sh -e ckad-simulation2
 ```
 
 ## Testing
@@ -88,12 +96,12 @@ Each exam is self-contained in `exams/{exam-id}/` with:
 
 ```bash
 # exam.conf structure
-EXAM_NAME="CKAD Simulation 1"
-EXAM_ID="ckad-simulation1"
+EXAM_NAME="CKAD Simulation 2"
+EXAM_ID="ckad-simulation2"
 EXAM_DURATION=120           # minutes
-TOTAL_QUESTIONS=22
+TOTAL_QUESTIONS=21
 PREVIEW_QUESTIONS=1
-TOTAL_POINTS=113
+TOTAL_POINTS=112
 PASSING_PERCENTAGE=66
 ALLOW_TIMER_PAUSE=false     # Allow pausing the timer (default: false)
 EXAM_NAMESPACES=(...)       # Array of namespace names

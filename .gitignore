@@ -38,7 +38,7 @@ ENV/
 # Exam answers (user-specific)
 exam/
 
-exams/ckad-simulation1/
+exams/ckad-simulation1
 
 # IDE
 .idea/
