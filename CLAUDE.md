@@ -21,7 +21,7 @@ ckad-dojo/
 │   ├── ckad-simulation2/       # Dojo Suzaku 🔥 (21 questions, 112 points)
 │   ├── ckad-simulation3/       # Dojo Byakko 🐯 (20 questions, 105 points)
 │   ├── ckad-simulation4/       # Dojo Genbu 🐢 (22 questions, 115 points)
-│   └── ckad-simulation5/       # Dojo Kappa 🐸 (16 questions, 88 points)
+│   └── ckad-simulation5/       # Dojo Kappa 🐸 (17 questions, 91 points)
 │       └── ...                 # Same structure as simulation1
 ├── scripts/                    # Automation scripts
 │   ├── ckad-setup.sh           # Sets up exam environment
