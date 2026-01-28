@@ -11,14 +11,17 @@ This is a CKAD (Certified Kubernetes Application Developer) exam preparation rep
 ```
 ckad-dojo/
 ├── exams/                      # Exam configurations and content
-│   ├── ckad-simulation1/       # First exam (22 questions, 113 points)
+│   ├── ckad-simulation1/       # Dojo Seiryu 🐉 (22 questions, 113 points)
 │   │   ├── exam.conf           # Exam configuration
 │   │   ├── questions.md        # Questions in markdown
 │   │   ├── solutions.md        # Solutions for review
 │   │   ├── scoring-functions.sh # Scoring functions
 │   │   ├── manifests/setup/    # Pre-existing K8s resources
 │   │   └── templates/          # Template files for questions
-│   └── ckad-simulation2/       # Second exam (21 questions, 112 points)
+│   ├── ckad-simulation2/       # Dojo Suzaku 🔥 (21 questions, 112 points)
+│   ├── ckad-simulation3/       # Dojo Byakko 🐯 (20 questions, 105 points)
+│   ├── ckad-simulation4/       # Dojo Genbu 🐢 (22 questions, 115 points)
+│   └── ckad-simulation5/       # Dojo Kappa 🐸 (17 questions, 91 points)
 │       └── ...                 # Same structure as simulation1
 ├── scripts/                    # Automation scripts
 │   ├── ckad-setup.sh           # Sets up exam environment

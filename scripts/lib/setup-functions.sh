@@ -456,6 +456,17 @@ cleanup_default_namespace() {
 		done
 	fi
 
+	# Delete user-created Ingress resources in default namespace
+	local ingresses
+	ingresses=$(kubectl get ingress -n default -o name 2>/dev/null)
+	if [ -n "$ingresses" ]; then
+		for ingress in $ingresses; do
+			kubectl delete "$ingress" -n default 2>/dev/null
+			print_success "Deleted $ingress"
+			((++deleted))
+		done
+	fi
+
 	if [ $deleted -eq 0 ]; then
 		print_skip "No exam resources found in default namespace"
 	fi
@@ -530,6 +541,23 @@ cleanup_docker_containers() {
 		fi
 	done
 
+	# Also clean up containers using exam images (by image name pattern)
+	local exam_image_patterns=("sun-cipher" "holy-api" "web-moon" "my-app" "localhost:5000/")
+
+	for pattern in "${exam_image_patterns[@]}"; do
+		local containers
+		containers=$(docker ps -a --format '{{.ID}} {{.Image}}' 2>/dev/null | grep "$pattern" | awk '{print $1}' || true)
+		if [ -n "$containers" ]; then
+			while read -r container_id; do
+				[ -z "$container_id" ] && continue
+				docker stop "$container_id" 2>/dev/null || true
+				docker rm "$container_id" 2>/dev/null || true
+				print_success "Removed container using $pattern image: $container_id"
+				((++deleted))
+			done <<<"$containers"
+		fi
+	done
+
 	if [ $deleted -eq 0 ]; then
 		print_skip "No exam containers found"
 	fi
@@ -555,7 +583,7 @@ cleanup_docker_images() {
 	fi
 
 	# Also clean up known exam image patterns (without registry prefix)
-	local exam_image_patterns=("sun-cipher" "holy-api" "web-moon")
+	local exam_image_patterns=("sun-cipher" "holy-api" "web-moon" "my-app")
 
 	for pattern in "${exam_image_patterns[@]}"; do
 		local matching_images

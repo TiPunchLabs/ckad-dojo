@@ -569,35 +569,50 @@ SCORING_FUNCTIONS="scoring-functions.sh"
 
 ### 5.4 scoring-functions.sh
 
+**CRITICAL FORMAT**: Each scoring function MUST follow this exact pattern for the UI to display detailed results:
+
 ```bash
 #!/bin/bash
 # scoring-functions.sh - CKAD Simulation {N} Scoring Functions
 # Dojo {Name} - {count} questions, {total} points total
 
+# Source common utilities (includes check_criterion function)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../../scripts/lib/common.sh" 2>/dev/null || true
+source "$SCRIPT_DIR/../../scripts/lib/scoring-functions.sh" 2>/dev/null || true
 
-check_criterion() {
-    if eval "$1" &>/dev/null; then
-        return 0
-    else
-        return 1
-    fi
-}
-
-# Q1: {Title} ({points} points)
+# ============================================================================
+# QUESTION 1 - {Title} ({points} points)
+# ============================================================================
 score_q1() {
     local score=0
-    local max_points={points}
+    local total={points}
 
-    if kubectl get {resource} {name} -n {namespace} &>/dev/null; then
-        ((score++))
-        # Additional checks...
+    # REQUIRED: Output question title first
+    echo "Question 1 | {Title}"
+
+    # Check 1: Resource exists
+    local resource_exists
+    resource_exists=$(kubectl get {resource} {name} -n {namespace} &>/dev/null && echo true || echo false)
+    check_criterion "{Resource} {name} exists in {namespace} namespace" "$resource_exists" && ((score++))
+
+    if [ "$resource_exists" = "true" ]; then
+        # Check 2: Property validation
+        local prop_value
+        prop_value=$(kubectl get {resource} {name} -n {namespace} -o jsonpath='{.spec.property}' 2>/dev/null)
+        check_criterion "Property is set to expected value" "$([ "$prop_value" = "expected" ] && echo true || echo false)" && ((score++))
+    else
+        # Output failed checks when resource doesn't exist
+        check_criterion "Property is set to expected value" "false"
     fi
 
-    echo "$score/$max_points"
+    # REQUIRED: Output final score
+    echo "$score/$total"
+    return $score
 }
 ```
+
+**DO NOT** define a local `check_criterion()` function - it will override the one from `scoring-functions.sh` that outputs PASS/FAIL.
 
 ### 5.5 manifests/setup/
 
@@ -608,14 +623,136 @@ score_q1() {
 
 - `q{N}-{description}.yaml` - Starting templates for questions
 
-## Phase 6: Validation
+## Phase 6: Setup Requirements Verification
+
+**CRITICAL**: Some questions require special setup beyond static manifests. Check each question type:
+
+### 6.1 Helm Releases in Different Namespaces
+
+If a question involves a Helm release in a namespace OTHER than `HELM_NAMESPACE`:
+
+- **DO NOT** add to `HELM_RELEASES` array in exam.conf
+- **MUST** add setup code to `scripts/lib/setup-functions.sh` in `setup_post_resources()`:
 
 ```bash
-shellcheck exams/ckad-simulation{N}/scoring-functions.sh
-bash -n exams/ckad-simulation{N}/scoring-functions.sh
+# CKAD-SIMULATION{N}: Q{X} - Helm release in {namespace}
+if [ "$CURRENT_EXAM_ID" = "ckad-simulation{N}" ]; then
+    print_info "Setting up Q{X}: Helm release in {namespace}..."
+    if ! helm ls -n {namespace} 2>/dev/null | grep -q "{release-name}"; then
+        helm install {release-name} bitnami/nginx \
+            --namespace {namespace} \
+            --version {version} \
+            --wait --timeout 60s 2>/dev/null || true
+    fi
+fi
 ```
 
-## Phase 7: Summary
+### 6.2 Deployment Rollout History
+
+If a question asks to inspect rollout history or a specific revision:
+
+- **MUST** create multiple revisions in `setup_post_resources()`:
+
+```bash
+# CKAD-SIMULATION{N}: Q{X} - Create rollout history with 4 revisions
+if [ "$CURRENT_EXAM_ID" = "ckad-simulation{N}" ]; then
+    local deploy_name="foundary-apd"
+    local ns="orbit"
+    if kubectl get deployment "$deploy_name" -n "$ns" &>/dev/null; then
+        # Create 4 revisions with different images
+        kubectl set image deployment/"$deploy_name" container=nginx:1.19 -n "$ns" --record 2>/dev/null || true
+        kubectl rollout status deployment/"$deploy_name" -n "$ns" --timeout=30s 2>/dev/null || true
+        kubectl set image deployment/"$deploy_name" container=nginx:1.20 -n "$ns" --record 2>/dev/null || true
+        kubectl rollout status deployment/"$deploy_name" -n "$ns" --timeout=30s 2>/dev/null || true
+        kubectl set image deployment/"$deploy_name" container=ubuntu -n "$ns" --record 2>/dev/null || true
+        kubectl rollout status deployment/"$deploy_name" -n "$ns" --timeout=30s 2>/dev/null || true
+        kubectl set image deployment/"$deploy_name" container=alpine -n "$ns" --record 2>/dev/null || true
+        kubectl rollout status deployment/"$deploy_name" -n "$ns" --timeout=30s 2>/dev/null || true
+    fi
+fi
+```
+
+### 6.3 Ingress Controller Troubleshooting
+
+If a question involves troubleshooting an ingress controller:
+
+- **MUST** create ingress resource in the target namespace
+- **MUST** misconfigure the controller in `setup_post_resources()`:
+
+```bash
+# CKAD-SIMULATION{N}: Q{X} - Misconfigure ingress-nginx controller
+if [ "$CURRENT_EXAM_ID" = "ckad-simulation{N}" ]; then
+    print_info "Setting up Q{X}: Misconfiguring ingress controller..."
+    kubectl scale deployment ingress-nginx-controller -n ingress-nginx --replicas=0 2>/dev/null || true
+fi
+```
+
+### 6.4 Cleanup Support
+
+**MUST** add cleanup functions for any special resources:
+
+```bash
+# In scripts/lib/setup-functions.sh
+cleanup_ingress_controller() {
+    # Restore ingress-nginx controller if it was scaled down
+    if kubectl get deployment ingress-nginx-controller -n ingress-nginx &>/dev/null; then
+        local replicas
+        replicas=$(kubectl get deployment ingress-nginx-controller -n ingress-nginx -o jsonpath='{.spec.replicas}' 2>/dev/null)
+        if [ "$replicas" = "0" ]; then
+            print_section "Restoring ingress-nginx controller..."
+            kubectl scale deployment ingress-nginx-controller -n ingress-nginx --replicas=1 2>/dev/null || true
+        fi
+    fi
+}
+```
+
+**MUST** call cleanup in `scripts/ckad-cleanup.sh`:
+
+```bash
+# Step X: Restore special resources
+cleanup_ingress_controller
+```
+
+### 6.5 Template Files with YAML Errors
+
+For template files that intentionally have YAML errors for the exam:
+
+- **MUST** add `# yamllint disable` comment at the top
+- **MUST** update `.pre-commit-config.yaml` to exclude `/templates/.*\.yaml$`
+
+### 6.6 Secret Files
+
+For exam secrets (practice credentials):
+
+- **MUST** add to `.gitleaksignore`:
+
+```
+# Ignore exam practice secrets (not real credentials)
+exams/ckad-simulation{N}/manifests/setup/q{X}-secret.yaml:kubernetes-secret-yaml:4
+```
+
+### 6.7 Custom Words
+
+If exam uses unusual words, add to `.pre-commit-config.yaml` codespell ignore list:
+
+```yaml
+args:
+  - "--ignore-words-list"
+  - "nd,ans,aks,iam,ro,ngnix,uptodate,foundary"  # Add new words here
+```
+
+## Phase 7: Validation
+
+```bash
+# Syntax validation
+shellcheck exams/ckad-simulation{N}/scoring-functions.sh
+bash -n exams/ckad-simulation{N}/scoring-functions.sh
+
+# Pre-commit checks
+pre-commit run --files exams/ckad-simulation{N}/**/*
+```
+
+## Phase 8: Summary
 
 ```markdown
 ## ✅ Simulation Created: ckad-simulation{N}
@@ -679,3 +816,53 @@ After this simulation, the following CKAD topics are now covered:
 3. **Use native K8s tooling only**
 4. **NO REPEATED QUESTIONS** across simulations
 5. **Questions achievable in 1-10 min each**
+
+---
+
+## Final Validation Checklist
+
+**MANDATORY**: Before completing the simulation, verify ALL items:
+
+### Scoring Functions Format
+
+- [ ] Each function outputs: `echo "Question N | Title"` first
+- [ ] Uses `check_criterion "description" "$condition"` for each check
+- [ ] Outputs `echo "$score/$total"` at the end
+- [ ] Sources `scripts/lib/scoring-functions.sh` (NOT defining local `check_criterion`)
+- [ ] All criteria output PASS/FAIL (via check_criterion from lib)
+
+### Setup Requirements
+
+- [ ] All pre-existing resources have manifests in `manifests/setup/`
+- [ ] Helm releases in non-default namespace added to `setup_post_resources()`
+- [ ] Deployment rollout history questions have revision setup code
+- [ ] Ingress troubleshooting questions have misconfiguration setup
+- [ ] All dynamic setup is idempotent (can run multiple times)
+
+### Cleanup Support
+
+- [ ] All special resources have cleanup functions
+- [ ] Cleanup functions called in `ckad-cleanup.sh`
+- [ ] Cleanup handles missing resources gracefully
+
+### Pre-commit Compliance
+
+- [ ] Template files with intentional errors have `# yamllint disable`
+- [ ] Secret files added to `.gitleaksignore`
+- [ ] Custom words added to codespell ignore list
+- [ ] All shell scripts pass shellcheck
+- [ ] All YAML files (except templates) pass yamllint
+
+### Testing
+
+- [ ] Run `./scripts/ckad-setup.sh -e ckad-simulation{N}` - succeeds
+- [ ] Run `./scripts/ckad-score.sh -e ckad-simulation{N}` - shows 0/X points (all failed)
+- [ ] Score details expand when clicked in web UI
+- [ ] Run `./scripts/ckad-cleanup.sh -e ckad-simulation{N}` - succeeds
+- [ ] Re-run setup - succeeds (idempotent)
+
+### Documentation
+
+- [ ] questions.md has correct point totals
+- [ ] solutions.md has working commands
+- [ ] exam.conf has correct TOTAL_QUESTIONS and TOTAL_POINTS

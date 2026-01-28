@@ -1,0 +1,22 @@
+# Q10: Deployment for readiness probe exercise
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deploy
+  namespace: rapids
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-deploy
+  template:
+    metadata:
+      labels:
+        app: api-deploy
+    spec:
+      containers:
+        - name: api
+          image: nginx:alpine
+          ports:
+            - containerPort: 8080
