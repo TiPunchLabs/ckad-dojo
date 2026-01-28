@@ -25,7 +25,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/version-1.7.0-blue" alt="Version 1.7.0">
   <img src="https://img.shields.io/badge/exams-5-blue" alt="5 Exams">
-  <img src="https://img.shields.io/badge/questions-101-blue" alt="101 Questions">
+  <img src="https://img.shields.io/badge/questions-102-blue" alt="102 Questions">
   <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-lightgrey" alt="License: CC BY-NC-SA 4.0"></a>
 </p>
@@ -109,7 +109,7 @@ Four dojos are themed after the Shishin (四神) — Four Celestial Guardians fr
 >
 > *「河童は水を知る」 — Le kappa connait les eaux*
 
-**16 questions • 88 points** — River/water theme (stream, pond, marsh, delta...)
+**17 questions • 91 points** — River/water theme (stream, pond, marsh, delta...)
 
 *Questions by [@aravind4799](https://github.com/aravind4799)*
 
@@ -452,7 +452,7 @@ ckad-dojo/
 │   ├── ckad-simulation2/     # Dojo Suzaku 🔥 - 21 questions, 112 points
 │   ├── ckad-simulation3/     # Dojo Byakko 🐯 - 20 questions, 105 points
 │   ├── ckad-simulation4/     # Dojo Genbu 🐢 - 22 questions, 115 points
-│   └── ckad-simulation5/     # Dojo Kappa 🐸 - 16 questions, 88 points
+│   └── ckad-simulation5/     # Dojo Kappa 🐸 - 17 questions, 91 points
 ├── exam/course/              # Your answers (created by setup)
 └── tests/                    # Unit tests
 ```
