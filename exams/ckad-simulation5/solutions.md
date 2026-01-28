@@ -1,6 +1,6 @@
 # CKAD Simulation 5 - Solutions (Dojo Kappa 🐸)
 
-> **Total Score**: 88 points | **Passing Score**: ~66% (58 points)
+> **Total Score**: 91 points | **Passing Score**: ~66% (60 points)
 >
 > **Original Questions**: Adapted from [CKAD-Practice-Questions](https://github.com/aravind4799/CKAD-Practice-Questions) by [@aravind4799](https://github.com/aravind4799)
 
@@ -513,7 +513,7 @@ kubectl describe pod resource-pod -n pond
 
 ---
 
-## Preview Question 1 | Pod Topology Spread Constraints (3 points)
+## Question 17 | Pod Topology Spread Constraints (3 points) - Preview
 
 ### Solution
 
