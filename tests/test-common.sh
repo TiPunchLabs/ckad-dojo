@@ -117,8 +117,9 @@ rm -f "$TEMP_FILE"
 # ----------------------------------------------------------------------------
 test_case "exam_exists function works correctly"
 
-assert_true 'exam_exists "ckad-simulation1"' "ckad-simulation1 should exist"
+# Note: ckad-simulation1 is LOCAL ONLY (not in git repo)
 assert_true 'exam_exists "ckad-simulation2"' "ckad-simulation2 should exist"
+assert_true 'exam_exists "ckad-simulation3"' "ckad-simulation3 should exist"
 assert_true '! exam_exists "nonexistent-exam"' "nonexistent-exam should not exist"
 
 # ----------------------------------------------------------------------------
@@ -127,31 +128,33 @@ assert_true '! exam_exists "nonexistent-exam"' "nonexistent-exam should not exis
 test_case "list_available_exams function works correctly"
 
 exams=$(list_available_exams)
-assert_contains "$exams" "ckad-simulation1" "Should list ckad-simulation1"
+# Note: ckad-simulation1 is LOCAL ONLY (not in git repo)
 assert_contains "$exams" "ckad-simulation2" "Should list ckad-simulation2"
+assert_contains "$exams" "ckad-simulation3" "Should list ckad-simulation3"
 
 # ----------------------------------------------------------------------------
 # Test: load_exam function
 # ----------------------------------------------------------------------------
 test_case "load_exam function works correctly"
 
-# Load simulation1
-if load_exam "ckad-simulation1"; then
-	assert_equals "ckad-simulation1" "$CURRENT_EXAM_ID" "CURRENT_EXAM_ID should be set"
+# Note: ckad-simulation1 is LOCAL ONLY (not in git repo)
+# Load simulation2
+if load_exam "ckad-simulation2"; then
+	assert_equals "ckad-simulation2" "$CURRENT_EXAM_ID" "CURRENT_EXAM_ID should be set"
 	assert_not_empty "$EXAM_NAME" "EXAM_NAME should be set"
 	assert_not_empty "$TOTAL_QUESTIONS" "TOTAL_QUESTIONS should be set"
 	assert_not_empty "$TOTAL_POINTS" "TOTAL_POINTS should be set"
 	assert_true '[ ${#EXAM_NAMESPACES[@]} -gt 0 ]' "EXAM_NAMESPACES should have elements"
-else
-	assert_true 'false' "load_exam should succeed for ckad-simulation1"
-fi
-
-# Load simulation2
-if load_exam "ckad-simulation2"; then
-	assert_equals "ckad-simulation2" "$CURRENT_EXAM_ID" "CURRENT_EXAM_ID should be set for simulation2"
 	assert_contains "${EXAM_NAMESPACES[*]}" "blaze" "simulation2 should have blaze namespace"
 else
 	assert_true 'false' "load_exam should succeed for ckad-simulation2"
+fi
+
+# Load simulation3
+if load_exam "ckad-simulation3"; then
+	assert_equals "ckad-simulation3" "$CURRENT_EXAM_ID" "CURRENT_EXAM_ID should be set for simulation3"
+else
+	assert_true 'false' "load_exam should succeed for ckad-simulation3"
 fi
 
 # Try to load nonexistent exam
@@ -227,7 +230,7 @@ assert_function_exists "open_docs_tabs" "open_docs_tabs function should exist"
 test_case "Default exam configuration is set"
 
 assert_not_empty "$DEFAULT_EXAM_ID" "DEFAULT_EXAM_ID should be set"
-assert_equals "ckad-simulation1" "$DEFAULT_EXAM_ID" "DEFAULT_EXAM_ID should be ckad-simulation1"
+assert_equals "ckad-simulation2" "$DEFAULT_EXAM_ID" "DEFAULT_EXAM_ID should be ckad-simulation2"
 
 # ----------------------------------------------------------------------------
 # Test: Legacy path variables
@@ -242,13 +245,8 @@ assert_contains "$EXAM_DIR" "exam/course" "EXAM_DIR should contain exam/course"
 # ----------------------------------------------------------------------------
 test_case "load_exam sets all required paths"
 
-# Use a complete exam for this test (simulation1 may be gitignored)
-_test_exam="ckad-simulation1"
-if ! exam_is_complete "$_test_exam" "$PROJECT_DIR"; then
-	_test_exam="ckad-simulation2"
-fi
-
-load_exam "$_test_exam" >/dev/null 2>&1
+# Note: ckad-simulation1 is LOCAL ONLY (not in git repo)
+load_exam "ckad-simulation2" >/dev/null 2>&1
 assert_not_empty "$CURRENT_EXAM_DIR" "CURRENT_EXAM_DIR should be set"
 assert_not_empty "$CURRENT_MANIFESTS_DIR" "CURRENT_MANIFESTS_DIR should be set"
 assert_not_empty "$CURRENT_TEMPLATES_DIR" "CURRENT_TEMPLATES_DIR should be set"

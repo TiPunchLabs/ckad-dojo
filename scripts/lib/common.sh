@@ -17,7 +17,7 @@ PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 EXAMS_DIR="$PROJECT_DIR/exams"
 
 # Default exam configuration
-DEFAULT_EXAM_ID="ckad-simulation1"
+DEFAULT_EXAM_ID="ckad-simulation2"
 CURRENT_EXAM_ID="${CURRENT_EXAM_ID:-$DEFAULT_EXAM_ID}"
 
 # Legacy paths (for backward compatibility)
