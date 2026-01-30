@@ -39,7 +39,7 @@ ENV/
 exam/
 
 # Local-only exam (not part of public simulations)
-exams/cka-local
+exams/cka-local*
 
 # IDE
 .idea/
