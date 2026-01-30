@@ -38,7 +38,8 @@ ENV/
 # Exam answers (user-specific)
 exam/
 
-exams/ckad-simulation1
+# Local-only exam (not part of public simulations)
+exams/cka-local/
 
 # IDE
 .idea/
