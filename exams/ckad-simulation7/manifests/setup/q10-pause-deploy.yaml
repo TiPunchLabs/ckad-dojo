@@ -1,0 +1,21 @@
+# Q10 - Pre-existing Deployment for pause/resume question
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pause-deploy
+  namespace: bark
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pause-deploy
+  template:
+    metadata:
+      labels:
+        app: pause-deploy
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.18.0
+        ports:
+        - containerPort: 80

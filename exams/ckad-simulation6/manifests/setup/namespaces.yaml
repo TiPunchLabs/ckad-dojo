@@ -1,0 +1,52 @@
+# Namespaces for CKAD Simulation 6 - Dojo Tengu
+# Mountain theme namespaces
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: peak
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: summit
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cliff
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ridge
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: valley
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cave
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: stone
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mist
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: alpine
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: crest

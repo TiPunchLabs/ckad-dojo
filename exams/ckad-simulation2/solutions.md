@@ -1,168 +1,61 @@
-# CKAD Simulation 2 - Dojo Suzaku 🔥 - Solutions
+# CKAD Simulation 2 - Dojo Byakko 🐯 - Solutions
 
-*「朱雀は灰から蘇る」 - Le phénix renaît de ses cendres*
+*「白虎は精密に打つ」 - Le tigre frappe avec précision*
 
-This document contains the solutions for all 21 questions in CKAD Simulation 2.
-
----
-
-## Question 1 | API Resources
-
-**Solution:**
-
-```bash
-# List all API resources and save to file
-kubectl api-resources > ./exam/course/1/api-resources
-```
-
-**Explanation:** The `kubectl api-resources` command lists all available API resources in the cluster, including their shortnames, API group, and whether they are namespaced. This is useful for discovering what resources are available.
+This document contains the solutions for all 20 questions in CKAD Simulation 2.
 
 ---
 
-## Question 2 | Deployment Recreate Strategy
+## Question 1 | Pod with Anti-Affinity
 
 **Solution:**
 
-```bash
-# Create the deployment with Recreate strategy
-cat <<EOF > ./exam/course/2/fire-app.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: fire-app
-  namespace: blaze
-spec:
-  replicas: 3
-  strategy:
-    type: Recreate
-  selector:
-    matchLabels:
-      app: fire-app
-  template:
-    metadata:
-      labels:
-        app: fire-app
-    spec:
-      containers:
-      - name: fire-container
-        image: nginx:1.21
-        ports:
-        - containerPort: 80
-EOF
-
-kubectl apply -f ./exam/course/2/fire-app.yaml
-```
-
-**Explanation:** The Recreate strategy terminates all existing pods before creating new ones. This is useful when you can't have multiple versions running simultaneously (unlike RollingUpdate which maintains availability during updates).
-
----
-
-## Question 3 | Job with Timeout
-
-**Solution:**
-
-```bash
-# Copy template and modify
-cp ./exam/course/3/job.yaml ./exam/course/3/job.yaml.bak
-
-# Edit the job to add activeDeadlineSeconds
-cat <<EOF > ./exam/course/3/job.yaml
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: data-processor
-  namespace: spark
-spec:
-  activeDeadlineSeconds: 60
-  backoffLimit: 2
-  template:
-    spec:
-      containers:
-      - name: processor
-        image: busybox:1.36
-        command: ["sh", "-c", "echo 'Processing data...' && sleep 30 && echo 'Done'"]
-      restartPolicy: Never
-EOF
-
-kubectl apply -f ./exam/course/3/job.yaml
-```
-
-**Explanation:** `activeDeadlineSeconds` sets the maximum duration for a Job. If the Job runs longer than this, it will be terminated. This prevents runaway jobs from consuming resources indefinitely.
-
----
-
-## Question 4 | Helm Template Debug
-
-**Solution:**
-
-```bash
-# Get the values from the installed release and render templates
-helm get values phoenix-web -n flare -o yaml > /tmp/phoenix-values.yaml
-helm template phoenix-web bitnami/nginx -n flare -f /tmp/phoenix-values.yaml > ./exam/course/4/rendered.yaml
-
-# Alternative: use helm get manifest for already installed release
-helm get manifest phoenix-web -n flare > ./exam/course/4/rendered.yaml
-```
-
-**Explanation:** `helm template` renders chart templates locally without installing. `helm get manifest` retrieves the rendered manifests from an installed release. Both are useful for debugging Helm deployments.
-
----
-
-## Question 5 | Fix CrashLoopBackOff
-
-**Solution:**
-
-```bash
-# Check the pod status and logs
-kubectl describe pod crash-app -n ember
-kubectl logs crash-app -n ember
-
-# The issue is the command "sleepx" which doesn't exist - should be "sleep"
-# Delete and recreate with correct command
-kubectl delete pod crash-app -n ember
-
-kubectl apply -f - <<EOF
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: crash-app
-  namespace: ember
+  name: titan-alpha
+  namespace: zeus
   labels:
-    app: crash-app
+    app: titan
 spec:
+  affinity:
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app: titan
+          topologyKey: kubernetes.io/hostname
   containers:
-  - name: app
-    image: busybox:1.36
-    command: ["sleep", "3600"]
-    resources:
-      requests:
-        memory: "32Mi"
-        cpu: "50m"
-      limits:
-        memory: "64Mi"
-        cpu: "100m"
-EOF
-
-# Verify
-kubectl get pod crash-app -n ember
+  - name: nginx
+    image: nginx:1.21
 ```
 
-**Explanation:** CrashLoopBackOff indicates the container is crashing repeatedly. In this case, the command `sleepx` doesn't exist. The fix is to use the correct command `sleep`.
+```bash
+kubectl apply -f titan-alpha.yaml
+```
 
 ---
 
-## Question 6 | ConfigMap Items Mount
+## Question 2 | ConfigMap from Multiple Sources
 
 **Solution:**
 
 ```bash
-# Create pod with selective ConfigMap mount
-kubectl apply -f - <<EOF
+# Create ConfigMap with literals
+kubectl create configmap app-config -n athena \
+  --from-literal=LOG_LEVEL=debug \
+  --from-literal=MAX_CONNECTIONS=100
+
+# Create Pod that mounts ConfigMap
+cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Pod
 metadata:
   name: config-reader
-  namespace: flame
+  namespace: athena
 spec:
   containers:
   - name: reader
@@ -170,473 +63,536 @@ spec:
     command: ["sleep", "3600"]
     volumeMounts:
     - name: config-volume
-      mountPath: /config
+      mountPath: /etc/config
   volumes:
   - name: config-volume
     configMap:
-      name: app-settings
-      items:
-      - key: database.host
-        path: database.host
-      - key: database.port
-        path: database.port
+      name: app-config
 EOF
 ```
 
-**Explanation:** Using `items` in a ConfigMap volume mount allows you to selectively mount specific keys rather than all keys. Each item maps a key to a file path within the mount directory.
-
 ---
 
-## Question 7 | Secret from File
+## Question 3 | ExternalName Service
 
 **Solution:**
 
-```bash
-# Create the password file (without trailing newline)
-mkdir -p ./exam/course/7
-echo -n 'FirePhoenix2024!' > ./exam/course/7/password.txt
-
-# Create secret from file
-kubectl create secret generic db-credentials \
-  --from-file=password.txt=./exam/course/7/password.txt \
-  -n magma
-```
-
-**Explanation:** `kubectl create secret generic --from-file` creates a secret from a file. The key in the secret will be the filename (or the specified key name). Using `echo -n` avoids adding a trailing newline.
-
----
-
-## Question 8 | Headless Service
-
-**Solution:**
-
-```bash
-kubectl apply -f - <<EOF
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-headless
-  namespace: corona
+  name: external-api
+  namespace: hermes
 spec:
-  clusterIP: None
-  selector:
-    app: backend
-  ports:
-  - port: 80
-    protocol: TCP
-    targetPort: 80
-EOF
+  type: ExternalName
+  externalName: api.external-service.com
 ```
 
-**Explanation:** A headless service (clusterIP: None) doesn't allocate a cluster IP. Instead, DNS returns the IP addresses of all pods matching the selector. This is commonly used with StatefulSets for direct pod addressing.
+```bash
+kubectl apply -f external-api.yaml
+```
 
 ---
 
-## Question 9 | Canary Deployment
+## Question 4 | LimitRange Configuration
 
 **Solution:**
 
-```bash
-# Create canary deployment
-kubectl apply -f - <<EOF
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: canary-v2
-  namespace: blaze
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: web-frontend
-      version: v2
-  template:
-    metadata:
-      labels:
-        app: web-frontend
-        version: v2
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.22
-        ports:
-        - containerPort: 80
-EOF
-
-# Create service that routes to both stable and canary
-kubectl apply -f - <<EOF
+```yaml
+# LimitRange
 apiVersion: v1
-kind: Service
+kind: LimitRange
 metadata:
-  name: frontend-svc
-  namespace: blaze
+  name: resource-limits
+  namespace: apollo
 spec:
-  type: ClusterIP
-  selector:
-    app: web-frontend
-  ports:
-  - port: 80
-    targetPort: 80
-EOF
-```
-
-**Explanation:** Canary deployment introduces a new version alongside the stable version. The service selector (app: web-frontend) matches both deployments. With 3 stable replicas and 1 canary replica, traffic is split approximately 75%/25%.
-
+  limits:
+  - type: Container
+    default:
+      cpu: 500m
+      memory: 256Mi
+    defaultRequest:
+      cpu: 100m
+      memory: 64Mi
 ---
-
-## Question 10 | Sidecar Data Processing
-
-**Solution:**
-
-```bash
-kubectl apply -f - <<EOF
+# Pod (will get defaults from LimitRange)
 apiVersion: v1
 kind: Pod
 metadata:
-  name: data-transform
-  namespace: phoenix
+  name: limited-pod
+  namespace: apollo
 spec:
   containers:
-  - name: producer
-    image: busybox:1.36
-    command: ["sh", "-c", "while true; do echo \$(date) >> /data/input.log; sleep 5; done"]
+  - name: app
+    image: nginx:1.21
+```
+
+```bash
+kubectl apply -f limitrange.yaml
+```
+
+---
+
+## Question 5 | SecurityContext - Read-Only Root Filesystem
+
+**Solution:**
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: secure-app
+  namespace: hades
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.21
+    securityContext:
+      readOnlyRootFilesystem: true
     volumeMounts:
-    - name: shared-data
-      mountPath: /data
-  - name: transformer
-    image: busybox:1.36
-    command: ["sh", "-c", "tail -f /data/input.log | while read line; do echo \"PROCESSED: \$line\" >> /data/output.log; done"]
-    volumeMounts:
-    - name: shared-data
-      mountPath: /data
+    - name: tmp
+      mountPath: /tmp
+    - name: cache
+      mountPath: /var/cache/nginx
+    - name: run
+      mountPath: /var/run
   volumes:
-  - name: shared-data
+  - name: tmp
     emptyDir: {}
-EOF
+  - name: cache
+    emptyDir: {}
+  - name: run
+    emptyDir: {}
 ```
-
-**Explanation:** The sidecar pattern uses multiple containers in a pod sharing a volume. The producer writes data, and the transformer processes it. emptyDir provides ephemeral storage that exists for the pod's lifetime.
 
 ---
 
-## Question 11 | Cross-Namespace NetworkPolicy
+## Question 6 | Pod with Multiple Init Containers
 
 **Solution:**
 
-```bash
-# First, label the flame namespace
-kubectl label namespace flame name=flame --overwrite
-
-# Create the NetworkPolicy
-kubectl apply -f - <<EOF
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-from-flame
-  namespace: corona
-spec:
-  podSelector:
-    matchLabels:
-      app: backend
-  policyTypes:
-  - Ingress
-  ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: flame
-    ports:
-    - protocol: TCP
-      port: 80
-EOF
-```
-
-**Explanation:** To allow traffic from a specific namespace, use `namespaceSelector`. The namespace must have a label that the selector can match. This policy allows ingress only from pods in the flame namespace on port 80.
-
----
-
-## Question 12 | Docker Build with ARG
-
-**Solution:**
-
-```bash
-# Copy template
-mkdir -p ./exam/course/12
-cp ./templates/q12-image/* ./exam/course/12/
-
-# Modify Dockerfile
-cat <<EOF > ./exam/course/12/image/Dockerfile
-FROM nginx:1.21
-
-ARG APP_VERSION=1.0.0
-LABEL version=\${APP_VERSION}
-
-COPY index.html /usr/share/nginx/html/index.html
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
-EOF
-
-# Build with custom ARG value
-cd ./exam/course/12
-sudo docker build --build-arg APP_VERSION=2.0.0 -t localhost:5000/phoenix-app:2.0.0 .
-
-# Push to registry
-sudo docker push localhost:5000/phoenix-app:2.0.0
-```
-
-**Explanation:** ARG defines build-time variables. They can have default values and be overridden with `--build-arg`. LABEL adds metadata to the image. Using `${ARG_NAME}` in LABEL allows dynamic labeling during build.
-
----
-
-## Question 13 | Helm Values File
-
-**Solution:**
-
-```bash
-# Copy values template
-mkdir -p ./exam/course/13
-cp ./templates/q13-values.yaml ./exam/course/13/values.yaml
-
-# Install with values file
-helm install phoenix-api bitnami/nginx \
-  -n flare \
-  -f ./exam/course/13/values.yaml
-```
-
-**Explanation:** Helm values files override default chart values. Using `-f` applies values from a file, which is more maintainable than multiple `--set` flags and allows version control of configuration.
-
----
-
-## Question 14 | PostStart Lifecycle Hook
-
-**Solution:**
-
-```bash
-kubectl apply -f - <<EOF
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: lifecycle-pod
-  namespace: phoenix
+  name: multi-init
+  namespace: poseidon
+spec:
+  initContainers:
+  - name: init-config
+    image: busybox:1.36
+    command: ["sh", "-c", "echo 'initialized' > /work/config.txt"]
+    volumeMounts:
+    - name: workdir
+      mountPath: /work
+  - name: init-permissions
+    image: busybox:1.36
+    command: ["chmod", "644", "/work/config.txt"]
+    volumeMounts:
+    - name: workdir
+      mountPath: /work
+  containers:
+  - name: app
+    image: nginx:1.21
+    volumeMounts:
+    - name: workdir
+      mountPath: /work
+  volumes:
+  - name: workdir
+    emptyDir: {}
+```
+
+---
+
+## Question 7 | Deployment with Pause/Resume
+
+**Solution:**
+
+```bash
+# Update the image
+kubectl set image deployment/battle-app nginx=nginx:1.21 -n ares
+
+# Pause the rollout immediately
+kubectl rollout pause deployment/battle-app -n ares
+
+# Save rollout status
+kubectl rollout status deployment/battle-app -n ares > ./exam/course/7/rollout-status.txt
+```
+
+---
+
+## Question 8 | Ambassador Pattern - Sidecar Proxy
+
+**Solution:**
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ambassador-pod
+  namespace: olympus
 spec:
   containers:
-  - name: main
+  - name: app
     image: nginx:1.21
     ports:
     - containerPort: 80
-    lifecycle:
-      postStart:
-        exec:
-          command: ["/bin/sh", "-c", "echo 'Started at \$(date)' > /usr/share/nginx/html/started.txt"]
-EOF
+  - name: proxy
+    image: envoyproxy/envoy:v1.28-latest
+    env:
+    - name: ENVOY_UID
+      value: "0"
 ```
-
-**Explanation:** postStart hooks execute immediately after a container is created (but not necessarily before the container's entrypoint). They're useful for initialization tasks. The hook runs in parallel with the container's main process.
 
 ---
 
-## Question 15 | Guaranteed QoS Class
+## Question 9 | Job with Backoff Limit
+
+**Solution:**
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: retry-job
+  namespace: artemis
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      containers:
+      - name: job
+        image: busybox:1.36
+        command: ["sh", "-c", "exit 1"]
+      restartPolicy: Never
+```
+
+---
+
+## Question 10 | Secret Types - Docker Registry
 
 **Solution:**
 
 ```bash
-kubectl apply -f - <<EOF
+# Create docker-registry secret
+kubectl create secret docker-registry registry-creds -n hera \
+  --docker-server=docker.io \
+  --docker-username=myuser \
+  --docker-password=mypassword \
+  --docker-email=user@example.com
+
+# Create pod with imagePullSecret
+cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Pod
 metadata:
-  name: qos-guaranteed
-  namespace: spark
+  name: private-app
+  namespace: hera
 spec:
   containers:
-  - name: web
+  - name: app
     image: nginx:1.21
-    resources:
-      requests:
-        memory: "128Mi"
-        cpu: "100m"
-      limits:
-        memory: "128Mi"
-        cpu: "100m"
+  imagePullSecrets:
+  - name: registry-creds
 EOF
 ```
 
-**Explanation:** Guaranteed QoS requires that every container has both memory and CPU requests AND limits set, and requests must equal limits. This ensures the pod gets exactly the resources it requests, making it less likely to be evicted.
+---
+
+## Question 11 | Adapter Pattern - Log Transformer
+
+**Solution:**
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: adapter-pod
+  namespace: zeus
+spec:
+  containers:
+  - name: app
+    image: busybox:1.36
+    command: ["sh", "-c", "while true; do echo $(date): log message >> /var/log/app.log; sleep 5; done"]
+    volumeMounts:
+    - name: logs
+      mountPath: /var/log
+  - name: log-adapter
+    image: busybox:1.36
+    command: ["sh", "-c", "tail -f /var/log/app.log | sed 's/^/[ADAPTED] /'"]
+    volumeMounts:
+    - name: logs
+      mountPath: /var/log
+  volumes:
+  - name: logs
+    emptyDir: {}
+```
 
 ---
 
-## Question 16 | ServiceAccount Projected Token
+## Question 12 | Network Policy - Egress Rules
+
+**Solution:**
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: egress-policy
+  namespace: athena
+spec:
+  podSelector:
+    matchLabels:
+      app: restricted
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: database
+    ports:
+    - protocol: TCP
+      port: 5432
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/8
+    ports:
+    - protocol: TCP
+      port: 443
+```
+
+---
+
+## Question 13 | RBAC - Service Account Permissions
 
 **Solution:**
 
 ```bash
-kubectl apply -f - <<EOF
+# Create ServiceAccount
+kubectl create serviceaccount deployment-manager -n hermes
+
+# Create Role
+cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: deploy-role
+  namespace: hermes
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "create", "update", "delete"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]
+EOF
+
+# Create RoleBinding
+kubectl create rolebinding deploy-binding -n hermes \
+  --role=deploy-role \
+  --serviceaccount=hermes:deployment-manager
+```
+
+---
+
+## Question 14 | Deployment Rolling Update Strategy
+
+**Solution:**
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rolling-app
+  namespace: apollo
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: rolling-app
+  template:
+    metadata:
+      labels:
+        app: rolling-app
+        version: v1
+    spec:
+      containers:
+      - name: web
+        image: nginx:1.21
+```
+
+---
+
+## Question 15 | Ingress with Path-Based Routing
+
+**Solution:**
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: path-ingress
+  namespace: poseidon
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: api-svc
+            port:
+              number: 8080
+      - path: /web
+        pathType: Prefix
+        backend:
+          service:
+            name: web-svc
+            port:
+              number: 80
+```
+
+---
+
+## Question 16 | Pod with Token Projection
+
+**Solution:**
+
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
   name: token-pod
-  namespace: magma
+  namespace: hades
 spec:
-  serviceAccountName: fire-sa
   containers:
   - name: app
-    image: busybox:1.36
-    command: ["sleep", "3600"]
+    image: nginx:1.21
     volumeMounts:
-    - name: fire-token
-      mountPath: /var/run/secrets/fire-token
-      readOnly: true
+    - name: token-volume
+      mountPath: /var/run/secrets/tokens
   volumes:
-  - name: fire-token
+  - name: token-volume
     projected:
       sources:
       - serviceAccountToken:
-          path: token
-          expirationSeconds: 3600
           audience: api
-EOF
+          expirationSeconds: 3600
+          path: token
 ```
-
-**Explanation:** Projected volumes allow mounting ServiceAccount tokens with configurable expiration and audience. This is more secure than the default token mounting as tokens expire and can be scoped to specific audiences.
 
 ---
 
-## Question 17 | TCP Liveness Probe
+## Question 17 | CronJob with Concurrency Policy
 
 **Solution:**
 
-```bash
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Pod
+```yaml
+apiVersion: batch/v1
+kind: CronJob
 metadata:
-  name: tcp-health
-  namespace: ember
+  name: scheduled-task
+  namespace: ares
 spec:
-  containers:
-  - name: web
-    image: nginx:1.21
-    ports:
-    - containerPort: 80
-    livenessProbe:
-      tcpSocket:
-        port: 80
-      initialDelaySeconds: 10
-      periodSeconds: 5
-EOF
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: task
+            image: busybox:1.36
+            command: ["sh", "-c", "echo Task executed at $(date)"]
+          restartPolicy: OnFailure
 ```
-
-**Explanation:** TCP socket probes check if a port is open and accepting connections. They're useful when HTTP probes aren't appropriate (e.g., non-HTTP services). The probe succeeds if the TCP connection is established.
 
 ---
 
-## Question 18 | Service with Named Ports
+## Question 18 | Pod Disruption Budget
 
 **Solution:**
 
-```bash
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Service
+```yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
 metadata:
-  name: web-svc
-  namespace: flame
+  name: app-pdb
+  namespace: hera
 spec:
-  type: ClusterIP
+  minAvailable: 2
   selector:
-    app: web-app
-  ports:
-  - name: http
-    port: 80
-    targetPort: http-web
-    protocol: TCP
-  - name: https
-    port: 443
-    targetPort: https-web
-    protocol: TCP
-EOF
+    matchLabels:
+      app: critical
 ```
-
-**Explanation:** Named ports allow services to reference ports by name rather than number. This makes configuration more readable and allows pods to change their port numbers without updating service definitions.
 
 ---
 
-## Question 19 | Topology Spread Constraints
+## Question 19 | Deployment with Annotations
 
 **Solution:**
 
-```bash
-kubectl apply -f - <<EOF
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: spread-deploy
-  namespace: blaze
+  name: annotated-app
+  namespace: olympus
+  annotations:
+    kubernetes.io/change-cause: "Initial deployment"
 spec:
-  replicas: 4
+  replicas: 2
   selector:
     matchLabels:
-      app: spread-app
+      app: annotated-app
   template:
     metadata:
       labels:
-        app: spread-app
+        app: annotated-app
+      annotations:
+        prometheus.io/scrape: "true"
     spec:
-      topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: ScheduleAnyway
-        labelSelector:
-          matchLabels:
-            app: spread-app
       containers:
       - name: web
         image: nginx:1.21
-        ports:
-        - containerPort: 80
-EOF
 ```
-
-**Explanation:** Topology spread constraints control how pods are distributed across topology domains (nodes, zones). `maxSkew: 1` means the difference in pod count between nodes should be at most 1. `ScheduleAnyway` allows scheduling even if constraints can't be fully satisfied.
 
 ---
 
-## Question 20 | Field Selectors
+## Question 20 | Multi-Container Pod with Shared Process Namespace
 
 **Solution:**
 
-```bash
-# Use field selector to find running pods
-kubectl get pods --all-namespaces --field-selector=status.phase=Running \
-  -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}' > ./exam/course/20/running-pods.txt
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shared-pid
+  namespace: artemis
+spec:
+  shareProcessNamespace: true
+  containers:
+  - name: app
+    image: nginx:1.21
+  - name: debug
+    image: busybox:1.36
+    command: ["sleep", "3600"]
 ```
 
-**Explanation:** Field selectors filter resources based on resource fields (like status, metadata) rather than labels. `--field-selector=status.phase=Running` finds all pods in Running phase across all namespaces.
-
----
-
-## Question 21 | Node Drain
-
-**Solution:**
+**Verification:**
 
 ```bash
-# Write the drain command to file (do not execute)
-mkdir -p ./exam/course/21
-cat <<'EOF' > ./exam/course/21/drain-command.sh
-kubectl drain worker-node-1 \
-  --ignore-daemonsets \
-  --delete-emptydir-data \
-  --force \
-  --timeout=60s
-EOF
+kubectl exec -n artemis shared-pid -c debug -- ps aux
+# Should show nginx processes from the app container
 ```
-
-**Explanation:** `kubectl drain` safely evicts pods from a node for maintenance. Key flags:
-
-- `--ignore-daemonsets`: Don't fail if DaemonSet pods exist
-- `--delete-emptydir-data`: Delete pods with emptyDir volumes
-- `--force`: Force deletion of pods not managed by controllers
-- `--timeout`: Maximum time to wait for eviction
 
 ---

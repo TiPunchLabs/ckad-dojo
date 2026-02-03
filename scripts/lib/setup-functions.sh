@@ -327,6 +327,22 @@ setup_post_resources() {
 	fi
 
 	# ============================================================================
+	# CKAD-SIMULATION6: Q7 - Create broken revision for rollback exercise
+	# ============================================================================
+	if kubectl get deployment rollback-deploy -n cave &>/dev/null; then
+		# Wait for deployment to be available
+		kubectl rollout status deployment rollback-deploy -n cave --timeout=60s 2>/dev/null
+
+		# Update with broken image to create revision 2
+		if kubectl set image deployment/rollback-deploy nginx=nginx:1.91 -n cave --record=false 2>/dev/null; then
+			print_success "Q7: Created broken deployment revision (nginx:1.91)"
+		else
+			print_fail "Q7: Failed to create broken revision"
+			((errors++))
+		fi
+	fi
+
+	# ============================================================================
 	# BOTH EXAMS: Create broken Helm release for Q4/Q13
 	# ============================================================================
 	local helm_ns="${HELM_NAMESPACE:-}"
@@ -382,6 +398,19 @@ cleanup_namespaces() {
 			print_skip "$ns (not found)"
 		fi
 	done
+
+	# Also cleanup user-created namespaces (from questions that ask user to create ns)
+	if [ ${#USER_NAMESPACES[@]} -gt 0 ]; then
+		print_section "Deleting user-created namespaces..."
+		for ns in "${USER_NAMESPACES[@]}"; do
+			if namespace_exists "$ns"; then
+				kubectl delete namespace "$ns" --wait=false 2>/dev/null
+				print_success "Deleting $ns (background)"
+			else
+				print_skip "$ns (not found)"
+			fi
+		done
+	fi
 }
 
 # Clean up exam-related resources in default namespace

@@ -1,8 +1,8 @@
-# CKAD Exam Simulator - Dojo Suzaku 🔥
+# CKAD Exam Simulator - Dojo Byakko 🐯
 
-> **Total Score**: 112 points | **Passing Score**: ~66% (74 points)
+> **Total Score**: 105 points | **Passing Score**: ~66% (69 points)
 >
-> *「朱雀は灰から蘇る」 - Le phénix renaît de ses cendres*
+> *「白虎は精密に打つ」 - Le tigre frappe avec précision*
 >
 > **Local Simulator Adaptations**:
 >
@@ -14,451 +14,417 @@
 
 ---
 
-## Question 1 | API Resources
-
-|                          |                                   |
-| ------------------------ | --------------------------------- |
-| **Points**         | 1                                 |
-| **Namespace**      | -                                 |
-| **File to create** | `./exam/course/1/api-resources` |
-
-### Task
-
-The DevOps team needs a complete list of all **API resources** available in the cluster. This should include the resource name, shortnames, API group, and whether the resource is namespaced.
-
-Save the complete output to `./exam/course/1/api-resources`.
-
----
-
-## Question 2 | Deployment Recreate Strategy
-
-|                          |                                   |
-| ------------------------ | --------------------------------- |
-| **Points**         | 6                                 |
-| **Namespace**      | `blaze`                         |
-| **Resources**      | Deployment `fire-app`           |
-| **File to create** | `./exam/course/2/fire-app.yaml` |
-
-### Task
-
-Create a **Deployment** named `fire-app` in namespace `blaze` with the following specifications:
-
-- Image: `nginx:1.21`
-- Replicas: 3
-- Strategy type: **Recreate** (not RollingUpdate)
-- Container name: `fire-container`
-
-Save the Deployment YAML to `./exam/course/2/fire-app.yaml` and apply it to the cluster.
-
----
-
-## Question 3 | Job with Timeout
-
-|                          |                              |
-| ------------------------ | ---------------------------- |
-| **Points**         | 6                            |
-| **Namespace**      | `spark`                    |
-| **Resources**      | Job `data-processor`       |
-| **File to create** | `./exam/course/3/job.yaml` |
-
-### Task
-
-A template Job manifest exists at `./exam/course/3/job.yaml`. Modify it to add a **timeout of 60 seconds** using `activeDeadlineSeconds`.
-
-The Job should:
-
-- Be named `data-processor`
-- Run in namespace `spark`
-- Automatically terminate if running longer than 60 seconds
-- Have `backoffLimit: 2`
-
-Apply the Job to the cluster.
-
----
-
-## Question 4 | Helm Template Debug
-
-|                          |                                   |
-| ------------------------ | --------------------------------- |
-| **Points**         | 5                                 |
-| **Namespace**      | `flare`                         |
-| **File to create** | `./exam/course/4/rendered.yaml` |
-
-### Task
-
-A Helm release `phoenix-web` is installed in namespace `flare`. Use `helm template` to render the manifests and save the complete output to `./exam/course/4/rendered.yaml`.
-
-**Note**: Use the correct flags to simulate the installed release's values.
-
----
-
-## Question 5 | Fix CrashLoopBackOff
-
-|                     |                   |
-| ------------------- | ----------------- |
-| **Points**    | 6                 |
-| **Namespace** | `ember`         |
-| **Resources** | Pod `crash-app` |
-
-### Task
-
-A Pod named `crash-app` in namespace `ember` is in **CrashLoopBackOff** state. The Pod has a command error that prevents it from starting.
-
-1. Investigate the Pod to find the issue
-2. Fix the Pod so it runs successfully
-3. The Pod should be in **Running** state after your fix
-
-**Hint**: Check the container command configuration.
-
----
-
-## Question 6 | ConfigMap Items Mount
-
-|                     |                                                   |
-| ------------------- | ------------------------------------------------- |
-| **Points**    | 6                                                 |
-| **Namespace** | `flame`                                         |
-| **Resources** | ConfigMap `app-settings`, Pod `config-reader` |
-
-### Task
-
-A ConfigMap named `app-settings` exists in namespace `flame` with multiple keys. Create a Pod named `config-reader` that:
-
-- Uses image `busybox:1.36`
-- Mounts **only** the `database.host` and `database.port` keys from the ConfigMap
-- Mounts them to `/config/` directory as files
-- Runs command `["sleep", "3600"]`
-- Container name: `reader`
-
-The Pod should only have those two specific keys mounted, not all keys from the ConfigMap.
-
----
-
-## Question 7 | Secret from File
-
-|                          |                                  |
-| ------------------------ | -------------------------------- |
-| **Points**         | 5                                |
-| **Namespace**      | `magma`                        |
-| **Resources**      | Secret `db-credentials`        |
-| **File to create** | `./exam/course/7/password.txt` |
-
-### Task
-
-Create a file at `./exam/course/7/password.txt` containing the text `FirePhoenix2024!` (no newline at end).
-
-Then create a **Secret** named `db-credentials` in namespace `magma` from this file. The key in the Secret should be `password.txt`.
-
----
-
-## Question 8 | Headless Service
-
-|                     |                              |
-| ------------------- | ---------------------------- |
-| **Points**    | 6                            |
-| **Namespace** | `corona`                   |
-| **Resources** | Service `backend-headless` |
-
-### Task
-
-Create a **Headless Service** named `backend-headless` in namespace `corona` that:
-
-- Has `clusterIP: None`
-- Selects pods with label `app=backend`
-- Exposes port 80
-- Uses protocol TCP
-
----
-
-## Question 9 | Canary Deployment
-
-|                     |                                                    |
-| ------------------- | -------------------------------------------------- |
-| **Points**    | 7                                                  |
-| **Namespace** | `blaze`                                          |
-| **Resources** | Deployment `canary-v2`, Service `frontend-svc` |
-
-### Task
-
-A Deployment named `stable-v1` already exists in namespace `blaze` with 3 replicas running `nginx:1.21`.
-
-Implement a **canary deployment pattern**:
-
-1. Create a new Deployment named `canary-v2`:
-
-   - Image: `nginx:1.22`
-   - Replicas: 1
-   - Labels: `app=web-frontend`, `version=v2`
-2. Create a Service named `frontend-svc`:
-
-   - Type: ClusterIP
-   - Port: 80
-   - Selector: `app=web-frontend` (should route to BOTH stable and canary pods)
-
-The traffic split should be approximately 75% stable / 25% canary (3:1 replica ratio).
-
----
-
-## Question 10 | Sidecar Data Processing
-
-|                     |                        |
-| ------------------- | ---------------------- |
-| **Points**    | 6                      |
-| **Namespace** | `phoenix`            |
-| **Resources** | Pod `data-transform` |
-
-### Task
-
-Create a Pod named `data-transform` in namespace `phoenix` with a sidecar pattern:
-
-**Main container** (`producer`):
-
-- Image: `busybox:1.36`
-- Command: `["sh", "-c", "while true; do echo $(date) >> /data/input.log; sleep 5; done"]`
-- Mounts volume `shared-data` at `/data`
-
-**Sidecar container** (`transformer`):
-
-- Image: `busybox:1.36`
-- Command: `["sh", "-c", "tail -f /data/input.log | while read line; do echo \"PROCESSED: $line\" >> /data/output.log; done"]`
-- Mounts same volume `shared-data` at `/data`
-
-Use an **emptyDir** volume named `shared-data`.
-
----
-
-## Question 11 | Cross-Namespace NetworkPolicy
-
-|                     |                                    |
-| ------------------- | ---------------------------------- |
-| **Points**    | 6                                  |
-| **Namespace** | `corona`                         |
-| **Resources** | NetworkPolicy `allow-from-flame` |
-
-### Task
-
-Create a **NetworkPolicy** named `allow-from-flame` in namespace `corona` that:
-
-- Applies to pods with label `app=backend`
-- Allows ingress traffic **only** from pods in namespace `flame`
-- Allows traffic on port 80 (TCP)
-- Denies all other ingress traffic
-
-**Hint**: You'll need to use `namespaceSelector` to specify the source namespace.
-
----
-
-## Question 12 | Docker Build with ARG
-
-|                           |                                      |
-| ------------------------- | ------------------------------------ |
-| **Points**          | 6                                    |
-| **Namespace**       | `inferno`                          |
-| **File to modify**  | `./exam/course/12/Dockerfile`      |
-| **Image to create** | `localhost:5000/phoenix-app:2.0.0` |
-
-### Task
-
-A Dockerfile template exists at `./exam/course/12/image/Dockerfile`. Modify it to:
-
-1. Add an **ARG** named `APP_VERSION` with default value `1.0.0`
-2. Add a **LABEL** `version=${APP_VERSION}`
-
-Then build the image with:
-
-- `APP_VERSION=2.0.0`
-- Tag: `localhost:5000/phoenix-app:2.0.0`
-
-Push the image to the local registry.
-
----
-
-## Question 13 | Helm Values File
-
-|                       |                                  |
-| --------------------- | -------------------------------- |
-| **Points**      | 5                                |
-| **Namespace**   | `flare`                        |
-| **Resources**   | Helm release `phoenix-api`     |
-| **File to use** | `./exam/course/13/values.yaml` |
-
-### Task
-
-A values file exists at `./exam/course/13/values.yaml`. Use it to install a new Helm release:
-
-- Release name: `phoenix-api`
-- Namespace: `flare`
-- Chart: `bitnami/nginx`
-- Values file: `./exam/course/13/values.yaml`
-
-The values file specifies 3 replicas and service port 8080.
-
----
-
-## Question 14 | PostStart Lifecycle Hook
-
-|                     |                       |
-| ------------------- | --------------------- |
-| **Points**    | 6                     |
-| **Namespace** | `phoenix`           |
-| **Resources** | Pod `lifecycle-pod` |
-
-### Task
-
-Create a Pod named `lifecycle-pod` in namespace `phoenix` that:
-
-- Uses image `nginx:1.21`
-- Container name: `main`
-- Has a **postStart** lifecycle hook that executes:
-
-  ```
-  /bin/sh -c "echo 'Started at $(date)' > /usr/share/nginx/html/started.txt"
-  ```
-
-The hook should create a file indicating when the container started.
-
----
-
-## Question 15 | Guaranteed QoS Class
-
-|                     |                        |
-| ------------------- | ---------------------- |
-| **Points**    | 5                      |
-| **Namespace** | `spark`              |
-| **Resources** | Pod `qos-guaranteed` |
-
-### Task
-
-Create a Pod named `qos-guaranteed` in namespace `spark` that achieves **Guaranteed** QoS class:
-
-- Image: `nginx:1.21`
-- Container name: `web`
-- Must have QoS class of exactly **Guaranteed**
-
-**Hint**: Resources must be set correctly for Guaranteed QoS.
-
----
-
-## Question 16 | ServiceAccount Projected Token
-
-|                     |                   |
-| ------------------- | ----------------- |
-| **Points**    | 4                 |
-| **Namespace** | `magma`         |
-| **Resources** | Pod `token-pod` |
-
-### Task
-
-A ServiceAccount named `fire-sa` exists in namespace `magma`. Create a Pod named `token-pod` that:
-
-- Uses image `busybox:1.36`
-- Command: `["sleep", "3600"]`
-- Container name: `app`
-- Uses ServiceAccount `fire-sa`
-- Mounts the ServiceAccount token via **projected volume** at `/var/run/secrets/fire-token/`
-- Token should have an expiration of 3600 seconds
-
----
-
-## Question 17 | TCP Liveness Probe
+## Question 1 | Pod with Anti-Affinity (6%)
 
 |                     |                    |
 | ------------------- | ------------------ |
 | **Points**    | 6                  |
-| **Namespace** | `ember`          |
-| **Resources** | Pod `tcp-health` |
+| **Namespace** | `zeus`           |
+| **Resources** | Pod `titan-alpha`|
 
 ### Task
 
-Create a Pod named `tcp-health` in namespace `ember` that:
+Create a Pod named `titan-alpha` in namespace `zeus` with the following specifications:
 
-- Uses image `nginx:1.21`
-- Container name: `web`
-- Has a **tcpSocket** liveness probe on port 80
-- Initial delay: 10 seconds
-- Period: 5 seconds
+- Image: `nginx:1.21`
+- Add a label `app=titan`
+- Configure **pod anti-affinity** to prefer not scheduling on nodes that already have pods with label `app=titan`
+
+The anti-affinity should use `preferredDuringSchedulingIgnoredDuringExecution` with weight `100` and topology key `kubernetes.io/hostname`.
 
 ---
 
-## Question 18 | Service with Named Ports
+## Question 2 | ConfigMap from Multiple Sources (5%)
 
-|                     |                     |
-| ------------------- | ------------------- |
-| **Points**    | 6                   |
-| **Namespace** | `flame`           |
-| **Resources** | Service `web-svc` |
+|                     |                                                 |
+| ------------------- | ----------------------------------------------- |
+| **Points**    | 5                                               |
+| **Namespace** | `athena`                                      |
+| **Resources** | ConfigMap `app-config`, Pod `config-reader` |
 
 ### Task
 
-A Deployment named `web-deploy` exists in namespace `flame` with pods exposing named ports `http-web` (80) and `https-web` (443).
+In namespace `athena`:
 
-Create a Service named `web-svc` that:
+1. Create a ConfigMap named `app-config` with:
+   - A literal key `LOG_LEVEL=debug`
+   - A literal key `MAX_CONNECTIONS=100`
 
-- Type: ClusterIP
-- Exposes port 80 targeting the named port `http-web`
-- Exposes port 443 targeting the named port `https-web`
-- Selector: `app=web-app`
+2. Create a Pod named `config-reader` using image `busybox:1.36` that:
+   - Mounts the ConfigMap as a volume at `/etc/config`
+   - Runs command `sleep 3600`
+   - Container name: `reader`
 
 ---
 
-## Question 19 | Topology Spread Constraints
+## Question 3 | ExternalName Service (4%)
+
+|                     |                          |
+| ------------------- | ------------------------ |
+| **Points**    | 4                        |
+| **Namespace** | `hermes`               |
+| **Resources** | Service `external-api` |
+
+### Task
+
+Create a Service of type `ExternalName` in namespace `hermes`:
+
+- Name: `external-api`
+- External name: `api.external-service.com`
+
+This service should allow pods in the namespace to access the external API using the internal DNS name `external-api.hermes.svc.cluster.local`.
+
+---
+
+## Question 4 | LimitRange Configuration (6%)
+
+|                     |                                               |
+| ------------------- | --------------------------------------------- |
+| **Points**    | 6                                             |
+| **Namespace** | `apollo`                                    |
+| **Resources** | LimitRange `resource-limits`, Pod `limited-pod` |
+
+### Task
+
+In namespace `apollo`:
+
+1. Create a LimitRange named `resource-limits` with the following constraints for containers:
+   - Default CPU limit: `500m`
+   - Default memory limit: `256Mi`
+   - Default CPU request: `100m`
+   - Default memory request: `64Mi`
+
+2. Create a Pod named `limited-pod` with image `nginx:1.21` (without specifying any resource requests/limits) to verify the defaults are applied.
+   - Container name: `app`
+
+---
+
+## Question 5 | SecurityContext - Read-Only Root Filesystem (5%)
+
+|                     |                    |
+| ------------------- | ------------------ |
+| **Points**    | 5                  |
+| **Namespace** | `hades`          |
+| **Resources** | Pod `secure-app` |
+
+### Task
+
+Create a Pod named `secure-app` in namespace `hades` with:
+
+- Image: `nginx:1.21`
+- Container name: `nginx`
+- Read-only root filesystem enabled
+- A writable emptyDir volume mounted at `/tmp`
+- A writable emptyDir volume mounted at `/var/cache/nginx`
+- A writable emptyDir volume mounted at `/var/run`
+
+The pod should be able to run nginx successfully despite the read-only root filesystem.
+
+---
+
+## Question 6 | Pod with Multiple Init Containers (6%)
+
+|                     |                   |
+| ------------------- | ----------------- |
+| **Points**    | 6                 |
+| **Namespace** | `poseidon`      |
+| **Resources** | Pod `multi-init`|
+
+### Task
+
+Create a Pod named `multi-init` in namespace `poseidon` with:
+
+- Main container: `app` using image `nginx:1.21`
+- Init container 1: `init-config` using image `busybox:1.36` that creates file `/work/config.txt` with content `initialized`
+- Init container 2: `init-permissions` using image `busybox:1.36` that runs `chmod 644 /work/config.txt`
+
+All containers should share an emptyDir volume named `workdir` mounted at `/work`.
+
+---
+
+## Question 7 | Deployment with Pause/Resume (5%)
+
+|                          |                                       |
+| ------------------------ | ------------------------------------- |
+| **Points**         | 5                                     |
+| **Namespace**      | `ares`                              |
+| **Resources**      | Deployment `battle-app`             |
+| **File to create** | `./exam/course/7/rollout-status.txt`|
+
+### Task
+
+A Deployment named `battle-app` exists in namespace `ares` with 3 replicas using image `nginx:1.20`.
+
+1. Update the image to `nginx:1.21`
+2. Immediately **pause** the rollout after starting the update
+3. Save the rollout status to `./exam/course/7/rollout-status.txt`
+
+**Hint**: Use `kubectl rollout pause` and `kubectl rollout status`.
+
+---
+
+## Question 8 | Ambassador Pattern - Sidecar Proxy (7%)
+
+|                     |                       |
+| ------------------- | --------------------- |
+| **Points**    | 7                     |
+| **Namespace** | `olympus`           |
+| **Resources** | Pod `ambassador-pod`|
+
+### Task
+
+Create a Pod named `ambassador-pod` in namespace `olympus` with an ambassador pattern:
+
+- Main container `app`: image `nginx:1.21`, exposes port 80
+- Sidecar container `proxy`: image `envoyproxy/envoy:v1.28-latest`
+  - Add environment variable `ENVOY_UID=0`
+
+Both containers should be in the same Pod to share the network namespace.
+
+**Note**: This demonstrates the ambassador pattern where a proxy container handles external communication.
+
+---
+
+## Question 9 | Job with Backoff Limit (5%)
+
+|                     |                  |
+| ------------------- | ---------------- |
+| **Points**    | 5                |
+| **Namespace** | `artemis`      |
+| **Resources** | Job `retry-job`|
+
+### Task
+
+Create a Job named `retry-job` in namespace `artemis` with:
+
+- Image: `busybox:1.36`
+- Command: `sh -c "exit 1"` (simulates failure)
+- Backoff limit: `3`
+- Restart policy: `Never`
+
+The job should attempt to run 3 times before being marked as failed.
+
+---
+
+## Question 10 | Secret Types - Docker Registry (6%)
+
+|                     |                                                   |
+| ------------------- | ------------------------------------------------- |
+| **Points**    | 6                                                 |
+| **Namespace** | `hera`                                          |
+| **Resources** | Secret `registry-creds`, Pod `private-app`    |
+
+### Task
+
+In namespace `hera`:
+
+1. Create a docker-registry Secret named `registry-creds` with:
+   - Docker server: `docker.io`
+   - Username: `myuser`
+   - Password: `mypassword`
+   - Email: `user@example.com`
+
+2. Create a Pod named `private-app` with image `nginx:1.21` that uses this secret as an `imagePullSecret`.
+   - Container name: `app`
+
+---
+
+## Question 11 | Adapter Pattern - Log Transformer (6%)
+
+|                     |                    |
+| ------------------- | ------------------ |
+| **Points**    | 6                  |
+| **Namespace** | `zeus`           |
+| **Resources** | Pod `adapter-pod`|
+
+### Task
+
+Create a Pod named `adapter-pod` in namespace `zeus` implementing the adapter pattern:
+
+- Main container `app`: image `busybox:1.36`, command `sh -c "while true; do echo $(date): log message >> /var/log/app.log; sleep 5; done"`
+- Adapter container `log-adapter`: image `busybox:1.36`, command `sh -c "tail -f /var/log/app.log | sed 's/^/[ADAPTED] /'"`
+
+Both containers share an emptyDir volume named `logs` mounted at `/var/log`.
+
+---
+
+## Question 12 | Network Policy - Egress Rules (5%)
 
 |                     |                              |
 | ------------------- | ---------------------------- |
-| **Points**    | 6                            |
-| **Namespace** | `blaze`                    |
-| **Resources** | Deployment `spread-deploy` |
+| **Points**    | 5                            |
+| **Namespace** | `athena`                   |
+| **Resources** | NetworkPolicy `egress-policy`|
 
 ### Task
 
-Create a Deployment named `spread-deploy` in namespace `blaze` that:
+Create a NetworkPolicy named `egress-policy` in namespace `athena` that:
+
+- Applies to pods with label `app=restricted`
+- Allows egress traffic only to:
+  - Pods with label `app=database` on port 5432
+  - External IP block `10.0.0.0/8` on port 443
+
+Deny all other egress traffic.
+
+---
+
+## Question 13 | RBAC - Service Account Permissions (6%)
+
+|                     |                                                                 |
+| ------------------- | --------------------------------------------------------------- |
+| **Points**    | 6                                                               |
+| **Namespace** | `hermes`                                                      |
+| **Resources** | ServiceAccount `deployment-manager`, Role, RoleBinding      |
+
+### Task
+
+In namespace `hermes`:
+
+1. Create a ServiceAccount named `deployment-manager`
+2. Create a Role named `deploy-role` that allows:
+   - `get`, `list`, `watch`, `create`, `update`, `delete` on Deployments
+   - `get`, `list` on Pods
+3. Create a RoleBinding named `deploy-binding` to bind the role to the service account
+
+---
+
+## Question 14 | Deployment Rolling Update Strategy (5%)
+
+|                     |                        |
+| ------------------- | ---------------------- |
+| **Points**    | 5                      |
+| **Namespace** | `apollo`             |
+| **Resources** | Deployment `rolling-app`|
+
+### Task
+
+Create a Deployment named `rolling-app` in namespace `apollo` with:
 
 - Image: `nginx:1.21`
-- Replicas: 4
+- Replicas: `4`
 - Container name: `web`
-- Uses **topologySpreadConstraints** to spread pods evenly across nodes
-- `topologyKey`: `kubernetes.io/hostname`
-- `maxSkew`: 1
-- `whenUnsatisfiable`: `ScheduleAnyway`
-- Label selector: `app=spread-app`
+- Rolling update strategy with:
+  - Max surge: `25%`
+  - Max unavailable: `1`
+- Add label `version=v1` to pod template
 
 ---
 
-## Question 20 | Field Selectors
+## Question 15 | Ingress with Path-Based Routing (6%)
 
-|                          |                                       |
-| ------------------------ | ------------------------------------- |
-| **Points**         | 4                                     |
-| **Namespace**      | -                                     |
-| **File to create** | `./exam/course/20/running-pods.txt` |
+|                     |                        |
+| ------------------- | ---------------------- |
+| **Points**    | 6                      |
+| **Namespace** | `poseidon`           |
+| **Resources** | Ingress `path-ingress`|
 
 ### Task
 
-Use **field selectors** (not label selectors) to list all Pods in the cluster that have `status.phase=Running`.
+Create an Ingress named `path-ingress` in namespace `poseidon` that:
 
-Save the Pod names (one per line) to `./exam/course/20/running-pods.txt`.
+- Routes `/api` to service `api-svc` on port 8080
+- Routes `/web` to service `web-svc` on port 80
+- Uses pathType `Prefix` for both paths
 
-**Hint**: Use `--field-selector` with kubectl.
+**Note**: Pre-existing services `api-svc` and `web-svc` are already created.
 
 ---
 
-## Question 21 | Node Drain
+## Question 16 | Pod with Token Projection (5%)
 
-|                          |                                       |
-| ------------------------ | ------------------------------------- |
-| **Points**         | 4                                     |
-| **Namespace**      | `solar`                             |
-| **File to create** | `./exam/course/21/drain-command.sh` |
+|                     |                   |
+| ------------------- | ----------------- |
+| **Points**    | 5                 |
+| **Namespace** | `hades`         |
+| **Resources** | Pod `token-pod` |
 
 ### Task
 
-Write a command to `./exam/course/21/drain-command.sh` that would drain a node named `worker-node-1`:
+Create a Pod named `token-pod` in namespace `hades` with:
 
-- Ignore DaemonSets
-- Delete emptyDir data
-- Force deletion of pods
-- Use a timeout of 60 seconds
+- Image: `nginx:1.21`
+- Container name: `app`
+- A projected volume named `token-volume` containing:
+  - ServiceAccount token with audience `api` and expiration `3600` seconds
+  - Mounted at `/var/run/secrets/tokens`
 
-**Note**: Do not actually execute the drain command. Just write it to the file.
+---
+
+## Question 17 | CronJob with Concurrency Policy (5%)
+
+|                     |                        |
+| ------------------- | ---------------------- |
+| **Points**    | 5                      |
+| **Namespace** | `ares`               |
+| **Resources** | CronJob `scheduled-task`|
+
+### Task
+
+Create a CronJob named `scheduled-task` in namespace `ares` with:
+
+- Schedule: `*/5 * * * *` (every 5 minutes)
+- Image: `busybox:1.36`
+- Command: `echo "Task executed at $(date)"`
+- Concurrency policy: `Forbid`
+- Successful jobs history limit: `3`
+- Failed jobs history limit: `1`
+
+---
+
+## Question 18 | Pod Disruption Budget (4%)
+
+|                     |                    |
+| ------------------- | ------------------ |
+| **Points**    | 4                  |
+| **Namespace** | `hera`           |
+| **Resources** | PDB `app-pdb`    |
+
+### Task
+
+Create a PodDisruptionBudget named `app-pdb` in namespace `hera` that:
+
+- Selects pods with label `app=critical`
+- Ensures at least `2` pods are always available during voluntary disruptions
+
+---
+
+## Question 19 | Deployment with Annotations (4%)
+
+|                     |                          |
+| ------------------- | ------------------------ |
+| **Points**    | 4                        |
+| **Namespace** | `olympus`              |
+| **Resources** | Deployment `annotated-app`|
+
+### Task
+
+Create a Deployment named `annotated-app` in namespace `olympus` with:
+
+- Image: `nginx:1.21`
+- Replicas: `2`
+- Container name: `web`
+- Add annotation `kubernetes.io/change-cause: "Initial deployment"` to the deployment
+- Add annotation `prometheus.io/scrape: "true"` to the pod template
+
+---
+
+## Question 20 | Multi-Container Pod with Shared Process Namespace (5%)
+
+|                     |                    |
+| ------------------- | ------------------ |
+| **Points**    | 5                  |
+| **Namespace** | `artemis`        |
+| **Resources** | Pod `shared-pid` |
+
+### Task
+
+Create a Pod named `shared-pid` in namespace `artemis` with:
+
+- Enable `shareProcessNamespace: true`
+- Container 1 `app`: image `nginx:1.21`
+- Container 2 `debug`: image `busybox:1.36`, command `sleep 3600`
+
+The debug container should be able to see processes from the app container using `ps aux`.
 
 ---

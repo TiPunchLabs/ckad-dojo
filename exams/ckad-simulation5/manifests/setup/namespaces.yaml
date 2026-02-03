@@ -1,82 +1,81 @@
-# CKAD Simulation 5 - Dojo Kappa Namespaces
-# River/Water themed namespaces
+# Namespaces for CKAD Simulation 5 - Dojo Kirin (Ocean theme)
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: stream
+  name: shell
   labels:
     exam: ckad-simulation5
-    theme: kappa
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: pond
+  name: ocean
   labels:
     exam: ckad-simulation5
-    theme: kappa
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: marsh
+  name: reef
   labels:
     exam: ckad-simulation5
-    theme: kappa
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: delta
+  name: deep
   labels:
     exam: ckad-simulation5
-    theme: kappa
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: spring
+  name: tide
   labels:
     exam: ckad-simulation5
-    theme: kappa
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: brook
+  name: wave
   labels:
     exam: ckad-simulation5
-    theme: kappa
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: rapids
+  name: coral
   labels:
     exam: ckad-simulation5
-    theme: kappa
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: cascade
+  name: lagoon
   labels:
     exam: ckad-simulation5
-    theme: kappa
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: shoal
+  name: current
   labels:
     exam: ckad-simulation5
-    theme: kappa
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: eddy
+  name: anchor
   labels:
     exam: ckad-simulation5
-    theme: kappa
+    theme: kirin

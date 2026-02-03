@@ -27,6 +27,8 @@ const state = {
     terminalPort: 7681,
     terminalConnected: false,
     splitRatio: 0.5,  // 50% split by default
+    // Hints state
+    allowHints: true,
     // Timer pause feature (enabled by default)
     allowTimerPause: true
 };
@@ -492,6 +494,7 @@ async function startExam(examId) {
         state.examStarted = true;
         state.examEnded = false;
         state.allowTimerPause = config.allow_timer_pause === true;
+        state.allowHints = config.allow_hints !== false;
 
         // Update pause button visibility
         updatePauseButtonVisibility();
@@ -1123,6 +1126,89 @@ function renderQuestionDots() {
     });
 }
 
+/**
+ * Process hints in question content
+ * - Hint/Tip: Collapsible (hidden by default)
+ * - Note: Always visible
+ * If allowHints is false, hints/tips are removed entirely
+ */
+function processHints(container) {
+    // Find all paragraphs that start with <strong>Hint</strong>:, <strong>Tip</strong>:, or <strong>Note</strong>:
+    // Note: Markdown **Hint**: becomes <strong>Hint</strong>: after marked.js rendering
+    const paragraphs = container.querySelectorAll('p');
+
+    paragraphs.forEach(p => {
+        const text = p.innerHTML;
+
+        // Match <strong>Hint</strong>:, <strong>Tip</strong>:, or <strong>Note</strong>: patterns (post-markdown rendering)
+        const hintMatch = text.match(/^\s*<strong>Hint<\/strong>:\s*(.*)/i);
+        const tipMatch = text.match(/^\s*<strong>Tip<\/strong>:\s*(.*)/i);
+        const noteMatch = text.match(/^\s*<strong>Note<\/strong>:\s*(.*)/i);
+
+        if (hintMatch || tipMatch) {
+            // Hint or Tip - collapsible
+            if (!state.allowHints) {
+                // Remove hints/tips if not allowed
+                p.remove();
+                return;
+            }
+
+            const isHint = !!hintMatch;
+            const content = isHint ? hintMatch[1] : tipMatch[1];
+            const type = isHint ? 'hint' : 'tip';
+            const icon = isHint ? '💡' : '⚡';
+            const label = isHint ? 'Hint' : 'Tip';
+
+            const hintBox = document.createElement('div');
+            hintBox.className = `hint-box hint-${type}`;
+            hintBox.innerHTML = `
+                <div class="hint-header" tabindex="0" role="button" aria-expanded="false">
+                    <span class="hint-icon">${icon}</span>
+                    <span class="hint-label">${label}</span>
+                    <span class="hint-toggle">▼</span>
+                </div>
+                <div class="hint-content">${content}</div>
+            `;
+
+            // Add click handler
+            const header = hintBox.querySelector('.hint-header');
+            header.addEventListener('click', () => toggleHint(hintBox));
+            header.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleHint(hintBox);
+                }
+            });
+
+            p.replaceWith(hintBox);
+        } else if (noteMatch) {
+            // Note - always visible
+            const content = noteMatch[1];
+
+            const noteBox = document.createElement('div');
+            noteBox.className = 'hint-box hint-note expanded';
+            noteBox.innerHTML = `
+                <div class="hint-header">
+                    <span class="hint-icon">📝</span>
+                    <span class="hint-label">Note</span>
+                </div>
+                <div class="hint-content">${content}</div>
+            `;
+
+            p.replaceWith(noteBox);
+        }
+    });
+}
+
+/**
+ * Toggle hint box expanded/collapsed state
+ */
+function toggleHint(hintBox) {
+    const isExpanded = hintBox.classList.toggle('expanded');
+    const header = hintBox.querySelector('.hint-header');
+    header.setAttribute('aria-expanded', isExpanded);
+}
+
 function showQuestion(index) {
     if (index < 0 || index >= state.questions.length) return;
     if (state.examEnded) return;
@@ -1142,6 +1228,9 @@ function showQuestion(index) {
     // Render question content with markdown
     const content = question.content || '';
     elements.questionContent.innerHTML = marked.parse(content);
+
+    // Process hints (collapsible for Hint/Tip, visible for Note)
+    processHints(elements.questionContent);
 
     // Highlight code blocks
     elements.questionContent.querySelectorAll('pre code').forEach(block => {
@@ -1471,6 +1560,7 @@ async function resumeExam(examId, startQuestion = 1) {
         state.examStarted = true;
         state.examEnded = false;
         state.allowTimerPause = config.allow_timer_pause === true;
+        state.allowHints = config.allow_hints !== false;
 
         // Update pause button visibility
         updatePauseButtonVisibility();

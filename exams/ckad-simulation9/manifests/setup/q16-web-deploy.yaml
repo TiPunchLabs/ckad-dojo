@@ -1,0 +1,23 @@
+# Q16 - Pre-existing Deployment with multiple revisions for rollout undo question
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deploy
+  namespace: tide
+  annotations:
+    kubernetes.io/change-cause: "Initial deployment with nginx:1.18"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web-deploy
+  template:
+    metadata:
+      labels:
+        app: web-deploy
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.18
+        ports:
+        - containerPort: 80

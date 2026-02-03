@@ -1,0 +1,21 @@
+# Q7 - Pre-existing Deployment for Pause/Resume question
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: battle-app
+  namespace: ares
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: battle-app
+  template:
+    metadata:
+      labels:
+        app: battle-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.20
+        ports:
+        - containerPort: 80

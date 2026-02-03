@@ -1,0 +1,23 @@
+# Q17 - Pre-existing Deployment for rollout history question
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: history-deploy
+  namespace: wave
+  annotations:
+    kubernetes.io/change-cause: "Initial deployment with nginx:1.18"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: history-deploy
+  template:
+    metadata:
+      labels:
+        app: history-deploy
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.18
+        ports:
+        - containerPort: 80

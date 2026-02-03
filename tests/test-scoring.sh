@@ -112,8 +112,10 @@ for _exam in $_exams; do
 	_scoring_file="$PROJECT_DIR/exams/$_exam/scoring-functions.sh"
 
 	# Accept sourcing common.sh directly or via scoring-functions.sh (which sources common.sh)
-	_sources_common=$(grep -c 'source.*common.sh' "$_scoring_file" 2>/dev/null || echo "0")
-	_sources_scoring=$(grep -c 'source.*scoring-functions.sh' "$_scoring_file" 2>/dev/null || echo "0")
+	_sources_common=$(grep -c 'source.*common.sh' "$_scoring_file" 2>/dev/null | tr -d '[:space:]')
+	_sources_scoring=$(grep -c 'source.*scoring-functions.sh' "$_scoring_file" 2>/dev/null | tr -d '[:space:]')
+	_sources_common=${_sources_common:-0}
+	_sources_scoring=${_sources_scoring:-0}
 	_total_sources=$((_sources_common + _sources_scoring))
 	assert_true "[ $_total_sources -ge 1 ]" "$_exam scoring file should source common utilities"
 done

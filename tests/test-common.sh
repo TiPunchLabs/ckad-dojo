@@ -145,7 +145,7 @@ if load_exam "ckad-simulation2"; then
 	assert_not_empty "$TOTAL_QUESTIONS" "TOTAL_QUESTIONS should be set"
 	assert_not_empty "$TOTAL_POINTS" "TOTAL_POINTS should be set"
 	assert_true '[ ${#EXAM_NAMESPACES[@]} -gt 0 ]' "EXAM_NAMESPACES should have elements"
-	assert_contains "${EXAM_NAMESPACES[*]}" "blaze" "simulation2 should have blaze namespace"
+	assert_contains "${EXAM_NAMESPACES[*]}" "olympus" "simulation2 should have olympus namespace"
 else
 	assert_true 'false' "load_exam should succeed for ckad-simulation2"
 fi

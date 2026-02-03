@@ -1,4 +1,4 @@
-# CKAD Simulation 2 - Dojo Suzaku 🔥 - Solutions
+# CKAD Simulation 1 - Dojo Suzaku 🔥 - Solutions
 
 *「朱雀は灰から蘇る」 - Le phénix renaît de ses cendres*
 

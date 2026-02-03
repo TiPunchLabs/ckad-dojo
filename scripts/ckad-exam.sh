@@ -58,6 +58,7 @@ show_help() {
 	echo "  --no-terminal    Disable embedded terminal panel"
 	echo "  --no-docs        Don't open K8s/Helm documentation tabs"
 	echo "  --no-pause       Disable timer pause functionality"
+	echo "  --no-hints       Disable hints (remove Hint/Tip boxes)"
 	echo "  --skip-detection Skip existing exam resource detection"
 	echo "  --port PORT      Web interface port (default: $WEB_PORT)"
 	echo "  --terminal-port PORT  Terminal port (default: 7681)"
@@ -442,6 +443,7 @@ start_web() {
 	local no_docs=$5
 	local browser=${6:-default}
 	local no_pause=$7
+	local no_hints=$8
 
 	# Setup cleanup trap
 	trap cleanup_web EXIT INT TERM
@@ -561,6 +563,7 @@ start_web() {
 	cd "$PROJECT_DIR"
 	export NO_TERMINAL="$no_terminal"
 	export NO_PAUSE="$no_pause"
+	export NO_HINTS="$no_hints"
 	export TTYD_PORT="$TTYD_PORT"
 	uv run python web/server.py "$WEB_PORT" "$exam_id" "$start_question"
 }
@@ -748,6 +751,7 @@ NO_TIMER=false
 NO_TERMINAL=false
 NO_DOCS=false
 NO_PAUSE=false
+NO_HINTS=false
 SKIP_DETECTION=false
 INTERACTIVE_EXAM=true
 BROWSER="${CKAD_BROWSER:-default}"
@@ -785,6 +789,10 @@ while [[ $# -gt 0 ]]; do
 		;;
 	--no-pause)
 		NO_PAUSE=true
+		shift
+		;;
+	--no-hints)
+		NO_HINTS=true
 		shift
 		;;
 	--skip-detection)
@@ -877,7 +885,7 @@ fi
 # Execute command
 case $COMMAND in
 web)
-	start_web "$EXAM_ID" "$SKIP_CONFIRM" "$START_QUESTION" "$NO_TERMINAL" "$NO_DOCS" "$BROWSER" "$NO_PAUSE"
+	start_web "$EXAM_ID" "$SKIP_CONFIRM" "$START_QUESTION" "$NO_TERMINAL" "$NO_DOCS" "$BROWSER" "$NO_PAUSE" "$NO_HINTS"
 	;;
 start)
 	start_exam "$EXAM_ID" "$SKIP_CONFIRM" "$NO_TIMER" "$START_QUESTION"

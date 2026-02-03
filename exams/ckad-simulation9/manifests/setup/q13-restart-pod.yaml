@@ -1,0 +1,14 @@
+# Q13 - Pre-existing Pod that will be restarted for --previous logs question
+apiVersion: v1
+kind: Pod
+metadata:
+  name: restart-pod
+  namespace: harbor
+spec:
+  containers:
+  - name: app
+    image: busybox
+    command: ["/bin/sh", "-c"]
+    args: ["echo 'Previous instance log entry'; sleep 3; exit 1"]
+    # This pod will crash and restart, creating previous logs
+  restartPolicy: Always

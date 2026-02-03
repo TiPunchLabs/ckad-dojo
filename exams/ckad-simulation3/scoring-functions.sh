@@ -1,5 +1,5 @@
 #!/bin/bash
-# scoring-functions.sh - Scoring functions for CKAD Simulation 3 - Dojo Byakko
+# scoring-functions.sh - Scoring functions for CKAD Simulation 3 - Dojo Genbu
 # Each function returns the number of points scored and prints detailed results
 
 # Source common utilities from scripts/lib

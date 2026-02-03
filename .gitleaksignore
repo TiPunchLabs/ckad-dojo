@@ -1,0 +1,12 @@
+# Ignore fake API keys and secrets in exam questions/solutions
+# These are example values for CKAD practice, not real secrets
+
+# Simulation 7
+exams/ckad-simulation7/questions.md:generic-api-key:367
+exams/ckad-simulation7/solutions.md:generic-api-key:404
+
+# Simulations 8-9 (wildcard for flexibility)
+exams/ckad-simulation8/questions.md:generic-api-key:*
+exams/ckad-simulation8/solutions.md:generic-api-key:*
+exams/ckad-simulation9/questions.md:generic-api-key:*
+exams/ckad-simulation9/solutions.md:generic-api-key:*

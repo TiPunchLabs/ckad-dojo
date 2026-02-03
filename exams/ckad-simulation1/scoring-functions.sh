@@ -1,5 +1,5 @@
 #!/bin/bash
-# scoring-functions.sh - Scoring functions for CKAD Simulation 2 (Dojo Suzaku 🔥)
+# scoring-functions.sh - Scoring functions for CKAD Simulation 1 (Dojo Suzaku 🔥)
 # 21 original questions - 112 points total
 # Each function returns the number of points scored and prints detailed results
 

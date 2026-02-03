@@ -1,0 +1,26 @@
+# Q18 - Pre-existing Service for DNS resolution
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-backend
+  namespace: field
+  labels:
+    app: web
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    ports:
+    - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-svc
+  namespace: field
+spec:
+  selector:
+    app: web
+  ports:
+  - port: 80
+    targetPort: 80

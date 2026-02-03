@@ -1,0 +1,12 @@
+# Q11 - Pre-existing Pod with issues for describe/events question
+apiVersion: v1
+kind: Pod
+metadata:
+  name: problem-pod
+  namespace: pearl
+spec:
+  containers:
+  - name: app
+    image: nginx:invalid-tag-that-does-not-exist
+    ports:
+    - containerPort: 80

@@ -1,82 +1,82 @@
 # CKAD Simulation 2 - Namespaces
-# Fire/Phoenix themed namespaces for Dojo Suzaku
+# Greek mythology themed namespaces for Dojo Byakko 🐯
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: phoenix
+  name: olympus
   labels:
     exam: ckad-simulation2
-    theme: fire
+    theme: greek
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ember
+  name: zeus
   labels:
     exam: ckad-simulation2
-    theme: fire
+    theme: greek
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: blaze
+  name: athena
   labels:
     exam: ckad-simulation2
-    theme: fire
+    theme: greek
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: inferno
+  name: apollo
   labels:
     exam: ckad-simulation2
-    theme: fire
+    theme: greek
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: flame
+  name: artemis
   labels:
     exam: ckad-simulation2
-    theme: fire
+    theme: greek
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: spark
+  name: hermes
   labels:
     exam: ckad-simulation2
-    theme: fire
+    theme: greek
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: solar
+  name: poseidon
   labels:
     exam: ckad-simulation2
-    theme: fire
+    theme: greek
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: corona
+  name: hades
   labels:
     exam: ckad-simulation2
-    theme: fire
+    theme: greek
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: flare
+  name: hera
   labels:
     exam: ckad-simulation2
-    theme: fire
+    theme: greek
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: magma
+  name: ares
   labels:
     exam: ckad-simulation2
-    theme: fire
+    theme: greek
