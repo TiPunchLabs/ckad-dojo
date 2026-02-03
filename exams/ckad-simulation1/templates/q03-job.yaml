@@ -1,0 +1,18 @@
+# Q3 - Job Template for Timeout Question
+# Task: Add activeDeadlineSeconds to limit job execution time
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: data-processor
+  namespace: spark
+spec:
+  # TODO: Add activeDeadlineSeconds: 60
+  template:
+    spec:
+      containers:
+      - name: processor
+        image: busybox:1.36
+        command: ["sh", "-c", "echo 'Processing data...' && sleep 30 && echo 'Done'"]
+      restartPolicy: Never
+  backoffLimit: 2

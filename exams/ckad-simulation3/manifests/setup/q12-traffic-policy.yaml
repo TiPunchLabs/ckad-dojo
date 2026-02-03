@@ -1,0 +1,36 @@
+# Q12 - Service for internalTrafficPolicy exercise
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: local-app
+  namespace: ocean
+  labels:
+    app: local-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: local-app
+  template:
+    metadata:
+      labels:
+        app: local-app
+    spec:
+      containers:
+      - name: app
+        image: nginx:1.21
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: local-svc
+  namespace: ocean
+spec:
+  selector:
+    app: local-app
+  ports:
+  - port: 80
+    targetPort: 80
