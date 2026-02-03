@@ -2,6 +2,10 @@
 # CKAD Simulation 9 - Dojo Ryujin 🐲 - Scoring Functions
 # Original Questions: https://github.com/dgkanatsios/CKAD-exercises
 
+# Source common utilities
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../../scripts/lib/common.sh" 2>/dev/null || true
+
 # Q1: Helm Create Chart (5 points)
 score_q1() {
 	local score=0

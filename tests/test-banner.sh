@@ -65,13 +65,13 @@ assert_contains "$_banner_output" "min" "Output should mention duration"
 test_case "show_dojo_banner loads exam configuration"
 
 # Note: ckad-simulation1 is LOCAL ONLY (not in git repo)
-# Test with simulation2
+# Test with simulation2 (Byakko - White Tiger)
 _banner_sim2=$(show_dojo_banner "ckad-simulation2" 2>&1)
-assert_contains "$_banner_sim2" "Suzaku" "Simulation2 should show Suzaku dojo name"
+assert_contains "$_banner_sim2" "Byakko" "Simulation2 should show Byakko dojo name"
 
-# Test with simulation3
+# Test with simulation3 (Genbu - Black Tortoise)
 _banner_sim3=$(show_dojo_banner "ckad-simulation3" 2>&1)
-assert_contains "$_banner_sim3" "Byakko" "Simulation3 should show Byakko dojo name"
+assert_contains "$_banner_sim3" "Genbu" "Simulation3 should show Genbu dojo name"
 
 # ----------------------------------------------------------------------------
 # Test: show_dojo_banner with invalid exam_id uses defaults
