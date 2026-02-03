@@ -55,7 +55,8 @@ Thumbs.db
 # Timer state
 .timer_*
 
-.claude/settings.local.json
-
+# Claude Code and Specify (local development only)
+.claude/
+.specify/
 
 kodekloud/
