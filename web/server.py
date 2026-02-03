@@ -105,29 +105,33 @@ def strip_ansi_codes(text: str) -> str:
 def parse_criteria_from_output(output: str, question_id: str) -> list:
     """Extract criteria (PASS/FAIL) for a specific question from scoring output.
 
-    Criteria lines start with ✓ (pass) or ✗ (fail) markers.
-    They appear between the question header and the score line.
+    Supports two formats:
+    1. Legacy format: ✓ (pass) or ✗ (fail) markers with "Question N |" headers
+    2. New format: DETAILS:item1. item2. item3. (sequential, no headers)
     """
     criteria = []
 
     # Strip ANSI color codes from output before parsing
     output = strip_ansi_codes(output)
-
-    # Find the section for this question
-    # Question headers: "Question N | Topic" or just "Question N"
-    # Also handle format with "QN" prefix in summary
     lines = output.split("\n")
-    in_question = False
 
+    # Determine question number from question_id
+    # question_id can be "1", "2", "P1", etc.
+    if question_id.startswith("P"):
+        # Preview questions handled separately
+        target_index = -1
+    else:
+        target_index = int(question_id) - 1  # 0-indexed
+
+    # Try legacy format first (with Question headers)
+    in_question = False
     for line in lines:
         # Check if we're entering a question section
-        # Match patterns like "Question 1 |" or "Question 1 "
         if re.match(rf"^Question\s+{question_id}\s*[\|\s]", line, re.IGNORECASE):
             in_question = True
             continue
 
         # Check if we're at the score line (end of question section)
-        # Format: "N/N" at end of scoring output for each question
         if in_question and re.match(r"^\d+/\d+$", line.strip()):
             break
 
@@ -137,7 +141,6 @@ def parse_criteria_from_output(output: str, question_id: str) -> list:
 
         # Parse criteria lines (✓ or ✗ followed by description)
         if in_question:
-            # Match PASS criteria: ✓ description
             pass_match = re.match(r"^[✓✔]\s+(.+)$", line.strip())
             if pass_match:
                 criteria.append(
@@ -145,12 +148,47 @@ def parse_criteria_from_output(output: str, question_id: str) -> list:
                 )
                 continue
 
-            # Match FAIL criteria: ✗ description
             fail_match = re.match(r"^[✗✘×]\s+(.+)$", line.strip())
             if fail_match:
                 criteria.append(
                     {"description": fail_match.group(1).strip(), "passed": False}
                 )
+
+    # If legacy format found criteria, return them
+    if criteria:
+        return criteria
+
+    # Try new format (DETAILS lines, sequential by position)
+    # Find all DETAILS lines and return the one at target_index
+    details_lines = []
+    for line in lines:
+        details_match = re.match(r"^DETAILS:(.+)$", line.strip())
+        if details_match:
+            details_lines.append(details_match.group(1).strip())
+
+    # Get the details for the target question index
+    if 0 <= target_index < len(details_lines):
+        details_text = details_lines[target_index]
+        # Split by ". " to get individual items
+        items = re.split(r"\.\s+", details_text)
+        for item in items:
+            item = item.strip().rstrip(".")
+            if not item:
+                continue
+            # Determine pass/fail based on keywords
+            fail_keywords = [
+                "not found",
+                "not exist",
+                "incorrect",
+                "wrong",
+                "missing",
+                "failed",
+                "expected:",
+                "instead of",
+                "should be",
+            ]
+            passed = not any(kw in item.lower() for kw in fail_keywords)
+            criteria.append({"description": item, "passed": passed})
 
     return criteria
 
@@ -420,6 +458,7 @@ def load_exam_config(exam_id: str) -> dict:
         "total_points": 113,
         "passing_percentage": 66,
         "allow_timer_pause": True,
+        "allow_hints": True,
     }
 
     if config_file.exists():
@@ -447,10 +486,14 @@ def load_exam_config(exam_id: str) -> dict:
                 config["passing_percentage"] = int(value)
             elif key == "ALLOW_TIMER_PAUSE":
                 config["allow_timer_pause"] = value.lower() == "true"
+            elif key == "ALLOW_HINTS":
+                config["allow_hints"] = value.lower() == "true"
 
-    # Environment variable override (NO_PAUSE=true disables pause)
+    # Environment variable overrides
     if os.environ.get("NO_PAUSE", "").lower() == "true":
         config["allow_timer_pause"] = False
+    if os.environ.get("NO_HINTS", "").lower() == "true":
+        config["allow_hints"] = False
 
     return config
 
@@ -546,10 +589,10 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
         """Add cache control headers for development"""
         # Disable caching for JS and CSS files to avoid stale code issues
-        if self.path.endswith(('.js', '.css', '.html')):
-            self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
-            self.send_header('Pragma', 'no-cache')
-            self.send_header('Expires', '0')
+        if self.path.endswith((".js", ".css", ".html")):
+            self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
+            self.send_header("Pragma", "no-cache")
+            self.send_header("Expires", "0")
         super().end_headers()
 
     def do_POST(self):
