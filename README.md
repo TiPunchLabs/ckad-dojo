@@ -24,8 +24,8 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/version-1.7.0-blue" alt="Version 1.7.0">
-  <img src="https://img.shields.io/badge/exams-4-blue" alt="4 Exams">
-  <img src="https://img.shields.io/badge/questions-80-blue" alt="80 Questions">
+  <img src="https://img.shields.io/badge/exams-5-blue" alt="5 Exams">
+  <img src="https://img.shields.io/badge/questions-98-blue" alt="98 Questions">
   <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-lightgrey" alt="License: CC BY-NC-SA 4.0"></a>
 </p>
@@ -58,7 +58,7 @@
 
 | Feature | Description |
 |---------|-------------|
-| **4 Dojos** | 80 questions across 4 themed dojos |
+| **5 Dojos** | 98 questions across 5 themed dojos |
 | **Unified CLI** | Single `uv run ckad-dojo` command for all operations |
 | **Web Interface** | Modern UI with 120-minute countdown timer |
 | **Auto-Scoring** | 400+ criteria automatically evaluated |
@@ -77,9 +77,9 @@
 
 ---
 
-## The Four Dojos
+## The Five Dojos
 
-Three dojos are themed after the Shishin (四神) — Celestial Guardians from East Asian mythology. The fourth dojo features the Kappa, a water spirit from Japanese folklore:
+Three dojos are themed after the Shishin (四神) — Celestial Guardians from East Asian mythology. The fourth dojo features the Kappa, a water spirit, and the fifth dojo features the Kirin, a celestial creature from Japanese folklore:
 
 ### 🔥 Dojo Suzaku — Phénix Vermillon du Sud
 >
@@ -97,7 +97,7 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 >
 > *"La tortue porte le monde. La patience est la clé du succès."*
 
-**22 questions • 115 points** — Norse mythology theme (Odin, Thor, Asgard...)
+**20 questions • 105 points** — Norse mythology theme (Odin, Thor, Asgard...)
 
 ### 🐸 Dojo Kappa — Kappa des Rivières
 >
@@ -106,6 +106,14 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 **17 questions • 91 points** — River/water theme (stream, pond, marsh, delta...)
 
 *Questions by [@aravind4799](https://github.com/aravind4799)*
+
+### 🦌 Dojo Kirin — Kirin Céleste
+>
+> *「麒麟は平和をもたらす」 — Le kirin apporte la paix*
+
+**20 questions • 100 points** — River/water theme (stream, pond, marsh, delta...)
+
+*Questions by [@dgkanatsios](https://github.com/dgkanatsios)*
 
 ---
 
@@ -442,10 +450,11 @@ ckad-dojo/
 │   └── lib/                  # Shared functions
 ├── web/                      # Web interface
 ├── exams/                    # Exam definitions
-│   ├── ckad-simulation2/     # Dojo Suzaku 🔥 - 21 questions, 112 points
-│   ├── ckad-simulation3/     # Dojo Byakko 🐯 - 20 questions, 105 points
-│   ├── ckad-simulation4/     # Dojo Genbu 🐢 - 22 questions, 115 points
-│   └── ckad-simulation5/     # Dojo Kappa 🐸 - 17 questions, 91 points
+│   ├── ckad-simulation1/     # Dojo Suzaku 🔥 - 21 questions, 112 points
+│   ├── ckad-simulation2/     # Dojo Byakko 🐯 - 20 questions, 105 points
+│   ├── ckad-simulation3/     # Dojo Genbu 🐢 - 20 questions, 105 points
+│   ├── ckad-simulation4/     # Dojo Kappa 🐸 - 17 questions, 91 points
+│   └── ckad-simulation5/     # Dojo Kirin 🦌 - 20 questions, 100 points
 ├── exam/course/              # Your answers (created by setup)
 └── tests/                    # Unit tests
 ```
@@ -589,6 +598,7 @@ Special thanks to the following contributors whose work has been adapted for thi
 | Dojo | Source | Author |
 |------|--------|--------|
 | 🐸 Dojo Kappa (Simulation 4) | [CKAD-Practice-Questions](https://github.com/aravind4799/CKAD-Practice-Questions) | [@aravind4799](https://github.com/aravind4799) |
+| 🦌 Dojo Kirin (Simulation 5) | [ckad-exercises](https://github.com/dgkanatsios/CKAD-exercises) | [@dgkanatsios](https://github.com/dgkanatsios) |
 
 ---
 
