@@ -1,0 +1,51 @@
+# Namespaces for CKAD Simulation 8 - Dojo Inari (Harvest theme)
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: harvest
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: grain
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rice
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: field
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shrine
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: blessing
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fortune
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: golden
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bounty
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prosperity
