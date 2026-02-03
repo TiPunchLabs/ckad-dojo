@@ -1,8 +1,8 @@
-# CKAD Exam Simulator - Dojo Byakko 🐯
+# CKAD Exam Simulator - Dojo Genbu 🐢
 
 > **Total Score**: 105 points | **Passing Score**: ~66% (69 points)
 >
-> *「白虎は精密に狩る」 - Le tigre blanc chasse avec précision*
+> *「玄武は深海を守る」 - La tortue noire garde les profondeurs*
 >
 > **Local Simulator Adaptations**:
 >

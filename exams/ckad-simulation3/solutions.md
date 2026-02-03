@@ -1,6 +1,6 @@
-# CKAD Simulation 3 - Dojo Byakko 🐯 - Solutions
+# CKAD Simulation 3 - Dojo Genbu 🐢 - Solutions
 
-*「白虎は精密に狩る」 - Le tigre blanc chasse avec précision*
+*「玄武は深海を守る」 - La tortue noire garde les profondeurs*
 
 This document contains the solutions for all 20 questions in CKAD Simulation 3.
 

@@ -1,545 +1,744 @@
-# CKAD Simulation 5 - Solutions (Dojo Kappa 🐸)
+# CKAD Simulation 5 - Solutions (Dojo Kirin 🦌)
 
-> **Total Score**: 91 points | **Passing Score**: ~66% (60 points)
->
-> **Original Questions**: Adapted from [CKAD-Practice-Questions](https://github.com/aravind4799/CKAD-Practice-Questions) by [@aravind4799](https://github.com/aravind4799)
+> **Total Score**: 105 points | **Passing Score**: ~66% (69 points)
 
 ---
 
-## Question 1 | Secret from Hardcoded Variables (4 points)
+## Question 1 | ResourceQuota (5 points)
 
 ### Solution
-
-```bash
-# Step 1: Create the Secret
-kubectl create secret generic db-credentials \
-  --from-literal=DB_USER=admin \
-  --from-literal=DB_PASS=Secret123! \
-  -n stream
-
-# Step 2: Update Deployment to use Secret
-kubectl edit deploy api-server -n stream
-```
-
-Replace the hardcoded environment variables with:
 
 ```yaml
-env:
-  - name: DB_USER
-    valueFrom:
-      secretKeyRef:
-        name: db-credentials
-        key: DB_USER
-  - name: DB_PASS
-    valueFrom:
-      secretKeyRef:
-        name: db-credentials
-        key: DB_PASS
-```
-
-```bash
-# Verify
-kubectl rollout status deploy api-server -n stream
-kubectl get secret db-credentials -n stream
-```
-
----
-
-## Question 2 | CronJob with Schedule and History Limits (8 points)
-
-### Solution
-
-```bash
-kubectl apply -f - <<EOF
-apiVersion: batch/v1
-kind: CronJob
+apiVersion: v1
+kind: ResourceQuota
 metadata:
-  name: backup-job
-  namespace: pond
+  name: namespace-limits
+  namespace: shell
 spec:
-  schedule: "*/30 * * * *"
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 2
-  jobTemplate:
-    spec:
-      activeDeadlineSeconds: 300
-      template:
-        spec:
-          restartPolicy: Never
-          containers:
-            - name: backup
-              image: busybox:latest
-              command: ["/bin/sh", "-c"]
-              args: ["echo Backup completed"]
-EOF
+  hard:
+    pods: "10"
+    requests.cpu: "4"
+    requests.memory: 4Gi
+    limits.cpu: "8"
+    limits.memory: 8Gi
+    configmaps: "10"
+    secrets: "10"
+```
 
-# Verify
-kubectl get cronjob backup-job -n pond
-kubectl describe cronjob backup-job -n pond
-
-# Test (optional)
-kubectl create job backup-job-test --from=cronjob/backup-job -n pond
-kubectl logs job/backup-job-test -n pond
+```bash
+kubectl apply -f resourcequota.yaml
+kubectl describe quota namespace-limits -n shell
 ```
 
 ---
 
-## Question 3 | ServiceAccount, Role, and RoleBinding (8 points)
+## Question 2 | HorizontalPodAutoscaler (6 points)
 
 ### Solution
 
-```bash
-# Step 1: Create ServiceAccount
-kubectl create sa log-sa -n marsh
+**Using kubectl autoscale:**
 
-# Step 2: Create Role
-kubectl apply -f - <<EOF
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+```bash
+kubectl autoscale deployment web-app -n ocean \
+  --name=web-app-hpa \
+  --min=2 \
+  --max=10 \
+  --cpu-percent=70
+```
+
+**Or using manifest:**
+
+```yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
 metadata:
-  name: log-role
-  namespace: marsh
-rules:
-  - apiGroups: [""]
-    resources: ["pods"]
-    verbs: ["get", "list", "watch"]
-EOF
-
-# Step 3: Create RoleBinding
-kubectl create rolebinding log-rb \
-  --role=log-role \
-  --serviceaccount=marsh:log-sa \
-  -n marsh
-
-# Step 4: Update Pod to use ServiceAccount
-kubectl get pod log-collector -n marsh -o yaml > /tmp/log-collector.yaml
-# Edit to change serviceAccountName to log-sa
-kubectl delete pod log-collector -n marsh
-kubectl apply -f /tmp/log-collector.yaml
-
-# Verify
-kubectl get pod log-collector -n marsh
-kubectl logs log-collector -n marsh
-```
-
----
-
-## Question 4 | Fix Broken Pod with Correct ServiceAccount (4 points)
-
-### Solution
-
-```bash
-# Step 1: Investigate existing RBAC resources
-kubectl get rolebindings -n delta
-kubectl describe rolebinding monitor-binding -n delta
-kubectl describe role metrics-reader -n delta
-
-# Step 2: Update Pod to use monitor-sa
-kubectl get pod metrics-pod -n delta -o yaml > /tmp/metrics-pod.yaml
-# Edit to change serviceAccountName to monitor-sa
-kubectl delete pod metrics-pod -n delta
-kubectl apply -f /tmp/metrics-pod.yaml
-
-# Step 3: Verify
-kubectl logs metrics-pod -n delta
-```
-
----
-
-## Question 5 | Build Container Image and Save as Tarball (8 points)
-
-### Solution
-
-```bash
-# Step 1: Build the image
-cd ./exam/course/5/image
-docker build -t my-app:1.0 .
-
-# Verify
-docker images | grep my-app
-
-# Step 2: Save image as tarball
-docker save -o ../my-app.tar my-app:1.0
-
-# Verify
-ls -lh ../my-app.tar
-```
-
----
-
-## Question 6 | Canary Deployment with Manual Traffic Split (8 points)
-
-### Solution
-
-```bash
-# Step 1: Scale existing Deployment
-kubectl scale deploy web-app --replicas=8 -n default
-
-# Step 2: Create canary Deployment
-kubectl apply -f - <<EOF
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: web-app-canary
-  namespace: default
+  name: web-app-hpa
+  namespace: ocean
 spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: webapp
-      version: v2
-  template:
-    metadata:
-      labels:
-        app: webapp
-        version: v2
-    spec:
-      containers:
-        - name: web
-          image: nginx:latest
-          ports:
-            - containerPort: 80
-EOF
-
-# Step 3: Verify Service selects both
-kubectl get endpoints web-service -n default
-kubectl get pods -n default -l app=webapp --show-labels
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: web-app
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
 ```
-
----
-
-## Question 7 | Fix NetworkPolicy by Updating Pod Labels (8 points)
-
-### Solution
 
 ```bash
-# Step 1: View existing NetworkPolicies
-kubectl get networkpolicies -n spring -o yaml
-
-# Step 2: Update Pod labels
-kubectl label pod frontend -n spring role=frontend --overwrite
-kubectl label pod backend -n spring role=backend --overwrite
-kubectl label pod database -n spring role=db --overwrite
-
-# Verify
-kubectl get pods -n spring --show-labels
+kubectl get hpa -n ocean
 ```
 
 ---
 
-## Question 8 | Fix Broken Deployment YAML (4 points)
+## Question 3 | StatefulSet (8 points)
 
 ### Solution
-
-Edit `./exam/course/8/broken-deploy.yaml`:
 
 ```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: broken-app
-  namespace: default
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: myapp
-  template:
-    metadata:
-      labels:
-        app: myapp
-    spec:
-      containers:
-        - name: web
-          image: nginx
-```
-
-```bash
-# Apply and verify
-kubectl apply -f ./exam/course/8/broken-deploy.yaml
-kubectl get deploy broken-app
-kubectl rollout status deploy broken-app
-```
-
----
-
-## Question 9 | Perform Rolling Update and Rollback (8 points)
-
-### Solution
-
-```bash
-# Step 1: Update the image
-kubectl set image deploy/app-v1 nginx=nginx:1.25 -n brook
-
-# Step 2: Monitor the rollout
-kubectl rollout status deploy app-v1 -n brook
-
-# Step 3: View rollout history
-kubectl rollout history deploy app-v1 -n brook
-
-# Step 4: Rollback to previous revision
-kubectl rollout undo deploy app-v1 -n brook
-
-# Step 5: Verify rollback
-kubectl rollout status deploy app-v1 -n brook
-kubectl get deploy app-v1 -n brook -o jsonpath='{.spec.template.spec.containers[0].image}'
-
-# Step 6: Save revision number
-kubectl rollout history deploy app-v1 -n brook | tail -1 | awk '{print $1}' > ./exam/course/9/rollback-revision.txt
-```
-
----
-
-## Question 10 | Add Readiness Probe to Deployment (4 points)
-
-### Solution
-
-```bash
-kubectl edit deploy api-deploy -n rapids
-```
-
-Add readiness probe:
-
-```yaml
-spec:
-  template:
-    spec:
-      containers:
-        - name: api
-          readinessProbe:
-            httpGet:
-              path: /ready
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-```
-
-```bash
-# Verify
-kubectl rollout status deploy api-deploy -n rapids
-kubectl describe deploy api-deploy -n rapids
-```
-
----
-
-## Question 11 | Configure Pod and Container Security Context (6 points)
-
-### Solution
-
-```bash
-kubectl edit deploy secure-app -n cascade
-```
-
-Add security contexts:
-
-```yaml
-spec:
-  template:
-    spec:
-      securityContext:
-        runAsUser: 1000
-      containers:
-        - name: app
-          securityContext:
-            capabilities:
-              add:
-                - NET_ADMIN
-```
-
-```bash
-# Verify
-kubectl rollout status deploy secure-app -n cascade
-kubectl get pod -n cascade -l app=secure-app -o yaml | grep -A 10 securityContext
-```
-
----
-
-## Question 12 | Fix Service Selector (2 points)
-
-### Solution
-
-```bash
-# Check current state
-kubectl get pods -n shoal --show-labels
-kubectl get endpoints web-svc -n shoal
-
-# Fix selector
-kubectl edit svc web-svc -n shoal
-```
-
-Change selector to:
-
-```yaml
-spec:
-  selector:
-    app: webapp
-```
-
-```bash
-# Verify
-kubectl get endpoints web-svc -n shoal
-```
-
----
-
-## Question 13 | Create NodePort Service (4 points)
-
-### Solution
-
-```bash
-kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Service
 metadata:
-  name: api-nodeport
-  namespace: default
+  name: db-headless
+  namespace: reef
 spec:
-  type: NodePort
+  clusterIP: None
   selector:
-    app: api
+    app: db-cluster
   ports:
-    - port: 80
-      targetPort: 9090
-      protocol: TCP
-EOF
-
-# Verify
-kubectl get svc api-nodeport -n default
-kubectl describe svc api-nodeport -n default
-```
-
+  - port: 6379
+    targetPort: 6379
 ---
-
-## Question 14 | Create Ingress Resource (4 points)
-
-### Solution
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db-cluster
+  namespace: reef
+spec:
+  serviceName: db-headless
+  replicas: 3
+  selector:
+    matchLabels:
+      app: db-cluster
+  template:
+    metadata:
+      labels:
+        app: db-cluster
+    spec:
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: data
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 100Mi
+```
 
 ```bash
-kubectl apply -f - <<EOF
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: web-ingress
-  namespace: eddy
-spec:
-  rules:
-    - host: web.example.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: web-svc
-                port:
-                  number: 8080
-EOF
-
-# Verify
-kubectl get ingress web-ingress -n eddy
-kubectl describe ingress web-ingress -n eddy
+kubectl apply -f statefulset.yaml
+kubectl get statefulset db-cluster -n reef
+kubectl get pods -n reef -l app=db-cluster
 ```
 
 ---
 
-## Question 15 | Fix Ingress PathType (4 points)
+## Question 4 | DaemonSet (6 points)
 
 ### Solution
 
-Edit `./exam/course/15/fix-ingress.yaml`:
+```yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-monitor
+  namespace: deep
+spec:
+  selector:
+    matchLabels:
+      app: node-monitor
+  template:
+    metadata:
+      labels:
+        app: node-monitor
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      containers:
+      - name: monitor
+        image: busybox:1.36
+        command: ["sh", "-c", "while true; do echo Node: $NODE_NAME; sleep 60; done"]
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+```
+
+```bash
+kubectl apply -f daemonset.yaml
+kubectl get daemonset node-monitor -n deep
+kubectl get pods -n deep -o wide
+```
+
+---
+
+## Question 5 | PriorityClass (5 points)
+
+### Solution
+
+```yaml
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: critical-priority
+value: 1000000
+globalDefault: false
+description: "Critical workloads priority"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: critical-pod
+  namespace: tide
+spec:
+  priorityClassName: critical-priority
+  containers:
+  - name: nginx
+    image: nginx:1.21
+```
+
+```bash
+kubectl apply -f priorityclass.yaml
+kubectl get priorityclass critical-priority
+kubectl get pod critical-pod -n tide -o yaml | grep priority
+```
+
+---
+
+## Question 6 | startupProbe (5 points)
+
+### Solution
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: slow-starter
+  namespace: wave
+spec:
+  containers:
+  - name: app
+    image: nginx:1.21
+    ports:
+    - containerPort: 80
+    startupProbe:
+      httpGet:
+        path: /
+        port: 80
+      failureThreshold: 30
+      periodSeconds: 10
+    livenessProbe:
+      httpGet:
+        path: /
+        port: 80
+```
+
+```bash
+kubectl apply -f slow-starter.yaml
+kubectl get pod slow-starter -n wave
+kubectl describe pod slow-starter -n wave | grep -A5 "Startup"
+```
+
+---
+
+## Question 7 | Pod Affinity (6 points)
+
+### Solution
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-frontend
+  namespace: coral
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-frontend
+  template:
+    metadata:
+      labels:
+        app: web-frontend
+        tier: frontend
+    spec:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: cache
+              topologyKey: kubernetes.io/hostname
+      containers:
+      - name: frontend
+        image: nginx:1.21
+```
+
+```bash
+kubectl apply -f web-frontend.yaml
+kubectl get deployment web-frontend -n coral
+kubectl get pods -n coral -o wide
+```
+
+---
+
+## Question 8 | Ingress with Path Routing (6 points)
+
+### Solution
 
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: api-ingress
-  namespace: default
+  name: api-routing
+  namespace: lagoon
 spec:
+  ingressClassName: nginx
   rules:
-    - http:
-        paths:
-          - path: /api
-            pathType: Prefix
-            backend:
-              service:
-                name: api-svc
-                port:
-                  number: 8080
+  - host: api.lagoon.local
+    http:
+      paths:
+      - path: /v1
+        pathType: Prefix
+        backend:
+          service:
+            name: api-v1-svc
+            port:
+              number: 80
+      - path: /v2
+        pathType: Prefix
+        backend:
+          service:
+            name: api-v2-svc
+            port:
+              number: 80
 ```
 
 ```bash
-# Apply
-kubectl apply -f ./exam/course/15/fix-ingress.yaml
-kubectl get ingress api-ingress -n default
+kubectl apply -f ingress.yaml
+kubectl get ingress api-routing -n lagoon
+kubectl describe ingress api-routing -n lagoon
 ```
 
 ---
 
-## Question 16 | Add Resource Requests and Limits to Pod (4 points)
+## Question 9 | Job with Completions and Parallelism (5 points)
+
+### Solution
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: parallel-processor
+  namespace: current
+spec:
+  completions: 6
+  parallelism: 3
+  backoffLimit: 4
+  template:
+    spec:
+      containers:
+      - name: processor
+        image: busybox:1.36
+        command: ["sh", "-c", "echo Processing batch $RANDOM && sleep 5"]
+      restartPolicy: Never
+```
+
+```bash
+kubectl apply -f job.yaml
+kubectl get jobs -n current
+kubectl get pods -n current -l job-name=parallel-processor
+```
+
+---
+
+## Question 10 | kubectl debug (4 points)
+
+### Solution
+
+**Using ephemeral containers (K8s 1.25+):**
+
+```bash
+kubectl debug troubled-app -n anchor -it --image=busybox:1.36 --target=app -c debugger -- sh
+
+# Inside the container
+ls -la /data > /tmp/output.txt
+exit
+```
+
+**Alternative using copy-to:**
+
+```bash
+kubectl debug troubled-app -n anchor -it --copy-to=troubled-app-debug --image=busybox:1.36 -- sh
+ls -la /data
+```
+
+**Save output:**
+
+```bash
+kubectl exec troubled-app -n anchor -- ls -la /data > ./exam/course/10/debug-output.txt
+```
+
+---
+
+## Question 11 | EndpointSlice (3 points)
 
 ### Solution
 
 ```bash
-# Step 1: Check ResourceQuota
-kubectl get quota -n pond
-kubectl describe quota pond-quota -n pond
+# List EndpointSlices for the service
+kubectl get endpointslices -n shell -l kubernetes.io/service-name=backend-svc
 
-# Step 2: Create Pod with half the quota limits
-# If quota shows limits.cpu: "2" and limits.memory: "4Gi"
-# Then use cpu: "1" and memory: "2Gi"
-kubectl apply -f - <<EOF
+# Get detailed information
+kubectl describe endpointslice -n shell -l kubernetes.io/service-name=backend-svc
+
+# Save to file
+cat > ./exam/course/11/endpoints-info.txt << 'EOF'
+EndpointSlice: backend-svc-xxxxx
+Number of endpoints: 3
+IP addresses:
+  - 10.244.0.10
+  - 10.244.0.11
+  - 10.244.0.12
+Ports: 80/TCP
+EOF
+```
+
+---
+
+## Question 12 | Service internalTrafficPolicy (4 points)
+
+### Solution
+
+```bash
+kubectl patch service local-svc -n ocean \
+  -p '{"spec":{"internalTrafficPolicy":"Local"}}'
+```
+
+**Or edit directly:**
+
+```bash
+kubectl edit svc local-svc -n ocean
+# Add: internalTrafficPolicy: Local
+```
+
+**Verification:**
+
+```bash
+kubectl get svc local-svc -n ocean -o yaml | grep internalTrafficPolicy
+```
+
+---
+
+## Question 13 | EmptyDir with sizeLimit (4 points)
+
+### Solution
+
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: resource-pod
-  namespace: pond
+  name: cache-pod
+  namespace: reef
 spec:
   containers:
-    - name: web
-      image: nginx:latest
-      resources:
-        requests:
-          cpu: "100m"
-          memory: "128Mi"
-        limits:
-          cpu: "1"
-          memory: "2Gi"
-EOF
+  - name: cache
+    image: redis:7-alpine
+    volumeMounts:
+    - name: cache-volume
+      mountPath: /cache
+  volumes:
+  - name: cache-volume
+    emptyDir:
+      medium: Memory
+      sizeLimit: 100Mi
+```
 
-# Verify
-kubectl get pod resource-pod -n pond
-kubectl describe pod resource-pod -n pond
+```bash
+kubectl apply -f cache-pod.yaml
+kubectl get pod cache-pod -n reef
+kubectl describe pod cache-pod -n reef | grep -A5 "Volumes"
 ```
 
 ---
 
-## Question 17 | Pod Topology Spread Constraints (3 points) - Preview
+## Question 14 | Secret with stringData (4 points)
 
 ### Solution
 
-```bash
-kubectl apply -f - <<EOF
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-credentials
+  namespace: deep
+immutable: true
+stringData:
+  api-key: super-secret-key-12345
+  db-password: postgres@secure!
+---
 apiVersion: v1
 kind: Pod
 metadata:
-  name: spread-pod
-  namespace: eddy
-  labels:
-    app: spread
+  name: secret-consumer
+  namespace: deep
 spec:
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: DoNotSchedule
-      labelSelector:
+  containers:
+  - name: consumer
+    image: busybox:1.36
+    command: ["sh", "-c", "cat /secrets/api-key && sleep 3600"]
+    volumeMounts:
+    - name: secret-volume
+      mountPath: /secrets
+      readOnly: true
+  volumes:
+  - name: secret-volume
+    secret:
+      secretName: app-credentials
+```
+
+```bash
+kubectl apply -f secret.yaml
+kubectl get secret app-credentials -n deep -o yaml
+kubectl exec secret-consumer -n deep -- cat /secrets/api-key
+```
+
+---
+
+## Question 15 | kubectl patch (5 points)
+
+### Solution
+
+**patch-commands.sh:**
+
+```bash
+#!/bin/bash
+
+# 1. Strategic merge patch - Update image
+kubectl patch deployment patch-demo -n tide \
+  -p '{"spec":{"template":{"spec":{"containers":[{"name":"nginx","image":"nginx:1.22"}]}}}}'
+
+# 2. JSON patch - Add environment variable
+kubectl patch deployment patch-demo -n tide --type='json' \
+  -p='[{"op":"add","path":"/spec/template/spec/containers/0/env/0","value":{"name":"ENV_MODE","value":"production"}}]'
+
+# 3. JSON patch - Update replicas
+kubectl patch deployment patch-demo -n tide --type='json' \
+  -p='[{"op":"replace","path":"/spec/replicas","value":4}]'
+```
+
+```bash
+chmod +x ./exam/course/15/patch-commands.sh
+./exam/course/15/patch-commands.sh
+kubectl describe deployment patch-demo -n tide
+```
+
+---
+
+## Question 16 | NetworkPolicy with IPBlock (8 points)
+
+### Solution
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: external-access
+  namespace: wave
+spec:
+  podSelector:
+    matchLabels:
+      tier: api
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
         matchLabels:
-          app: spread
-  containers:
-    - name: nginx
-      image: nginx
-EOF
-
-# Verify
-kubectl get pod spread-pod -n eddy
-kubectl describe pod spread-pod -n eddy
+          tier: client
+    - ipBlock:
+        cidr: 10.0.0.0/8
+        except:
+        - 10.0.1.0/24
+    ports:
+    - protocol: TCP
+      port: 80
+  egress:
+  - to: []
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - protocol: TCP
+      port: 443
 ```
+
+```bash
+kubectl apply -f networkpolicy.yaml
+kubectl get networkpolicy external-access -n wave
+kubectl describe networkpolicy external-access -n wave
+```
+
+---
+
+## Question 17 | Pod with hostNetwork (5 points)
+
+### Solution
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: network-diagnostic
+  namespace: coral
+spec:
+  hostNetwork: true
+  hostPID: true
+  containers:
+  - name: netshoot
+    image: nicolaka/netshoot:latest
+    command: ["sleep", "3600"]
+    securityContext:
+      privileged: true
+```
+
+```bash
+kubectl apply -f network-diagnostic.yaml
+kubectl get pod network-diagnostic -n coral
+kubectl exec network-diagnostic -n coral -- ip addr
+kubectl exec network-diagnostic -n coral -- ps aux | head
+```
+
+---
+
+## Question 18 | ClusterRole and ClusterRoleBinding (6 points)
+
+### Solution
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: node-monitor-sa
+  namespace: lagoon
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: node-reader
+rules:
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["nodes/status"]
+  verbs: ["get"]
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: node-reader-binding
+subjects:
+- kind: ServiceAccount
+  name: node-monitor-sa
+  namespace: lagoon
+roleRef:
+  kind: ClusterRole
+  name: node-reader
+  apiGroup: rbac.authorization.k8s.io
+```
+
+```bash
+kubectl apply -f rbac.yaml
+kubectl auth can-i list nodes --as=system:serviceaccount:lagoon:node-monitor-sa
+```
+
+---
+
+## Question 19 | kubectl auth can-i (4 points)
+
+### Solution
+
+```bash
+# Check permissions for app-deployer ServiceAccount
+SA="system:serviceaccount:current:app-deployer"
+
+kubectl auth can-i create deployments -n current --as=$SA
+kubectl auth can-i delete deployments -n current --as=$SA
+kubectl auth can-i create pods -n current --as=$SA
+kubectl auth can-i delete secrets -n current --as=$SA
+kubectl auth can-i list nodes --as=$SA
+
+# Save results
+cat > ./exam/course/19/permissions.txt << 'EOF'
+create deployments: yes
+delete deployments: no
+create pods: no
+delete secrets: no
+list nodes: no
+EOF
+```
+
+---
+
+## Question 20 | Multi-Container with Shared Volume (6 points)
+
+### Solution
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: data-pipeline
+  namespace: anchor
+spec:
+  containers:
+  - name: producer
+    image: busybox:1.36
+    command: ["sh", "-c", "while true; do date >> /data/log.txt; sleep 5; done"]
+    volumeMounts:
+    - name: shared-data
+      mountPath: /data
+  - name: consumer
+    image: busybox:1.36
+    command: ["sh", "-c", "tail -f /data/log.txt"]
+    volumeMounts:
+    - name: shared-data
+      mountPath: /data
+  - name: monitor
+    image: busybox:1.36
+    command: ["sh", "-c", "while true; do wc -l /data/log.txt; sleep 10; done"]
+    volumeMounts:
+    - name: shared-data
+      mountPath: /data
+  volumes:
+  - name: shared-data
+    emptyDir: {}
+```
+
+```bash
+kubectl apply -f data-pipeline.yaml
+kubectl get pod data-pipeline -n anchor
+kubectl logs data-pipeline -n anchor -c consumer
+kubectl logs data-pipeline -n anchor -c monitor
+```
+
+---

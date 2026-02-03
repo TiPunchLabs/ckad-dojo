@@ -1,81 +1,82 @@
-# Namespaces for CKAD Simulation 4 - Dojo Genbu (Ocean/Water theme)
+# CKAD Simulation 5 - Dojo Kappa Namespaces
+# River/Water themed namespaces
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: shell
+  name: stream
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kappa
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: ocean
+  name: pond
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kappa
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: reef
+  name: marsh
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kappa
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: deep
+  name: delta
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kappa
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: tide
+  name: spring
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kappa
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: wave
+  name: brook
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kappa
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: coral
+  name: rapids
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kappa
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: lagoon
+  name: cascade
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kappa
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: current
+  name: shoal
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kappa
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: anchor
+  name: eddy
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kappa

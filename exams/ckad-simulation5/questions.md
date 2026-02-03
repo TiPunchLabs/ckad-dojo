@@ -1,10 +1,8 @@
-# CKAD Exam Simulator - Dojo Kappa 🐸
+# CKAD Exam Simulator - Dojo Kirin 🦌
 
-> **Total Score**: 88 points | **Passing Score**: ~66% (58 points)
+> **Total Score**: 105 points | **Passing Score**: ~66% (69 points)
 >
-> *「河童は水を知る」 - Le kappa connait les eaux*
->
-> **Original Questions**: Adapted from [CKAD-Practice-Questions](https://github.com/aravind4799/CKAD-Practice-Questions) by [@aravind4799](https://github.com/aravind4799)
+> *「麒麟は平和をもたらす」 - Le kirin apporte la paix*
 >
 > **Local Simulator Adaptations**:
 >
@@ -16,423 +14,549 @@
 
 ---
 
-## Question 1 | Secret from Hardcoded Variables
+## Question 1 | ResourceQuota
 
 | | |
 |---|---|
-| **Points** | 4/88 (5%) |
-| **Namespace** | `stream` |
-| **Resources** | Secret `db-credentials`, Deployment `api-server` |
-| **Files** | - |
+| **Points** | 5 |
+| **Namespace** | `shell` |
+| **Resources** | ResourceQuota `namespace-limits` |
 
 ### Task
 
-In namespace `stream`, Deployment `api-server` exists with hard-coded environment variables:
+Create a **ResourceQuota** named `namespace-limits` in namespace `shell` that enforces:
 
-- `DB_USER=admin`
-- `DB_PASS=Secret123!`
+| Resource | Limit |
+|----------|-------|
+| Max pods | `10` |
+| Max CPU requests | `4` |
+| Max memory requests | `4Gi` |
+| Max CPU limits | `8` |
+| Max memory limits | `8Gi` |
+| Max ConfigMaps | `10` |
+| Max Secrets | `10` |
 
-Your tasks:
-
-1. Create a Secret named **`db-credentials`** in namespace `stream` containing these credentials
-2. Update Deployment `api-server` to use the Secret via `valueFrom.secretKeyRef`
-3. Do not change the Deployment name or namespace
+Verify the quota is applied with `kubectl describe quota`.
 
 ---
 
-## Question 2 | CronJob with Schedule and History Limits
+## Question 2 | HorizontalPodAutoscaler
 
 | | |
 |---|---|
-| **Points** | 8/88 (9%) |
-| **Namespace** | `pond` |
-| **Resources** | CronJob `backup-job` |
-| **Files** | - |
+| **Points** | 6 |
+| **Namespace** | `ocean` |
+| **Resources** | HPA `web-app-hpa` |
 
 ### Task
 
-Create a CronJob named **`backup-job`** in namespace `pond` with the following specifications:
+A Deployment named `web-app` already exists in namespace `ocean`.
 
-- Schedule: Run every 30 minutes (`*/30 * * * *`)
-- Image: `busybox:latest`
-- Container name: `backup`
-- Container command: `echo "Backup completed"`
-- Set `successfulJobsHistoryLimit: 3`
-- Set `failedJobsHistoryLimit: 2`
-- Set `activeDeadlineSeconds: 300`
-- Use `restartPolicy: Never`
+Create a **HorizontalPodAutoscaler** named `web-app-hpa` that:
 
-**Tip:** Use `kubectl explain cronjob.spec` to find the correct field names.
+| Configuration | Value |
+|---------------|-------|
+| Target Deployment | `web-app` |
+| Min replicas | `2` |
+| Max replicas | `10` |
+| Target CPU utilization | `70%` |
+
+Use `kubectl autoscale` or create the HPA manifest directly.
+
+Verify the HPA is created with `kubectl get hpa`.
+
+**Note**: If metrics-server is not installed, the HPA will show `<unknown>` for current metrics. This is expected.
 
 ---
 
-## Question 3 | ServiceAccount, Role, and RoleBinding
+## Question 3 | StatefulSet
 
 | | |
 |---|---|
-| **Points** | 8/88 (9%) |
-| **Namespace** | `marsh` |
-| **Resources** | ServiceAccount `log-sa`, Role `log-role`, RoleBinding `log-rb`, Pod `log-collector` |
-| **Files** | - |
+| **Points** | 8 |
+| **Namespace** | `reef` |
+| **Resources** | StatefulSet `db-cluster`, Headless Service `db-headless` |
 
 ### Task
 
-In namespace `marsh`, Pod `log-collector` exists but is failing with authorization errors.
+Create a **StatefulSet** named `db-cluster` in namespace `reef` for a database cluster:
 
-Check the Pod logs to identify what permissions are needed. The logs show:
+| Configuration | Value |
+|---------------|-------|
+| Image | `redis:7-alpine` |
+| Replicas | `3` |
+| Container name | `redis` |
+| Container port | `6379` |
+| Volume claim template | `data` with 100Mi storage |
 
-```
-User "system:serviceaccount:marsh:default" cannot list pods in the namespace "marsh"
-```
+Also create a **Headless Service** named `db-headless`:
 
-Your tasks:
+- Selector: `app: db-cluster`
+- ClusterIP: `None`
+- Port: `6379`
 
-1. Create a ServiceAccount named **`log-sa`** in namespace `marsh`
-2. Create a Role **`log-role`** that grants `get`, `list`, and `watch` on resource `pods`
-3. Create a RoleBinding **`log-rb`** binding `log-role` to `log-sa`
-4. Update Pod `log-collector` to use ServiceAccount `log-sa` (delete and recreate if needed)
+Verify pods are created with ordinal names (db-cluster-0, db-cluster-1, db-cluster-2).
 
 ---
 
-## Question 4 | Fix Broken Pod with Correct ServiceAccount
+## Question 4 | DaemonSet
 
 | | |
 |---|---|
-| **Points** | 4/88 (5%) |
-| **Namespace** | `delta` |
-| **Resources** | Pod `metrics-pod`, ServiceAccounts, Roles, RoleBindings |
-| **Files** | - |
+| **Points** | 6 |
+| **Namespace** | `deep` |
+| **Resources** | DaemonSet `node-monitor` |
 
 ### Task
 
-In namespace `delta`, Pod `metrics-pod` is using ServiceAccount `wrong-sa` and receiving authorization errors.
+Create a **DaemonSet** named `node-monitor` in namespace `deep`:
 
-Multiple ServiceAccounts, Roles, and RoleBindings already exist in the namespace:
+| Configuration | Value |
+|---------------|-------|
+| Image | `busybox:1.36` |
+| Command | `["sh", "-c", "while true; do echo Node: $NODE_NAME; sleep 60; done"]` |
+| Container name | `monitor` |
 
-- ServiceAccounts: `monitor-sa`, `wrong-sa`, `admin-sa`
-- Roles: `metrics-reader`, `full-access`, `view-only`
-- RoleBindings: `monitor-binding`, `admin-binding`
+The container should have an environment variable `NODE_NAME` set via the **Downward API** from `spec.nodeName`.
 
-Your tasks:
+Add a **toleration** to run on all nodes including control-plane nodes:
 
-1. Identify which ServiceAccount/Role/RoleBinding combination has the correct permissions
-2. Update Pod `metrics-pod` to use the correct ServiceAccount
-3. Verify the Pod stops showing authorization errors
-
-**Hint:** Check existing RoleBindings to see which ServiceAccount is bound to which Role.
+- Key: `node-role.kubernetes.io/control-plane`
+- Operator: `Exists`
+- Effect: `NoSchedule`
 
 ---
 
-## Question 5 | Build Container Image and Save as Tarball
+## Question 5 | PriorityClass
 
 | | |
 |---|---|
-| **Points** | 8/88 (9%) |
-| **Namespace** | N/A (host system) |
-| **Resources** | Container image `my-app:1.0` |
-| **Files** | `./exam/course/5/image/Dockerfile` |
+| **Points** | 5 |
+| **Namespace** | `tide` |
+| **Resources** | PriorityClass `critical-priority`, Pod `critical-pod` |
 
 ### Task
 
-Directory `./exam/course/5/image/` contains a valid `Dockerfile`.
+1. Create a **PriorityClass** named `critical-priority`:
+   - Value: `1000000`
+   - Global default: `false`
+   - Description: "Critical workloads priority"
 
-Your tasks:
+2. Create a **Pod** named `critical-pod` in namespace `tide`:
+   - Image: `nginx:1.21`
+   - Container name: `nginx`
+   - Use the `critical-priority` PriorityClass
 
-1. Build a container image using Docker with name **`my-app:1.0`** using `./exam/course/5/image/` as build context
-2. Save the image as a tarball to **`./exam/course/5/my-app.tar`**
+Verify the pod has the correct priority with `kubectl get pod critical-pod -o yaml | grep priority`.
 
 ---
 
-## Question 6 | Canary Deployment with Manual Traffic Split
+## Question 6 | startupProbe
 
 | | |
 |---|---|
-| **Points** | 8/88 (9%) |
-| **Namespace** | `default` |
-| **Resources** | Deployment `web-app`, Deployment `web-app-canary`, Service `web-service` |
-| **Files** | - |
+| **Points** | 5 |
+| **Namespace** | `wave` |
+| **Resources** | Pod `slow-starter` |
 
 ### Task
 
-In namespace `default`, the following resources exist:
+Create a **Pod** named `slow-starter` in namespace `wave` for an application that takes a long time to start:
 
-- Deployment `web-app` with 5 replicas, labels `app=webapp, version=v1`
-- Service `web-service` with selector `app=webapp`
+| Configuration | Value |
+|---------------|-------|
+| Image | `nginx:1.21` |
+| Container name | `app` |
 
-Your tasks:
+Configure a **startupProbe**:
 
-1. Scale Deployment `web-app` to **8 replicas** (80% of 10 total)
-2. Create a new Deployment **`web-app-canary`** with **2 replicas**, labels `app=webapp, version=v2`
-3. Both Deployments should be selected by `web-service`
+| Setting | Value |
+|---------|-------|
+| HTTP GET path | `/` |
+| Port | `80` |
+| failureThreshold | `30` |
+| periodSeconds | `10` |
 
-**Note:** This is a manual canary pattern where traffic is split based on replica counts.
+This allows up to 5 minutes (30 * 10 seconds) for the application to start.
+
+Also add a **livenessProbe** with HTTP GET on `/` port `80` with default settings.
 
 ---
 
-## Question 7 | Fix NetworkPolicy by Updating Pod Labels
+## Question 7 | Pod Affinity (Preferred)
 
 | | |
 |---|---|
-| **Points** | 8/88 (9%) |
-| **Namespace** | `spring` |
-| **Resources** | Pods `frontend`, `backend`, `database`, NetworkPolicies |
-| **Files** | - |
+| **Points** | 6 |
+| **Namespace** | `coral` |
+| **Resources** | Deployment `web-frontend` |
 
 ### Task
 
-In namespace `spring`, three Pods exist:
+Create a **Deployment** named `web-frontend` in namespace `coral`:
 
-- `frontend` with label `role=wrong-frontend`
-- `backend` with label `role=wrong-backend`
-- `database` with label `role=wrong-db`
+| Configuration | Value |
+|---------------|-------|
+| Image | `nginx:1.21` |
+| Replicas | `3` |
+| Container name | `frontend` |
+| Labels | `app: web-frontend`, `tier: frontend` |
 
-Three NetworkPolicies exist:
+Configure **preferredDuringSchedulingIgnoredDuringExecution** pod affinity:
 
-- `deny-all` (default deny)
-- `allow-frontend-to-backend` (allows traffic from `role=frontend` to `role=backend`)
-- `allow-backend-to-db` (allows traffic from `role=backend` to `role=db`)
+- Weight: `100`
+- Prefer scheduling on the **same node** as pods with label `app: cache`
+- Topology key: `kubernetes.io/hostname`
 
-Your task:
-
-Update the **Pod labels** (do NOT modify NetworkPolicies) to enable the communication chain:
-
-`frontend` → `backend` → `database`
-
-**Time Saver Tip:** Use `kubectl label` instead of editing YAML.
+**Note**: This is a soft preference. Pods will be scheduled even if no cache pods exist.
 
 ---
 
-## Question 8 | Fix Broken Deployment YAML
+## Question 8 | Ingress with Path Routing
 
 | | |
 |---|---|
-| **Points** | 4/88 (5%) |
-| **Namespace** | `default` |
-| **Resources** | Deployment `broken-app` |
-| **Files** | `./exam/course/8/broken-deploy.yaml` |
+| **Points** | 6 |
+| **Namespace** | `lagoon` |
+| **Resources** | Ingress `api-routing` |
 
 ### Task
 
-File `./exam/course/8/broken-deploy.yaml` contains a Deployment manifest that fails to apply.
+Services `api-v1-svc` and `api-v2-svc` already exist in namespace `lagoon`.
 
-The file has the following issues:
+Create an **Ingress** named `api-routing` with path-based routing:
 
-1. Uses deprecated API version
-2. Missing required `selector` field
-3. Selector doesn't match template labels
+| Path | Backend Service | Port |
+|------|-----------------|------|
+| `/v1` | `api-v1-svc` | `80` |
+| `/v2` | `api-v2-svc` | `80` |
 
-Your tasks:
+Configuration:
 
-1. Fix the YAML file to use `apiVersion: apps/v1`
-2. Add a proper `selector` field that matches the template labels
-3. Apply the fixed manifest and ensure the Deployment is running
+- Host: `api.lagoon.local`
+- PathType: `Prefix`
+- IngressClassName: `nginx`
 
 ---
 
-## Question 9 | Perform Rolling Update and Rollback
+## Question 9 | Job with Completions and Parallelism
 
 | | |
 |---|---|
-| **Points** | 8/88 (9%) |
-| **Namespace** | `brook` |
-| **Resources** | Deployment `app-v1` |
-| **Files** | `./exam/course/9/rollback-revision.txt` |
+| **Points** | 5 |
+| **Namespace** | `current` |
+| **Resources** | Job `parallel-processor` |
 
 ### Task
 
-In namespace `brook`, Deployment `app-v1` exists with image `nginx:1.20`.
+Create a **Job** named `parallel-processor` in namespace `current`:
 
-Your tasks:
+| Configuration | Value |
+|---------------|-------|
+| Image | `busybox:1.36` |
+| Command | `["sh", "-c", "echo Processing batch $RANDOM && sleep 5"]` |
+| Container name | `processor` |
+| Completions | `6` |
+| Parallelism | `3` |
+| backoffLimit | `4` |
 
-1. Update the Deployment to use image **`nginx:1.25`**
-2. Verify the rolling update completes successfully
-3. Rollback to the **previous revision**
-4. Verify the rollback completed
-5. Save the current revision number to **`./exam/course/9/rollback-revision.txt`**
+The Job should run 6 total completions with 3 running in parallel at a time.
+
+Verify with `kubectl get jobs` that completions reach 6/6.
 
 ---
 
-## Question 10 | Add Readiness Probe to Deployment
+## Question 10 | kubectl debug
 
 | | |
 |---|---|
-| **Points** | 4/88 (5%) |
-| **Namespace** | `rapids` |
-| **Resources** | Deployment `api-deploy` |
-| **Files** | - |
+| **Points** | 4 |
+| **Namespace** | `anchor` |
+| **Resources** | Pod `troubled-app` |
+| **File to create** | `./exam/course/10/debug-output.txt` |
 
 ### Task
 
-In namespace `rapids`, Deployment `api-deploy` exists with a container listening on port `8080`.
+A Pod named `troubled-app` exists in namespace `anchor` but you need to debug it.
 
-Your task:
+1. Use `kubectl debug` to create an **ephemeral container** in the running pod:
+   - Image: `busybox:1.36`
+   - Container name: `debugger`
 
-Add a readiness probe to the Deployment with:
+2. From within the ephemeral container, run `ls -la /data` and save the output to `./exam/course/10/debug-output.txt`
 
-- HTTP GET on path `/ready`
-- Port `8080`
-- `initialDelaySeconds: 5`
-- `periodSeconds: 10`
-
-Ensure the Deployment rolls out successfully.
+**Note**: If your cluster doesn't support ephemeral containers, use `kubectl debug` with `--copy-to` to create a debug copy of the pod instead.
 
 ---
 
-## Question 11 | Configure Pod and Container Security Context
+## Question 11 | EndpointSlice
 
 | | |
 |---|---|
-| **Points** | 6/88 (7%) |
-| **Namespace** | `cascade` |
-| **Resources** | Deployment `secure-app` |
-| **Files** | - |
+| **Points** | 3 |
+| **Namespace** | `shell` |
+| **File to create** | `./exam/course/11/endpoints-info.txt` |
 
 ### Task
 
-In namespace `cascade`, Deployment `secure-app` exists without any security context.
+A Service named `backend-svc` exists in namespace `shell` with multiple pod endpoints.
 
-Your tasks:
+1. List all **EndpointSlices** for the service `backend-svc`
+2. Save the following information to `./exam/course/11/endpoints-info.txt`:
+   - Number of endpoints
+   - IP addresses of all endpoints
+   - Ports exposed
 
-1. Set Pod-level **`runAsUser: 1000`**
-2. Add container-level capability **`NET_ADMIN`** to the container named `app`
-
-**Note:** Capabilities are set at the container level, not the Pod level.
+Use `kubectl get endpointslices` and `kubectl describe endpointslice`.
 
 ---
 
-## Question 12 | Fix Service Selector
+## Question 12 | Service internalTrafficPolicy
 
 | | |
 |---|---|
-| **Points** | 2/88 (2%) |
-| **Namespace** | `shoal` |
-| **Resources** | Deployment `web-app`, Service `web-svc` |
-| **Files** | - |
+| **Points** | 4 |
+| **Namespace** | `ocean` |
+| **Resources** | Service `local-svc` |
 
 ### Task
 
-In namespace `shoal`, Deployment `web-app` exists with Pods labeled `app=webapp, tier=frontend`.
+A Service named `local-svc` exists in namespace `ocean`.
 
-Service `web-svc` exists but has incorrect selector `app=wrongapp`.
+Modify the Service to use **node-local traffic routing**:
 
-Your task:
+1. Set `internalTrafficPolicy: Local`
 
-Update Service `web-svc` to correctly select Pods from Deployment `web-app`.
+This ensures traffic is only routed to pods on the same node as the client, reducing latency.
+
+Verify the change with `kubectl get svc local-svc -o yaml`.
 
 ---
 
-## Question 13 | Create NodePort Service
+## Question 13 | EmptyDir with sizeLimit
 
 | | |
 |---|---|
-| **Points** | 4/88 (5%) |
-| **Namespace** | `default` |
-| **Resources** | Deployment `api-server`, Service `api-nodeport` |
-| **Files** | - |
+| **Points** | 4 |
+| **Namespace** | `reef` |
+| **Resources** | Pod `cache-pod` |
 
 ### Task
 
-In namespace `default`, Deployment `api-server` exists with Pods labeled `app=api` and container port `9090`.
+Create a **Pod** named `cache-pod` in namespace `reef`:
 
-Your task:
+| Configuration | Value |
+|---------------|-------|
+| Image | `redis:7-alpine` |
+| Container name | `cache` |
 
-Create a Service named **`api-nodeport`** that:
+Add an **emptyDir** volume with:
 
-- Type: `NodePort`
-- Selects Pods with label `app=api`
-- Exposes Service port **`80`** mapping to target port **`9090`**
+- Name: `cache-volume`
+- sizeLimit: `100Mi`
+- medium: `Memory` (use RAM-backed tmpfs)
+
+Mount the volume at `/cache`.
+
+This creates a memory-backed cache limited to 100Mi.
 
 ---
 
-## Question 14 | Create Ingress Resource
+## Question 14 | Secret with stringData
 
 | | |
 |---|---|
-| **Points** | 4/88 (5%) |
-| **Namespace** | `eddy` |
-| **Resources** | Ingress `web-ingress`, Service `web-svc` |
-| **Files** | - |
+| **Points** | 4 |
+| **Namespace** | `deep` |
+| **Resources** | Secret `app-credentials`, Pod `secret-consumer` |
 
 ### Task
 
-In namespace `eddy`, the following resources exist:
+1. Create a **Secret** named `app-credentials` in namespace `deep` using **stringData** (plain text, auto-encoded):
 
-- Deployment `web-deploy` with Pods labeled `app=web`
-- Service `web-svc` with selector `app=web` on port `8080`
+   | Key | Value |
+   |-----|-------|
+   | `api-key` | `super-secret-key-12345` |
+   | `db-password` | `postgres@secure!` |
 
-Your task:
+2. Make the Secret **immutable**
 
-Create an Ingress named **`web-ingress`** that:
-
-- Routes host **`web.example.com`**
-- Path `/` with `pathType: Prefix`
-- Backend Service `web-svc` on port `8080`
-- Uses API version `networking.k8s.io/v1`
+3. Create a **Pod** named `secret-consumer`:
+   - Image: `busybox:1.36`
+   - Command: `["sh", "-c", "cat /secrets/api-key && sleep 3600"]`
+   - Mount the secret at `/secrets`
 
 ---
 
-## Question 15 | Fix Ingress PathType
+## Question 15 | kubectl patch
 
 | | |
 |---|---|
-| **Points** | 4/88 (5%) |
-| **Namespace** | `default` |
-| **Resources** | Ingress `api-ingress`, Service `api-svc` |
-| **Files** | `./exam/course/15/fix-ingress.yaml` |
+| **Points** | 5 |
+| **Namespace** | `tide` |
+| **Resources** | Deployment `patch-demo` |
+| **File to create** | `./exam/course/15/patch-commands.sh` |
 
 ### Task
 
-File `./exam/course/15/fix-ingress.yaml` contains an Ingress manifest that fails to apply due to an invalid `pathType` value.
+A Deployment named `patch-demo` exists in namespace `tide`.
 
-Your tasks:
+Use `kubectl patch` to make the following changes:
 
-1. Apply the file and note the error
-2. Fix the `pathType` to a valid value (`Prefix`, `Exact`, or `ImplementationSpecific`)
-3. Ensure the Ingress routes path `/api` to Service `api-svc` on port `8080`
-4. Apply the fixed manifest successfully
+1. **Strategic merge patch**: Update the image to `nginx:1.22`
+2. **JSON patch**: Add a new environment variable `ENV_MODE=production`
+3. **JSON patch**: Update replicas to `4`
+
+Save all three patch commands to `./exam/course/15/patch-commands.sh`.
+
+Verify changes with `kubectl describe deployment patch-demo`.
 
 ---
 
-## Question 16 | Add Resource Requests and Limits to Pod
+## Question 16 | NetworkPolicy with IPBlock
 
 | | |
 |---|---|
-| **Points** | 4/88 (5%) |
-| **Namespace** | `pond` |
-| **Resources** | ResourceQuota, Pod `resource-pod` |
-| **Files** | - |
+| **Points** | 8 |
+| **Namespace** | `wave` |
+| **Resources** | NetworkPolicy `external-access` |
 
 ### Task
 
-In namespace `pond`, a ResourceQuota exists that sets resource limits for the namespace.
+Pods labeled `tier: api` exist in namespace `wave`.
 
-Your tasks:
+Create a **NetworkPolicy** named `external-access` that:
 
-1. Check the ResourceQuota for namespace `pond` to see the limits set
-2. Create a Pod named **`resource-pod`** with:
-   - Image: `nginx:latest`
-   - Container name: `web`
-   - Set the CPU and memory limits to **half** of the limits set in the ResourceQuota
-   - Set appropriate requests (at least `100m` CPU and `128Mi` memory)
+1. Applies to pods with label `tier: api`
+
+2. **Allows ingress** from:
+   - Pods with label `tier: client` on port `80`
+   - External IP range `10.0.0.0/8` on port `80` (using ipBlock)
+   - **Except** block `10.0.1.0/24` (internal restricted subnet)
+
+3. **Allows egress** to:
+   - DNS on port `53` UDP/TCP (any destination)
+   - External IP range `0.0.0.0/0` on port `443` (HTTPS to external APIs)
 
 ---
 
-## Question 17 | Pod Topology Spread Constraints (Preview)
+## Question 17 | Pod with hostNetwork
 
 | | |
 |---|---|
-| **Points** | 3 (bonus) |
-| **Namespace** | `eddy` |
-| **Resources** | Pod `spread-pod` |
-| **Files** | - |
+| **Points** | 5 |
+| **Namespace** | `coral` |
+| **Resources** | Pod `network-diagnostic` |
 
 ### Task
 
-Create a Pod named **`spread-pod`** in namespace `eddy` with:
+Create a **Pod** named `network-diagnostic` in namespace `coral` for network troubleshooting:
 
-- Image: `nginx`
-- Topology spread constraint that spreads across nodes with `maxSkew: 1`
-- Use `topologyKey: kubernetes.io/hostname`
-- `whenUnsatisfiable: DoNotSchedule`
+| Configuration | Value |
+|---------------|-------|
+| Image | `nicolaka/netshoot:latest` |
+| Command | `["sleep", "3600"]` |
+| Container name | `netshoot` |
 
-**Note:** This is a preview question for advanced topics.
+Configure the pod with:
+
+- `hostNetwork: true` - Use the host's network namespace
+- `hostPID: true` - Use the host's PID namespace
+
+**Warning**: This gives the pod elevated access. Only use for debugging.
+
+Verify with `kubectl exec` that the pod can see host network interfaces (`ip addr`).
+
+---
+
+## Question 18 | ClusterRole and ClusterRoleBinding
+
+| | |
+|---|---|
+| **Points** | 6 |
+| **Namespace** | `lagoon` (ServiceAccount only) |
+| **Resources** | ClusterRole `node-reader`, ClusterRoleBinding `node-reader-binding` |
+
+### Task
+
+Create cluster-wide RBAC for node monitoring:
+
+1. Create a **ServiceAccount** named `node-monitor-sa` in namespace `lagoon`
+
+2. Create a **ClusterRole** named `node-reader`:
+   - Allow `get`, `list`, `watch` on `nodes`
+   - Allow `get`, `list` on `namespaces`
+   - Allow `get` on `nodes/status`
+
+3. Create a **ClusterRoleBinding** named `node-reader-binding`:
+   - Bind `node-reader` ClusterRole to `node-monitor-sa` ServiceAccount
+
+Verify with `kubectl auth can-i list nodes --as=system:serviceaccount:lagoon:node-monitor-sa`.
+
+---
+
+## Question 19 | kubectl auth can-i
+
+| | |
+|---|---|
+| **Points** | 4 |
+| **Namespace** | `current` |
+| **File to create** | `./exam/course/19/permissions.txt` |
+
+### Task
+
+A ServiceAccount named `app-deployer` exists in namespace `current` with specific permissions.
+
+Use `kubectl auth can-i` to check and document its permissions:
+
+1. Check if it can:
+   - Create deployments in `current` namespace
+   - Delete deployments in `current` namespace
+   - Create pods in `current` namespace
+   - Delete secrets in `current` namespace
+   - List nodes (cluster-wide)
+
+2. Save the results in the following format to `./exam/course/19/permissions.txt`:
+
+   ```
+   create deployments: yes/no
+   delete deployments: yes/no
+   create pods: yes/no
+   delete secrets: yes/no
+   list nodes: yes/no
+   ```
+
+---
+
+## Question 20 | Multi-Container with Shared Volume
+
+| | |
+|---|---|
+| **Points** | 6 |
+| **Namespace** | `anchor` |
+| **Resources** | Pod `data-pipeline` |
+
+### Task
+
+Create a **Pod** named `data-pipeline` in namespace `anchor` implementing a producer-consumer pattern:
+
+**Container 1: producer**
+
+- Image: `busybox:1.36`
+- Command: `["sh", "-c", "while true; do date >> /data/log.txt; sleep 5; done"]`
+
+**Container 2: consumer**
+
+- Image: `busybox:1.36`
+- Command: `["sh", "-c", "tail -f /data/log.txt"]`
+
+**Container 3: monitor**
+
+- Image: `busybox:1.36`
+- Command: `["sh", "-c", "while true; do wc -l /data/log.txt; sleep 10; done"]`
+
+All three containers must share an **emptyDir** volume mounted at `/data`.
+
+Verify all containers are running and check logs of the consumer container.
+
+---
