@@ -1,0 +1,51 @@
+# Namespaces for CKAD Simulation 7 - Dojo Tanuki (Forest theme)
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: grove
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: thicket
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: glade
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: meadow
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fern
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: moss
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: root
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bark
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: canopy
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hollow
