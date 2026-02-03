@@ -1,81 +1,81 @@
-# Namespaces for CKAD Simulation 4 - Dojo Genbu (Ocean/Water theme)
+# Namespaces for CKAD Simulation 5 - Dojo Kirin (Ocean theme)
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: shell
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: ocean
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: reef
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: deep
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: tide
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: wave
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: coral
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: lagoon
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: current
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kirin
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   name: anchor
   labels:
-    exam: ckad-simulation4
-    theme: genbu
+    exam: ckad-simulation5
+    theme: kirin
