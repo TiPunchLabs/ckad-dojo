@@ -1,0 +1,93 @@
+# Q4: Pre-existing RBAC resources for ServiceAccount troubleshooting
+---
+# ServiceAccounts
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: monitor-sa
+  namespace: delta
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: wrong-sa
+  namespace: delta
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-sa
+  namespace: delta
+---
+# Roles
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: metrics-reader
+  namespace: delta
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/log"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: full-access
+  namespace: delta
+rules:
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: view-only
+  namespace: delta
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+---
+# RoleBindings
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: monitor-binding
+  namespace: delta
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: metrics-reader
+subjects:
+  - kind: ServiceAccount
+    name: monitor-sa
+    namespace: delta
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: admin-binding
+  namespace: delta
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: full-access
+subjects:
+  - kind: ServiceAccount
+    name: admin-sa
+    namespace: delta
+---
+# Pod using wrong ServiceAccount
+apiVersion: v1
+kind: Pod
+metadata:
+  name: metrics-pod
+  namespace: delta
+spec:
+  serviceAccountName: wrong-sa
+  containers:
+    - name: metrics
+      image: bitnami/kubectl:latest
+      command: ["sleep", "infinity"]

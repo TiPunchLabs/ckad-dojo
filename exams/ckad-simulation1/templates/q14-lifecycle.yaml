@@ -1,0 +1,19 @@
+# Q14 - Pod Template for PostStart Hook
+# Task: Add lifecycle postStart hook to create a file
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lifecycle-pod
+  namespace: phoenix
+spec:
+  containers:
+  - name: main
+    image: nginx:1.21
+    ports:
+    - containerPort: 80
+    # TODO: Add lifecycle with postStart hook
+    # lifecycle:
+    #   postStart:
+    #     exec:
+    #       command: ["/bin/sh", "-c", "echo 'Started at $(date)' > /usr/share/nginx/html/started.txt"]

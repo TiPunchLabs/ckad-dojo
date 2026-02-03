@@ -1,0 +1,82 @@
+# CKAD Simulation 2 - Namespaces
+# Fire/Phoenix themed namespaces for Dojo Suzaku
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: phoenix
+  labels:
+    exam: ckad-simulation2
+    theme: fire
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ember
+  labels:
+    exam: ckad-simulation2
+    theme: fire
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: blaze
+  labels:
+    exam: ckad-simulation2
+    theme: fire
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: inferno
+  labels:
+    exam: ckad-simulation2
+    theme: fire
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flame
+  labels:
+    exam: ckad-simulation2
+    theme: fire
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: spark
+  labels:
+    exam: ckad-simulation2
+    theme: fire
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: solar
+  labels:
+    exam: ckad-simulation2
+    theme: fire
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: corona
+  labels:
+    exam: ckad-simulation2
+    theme: fire
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flare
+  labels:
+    exam: ckad-simulation2
+    theme: fire
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: magma
+  labels:
+    exam: ckad-simulation2
+    theme: fire
