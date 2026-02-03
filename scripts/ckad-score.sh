@@ -163,8 +163,13 @@ main() {
 			echo ""
 			score_result=$("score_q$qnum" 2>/dev/null || echo "0/0")
 			echo "$score_result"
-			scored=$(echo "$score_result" | tail -1 | cut -d'/' -f1)
-			max_points=$(echo "$score_result" | tail -1 | cut -d'/' -f2)
+			# Extract score line (format: N/N) - may be first or last line
+			score_line=$(echo "$score_result" | grep -E '^[0-9]+/[0-9]+$' | head -1)
+			if [ -z "$score_line" ]; then
+				score_line="0/0"
+			fi
+			scored=$(echo "$score_line" | cut -d'/' -f1)
+			max_points=$(echo "$score_line" | cut -d'/' -f2)
 
 			# Handle cases where scoring fails
 			if [ -z "$scored" ] || ! [[ "$scored" =~ ^[0-9]+$ ]]; then
@@ -198,8 +203,13 @@ main() {
 				echo ""
 				preview_result=$("score_preview_q$pnum" 2>/dev/null || echo "0/0")
 				echo "$preview_result"
-				preview_scored=$(echo "$preview_result" | tail -1 | cut -d'/' -f1)
-				preview_max=$(echo "$preview_result" | tail -1 | cut -d'/' -f2)
+				# Extract score line (format: N/N) - may be first or last line
+				preview_score_line=$(echo "$preview_result" | grep -E '^[0-9]+/[0-9]+$' | head -1)
+				if [ -z "$preview_score_line" ]; then
+					preview_score_line="0/0"
+				fi
+				preview_scored=$(echo "$preview_score_line" | cut -d'/' -f1)
+				preview_max=$(echo "$preview_score_line" | cut -d'/' -f2)
 				if [ -z "$preview_scored" ] || ! [[ "$preview_scored" =~ ^[0-9]+$ ]]; then
 					preview_scored=0
 				fi
