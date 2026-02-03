@@ -43,6 +43,11 @@ load_exam() {
 	# Source the exam configuration
 	source "$exam_conf"
 
+	# Initialize USER_NAMESPACES if not defined (for backward compatibility)
+	if [ -z "${USER_NAMESPACES+x}" ]; then
+		USER_NAMESPACES=()
+	fi
+
 	# Set exam-specific paths
 	CURRENT_EXAM_ID="$exam_id"
 	CURRENT_EXAM_DIR="$EXAMS_DIR/$exam_id"
