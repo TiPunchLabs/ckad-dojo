@@ -24,8 +24,8 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/version-1.8.0-blue" alt="Version 1.8.0">
-  <img src="https://img.shields.io/badge/exams-5-blue" alt="5 Exams">
-  <img src="https://img.shields.io/badge/questions-98-blue" alt="98 Questions">
+  <img src="https://img.shields.io/badge/exams-9-blue" alt="9 Exams">
+  <img src="https://img.shields.io/badge/questions-178-blue" alt="178 Questions">
   <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-lightgrey" alt="License: CC BY-NC-SA 4.0"></a>
 </p>
@@ -58,7 +58,7 @@
 
 | Feature | Description |
 |---------|-------------|
-| **5 Dojos** | 98 questions across 5 themed dojos |
+| **9 Dojos** | 178 questions across 9 themed dojos |
 | **Unified CLI** | Single `uv run ckad-dojo` command for all operations |
 | **Web Interface** | Modern UI with 120-minute countdown timer |
 | **Auto-Scoring** | 400+ criteria automatically evaluated |
@@ -77,43 +77,38 @@
 
 ---
 
-## The Five Dojos
+## The Nine Dojos
 
-Three dojos are themed after the Shishin (四神) — Celestial Guardians from East Asian mythology. The fourth dojo features the Kappa, a water spirit, and the fifth dojo features the Kirin, a celestial creature from Japanese folklore:
+Three dojos are themed after the Shishin (四神) — Celestial Guardians from East Asian mythology. The remaining six dojos feature mythical creatures from Japanese folklore.
 
-### 🔥 Dojo Suzaku — Phénix Vermillon du Sud
->
-> *"Le phénix renaît de ses cendres. Chaque erreur forge ta maîtrise."*
+| # | Dojo | Title | Questions | Points | Theme | Credit |
+|:-:|------|-------|:---------:|:------:|-------|--------|
+| 1 | 🔥 **Suzaku** | Phénix Vermillon du Sud | 21 | 112 | Constellation (Orion, Andromeda...) | — |
+| 2 | 🐯 **Byakko** | Tigre Blanc de l'Ouest | 20 | 105 | Greek mythology (Olympus, Zeus...) | — |
+| 3 | 🐢 **Genbu** | Tortue Noire du Nord | 20 | 105 | Norse mythology (Odin, Thor...) | — |
+| 4 | 🐸 **Kappa** | Kappa des Rivières | 17 | 91 | River/water (stream, pond...) | [@aravind4799](https://github.com/aravind4799) |
+| 5 | 🦌 **Kirin** | Kirin Céleste | 20 | 105 | Ocean (shell, ocean, reef...) | — |
+| 6 | 👺 **Tengu** | Tengu des Montagnes | 20 | 100 | Mountain (peak, summit...) | [@dgkanatsios](https://github.com/dgkanatsios) |
+| 7 | 🦝 **Tanuki** | Tanuki des Forêts | 20 | 100 | Forest (grove, thicket...) | [@dgkanatsios](https://github.com/dgkanatsios) |
+| 8 | 🦊 **Inari** | Inari des Moissons | 20 | 100 | Harvest (harvest, grain...) | [@dgkanatsios](https://github.com/dgkanatsios) |
+| 9 | 🐲 **Ryujin** | Ryujin des Profondeurs | 20 | 100 | Sea (tide, wave, depths...) | [@dgkanatsios](https://github.com/dgkanatsios) |
 
-**21 questions • 112 points** — Constellation theme (Orion, Andromeda, Pegasus...)
+<details>
+<summary><strong>Dojo Quotes</strong></summary>
 
-### 🐯 Dojo Byakko — Tigre Blanc de l'Ouest
->
-> *"Le tigre frappe avec précision. Un manifeste, une solution."*
+| Dojo | Quote |
+|------|-------|
+| 🔥 Suzaku | *「朱雀は灰から蘇る」— Le phénix renaît de ses cendres* |
+| 🐯 Byakko | *「白虎は正確に打つ」— Le tigre frappe avec précision* |
+| 🐢 Genbu | *「玄武は世界を支える」— La tortue porte le monde* |
+| 🐸 Kappa | *「河童は水を知る」— Le kappa connait les eaux* |
+| 🦌 Kirin | *「麒麟は平和をもたらす」— Le kirin apporte la paix* |
+| 👺 Tengu | *「天狗は山を守る」— Le tengu protège la montagne* |
+| 🦝 Tanuki | *「狸は森に潜む」— Le tanuki se cache dans la forêt* |
+| 🦊 Inari | *「稲荷は豊穣を祝う」— Inari célèbre l'abondance* |
+| 🐲 Ryujin | *「龍神は波を操る」— Ryujin commande les vagues* |
 
-**20 questions • 105 points** — Greek mythology theme (Olympus, Zeus, Athena...)
-
-### 🐢 Dojo Genbu — Tortue Noire du Nord
->
-> *"La tortue porte le monde. La patience est la clé du succès."*
-
-**20 questions • 105 points** — Norse mythology theme (Odin, Thor, Asgard...)
-
-### 🐸 Dojo Kappa — Kappa des Rivières
->
-> *「河童は水を知る」 — Le kappa connait les eaux*
-
-**17 questions • 91 points** — River/water theme (stream, pond, marsh, delta...)
-
-*Questions by [@aravind4799](https://github.com/aravind4799)*
-
-### 🦌 Dojo Kirin — Kirin Céleste
->
-> *「麒麟は平和をもたらす」 — Le kirin apporte la paix*
-
-**20 questions • 100 points** — River/water theme (stream, pond, marsh, delta...)
-
-*Questions by [@dgkanatsios](https://github.com/dgkanatsios)*
+</details>
 
 ---
 
@@ -454,7 +449,11 @@ ckad-dojo/
 │   ├── ckad-simulation2/     # Dojo Byakko 🐯 - 20 questions, 105 points
 │   ├── ckad-simulation3/     # Dojo Genbu 🐢 - 20 questions, 105 points
 │   ├── ckad-simulation4/     # Dojo Kappa 🐸 - 17 questions, 91 points
-│   └── ckad-simulation5/     # Dojo Kirin 🦌 - 20 questions, 100 points
+│   ├── ckad-simulation5/     # Dojo Kirin 🦌 - 20 questions, 100 points
+│   ├── ckad-simulation6/     # Dojo Tengu 👺 - 20 questions, 100 points
+│   ├── ckad-simulation7/     # Dojo Tanuki 🦝 - 20 questions, 100 points
+│   ├── ckad-simulation8/     # Dojo Inari 🦊 - 20 questions, 100 points
+│   └── ckad-simulation9/     # Dojo Ryujin 🐲 - 20 questions, 100 points
 ├── exam/course/              # Your answers (created by setup)
 └── tests/                    # Unit tests
 ```
@@ -598,7 +597,10 @@ Special thanks to the following contributors whose work has been adapted for thi
 | Dojo | Source | Author |
 |------|--------|--------|
 | 🐸 Dojo Kappa (Simulation 4) | [CKAD-Practice-Questions](https://github.com/aravind4799/CKAD-Practice-Questions) | [@aravind4799](https://github.com/aravind4799) |
-| 🦌 Dojo Kirin (Simulation 5) | [ckad-exercises](https://github.com/dgkanatsios/CKAD-exercises) | [@dgkanatsios](https://github.com/dgkanatsios) |
+| 👺 Dojo Tengu (Simulation 6) | [CKAD-exercises](https://github.com/dgkanatsios/CKAD-exercises) | [@dgkanatsios](https://github.com/dgkanatsios) |
+| 🦝 Dojo Tanuki (Simulation 7) | [CKAD-exercises](https://github.com/dgkanatsios/CKAD-exercises) | [@dgkanatsios](https://github.com/dgkanatsios) |
+| 🦊 Dojo Inari (Simulation 8) | [CKAD-exercises](https://github.com/dgkanatsios/CKAD-exercises) | [@dgkanatsios](https://github.com/dgkanatsios) |
+| 🐲 Dojo Ryujin (Simulation 9) | [CKAD-exercises](https://github.com/dgkanatsios/CKAD-exercises) | [@dgkanatsios](https://github.com/dgkanatsios) |
 
 ---
 
