@@ -1578,3 +1578,127 @@ html, body {
         flex: none;
     }
 }
+
+/* ============================================================================
+   Hint/Tip/Note Boxes
+   ============================================================================ */
+
+/* Base hint box styles */
+.hint-box {
+    margin: 1rem 0;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+/* Hint header (clickable toggle) */
+.hint-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 500;
+    transition: background-color var(--transition);
+}
+
+.hint-header:hover {
+    filter: brightness(1.1);
+}
+
+.hint-header:focus {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+/* Hint icon */
+.hint-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* Toggle chevron */
+.hint-toggle {
+    margin-left: auto;
+    transition: transform var(--transition);
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.hint-box.expanded .hint-toggle {
+    transform: rotate(180deg);
+}
+
+/* Hint content (hidden by default for hints/tips, visible for notes) */
+.hint-content {
+    padding: 0 1rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.hint-box.expanded .hint-content {
+    padding: 0.75rem 1rem;
+    max-height: 500px;
+}
+
+/* Hint type: Hint (blue) */
+.hint-box.hint-hint {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.hint-box.hint-hint .hint-header {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+}
+
+[data-theme="light"] .hint-box.hint-hint .hint-header {
+    color: #2563eb;
+}
+
+/* Hint type: Tip (green) */
+.hint-box.hint-tip {
+    background-color: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.hint-box.hint-tip .hint-header {
+    background-color: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+}
+
+[data-theme="light"] .hint-box.hint-tip .hint-header {
+    color: #16a34a;
+}
+
+/* Hint type: Note (orange) - Always visible, no toggle */
+.hint-box.hint-note {
+    background-color: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.hint-box.hint-note .hint-header {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+    cursor: default;
+}
+
+.hint-box.hint-note .hint-header:hover {
+    filter: none;
+}
+
+[data-theme="light"] .hint-box.hint-note .hint-header {
+    color: #d97706;
+}
+
+/* Notes are always expanded */
+.hint-box.hint-note .hint-content {
+    padding: 0.75rem 1rem;
+    max-height: none;
+}
+
+.hint-box.hint-note .hint-toggle {
+    display: none;
+}
