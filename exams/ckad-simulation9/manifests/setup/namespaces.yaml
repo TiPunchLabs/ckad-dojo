@@ -1,0 +1,51 @@
+# CKAD Simulation 9 - Dojo Ryujin 🐲 - Namespaces
+# Sea-themed namespaces
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tide
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: wave
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: depths
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: coral
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: current
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: abyss
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pearl
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: storm
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: harbor
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: voyage
