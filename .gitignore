@@ -56,5 +56,6 @@ Thumbs.db
 .timer_*
 
 # Claude Code and Specify (local development only)
+CLAUDE.md
 .claude/
 .specify/
