@@ -1,0 +1,22 @@
+# Q7 - Pre-existing Deployment with WORKING image (revision 1)
+# The bad image (nginx:1.91) is applied via setup_post_resources() to create revision 2
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rollback-deploy
+  namespace: cave
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rollback-deploy
+  template:
+    metadata:
+      labels:
+        app: rollback-deploy
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.19
+        ports:
+        - containerPort: 80

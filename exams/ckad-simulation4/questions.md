@@ -62,7 +62,7 @@ Create a CronJob named **`backup-job`** in namespace `pond` with the following s
 - Set `activeDeadlineSeconds: 300`
 - Use `restartPolicy: Never`
 
-**Tip:** Use `kubectl explain cronjob.spec` to find the correct field names.
+**Tip**: Use `kubectl explain cronjob.spec` to find the correct field names.
 
 ---
 
@@ -119,7 +119,7 @@ Your tasks:
 2. Update Pod `metrics-pod` to use the correct ServiceAccount
 3. Verify the Pod stops showing authorization errors
 
-**Hint:** Check existing RoleBindings to see which ServiceAccount is bound to which Role.
+**Hint**: Check existing RoleBindings to see which ServiceAccount is bound to which Role.
 
 ---
 
@@ -165,7 +165,7 @@ Your tasks:
 2. Create a new Deployment **`web-app-canary`** with **2 replicas**, labels `app=webapp, version=v2`
 3. Both Deployments should be selected by `web-service`
 
-**Note:** This is a manual canary pattern where traffic is split based on replica counts.
+**Note**: This is a manual canary pattern where traffic is split based on replica counts.
 
 ---
 
@@ -198,7 +198,7 @@ Update the **Pod labels** (do NOT modify NetworkPolicies) to enable the communic
 
 `frontend` → `backend` → `database`
 
-**Time Saver Tip:** Use `kubectl label` instead of editing YAML.
+**Tip**: Use `kubectl label` instead of editing YAML.
 
 ---
 
@@ -296,7 +296,7 @@ Your tasks:
 1. Set Pod-level **`runAsUser: 1000`**
 2. Add container-level capability **`NET_ADMIN`** to the container named `app`
 
-**Note:** Capabilities are set at the container level, not the Pod level.
+**Note**: Capabilities are set at the container level, not the Pod level.
 
 ---
 
@@ -435,4 +435,4 @@ Create a Pod named **`spread-pod`** in namespace `eddy` with:
 - Use `topologyKey: kubernetes.io/hostname`
 - `whenUnsatisfiable: DoNotSchedule`
 
-**Note:** This is a preview question for advanced topics.
+**Note**: This is a preview question for advanced topics.
