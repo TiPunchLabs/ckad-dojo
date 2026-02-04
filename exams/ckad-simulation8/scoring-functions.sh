@@ -391,7 +391,7 @@ score_q10() {
 		((score += 2))
 		details+="Pod shared-pod exists. "
 
-		# Check two containers
+		# Check two containers (writer and reader)
 		local container_count
 		container_count=$(kubectl get pod shared-pod -n bounty -o jsonpath='{.spec.containers}' 2>/dev/null | grep -o '"name"' | wc -l)
 		if [[ "$container_count" -ge 2 ]]; then
@@ -401,14 +401,14 @@ score_q10() {
 			details+="Less than 2 containers. "
 		fi
 
-		# Check emptyDir volume
+		# Check emptyDir volume named shared-data
 		local vol_type
-		vol_type=$(kubectl get pod shared-pod -n bounty -o jsonpath='{.spec.volumes[0].emptyDir}' 2>/dev/null)
+		vol_type=$(kubectl get pod shared-pod -n bounty -o jsonpath='{.spec.volumes[?(@.name=="shared-data")].emptyDir}' 2>/dev/null)
 		if [[ "$vol_type" == "{}" ]]; then
 			((score += 2))
-			details+="emptyDir volume configured."
+			details+="emptyDir volume shared-data configured."
 		else
-			details+="emptyDir volume missing."
+			details+="emptyDir volume shared-data missing."
 		fi
 	else
 		details+="Pod shared-pod not found."
@@ -527,12 +527,12 @@ score_q15() {
 	local max_points=4
 	local details=""
 
-	# Check file exists
-	if [ -f "./exam/course/15/releases.txt" ]; then
+	# Check file exists and not empty
+	if file_exists_and_not_empty "./exam/course/15/releases.txt"; then
 		((score += 4))
 		details+="Releases file saved."
 	else
-		details+="Releases file not found."
+		details+="Releases file not found or empty."
 	fi
 
 	echo "$score/$max_points"
@@ -545,40 +545,53 @@ score_q16() {
 	local max_points=6
 	local details=""
 
-	# Check app-v1 deployment
+	# Check app-v1 deployment (1 point for exists + replicas + image)
 	if resource_exists "deployment" "app-v1" "grain"; then
-		((score += 1))
-		details+="Deployment app-v1 exists. "
-
-		local v1_replicas
+		local v1_replicas v1_image v1_label
 		v1_replicas=$(kubectl get deployment app-v1 -n grain -o jsonpath='{.spec.replicas}' 2>/dev/null)
-		if [[ "$v1_replicas" == "3" ]]; then
+		v1_image=$(kubectl get deployment app-v1 -n grain -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
+		v1_label=$(kubectl get deployment app-v1 -n grain -o jsonpath='{.spec.template.metadata.labels.app}' 2>/dev/null)
+
+		if [[ "$v1_replicas" == "3" && "$v1_image" == "nginx:1.18.0" && "$v1_label" == "myapp" ]]; then
+			((score += 2))
+			details+="app-v1 correct (3 replicas, nginx:1.18.0, app=myapp). "
+		else
 			((score += 1))
-			details+="app-v1 replicas correct. "
+			details+="app-v1 exists but config incorrect. "
 		fi
 	else
 		details+="Deployment app-v1 not found. "
 	fi
 
-	# Check app-v2 deployment
+	# Check app-v2 deployment (1 point for exists + replicas + image)
 	if resource_exists "deployment" "app-v2" "grain"; then
-		((score += 1))
-		details+="Deployment app-v2 exists. "
-
-		local v2_replicas
+		local v2_replicas v2_image v2_label
 		v2_replicas=$(kubectl get deployment app-v2 -n grain -o jsonpath='{.spec.replicas}' 2>/dev/null)
-		if [[ "$v2_replicas" == "1" ]]; then
+		v2_image=$(kubectl get deployment app-v2 -n grain -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
+		v2_label=$(kubectl get deployment app-v2 -n grain -o jsonpath='{.spec.template.metadata.labels.app}' 2>/dev/null)
+
+		if [[ "$v2_replicas" == "1" && "$v2_image" == "nginx:1.19.0" && "$v2_label" == "myapp" ]]; then
+			((score += 2))
+			details+="app-v2 correct (1 replica, nginx:1.19.0, app=myapp). "
+		else
 			((score += 1))
-			details+="app-v2 replicas correct. "
+			details+="app-v2 exists but config incorrect. "
 		fi
 	else
 		details+="Deployment app-v2 not found. "
 	fi
 
-	# Check Service
+	# Check Service with correct selector
 	if resource_exists "service" "app" "grain"; then
-		((score += 2))
-		details+="Service app exists."
+		local svc_selector
+		svc_selector=$(kubectl get svc app -n grain -o jsonpath='{.spec.selector.app}' 2>/dev/null)
+		if [[ "$svc_selector" == "myapp" ]]; then
+			((score += 2))
+			details+="Service app with selector app=myapp correct."
+		else
+			((score += 1))
+			details+="Service app exists but selector incorrect."
+		fi
 	else
 		details+="Service app not found."
 	fi
@@ -595,24 +608,24 @@ score_q17() {
 
 	# Check Pod exists
 	if resource_exists "pod" "data-pod" "rice"; then
-		((score += 2))
+		((score += 1))
 		details+="Pod data-pod exists. "
 
-		# Check two containers
-		local container_count
-		container_count=$(kubectl get pod data-pod -n rice -o jsonpath='{.spec.containers}' 2>/dev/null | grep -o '"name"' | wc -l)
-		if [[ "$container_count" -ge 2 ]]; then
+		# Check containers producer and consumer
+		local containers
+		containers=$(kubectl get pod data-pod -n rice -o jsonpath='{.spec.containers[*].name}' 2>/dev/null)
+		if [[ "$containers" == *"producer"* && "$containers" == *"consumer"* ]]; then
 			((score += 2))
-			details+="Two containers present. "
+			details+="Containers producer and consumer present. "
 		else
-			details+="Less than 2 containers. "
+			details+="Containers producer/consumer missing. "
 		fi
 
-		# Check emptyDir
+		# Check emptyDir volume named data-volume
 		local vol_type
 		vol_type=$(kubectl get pod data-pod -n rice -o jsonpath='{.spec.volumes[?(@.name=="data-volume")].emptyDir}' 2>/dev/null)
 		if [[ "$vol_type" == "{}" ]]; then
-			((score += 1))
+			((score += 2))
 			details+="emptyDir volume data-volume exists."
 		else
 			details+="Volume data-volume missing."

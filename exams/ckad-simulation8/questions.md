@@ -1,6 +1,6 @@
 # CKAD Exam Simulator - Dojo Inari 🦊
 
-> **Total Score**: 100 points | **Passing Score**: ~66% (66 points)
+> **Total Score**: 104 points | **Passing Score**: ~66% (69 points)
 >
 > *「稲荷は豊穣を祝う」 - Inari célèbre l'abondance*
 >
