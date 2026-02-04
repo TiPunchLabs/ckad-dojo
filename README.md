@@ -191,7 +191,7 @@ cd ckad-dojo
 
 | Tool | Version | Purpose | Installation |
 |------|---------|---------|--------------|
-| Kubernetes cluster | 1.28+ | kubeadm, minikube, kind... | [kubernetes.io](https://kubernetes.io/docs/setup/) |
+| Kubernetes cluster | 1.28+ | kubeadm, minikube, kind... | [kubernetes.io](https://kubernetes.io/docs/setup/) or [vagrant-k8s-cluster](https://github.com/TiPunchLabs/vagrant-k8s-cluster) |
 | `kubectl` | 1.28+ | Kubernetes CLI | `curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"` |
 | `helm` | 3.x | Package manager | `curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \| bash` |
 | `docker` | 20.x+ | Container runtime | [docs.docker.com](https://docs.docker.com/engine/install/) |
@@ -358,6 +358,7 @@ uv run ckad-dojo completion fish > ~/.config/fish/completions/ckad-dojo.fish
 | `--no-terminal` | Disable embedded terminal panel |
 | `--no-docs` | Don't open K8s/Helm documentation tabs |
 | `--no-pause` | Disable timer pause functionality |
+| `--no-hints` | Disable hints (remove Hint/Tip boxes) |
 | `--browser NAME` | Browser to use (firefox, chrome, chromium, brave, default) |
 | `--port PORT` | Use custom port (default: 9090) |
 | `--terminal-port PORT` | Terminal port (default: 7681) |

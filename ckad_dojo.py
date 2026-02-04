@@ -521,6 +521,8 @@ def cmd_exam_start(args) -> int:
     script_args = ["web", "-e", exam_id, "--skip-detection", "--browser", browser]
     if getattr(args, 'no_pause', False):
         script_args.append("--no-pause")
+    if getattr(args, 'no_hints', False):
+        script_args.append("--no-hints")
     returncode, _, _ = run_script("ckad-exam.sh", script_args)
     return returncode
 
@@ -1033,6 +1035,11 @@ def create_parser() -> argparse.ArgumentParser:
         "--no-pause",
         action="store_true",
         help="Disable timer pause functionality"
+    )
+    exam_start.add_argument(
+        "--no-hints",
+        action="store_true",
+        help="Disable hints (remove Hint/Tip boxes)"
     )
 
     exam_subparsers.add_parser("stop", help="Stop current exam session")
