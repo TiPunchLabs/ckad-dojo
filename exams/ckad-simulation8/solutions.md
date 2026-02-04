@@ -1,6 +1,6 @@
 # CKAD Simulation 8 - Solutions (Dojo Inari 🦊)
 
-> **Total Score**: 100 points | **Passing Score**: ~66% (66 points)
+> **Total Score**: 104 points | **Passing Score**: ~66% (69 points)
 >
 > **Original Questions**: Adapted from [CKAD-exercises](https://github.com/dgkanatsios/CKAD-exercises) by [@dgkanatsios](https://github.com/dgkanatsios)
 
