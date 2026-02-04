@@ -136,10 +136,11 @@ score_q4() {
 		((score += 2))
 		details+="Pod debug-pod exists. "
 
-		# Check command
-		local args
+		# Check command (may be in args or command field)
+		local args cmd
 		args=$(kubectl get pod debug-pod -n meadow -o jsonpath='{.spec.containers[0].args}' 2>/dev/null)
-		if [[ "$args" == *"notexist"* ]]; then
+		cmd=$(kubectl get pod debug-pod -n meadow -o jsonpath='{.spec.containers[0].command}' 2>/dev/null)
+		if [[ "$args" == *"notexist"* ]] || [[ "$cmd" == *"notexist"* ]]; then
 			((score += 1))
 			details+="Error command configured. "
 		else
@@ -352,9 +353,9 @@ score_q9() {
 			details+="Max replicas incorrect ($max_replicas). "
 		fi
 
-		# Check CPU target
+		# Check CPU target (autoscaling/v2 uses metrics array)
 		local cpu_target
-		cpu_target=$(kubectl get hpa app-deploy -n root -o jsonpath='{.spec.targetCPUUtilizationPercentage}' 2>/dev/null)
+		cpu_target=$(kubectl get hpa app-deploy -n root -o jsonpath='{.spec.metrics[0].resource.target.averageUtilization}' 2>/dev/null)
 		if [[ "$cpu_target" == "80" ]]; then
 			((score += 2))
 			details+="CPU target 80% correct."
