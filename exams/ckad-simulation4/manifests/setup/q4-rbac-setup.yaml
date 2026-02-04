@@ -90,4 +90,12 @@ spec:
   containers:
     - name: metrics
       image: bitnami/kubectl:latest
-      command: ["sleep", "infinity"]
+      command:
+        - /bin/sh
+        - -c
+        - |
+          while true; do
+            echo "Attempting to list pods in namespace delta..."
+            kubectl get pods -n delta 2>&1
+            sleep 10
+          done
