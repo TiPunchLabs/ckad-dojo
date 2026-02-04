@@ -505,6 +505,35 @@ lsof -i :9090                             # Check port availability
 
 </details>
 
+<details>
+<summary><strong>Ingress creation fails with webhook error</strong></summary>
+
+If you see this error when creating an Ingress:
+
+```
+Error from server (InternalError): error when creating "ingress.yaml": Internal error occurred:
+failed calling webhook "validate.nginx.ingress.kubernetes.io": Post
+"https://ingress-nginx-controller-admission.ingress-nginx.svc:443/...": dial tcp ...:443: connect: connection refused
+```
+
+The ingress-nginx controller is not running. Fix it with:
+
+```bash
+# Check controller status
+kubectl get pods -n ingress-nginx
+
+# Option 1: Restart the controller
+kubectl rollout restart deployment ingress-nginx-controller -n ingress-nginx
+
+# Option 2: Install ingress-nginx if missing
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+
+# Option 3: Delete the webhook (workaround)
+kubectl delete validatingwebhookconfiguration ingress-nginx-admission
+```
+
+</details>
+
 ---
 
 ## Topics Covered
