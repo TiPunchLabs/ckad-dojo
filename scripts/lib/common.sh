@@ -84,6 +84,43 @@ exam_exists() {
 	[ -d "$EXAMS_DIR/$exam_id" ] && [ -f "$EXAMS_DIR/$exam_id/exam.conf" ]
 }
 
+# ============================================================================
+# ACTIVE EXAM STATE MANAGEMENT
+# ============================================================================
+
+# State file for tracking the currently active exam
+EXAM_STATE_DIR="${EXAM_STATE_DIR:-/tmp/ckad-dojo}"
+EXAM_STATE_FILE="$EXAM_STATE_DIR/active-exam.state"
+
+# Save the active exam ID to state file
+# Usage: save_active_exam <exam_id>
+save_active_exam() {
+	local exam_id=$1
+	mkdir -p "$EXAM_STATE_DIR"
+	echo "ACTIVE_EXAM_ID=$exam_id" >"$EXAM_STATE_FILE"
+	echo "ACTIVE_SINCE=$(date +%s)" >>"$EXAM_STATE_FILE"
+}
+
+# Get the active exam ID from state file
+# Returns: exam_id if found, empty string otherwise
+get_active_exam() {
+	if [ -f "$EXAM_STATE_FILE" ]; then
+		local exam_id
+		exam_id=$(grep "^ACTIVE_EXAM_ID=" "$EXAM_STATE_FILE" 2>/dev/null | cut -d= -f2)
+		if [ -n "$exam_id" ] && exam_exists "$exam_id"; then
+			echo "$exam_id"
+			return 0
+		fi
+	fi
+	echo ""
+	return 1
+}
+
+# Clear the active exam state
+clear_active_exam() {
+	rm -f "$EXAM_STATE_FILE"
+}
+
 # Print functions
 print_header() {
 	echo -e "${BLUE}╔════════════════════════════════════════════════════════════════╗${NC}"
