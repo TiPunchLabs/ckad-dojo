@@ -1,0 +1,19 @@
+# Q20: Running pod for kubectl top metrics
+apiVersion: v1
+kind: Pod
+metadata:
+  name: metrics-pod
+  namespace: storm
+  labels:
+    app: metrics-test
+spec:
+  containers:
+  - name: nginx
+    image: nginx:alpine
+    resources:
+      requests:
+        cpu: "10m"
+        memory: "32Mi"
+      limits:
+        cpu: "50m"
+        memory: "64Mi"
