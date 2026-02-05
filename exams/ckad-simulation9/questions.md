@@ -1,6 +1,6 @@
 # CKAD Exam Simulator - Dojo Ryujin 🐲
 
-> **Total Score**: 100 points | **Passing Score**: ~66% (66 points)
+> **Total Score**: 99 points | **Passing Score**: ~66% (65 points)
 >
 > *「龍神は波を操る」 - Ryujin commande les vagues*
 >
