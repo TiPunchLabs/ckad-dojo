@@ -528,6 +528,9 @@ start_web() {
 	# Stop any existing timer
 	timer_stop 2>/dev/null || true
 
+	# Save active exam state (for cleanup auto-detection)
+	save_active_exam "$exam_id"
+
 	# Check if port is available
 	if lsof -Pi :$WEB_PORT -sTCP:LISTEN -t >/dev/null 2>&1; then
 		echo ""
@@ -633,6 +636,9 @@ start_exam() {
 
 	# Stop any existing timer
 	timer_stop 2>/dev/null
+
+	# Save active exam state (for cleanup auto-detection)
+	save_active_exam "$exam_id"
 
 	# Start timer (unless disabled)
 	if [ "$no_timer" != "true" ]; then

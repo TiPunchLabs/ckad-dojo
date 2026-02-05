@@ -54,7 +54,8 @@ list_exams() {
 SKIP_CONFIRM=false
 KEEP_REGISTRY=false
 KEEP_DIRS=false
-SELECTED_EXAM="$DEFAULT_EXAM_ID"
+EXAM_SPECIFIED=false
+SELECTED_EXAM=""
 
 while [[ $# -gt 0 ]]; do
 	case $1 in
@@ -64,6 +65,7 @@ while [[ $# -gt 0 ]]; do
 		;;
 	-e | --exam)
 		SELECTED_EXAM="$2"
+		EXAM_SPECIFIED=true
 		shift 2
 		;;
 	-y | --yes)
@@ -93,6 +95,19 @@ done
 # Main cleanup function
 main() {
 	local start_time=$(date +%s)
+
+	# Auto-detect active exam if not specified
+	if [ "$EXAM_SPECIFIED" = false ]; then
+		local active_exam
+		active_exam=$(get_active_exam)
+		if [ -n "$active_exam" ]; then
+			SELECTED_EXAM="$active_exam"
+			echo -e "${CYAN}Auto-detected active exam: $SELECTED_EXAM${NC}"
+		else
+			SELECTED_EXAM="$DEFAULT_EXAM_ID"
+			echo -e "${YELLOW}No active exam detected, using default: $SELECTED_EXAM${NC}"
+		fi
+	fi
 
 	# Load exam configuration
 	if ! load_exam "$SELECTED_EXAM"; then
@@ -185,6 +200,9 @@ main() {
 
 	# Wait for namespace deletion
 	wait_for_namespace_deletion
+
+	# Clear active exam state
+	clear_active_exam
 
 	# Summary
 	local end_time=$(date +%s)

@@ -123,6 +123,9 @@ main() {
 		((errors++))
 	fi
 
+	# Save the active exam state (for cleanup auto-detection)
+	save_active_exam "$CURRENT_EXAM_ID"
+
 	# Step 2: Deploy pre-existing resources
 	setup_resources
 	local resource_errors=$?
