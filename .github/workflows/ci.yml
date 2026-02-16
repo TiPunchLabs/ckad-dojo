@@ -49,9 +49,9 @@ jobs:
         run: uvx pip-audit
 
       - name: Secret scan
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+        run: |
+          wget -qO- https://github.com/gitleaks/gitleaks/releases/download/v8.24.3/gitleaks_8.24.3_linux_x64.tar.gz | tar xz
+          ./gitleaks detect --source . --verbose
 
   build:
     runs-on: ubuntu-latest
