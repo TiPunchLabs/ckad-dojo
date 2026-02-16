@@ -10,3 +10,7 @@ exams/ckad-simulation8/questions.md:generic-api-key:*
 exams/ckad-simulation8/solutions.md:generic-api-key:*
 exams/ckad-simulation9/questions.md:generic-api-key:*
 exams/ckad-simulation9/solutions.md:generic-api-key:*
+
+# Q11 image template (Go app with fake cipher for exercise)
+1839457ff9665242ee020a33030eec991db0b5e2:templates/q11-image/main.go:generic-api-key:16
+1839457ff9665242ee020a33030eec991db0b5e2:templates/q11-image/main.go:generic-api-key:21
