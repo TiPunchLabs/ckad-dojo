@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- CI: `security` job with dependency audit (`pip-audit`) and secret scanning (`gitleaks`)
+- CI: `build` job with package build (`uv build`) and artifact upload
+- `.gitleaks.toml` config for path-based allowlist of exercise templates
+
 ### Changed
 
 ### Fixed
