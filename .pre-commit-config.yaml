@@ -64,12 +64,14 @@ repos:
   # =============================================================================
   # Python
   # =============================================================================
-  - repo: https://github.com/pycqa/flake8
-    rev: 7.3.0
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.1
     hooks:
-      - id: flake8
-        exclude: (^\.venv/)
-        additional_dependencies: [flake8-bugbear]
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        exclude: (^\.venv/|^\.specify/)
+      - id: ruff-format
+        exclude: (^\.venv/|^\.specify/)
 
   # =============================================================================
   # Markdown

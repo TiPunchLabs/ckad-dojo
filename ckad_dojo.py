@@ -7,7 +7,6 @@ This CLI unifies all exam operations (setup, exam, score, cleanup) into a single
 entry point with both interactive menu and direct command-line access.
 """
 
-import argcomplete
 import argparse
 import os
 import re
@@ -16,7 +15,8 @@ import signal
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+
+import argcomplete
 
 __version__ = "1.7.0"
 
@@ -31,6 +31,7 @@ SUPPORTED_BROWSERS = ["firefox", "chrome", "chromium", "brave", "default"]
 
 class Colors:
     """ANSI color codes for terminal output."""
+
     RED = "\033[0;31m"
     GREEN = "\033[0;32m"
     YELLOW = "\033[1;33m"
@@ -80,6 +81,7 @@ def print_info(message: str) -> None:
 # =============================================================================
 # Project Paths
 # =============================================================================
+
 
 def get_project_root() -> Path:
     """Get the project root directory."""
@@ -143,8 +145,16 @@ def show_version() -> None:
 class VersionAction(argparse.Action):
     """Custom version action that displays banner and description."""
 
-    def __init__(self, option_strings, dest=argparse.SUPPRESS, default=argparse.SUPPRESS, help="Show version and exit"):
-        super().__init__(option_strings=option_strings, dest=dest, default=default, nargs=0, help=help)
+    def __init__(
+        self,
+        option_strings,
+        dest=argparse.SUPPRESS,
+        default=argparse.SUPPRESS,
+        help="Show version and exit",
+    ):
+        super().__init__(
+            option_strings=option_strings, dest=dest, default=default, nargs=0, help=help
+        )
 
     def __call__(self, parser, namespace, values, option_string=None):
         show_version()
@@ -155,7 +165,8 @@ class VersionAction(argparse.Action):
 # Exam Discovery (T005)
 # =============================================================================
 
-def discover_exams() -> List[str]:
+
+def discover_exams() -> list[str]:
     """Discover available exams in the exams/ directory."""
     exams_dir = get_exams_dir()
     if not exams_dir.exists():
@@ -179,7 +190,8 @@ def normalize_exam_id(exam_id: str) -> str:
 # Exam Config Parser (T006)
 # =============================================================================
 
-def parse_exam_config(exam_id: str) -> Optional[Dict[str, str]]:
+
+def parse_exam_config(exam_id: str) -> dict[str, str] | None:
     """Parse exam.conf file and return configuration as dictionary."""
     config_file = get_exams_dir() / exam_id / "exam.conf"
     if not config_file.exists():
@@ -196,14 +208,14 @@ def parse_exam_config(exam_id: str) -> Optional[Dict[str, str]]:
                 match = re.match(r'^([A-Z_]+)=["\'"]?([^"\'"\n]*)["\'"]?', line)
                 if match:
                     key, value = match.groups()
-                    config[key] = value.strip('"\'')
+                    config[key] = value.strip("\"'")
     except Exception:
         return None
 
     return config
 
 
-def get_exam_info(exam_id: str) -> Optional[Dict[str, str]]:
+def get_exam_info(exam_id: str) -> dict[str, str] | None:
     """Get formatted exam information."""
     config = parse_exam_config(exam_id)
     if not config:
@@ -225,7 +237,10 @@ def get_exam_info(exam_id: str) -> Optional[Dict[str, str]]:
 # Script Runner (T007)
 # =============================================================================
 
-def run_script(script_name: str, args: List[str] = None, capture: bool = False) -> Tuple[int, str, str]:
+
+def run_script(
+    script_name: str, args: list[str] | None = None, capture: bool = False
+) -> tuple[int, str, str]:
     """Run a bash script from the scripts directory."""
     script_path = get_scripts_dir() / script_name
     if not script_path.exists():
@@ -249,6 +264,7 @@ def run_script(script_name: str, args: List[str] = None, capture: bool = False) 
 # =============================================================================
 # Prerequisite Checker (T008)
 # =============================================================================
+
 
 def check_command(cmd: str) -> bool:
     """Check if a command is available in PATH."""
@@ -277,10 +293,7 @@ def check_cluster_connectivity() -> bool:
     """Check if kubectl can connect to a cluster."""
     try:
         result = subprocess.run(
-            ["kubectl", "cluster-info"],
-            capture_output=True,
-            text=True,
-            timeout=10
+            ["kubectl", "cluster-info"], capture_output=True, text=True, timeout=10
         )
         return result.returncode == 0
     except Exception:
@@ -317,6 +330,7 @@ def signal_handler(signum, frame):
 # Interactive Menu (T011-T017)
 # =============================================================================
 
+
 def show_menu() -> None:
     """Display the main menu."""
     print(color("=" * 50, Colors.CYAN))
@@ -334,7 +348,7 @@ def show_menu() -> None:
     print()
 
 
-def select_exam(prompt: str = "Select an exam") -> Optional[str]:
+def select_exam(prompt: str = "Select an exam") -> str | None:
     """Display exam selection menu and return selected exam ID."""
     exams = discover_exams()
     if not exams:
@@ -348,10 +362,10 @@ def select_exam(prompt: str = "Select an exam") -> Optional[str]:
         info = get_exam_info(exam)
         if info:
             # Use dojo name with emoji if available, otherwise fall back to exam name
-            if info['dojo_name'] and info['dojo_emoji']:
+            if info["dojo_name"] and info["dojo_emoji"]:
                 display_name = f"{info['dojo_name']} {info['dojo_emoji']}"
             else:
-                display_name = info['name']
+                display_name = info["name"]
             print(f"  {i}. {display_name} ({info['questions']} questions, {info['points']} points)")
         else:
             print(f"  {i}. {exam}")
@@ -433,9 +447,11 @@ def menu_exam_info() -> None:
         return
 
     print()
+
     # Create a simple namespace to pass exam_id
     class Args:
         exam = exam_id
+
     cmd_info(Args())
 
 
@@ -490,6 +506,7 @@ def run_interactive_menu() -> None:
 # CLI Commands (T018-T030)
 # =============================================================================
 
+
 def cmd_exam_start(args) -> int:
     """Start an exam (setup + web interface)."""
     exam_id = normalize_exam_id(args.exam) if args.exam else None
@@ -517,11 +534,11 @@ def cmd_exam_start(args) -> int:
     # Start exam (skip detection since we just ran setup)
     print()
     print_info("Launching exam interface...")
-    browser = getattr(args, 'browser', 'default')
+    browser = getattr(args, "browser", "default")
     script_args = ["web", "-e", exam_id, "--skip-detection", "--browser", browser]
-    if getattr(args, 'no_pause', False):
+    if getattr(args, "no_pause", False):
         script_args.append("--no-pause")
-    if getattr(args, 'no_hints', False):
+    if getattr(args, "no_hints", False):
         script_args.append("--no-hints")
     returncode, _, _ = run_script("ckad-exam.sh", script_args)
     return returncode
@@ -621,11 +638,13 @@ def cmd_list(args) -> int:
         info = get_exam_info(exam_id)
         if info:
             # Use dojo name with emoji if available
-            if info['dojo_name'] and info['dojo_emoji']:
+            if info["dojo_name"] and info["dojo_emoji"]:
                 display_name = f"{info['dojo_name']} {info['dojo_emoji']}"
             else:
-                display_name = info['name']
-            print(f"{info['id']:<20} {display_name:<25} {info['questions']:<12} {info['points']:<10} {info['duration']} min")
+                display_name = info["name"]
+            print(
+                f"{info['id']:<20} {display_name:<25} {info['questions']:<12} {info['points']:<10} {info['duration']} min"
+            )
         else:
             print(f"{exam_id:<20} {'(config error)':<25}")
 
@@ -666,7 +685,8 @@ def cmd_info(args) -> int:
 # Shell Completion Generation
 # =============================================================================
 
-def get_exam_ids_for_completion() -> List[str]:
+
+def get_exam_ids_for_completion() -> list[str]:
     """Get list of exam IDs for shell completion."""
     return discover_exams()
 
@@ -792,7 +812,7 @@ def generate_zsh_completion() -> str:
     """Generate zsh completion script."""
     exam_ids = " ".join(get_exam_ids_for_completion())
 
-    return f'''#compdef ckad-dojo
+    return f"""#compdef ckad-dojo
 # Zsh completion for ckad-dojo
 # Generated by: uv run ckad-dojo completion zsh
 
@@ -856,7 +876,7 @@ _ckad_dojo() {{
 }}
 
 _ckad_dojo "$@"
-'''
+"""
 
 
 def generate_fish_completion() -> str:
@@ -897,10 +917,14 @@ def generate_fish_completion() -> str:
 
     # Add exam ID completions
     for cmd in ["setup", "score", "cleanup", "info", "status"]:
-        lines.append(f"complete -c ckad-dojo -n '__fish_seen_subcommand_from {cmd}' -s e -l exam -d 'Exam ID' -xa '{' '.join(exam_ids)}'")
+        lines.append(
+            f"complete -c ckad-dojo -n '__fish_seen_subcommand_from {cmd}' -s e -l exam -d 'Exam ID' -xa '{' '.join(exam_ids)}'"
+        )
 
     # Add exam ID for exam start
-    lines.append(f"complete -c ckad-dojo -n '__fish_seen_subcommand_from start' -s e -l exam -d 'Exam ID' -xa '{' '.join(exam_ids)}'")
+    lines.append(
+        f"complete -c ckad-dojo -n '__fish_seen_subcommand_from start' -s e -l exam -d 'Exam ID' -xa '{' '.join(exam_ids)}'"
+    )
 
     return "\n".join(lines)
 
@@ -966,7 +990,7 @@ def cmd_status(args) -> int:
                 ["kubectl", "get", "namespaces", "-o", "name"],
                 capture_output=True,
                 text=True,
-                timeout=10
+                timeout=10,
             )
             existing_ns = set(result.stdout.strip().split("\n"))
             existing_ns = {ns.replace("namespace/", "") for ns in existing_ns}
@@ -975,11 +999,12 @@ def cmd_status(args) -> int:
             exam_name = config.get("EXAM_NAME", eid)
             # Simple heuristic: check if common namespace exists
             has_resources = any(
-                ns in existing_ns
-                for ns in ["neptune", "saturn", "andromeda", "olympus", "athena"]
+                ns in existing_ns for ns in ["neptune", "saturn", "andromeda", "olympus", "athena"]
             )
 
-            status = color("SETUP", Colors.GREEN) if has_resources else color("NOT SETUP", Colors.YELLOW)
+            status = (
+                color("SETUP", Colors.GREEN) if has_resources else color("NOT SETUP", Colors.YELLOW)
+            )
             print(f"  {exam_name}: {status}")
 
         except Exception:
@@ -993,53 +1018,42 @@ def cmd_status(args) -> int:
 # Argument Parser (T018, T031-T033)
 # =============================================================================
 
+
 def create_parser() -> argparse.ArgumentParser:
     """Create the argument parser with all subcommands."""
     parser = argparse.ArgumentParser(
         prog="ckad-dojo",
         description="CKAD Exam Simulator - Centralized CLI for exam management",
         epilog="Run without arguments for interactive menu mode.",
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
-    parser.add_argument(
-        "--version", "-V",
-        action=VersionAction
-    )
+    parser.add_argument("--version", "-V", action=VersionAction)
 
-    parser.add_argument(
-        "--no-color",
-        action="store_true",
-        help="Disable colored output"
-    )
+    parser.add_argument("--no-color", action="store_true", help="Disable colored output")
 
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # exam command with subcommands
     exam_parser = subparsers.add_parser(
-        "exam",
-        help="Exam operations (start, stop)",
-        description="Start or stop exam sessions"
+        "exam", help="Exam operations (start, stop)", description="Start or stop exam sessions"
     )
     exam_subparsers = exam_parser.add_subparsers(dest="exam_action", help="Exam actions")
 
     exam_start = exam_subparsers.add_parser("start", help="Start an exam session")
     exam_start.add_argument("-e", "--exam", help="Exam ID (e.g., ckad-simulation1)")
     exam_start.add_argument(
-        "-b", "--browser",
+        "-b",
+        "--browser",
         choices=SUPPORTED_BROWSERS,
         default=os.environ.get("CKAD_BROWSER", "default"),
-        help="Browser to use (default: from CKAD_BROWSER env or 'default')"
+        help="Browser to use (default: from CKAD_BROWSER env or 'default')",
     )
     exam_start.add_argument(
-        "--no-pause",
-        action="store_true",
-        help="Disable timer pause functionality"
+        "--no-pause", action="store_true", help="Disable timer pause functionality"
     )
     exam_start.add_argument(
-        "--no-hints",
-        action="store_true",
-        help="Disable hints (remove Hint/Tip boxes)"
+        "--no-hints", action="store_true", help="Disable hints (remove Hint/Tip boxes)"
     )
 
     exam_subparsers.add_parser("stop", help="Stop current exam session")
@@ -1048,15 +1062,13 @@ def create_parser() -> argparse.ArgumentParser:
     setup_parser = subparsers.add_parser(
         "setup",
         help="Setup exam environment",
-        description="Setup exam environment without starting the interface"
+        description="Setup exam environment without starting the interface",
     )
     setup_parser.add_argument("-e", "--exam", help="Exam ID (e.g., ckad-simulation1)")
 
     # score command
     score_parser = subparsers.add_parser(
-        "score",
-        help="Score exam answers",
-        description="Calculate and display exam score"
+        "score", help="Score exam answers", description="Calculate and display exam score"
     )
     score_parser.add_argument("-e", "--exam", help="Exam ID (e.g., ckad-simulation1)")
 
@@ -1064,22 +1076,18 @@ def create_parser() -> argparse.ArgumentParser:
     cleanup_parser = subparsers.add_parser(
         "cleanup",
         help="Cleanup exam resources",
-        description="Remove all exam resources from the cluster"
+        description="Remove all exam resources from the cluster",
     )
     cleanup_parser.add_argument("-e", "--exam", help="Exam ID (e.g., ckad-simulation1)")
 
     # list command
     subparsers.add_parser(
-        "list",
-        help="List available exams",
-        description="Show all available exams with details"
+        "list", help="List available exams", description="Show all available exams with details"
     )
 
     # info command
     info_parser = subparsers.add_parser(
-        "info",
-        help="Show exam details",
-        description="Display detailed information about an exam"
+        "info", help="Show exam details", description="Display detailed information about an exam"
     )
     info_parser.add_argument("-e", "--exam", help="Exam ID (e.g., ckad-simulation1)")
 
@@ -1087,7 +1095,7 @@ def create_parser() -> argparse.ArgumentParser:
     status_parser = subparsers.add_parser(
         "status",
         help="Show environment status",
-        description="Check cluster connectivity and exam resource status"
+        description="Check cluster connectivity and exam resource status",
     )
     status_parser.add_argument("-e", "--exam", help="Exam ID to check (optional)")
 
@@ -1117,13 +1125,10 @@ Installation instructions:
     # Save to completions directory:
     uv run ckad-dojo completion fish > ~/.config/fish/completions/ckad-dojo.fish
 """,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     completion_parser.add_argument(
-        "shell",
-        nargs="?",
-        choices=["bash", "zsh", "fish"],
-        help="Shell type (bash, zsh, or fish)"
+        "shell", nargs="?", choices=["bash", "zsh", "fish"], help="Shell type (bash, zsh, or fish)"
     )
 
     return parser
@@ -1132,6 +1137,7 @@ Installation instructions:
 # =============================================================================
 # Main Entry Point
 # =============================================================================
+
 
 def main() -> int:
     """Main entry point for the CLI."""
