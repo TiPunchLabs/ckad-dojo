@@ -1,0 +1,5 @@
+[allowlist]
+description = "CKAD exercise templates with fake secrets"
+paths = [
+    '''templates/q11-image/main\.go''',
+]
