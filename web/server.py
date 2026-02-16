@@ -4,6 +4,7 @@ ckad-dojo - Web Server
 Serves the exam interface and provides API endpoints
 """
 
+import contextlib
 import http.server
 import json
 import os
@@ -47,7 +48,7 @@ flagged_questions = set()
 SCRIPTS_DIR = PROJECT_DIR / "scripts"
 
 
-def run_cleanup_script(exam_id: str = None) -> dict:
+def run_cleanup_script(exam_id: str | None = None) -> dict:
     """Run ckad-cleanup.sh to clean up exam resources"""
     script_path = SCRIPTS_DIR / "ckad-cleanup.sh"
 
@@ -92,7 +93,7 @@ def run_cleanup_script(exam_id: str = None) -> dict:
         print("  [ERROR] Cleanup script timed out\n")
         return {"success": False, "error": "Cleanup script timed out"}
     except Exception as e:
-        print(f"  [ERROR] {str(e)}\n")
+        print(f"  [ERROR] {e!s}\n")
         return {"success": False, "error": str(e)}
 
 
@@ -143,16 +144,12 @@ def parse_criteria_from_output(output: str, question_id: str) -> list:
         if in_question:
             pass_match = re.match(r"^[✓✔]\s+(.+)$", line.strip())
             if pass_match:
-                criteria.append(
-                    {"description": pass_match.group(1).strip(), "passed": True}
-                )
+                criteria.append({"description": pass_match.group(1).strip(), "passed": True})
                 continue
 
             fail_match = re.match(r"^[✗✘×]\s+(.+)$", line.strip())
             if fail_match:
-                criteria.append(
-                    {"description": fail_match.group(1).strip(), "passed": False}
-                )
+                criteria.append({"description": fail_match.group(1).strip(), "passed": False})
 
     # If legacy format found criteria, return them
     if criteria:
@@ -193,7 +190,7 @@ def parse_criteria_from_output(output: str, question_id: str) -> list:
     return criteria
 
 
-def run_scoring_script(exam_id: str = None) -> dict:
+def run_scoring_script(exam_id: str | None = None) -> dict:
     """Run ckad-score.sh and parse the output"""
     script_path = SCRIPTS_DIR / "ckad-score.sh"
 
@@ -412,11 +409,7 @@ def parse_questions_md(exam_id: str) -> list:
             if line.startswith("|"):
                 parts = [p.strip() for p in line.split("|")[1:-1]]
                 # Check if this is a metadata row (has **Key** format in first column)
-                if (
-                    len(parts) >= 2
-                    and parts[0].startswith("**")
-                    and parts[0].endswith("**")
-                ):
+                if len(parts) >= 2 and parts[0].startswith("**") and parts[0].endswith("**"):
                     key = parts[0].strip("*").lower()
                     value = parts[1]
                     if key == "points":
@@ -548,9 +541,7 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
             no_terminal = os.environ.get("NO_TERMINAL", "false").lower() == "true"
 
             if no_terminal:
-                self.send_json(
-                    {"enabled": False, "running": False, "port": 0, "url": None}
-                )
+                self.send_json({"enabled": False, "running": False, "port": 0, "url": None})
             else:
                 # Check if ttyd is running
                 ttyd_port = int(os.environ.get("TTYD_PORT", "7681"))
@@ -569,9 +560,7 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
             if path.endswith("/solutions"):
                 # Get all solutions for exam
                 solutions = parse_solutions_md(exam_id)
-                self.send_json(
-                    {"available": len(solutions) > 0, "solutions": solutions}
-                )
+                self.send_json({"available": len(solutions) > 0, "solutions": solutions})
             elif len(parts) >= 6:
                 # Get specific solution: /api/exam/{id}/solutions/{question_id}
                 question_id = parts[5]
@@ -601,11 +590,7 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
         path = parsed.path
 
         content_length = int(self.headers.get("Content-Length", 0))
-        body = (
-            self.rfile.read(content_length).decode("utf-8")
-            if content_length > 0
-            else "{}"
-        )
+        body = self.rfile.read(content_length).decode("utf-8") if content_length > 0 else "{}"
 
         try:
             data = json.loads(body) if body else {}
@@ -677,23 +662,17 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
                 print(
                     f"  Score: {score_result.get('total_score')}/{score_result.get('max_score')} ({score_result.get('percentage')}%)"
                 )
-                print(
-                    f"  Status: {'PASSED' if score_result.get('passed') else 'FAILED'}\n"
-                )
+                print(f"  Status: {'PASSED' if score_result.get('passed') else 'FAILED'}\n")
 
             # Add timer info to result
             if timer_state["start_time"]:
                 total_paused = timer_state.get("total_paused_seconds", 0)
                 elapsed = time.time() - timer_state["start_time"] - total_paused
                 score_result["elapsed_seconds"] = int(elapsed)
-                score_result["elapsed_formatted"] = (
-                    f"{int(elapsed // 60)}:{int(elapsed % 60):02d}"
-                )
+                score_result["elapsed_formatted"] = f"{int(elapsed // 60)}:{int(elapsed % 60):02d}"
 
             # Add solutions availability
-            score_result["solutions_available"] = (
-                solutions_available(exam_id) if exam_id else False
-            )
+            score_result["solutions_available"] = solutions_available(exam_id) if exam_id else False
             score_result["exam_id"] = exam_id
 
             self.send_json(score_result)
@@ -750,9 +729,7 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
 
         if timer_state.get("paused") and timer_state.get("pause_time"):
             # Currently paused - use pause_time as reference
-            elapsed = (
-                timer_state["pause_time"] - timer_state["start_time"] - total_paused
-            )
+            elapsed = timer_state["pause_time"] - timer_state["start_time"] - total_paused
         else:
             # Running - use current time
             elapsed = time.time() - timer_state["start_time"] - total_paused
@@ -812,10 +789,8 @@ def main():
 
     # Check for port argument
     if len(sys.argv) > 1:
-        try:
+        with contextlib.suppress(ValueError):
             PORT = int(sys.argv[1])
-        except ValueError:
-            pass
 
     # Check for exam_id argument to auto-start timer
     exam_id = None

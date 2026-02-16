@@ -106,7 +106,11 @@ def update_changelog(new_version: str) -> bool:
 
         # Clean up the duplicated sections
         new_content = re.sub(
-            r"(## \[Unreleased\])\n\n### Added\n\n### Changed\n\n### Fixed\n\n### Removed\n\n(## \[" + re.escape(new_version) + r"\] - " + today + r")\n\n### Added",
+            r"(## \[Unreleased\])\n\n### Added\n\n### Changed\n\n### Fixed\n\n### Removed\n\n(## \["
+            + re.escape(new_version)
+            + r"\] - "
+            + today
+            + r")\n\n### Added",
             r"\1\n\n### Added\n\n### Changed\n\n### Fixed\n\n### Removed\n\n\2\n\n### Added",
             new_content,
         )
