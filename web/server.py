@@ -15,6 +15,7 @@ import sys
 import time
 import urllib.parse
 from pathlib import Path
+from typing import Any
 
 # Configuration
 PORT = 9090
@@ -26,7 +27,7 @@ PROJECT_DIR = SCRIPT_DIR.parent
 EXAMS_DIR = PROJECT_DIR / "exams"
 
 # Timer state (in-memory)
-timer_state = {
+timer_state: dict[str, Any] = {
     "start_time": None,
     "duration_minutes": 120,
     "exam_id": None,
@@ -42,7 +43,7 @@ timer_state = {
 shutdown_requested = False
 
 # Question flags state (in-memory)
-flagged_questions = set()
+flagged_questions: set[str] = set()
 
 # Scripts directory
 SCRIPTS_DIR = PROJECT_DIR / "scripts"
@@ -293,7 +294,7 @@ def run_scoring_script(exam_id: str | None = None) -> dict:
         }
 
 
-def parse_solutions_md(exam_id: str) -> list:
+def parse_solutions_md(exam_id: str) -> list[dict[str, object]]:
     """Parse solutions.md file and extract solutions"""
     solutions_file = EXAMS_DIR / exam_id / "solutions.md"
 
@@ -308,7 +309,7 @@ def parse_solutions_md(exam_id: str) -> list:
 
     lines = content.split("\n")
     current_solution = None
-    current_content = []
+    current_content: list[str] = []
 
     for line in lines:
         match = re.match(solution_pattern, line)
@@ -348,7 +349,7 @@ def parse_solutions_md(exam_id: str) -> list:
     return solutions
 
 
-def get_solution(exam_id: str, question_id: str) -> dict:
+def get_solution(exam_id: str, question_id: str) -> dict[str, object] | None:
     """Get a specific solution by question ID"""
     solutions = parse_solutions_md(exam_id)
     for solution in solutions:
@@ -379,7 +380,7 @@ def parse_questions_md(exam_id: str) -> list:
     # Find all question sections
     lines = content.split("\n")
     current_question = None
-    current_content = []
+    current_content: list[str] = []
 
     for line in lines:
         match = re.match(question_pattern, line)
@@ -771,7 +772,7 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.send_header("Access-Control-Allow-Origin", "*")
-            self.send_header("Content-Length", len(response.encode("utf-8")))
+            self.send_header("Content-Length", str(len(response.encode("utf-8"))))
             self.end_headers()
             self.wfile.write(response.encode("utf-8"))
         except (BrokenPipeError, ConnectionResetError):
