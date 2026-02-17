@@ -11,13 +11,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 - CI: `security` job with dependency audit (`pip-audit`) and secret scanning (`gitleaks`)
 - CI: `build` job with package build (`uv build`) and artifact upload
+- CI: Python test step with pytest and coverage reporting
 - `.gitleaks.toml` config for path-based allowlist of exercise templates
+- Pre-commit: `check-added-large-files` hook (max 500KB)
+- Pre-commit: `mirrors-mypy` hook for Python type checking
+- Python unit tests: 57 tests covering `ckad_dojo.py`, `web/server.py`, `scripts/bump-version.py`
+- pytest + pytest-cov configuration in `pyproject.toml` (coverage threshold 30%)
+- mypy configuration with `explicit_package_bases` and gradual type checking
+- Dependabot: grouping, labels, and weekly Monday schedule
+- Architecture documentation (`docs/architecture.md`)
 
 ### Changed
 
+- CI: restructured pipeline into 3 ordered stages (lint -> test+security -> build)
+- Pre-commit: replaced flake8 with ruff (lint + format)
+- Ruff configuration in `pyproject.toml` with comprehensive rule selection
+- Narrowed all `except Exception` to specific exception types (`OSError`, `subprocess.SubprocessError`, `ValueError`)
+- Added type annotations to `web/server.py` and `ckad_dojo.py`
+- Codespell ignore list extended for French documentation support
+
 ### Fixed
 
+- `web/server.py`: `send_header` Content-Length passed as `str` instead of `int` (type bug)
+
 ### Removed
+
+- `.flake8` configuration file (replaced by ruff in `pyproject.toml`)
 
 ## [1.7.0] - 2026-01-26
 
