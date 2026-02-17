@@ -65,5 +65,17 @@ ignore = [
 quote-style = "double"
 indent-style = "space"
 
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "argcomplete"
+ignore_missing_imports = true
+
 [dependency-groups]
-dev = ["pre-commit>=4.0"]
+dev = ["mypy>=1.0", "pre-commit>=4.0"]

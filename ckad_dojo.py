@@ -252,11 +252,11 @@ def run_script(
 
     try:
         if capture:
-            result = subprocess.run(cmd, capture_output=True, text=True, cwd=get_project_root())
-            return result.returncode, result.stdout, result.stderr
+            captured = subprocess.run(cmd, capture_output=True, text=True, cwd=get_project_root())
+            return captured.returncode, captured.stdout, captured.stderr
         else:
-            result = subprocess.run(cmd, cwd=get_project_root())
-            return result.returncode, "", ""
+            proc = subprocess.run(cmd, cwd=get_project_root())
+            return proc.returncode, "", ""
     except Exception as e:
         return 1, "", str(e)
 
