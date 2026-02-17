@@ -93,7 +93,7 @@ def run_cleanup_script(exam_id: str | None = None) -> dict:
     except subprocess.TimeoutExpired:
         print("  [ERROR] Cleanup script timed out\n")
         return {"success": False, "error": "Cleanup script timed out"}
-    except Exception as e:
+    except (OSError, subprocess.SubprocessError) as e:
         print(f"  [ERROR] {e!s}\n")
         return {"success": False, "error": str(e)}
 
@@ -282,7 +282,7 @@ def run_scoring_script(exam_id: str | None = None) -> dict:
             "percentage": 0,
             "passed": False,
         }
-    except Exception as e:
+    except (OSError, subprocess.SubprocessError) as e:
         return {
             "success": False,
             "error": str(e),
@@ -762,7 +762,7 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
             result = sock.connect_ex(("localhost", port))
             sock.close()
             return result == 0
-        except Exception:
+        except OSError:
             return False
 
     def send_json(self, data):
