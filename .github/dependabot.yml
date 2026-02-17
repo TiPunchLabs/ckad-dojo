@@ -24,7 +24,7 @@ updates:
     commit-message:
       prefix: "chore(ci)"
     labels:
-      - "ci"
+      - "github_actions"
     groups:
       github-actions:
         patterns:
