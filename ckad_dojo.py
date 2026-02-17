@@ -209,7 +209,7 @@ def parse_exam_config(exam_id: str) -> dict[str, str] | None:
                 if match:
                     key, value = match.groups()
                     config[key] = value.strip("\"'")
-    except Exception:
+    except (OSError, ValueError):
         return None
 
     return config
@@ -257,7 +257,7 @@ def run_script(
         else:
             proc = subprocess.run(cmd, cwd=get_project_root())
             return proc.returncode, "", ""
-    except Exception as e:
+    except (OSError, subprocess.SubprocessError) as e:
         return 1, "", str(e)
 
 
@@ -296,7 +296,7 @@ def check_cluster_connectivity() -> bool:
             ["kubectl", "cluster-info"], capture_output=True, text=True, timeout=10
         )
         return result.returncode == 0
-    except Exception:
+    except (OSError, subprocess.SubprocessError):
         return False
 
 
@@ -1007,7 +1007,7 @@ def cmd_status(args) -> int:
             )
             print(f"  {exam_name}: {status}")
 
-        except Exception:
+        except (OSError, subprocess.SubprocessError):
             print(f"  {eid}: {color('UNKNOWN', Colors.YELLOW)}")
 
     print()
