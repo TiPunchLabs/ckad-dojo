@@ -16,13 +16,13 @@ show_help() {
 	echo ""
 	echo "OPTIONS:"
 	echo "  -h, --help         Show this help message"
-	echo "  -e, --exam EXAM    Select exam to score (default: $DEFAULT_EXAM_ID)"
+	echo "  -e, --exam EXAM    Select exam to score (default: active exam)"
 	echo "  -q, --question N   Score a specific question (1-22, p1, p2)"
 	echo "  -s, --summary      Show summary only (no details)"
 	echo "  --list             List available exams"
 	echo ""
 	echo "EXAMPLES:"
-	echo "  $(basename "$0")                      # Score all questions (default exam)"
+	echo "  $(basename "$0")                      # Score active exam"
 	echo "  $(basename "$0") -e ckad-simulation1  # Score specific exam"
 	echo "  $(basename "$0") -q 5                 # Score only question 5"
 	echo "  $(basename "$0") -s                   # Show summary only"
@@ -48,7 +48,7 @@ list_exams() {
 # Parse arguments
 SPECIFIC_QUESTION=""
 SUMMARY_ONLY=false
-SELECTED_EXAM="$DEFAULT_EXAM_ID"
+SELECTED_EXAM=""
 
 while [[ $# -gt 0 ]]; do
 	case $1 in
@@ -79,6 +79,18 @@ while [[ $# -gt 0 ]]; do
 		;;
 	esac
 done
+
+# Resolve exam: use active exam or fail explicitly
+if [ -z "$SELECTED_EXAM" ]; then
+	active_exam=$(get_active_exam)
+	if [ -n "$active_exam" ]; then
+		SELECTED_EXAM="$active_exam"
+		echo -e "${CYAN}Active exam detected: $SELECTED_EXAM${NC}"
+	else
+		print_error "No active exam detected. Use -e to specify an exam, or --list to see available exams."
+		exit 1
+	fi
+fi
 
 # Main scoring function
 main() {

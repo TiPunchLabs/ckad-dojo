@@ -225,12 +225,11 @@ assert_function_exists "open_browser_tab" "open_browser_tab function should exis
 assert_function_exists "open_docs_tabs" "open_docs_tabs function should exist"
 
 # ----------------------------------------------------------------------------
-# Test: Default exam configuration
+# Test: No default exam ID (interactive selection required)
 # ----------------------------------------------------------------------------
-test_case "Default exam configuration is set"
+test_case "DEFAULT_EXAM_ID is no longer defined"
 
-assert_not_empty "$DEFAULT_EXAM_ID" "DEFAULT_EXAM_ID should be set"
-assert_equals "ckad-simulation2" "$DEFAULT_EXAM_ID" "DEFAULT_EXAM_ID should be ckad-simulation2"
+assert_equals "" "${DEFAULT_EXAM_ID:-}" "DEFAULT_EXAM_ID should not be set"
 
 # ----------------------------------------------------------------------------
 # Test: Legacy path variables

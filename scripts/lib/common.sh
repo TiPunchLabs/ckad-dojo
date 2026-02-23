@@ -16,9 +16,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 EXAMS_DIR="$PROJECT_DIR/exams"
 
-# Default exam configuration
-DEFAULT_EXAM_ID="ckad-simulation2"
-CURRENT_EXAM_ID="${CURRENT_EXAM_ID:-$DEFAULT_EXAM_ID}"
+# Current exam (set by load_exam or interactive selection)
+CURRENT_EXAM_ID="${CURRENT_EXAM_ID:-}"
 
 # Legacy paths (for backward compatibility)
 MANIFESTS_DIR="$PROJECT_DIR/manifests/setup"
@@ -32,7 +31,7 @@ EXAM_DIR="$PROJECT_DIR/exam/course"
 # Load exam configuration
 # Usage: load_exam <exam_id>
 load_exam() {
-	local exam_id=${1:-$DEFAULT_EXAM_ID}
+	local exam_id=$1
 	local exam_conf="$EXAMS_DIR/$exam_id/exam.conf"
 
 	if [ ! -f "$exam_conf" ]; then
@@ -82,6 +81,52 @@ list_available_exams() {
 exam_exists() {
 	local exam_id=$1
 	[ -d "$EXAMS_DIR/$exam_id" ] && [ -f "$EXAMS_DIR/$exam_id/exam.conf" ]
+}
+
+# Interactive exam selection menu
+# Sets the global SELECTED_EXAM variable
+select_exam_interactive() {
+	local exams
+	IFS=' ' read -r -a exams <<<"$(list_available_exams)"
+	local num_exams=${#exams[@]}
+
+	if [ "$num_exams" -eq 0 ]; then
+		print_error "No exams found in $EXAMS_DIR"
+		exit 1
+	fi
+
+	echo ""
+	echo -e "${BLUE}╔═══════════════════════════════════════════════════════════════════╗${NC}"
+	echo -e "${BLUE}║${NC}                     SELECT AN EXAM                                ${BLUE}║${NC}"
+	echo -e "${BLUE}╠═══════════════════════════════════════════════════════════════════╣${NC}"
+	echo -e "${BLUE}║${NC}"
+
+	local i=1
+	for exam_id in "${exams[@]}"; do
+		source "$EXAMS_DIR/$exam_id/exam.conf"
+		printf "${BLUE}║${NC}  ${CYAN}%d)${NC} %-20s - %s\n" "$i" "$exam_id" "$EXAM_NAME"
+		printf "${BLUE}║${NC}     Duration: %d min | Questions: %d | Points: %d\n" \
+			"$EXAM_DURATION" "$TOTAL_QUESTIONS" "$TOTAL_POINTS"
+		echo -e "${BLUE}║${NC}"
+		((i++))
+	done
+
+	echo -e "${BLUE}╚═══════════════════════════════════════════════════════════════════╝${NC}"
+	echo ""
+
+	local selection
+	while true; do
+		read -r -p "Select an exam: " selection
+		if [[ "$selection" =~ ^[0-9]+$ ]] && [ "$selection" -ge 1 ] && [ "$selection" -le "$num_exams" ]; then
+			SELECTED_EXAM="${exams[$((selection - 1))]}"
+			break
+		else
+			echo -e "${RED}Invalid selection. Please enter a valid exam number.${NC}"
+		fi
+	done
+
+	echo ""
+	echo -e "${GREEN}Selected:${NC} $SELECTED_EXAM"
 }
 
 # ============================================================================
