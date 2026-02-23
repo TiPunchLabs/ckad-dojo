@@ -99,7 +99,7 @@ main() {
 	# Auto-detect active exam if not specified
 	if [ "$EXAM_SPECIFIED" = false ]; then
 		local active_exam
-		active_exam=$(get_active_exam)
+		active_exam=$(get_active_exam) || true
 		if [ -n "$active_exam" ]; then
 			SELECTED_EXAM="$active_exam"
 			echo -e "${CYAN}Active exam detected: $SELECTED_EXAM${NC}"

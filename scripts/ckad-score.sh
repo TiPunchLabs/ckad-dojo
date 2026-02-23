@@ -82,7 +82,7 @@ done
 
 # Resolve exam: use active exam or fail explicitly
 if [ -z "$SELECTED_EXAM" ]; then
-	active_exam=$(get_active_exam)
+	active_exam=$(get_active_exam) || true
 	if [ -n "$active_exam" ]; then
 		SELECTED_EXAM="$active_exam"
 		echo -e "${CYAN}Active exam detected: $SELECTED_EXAM${NC}"
