@@ -26,8 +26,18 @@
   <img src="https://img.shields.io/badge/version-1.8.0-blue" alt="Version 1.8.0">
   <img src="https://img.shields.io/badge/exams-9-blue" alt="9 Exams">
   <img src="https://img.shields.io/badge/questions-178-blue" alt="178 Questions">
+  <img src="https://img.shields.io/badge/scoring_criteria-400+-blue" alt="400+ Scoring Criteria">
   <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
+  <img src="https://img.shields.io/badge/difficulty-exam--realistic-red" alt="Exam Realistic Difficulty">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-lightgrey" alt="License: CC BY-NC-SA 4.0"></a>
+</p>
+
+<p align="center">
+  <strong>⭐ If this helped you pass CKAD, please star the repo — it helps others find it!</strong>
+</p>
+
+<p align="center">
+  <em>🧠 Used by engineers worldwide preparing for CKAD certification</em>
 </p>
 
 ---
@@ -112,20 +122,23 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 
 ---
 
-## Quick Start
+## 🚀 Quick Start (5 minutes)
+
+Get your first exam running in under 5 minutes:
 
 ```bash
 # 1. Install uv (Python package manager)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 2. Launch the unified CLI (recommended)
+# 2. Clone and launch
+git clone https://github.com/TiPunchLabs/ckad-dojo.git
+cd ckad-dojo
 uv run ckad-dojo
-
-# Or use the bash script directly
-./scripts/ckad-exam.sh
 ```
 
-Opens `http://localhost:9090` with the exam interface.
+That's it. The interactive menu guides you from there. Opens `http://localhost:9090` with timer, questions, and embedded terminal.
+
+> **Already cloned?** Just run `uv run ckad-dojo` from the repo directory.
 
 ---
 
