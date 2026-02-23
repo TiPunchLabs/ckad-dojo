@@ -12,8 +12,6 @@ PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 source "$SCRIPT_DIR/lib/common.sh"
 source "$SCRIPT_DIR/lib/timer.sh"
 
-# Default exam
-DEFAULT_EXAM="ckad-simulation1"
 EXAMS_DIR="$PROJECT_DIR/exams"
 
 # Web server settings
@@ -436,7 +434,7 @@ cleanup_web() {
 
 # Start web interface
 start_web() {
-	local exam_id=${1:-$DEFAULT_EXAM}
+	local exam_id=${1:-$DEFAULT_EXAM_ID}
 	local skip_confirm=$2
 	local start_question=${3:-1}
 	local no_terminal=$4
@@ -573,7 +571,7 @@ start_web() {
 
 # Start exam session (terminal mode)
 start_exam() {
-	local exam_id=${1:-$DEFAULT_EXAM}
+	local exam_id=${1:-$DEFAULT_EXAM_ID}
 	local skip_confirm=$2
 	local no_timer=$3
 	local start_question=${4:-1}
