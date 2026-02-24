@@ -230,6 +230,12 @@ check_prerequisites() {
 		return 1
 	fi
 
+	# Check Docker daemon is running
+	if ! docker info &>/dev/null; then
+		print_error "Docker daemon is not running. Start it with: sudo systemctl start docker"
+		return 1
+	fi
+
 	return 0
 }
 
