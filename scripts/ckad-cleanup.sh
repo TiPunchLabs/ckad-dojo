@@ -18,7 +18,7 @@ show_help() {
 	echo ""
 	echo "OPTIONS:"
 	echo "  -h, --help         Show this help message"
-	echo "  -e, --exam EXAM    Select exam to clean up (default: $DEFAULT_EXAM_ID)"
+	echo "  -e, --exam EXAM    Select exam to clean up (default: active exam or interactive)"
 	echo "  -y, --yes          Skip confirmation prompt"
 	echo "  --keep-registry    Keep the local Docker registry running"
 	echo "  --keep-dirs        Keep the exam directory structure"
@@ -99,13 +99,13 @@ main() {
 	# Auto-detect active exam if not specified
 	if [ "$EXAM_SPECIFIED" = false ]; then
 		local active_exam
-		active_exam=$(get_active_exam)
+		active_exam=$(get_active_exam) || true
 		if [ -n "$active_exam" ]; then
 			SELECTED_EXAM="$active_exam"
-			echo -e "${CYAN}Auto-detected active exam: $SELECTED_EXAM${NC}"
+			echo -e "${CYAN}Active exam detected: $SELECTED_EXAM${NC}"
 		else
-			SELECTED_EXAM="$DEFAULT_EXAM_ID"
-			echo -e "${YELLOW}No active exam detected, using default: $SELECTED_EXAM${NC}"
+			echo -e "${YELLOW}No active exam detected.${NC}"
+			select_exam_interactive
 		fi
 	fi
 

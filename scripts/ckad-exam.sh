@@ -12,8 +12,6 @@ PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 source "$SCRIPT_DIR/lib/common.sh"
 source "$SCRIPT_DIR/lib/timer.sh"
 
-# Default exam
-DEFAULT_EXAM="ckad-simulation1"
 EXAMS_DIR="$PROJECT_DIR/exams"
 
 # Web server settings
@@ -89,61 +87,6 @@ list_exams() {
 			echo ""
 		fi
 	done
-}
-
-# Get array of available exams
-get_available_exams() {
-	local exams=()
-	for exam_dir in "$EXAMS_DIR"/*/; do
-		if [ -d "$exam_dir" ] && [ -f "$exam_dir/exam.conf" ]; then
-			exams+=("$(basename "$exam_dir")")
-		fi
-	done
-	echo "${exams[@]}"
-}
-
-# Interactive exam selection
-select_exam_interactive() {
-	local exams=($(get_available_exams))
-	local num_exams=${#exams[@]}
-
-	if [ $num_exams -eq 0 ]; then
-		print_error "No exams found in $EXAMS_DIR"
-		exit 1
-	fi
-
-	echo ""
-	echo -e "${BLUE}╔═══════════════════════════════════════════════════════════════════╗${NC}"
-	echo -e "${BLUE}║${NC}                     SELECT AN EXAM TO START                       ${BLUE}║${NC}"
-	echo -e "${BLUE}╠═══════════════════════════════════════════════════════════════════╣${NC}"
-	echo -e "${BLUE}║${NC}"
-
-	local i=1
-	for exam_id in "${exams[@]}"; do
-		source "$EXAMS_DIR/$exam_id/exam.conf"
-		printf "${BLUE}║${NC}  ${CYAN}%d)${NC} %-20s - %s\n" $i "$exam_id" "$EXAM_NAME"
-		printf "${BLUE}║${NC}     Duration: %d min | Questions: %d | Points: %d\n" \
-			"$EXAM_DURATION" "$TOTAL_QUESTIONS" "$TOTAL_POINTS"
-		echo -e "${BLUE}║${NC}"
-		((i++))
-	done
-
-	echo -e "${BLUE}╚═══════════════════════════════════════════════════════════════════╝${NC}"
-	echo ""
-
-	local selection
-	while true; do
-		read -r -p "Select an exam: " selection
-		if [[ "$selection" =~ ^[0-9]+$ ]] && [ "$selection" -ge 1 ] && [ "$selection" -le "$num_exams" ]; then
-			SELECTED_EXAM="${exams[$((selection - 1))]}"
-			break
-		else
-			echo -e "${RED}Invalid selection. Please enter a valid exam number.${NC}"
-		fi
-	done
-
-	echo ""
-	echo -e "${GREEN}Selected:${NC} $SELECTED_EXAM"
 }
 
 # Detect if another exam's resources exist in the cluster
@@ -436,7 +379,7 @@ cleanup_web() {
 
 # Start web interface
 start_web() {
-	local exam_id=${1:-$DEFAULT_EXAM}
+	local exam_id=$1
 	local skip_confirm=$2
 	local start_question=${3:-1}
 	local no_terminal=$4
@@ -573,7 +516,7 @@ start_web() {
 
 # Start exam session (terminal mode)
 start_exam() {
-	local exam_id=${1:-$DEFAULT_EXAM}
+	local exam_id=$1
 	local skip_confirm=$2
 	local no_timer=$3
 	local start_question=${4:-1}

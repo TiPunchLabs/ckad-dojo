@@ -17,7 +17,7 @@ show_help() {
 	echo ""
 	echo "OPTIONS:"
 	echo "  -h, --help         Show this help message"
-	echo "  -e, --exam EXAM    Select exam to set up (default: $DEFAULT_EXAM_ID)"
+	echo "  -e, --exam EXAM    Select exam to set up (default: interactive selection)"
 	echo "  -q, --quiet        Suppress non-essential output"
 	echo "  --skip-registry    Skip local Docker registry setup"
 	echo "  --list             List available exams"
@@ -33,7 +33,7 @@ show_help() {
 	echo "The script is idempotent - safe to run multiple times."
 	echo ""
 	echo "EXAMPLES:"
-	echo "  $(basename "$0")                          # Setup default exam"
+	echo "  $(basename "$0")                          # Interactive exam selection"
 	echo "  $(basename "$0") -e ckad-simulation1      # Setup specific exam"
 	echo "  $(basename "$0") --list                   # List available exams"
 }
@@ -58,7 +58,7 @@ list_exams() {
 # Parse arguments
 QUIET=false
 SKIP_REGISTRY=false
-SELECTED_EXAM="$DEFAULT_EXAM_ID"
+SELECTED_EXAM=""
 
 while [[ $# -gt 0 ]]; do
 	case $1 in
@@ -89,6 +89,11 @@ while [[ $# -gt 0 ]]; do
 		;;
 	esac
 done
+
+# Interactive exam selection if not specified
+if [ -z "$SELECTED_EXAM" ]; then
+	select_exam_interactive
+fi
 
 # Main setup function
 main() {
