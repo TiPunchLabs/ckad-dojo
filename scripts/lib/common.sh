@@ -203,34 +203,65 @@ command_exists() {
 }
 
 # Check prerequisites
+# Usage: check_prerequisites [--verbose]
+# --verbose: show each check result (success/fail) instead of failing at first error
 check_prerequisites() {
-	local missing=()
-
-	if ! command_exists kubectl; then
-		missing+=("kubectl")
+	local verbose=false
+	if [ "${1:-}" = "--verbose" ]; then
+		verbose=true
 	fi
 
-	if ! command_exists helm; then
-		missing+=("helm")
+	local errors=0
+
+	# Check kubectl
+	if command_exists kubectl; then
+		if $verbose; then print_success "kubectl found"; fi
+	else
+		if $verbose; then print_fail "kubectl not found"; else print_error "kubectl is not installed"; fi
+		((errors++))
 	fi
 
-	# Check for docker (required)
-	if ! command_exists docker; then
-		missing+=("docker")
+	# Check cluster connection (only if kubectl exists)
+	if [ $errors -eq 0 ] || $verbose; then
+		if kubectl cluster-info &>/dev/null; then
+			if $verbose; then print_success "Kubernetes cluster accessible"; fi
+		else
+			if $verbose; then print_fail "Cannot connect to Kubernetes cluster"; else print_error "Cannot connect to Kubernetes cluster. Check your kubeconfig."; fi
+			((errors++))
+		fi
 	fi
 
-	if [ ${#missing[@]} -gt 0 ]; then
-		print_error "Missing required tools: ${missing[*]}"
+	# Check helm
+	if command_exists helm; then
+		if $verbose; then print_success "helm found"; fi
+	else
+		if $verbose; then print_fail "helm not found"; else print_error "helm is not installed"; fi
+		((errors++))
+	fi
+
+	# Check docker
+	if command_exists docker; then
+		if $verbose; then print_success "docker found"; fi
+	else
+		if $verbose; then print_fail "docker not found"; else print_error "docker is not installed"; fi
+		((errors++))
+	fi
+
+	# Check Docker daemon is running (only if docker exists)
+	if command_exists docker; then
+		if docker info &>/dev/null; then
+			if $verbose; then print_success "Docker daemon is running"; fi
+		else
+			if $verbose; then print_fail "Docker daemon is not running"; else print_error "Docker daemon is not running. Start it with: sudo systemctl start docker"; fi
+			((errors++))
+		fi
+	fi
+
+	if ! $verbose && [ $errors -gt 0 ]; then
 		return 1
 	fi
 
-	# Check kubectl connection
-	if ! kubectl cluster-info &>/dev/null; then
-		print_error "Cannot connect to Kubernetes cluster. Check your kubeconfig."
-		return 1
-	fi
-
-	return 0
+	return $errors
 }
 
 # Check if namespace exists
