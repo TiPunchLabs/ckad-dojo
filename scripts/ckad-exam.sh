@@ -253,48 +253,6 @@ load_exam_config() {
 	export CURRENT_TEMPLATES_DIR CURRENT_QUESTIONS_FILE CURRENT_SCORING_FILE
 }
 
-# Verify exam prerequisites
-verify_prerequisites() {
-	local errors=0
-
-	echo ""
-	print_section "Verifying prerequisites..."
-
-	# Check kubectl
-	if command_exists kubectl; then
-		print_success "kubectl found"
-	else
-		print_fail "kubectl not found"
-		((errors++))
-	fi
-
-	# Check cluster connection
-	if kubectl cluster-info &>/dev/null; then
-		print_success "Kubernetes cluster accessible"
-	else
-		print_fail "Cannot connect to Kubernetes cluster"
-		((errors++))
-	fi
-
-	# Check helm
-	if command_exists helm; then
-		print_success "helm found"
-	else
-		print_fail "helm not found"
-		((errors++))
-	fi
-
-	# Check docker
-	if command_exists docker; then
-		print_success "docker found"
-	else
-		print_fail "docker not found"
-		((errors++))
-	fi
-
-	return $errors
-}
-
 # Verify exam environment is set up
 verify_exam_setup() {
 	local errors=0
@@ -399,7 +357,8 @@ start_web() {
 	echo ""
 
 	# Verify prerequisites
-	if ! verify_prerequisites; then
+	print_section "Verifying prerequisites..."
+	if ! check_prerequisites --verbose; then
 		echo ""
 		print_error "Prerequisites check failed. Please install missing tools."
 		exit 1
@@ -529,7 +488,8 @@ start_exam() {
 	echo ""
 
 	# Verify prerequisites
-	if ! verify_prerequisites; then
+	print_section "Verifying prerequisites..."
+	if ! check_prerequisites --verbose; then
 		echo ""
 		print_error "Prerequisites check failed. Please install missing tools."
 		exit 1
