@@ -62,3 +62,6 @@ CLAUDE.md
 
 AUDIT-REPORT.md
 PROJECT-AUDIT.md
+
+.coverage
+.playwright-mcp/
