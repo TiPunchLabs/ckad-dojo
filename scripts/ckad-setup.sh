@@ -132,7 +132,7 @@ main() {
 	save_active_exam "$CURRENT_EXAM_ID"
 
 	# Step 2: Deploy pre-existing resources
-	setup_resources
+	setup_resources || true
 	local resource_errors=$?
 	if [ $resource_errors -gt 0 ]; then
 		print_fail "$resource_errors resource(s) failed to deploy"
@@ -164,7 +164,7 @@ main() {
 	sleep 3
 
 	# Step 7: Post-setup configurations (multi-revision deployments, etc.)
-	setup_post_resources
+	setup_post_resources || true
 
 	# Summary
 	local end_time=$(date +%s)

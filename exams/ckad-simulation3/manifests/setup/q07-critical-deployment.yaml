@@ -1,31 +1,29 @@
-# Q18 - Web deployment for named ports service
+# Q7 - Pre-existing Deployment for PodDisruptionBudget exercise
+# 5 replicas with label app: critical-app in namespace jungle
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-deploy
-  namespace: flame
+  name: critical-app
+  namespace: jungle
   labels:
-    app: web-app
-    exam: ckad-simulation1
+    app: critical-app
+    exam: ckad-simulation3
 spec:
-  replicas: 2
+  replicas: 5
   selector:
     matchLabels:
-      app: web-app
+      app: critical-app
   template:
     metadata:
       labels:
-        app: web-app
+        app: critical-app
     spec:
       containers:
-      - name: web
+      - name: nginx
         image: nginx:1.21
         ports:
         - containerPort: 80
-          name: http-web
-        - containerPort: 443
-          name: https-web
         resources:
           requests:
             memory: "64Mi"

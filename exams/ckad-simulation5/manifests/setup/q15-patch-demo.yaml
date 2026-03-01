@@ -1,31 +1,29 @@
-# Q18 - Web deployment for named ports service
+# Q15 - Pre-existing Deployment for kubectl patch exercise
+# Student will use strategic merge patch and JSON patch to modify it
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-deploy
-  namespace: flame
+  name: patch-demo
+  namespace: tide
   labels:
-    app: web-app
-    exam: ckad-simulation1
+    app: patch-demo
+    exam: ckad-simulation5
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: web-app
+      app: patch-demo
   template:
     metadata:
       labels:
-        app: web-app
+        app: patch-demo
     spec:
       containers:
-      - name: web
+      - name: nginx
         image: nginx:1.21
         ports:
         - containerPort: 80
-          name: http-web
-        - containerPort: 443
-          name: https-web
         resources:
           requests:
             memory: "64Mi"
