@@ -263,43 +263,7 @@ setup_post_resources() {
 	local errors=0
 
 	# ============================================================================
-	# CKAD-SIMULATION4: Q9 - Create broken revision for rollback exercise
-	# ============================================================================
-	if [[ "${CURRENT_EXAM_ID:-}" == "ckad-simulation4" ]]; then
-		if kubectl get deployment voyage-app -n njord &>/dev/null; then
-			# Wait for deployment to be available
-			kubectl rollout status deployment voyage-app -n njord --timeout=60s 2>/dev/null
-
-			# Update with broken image to create revision 2
-			if kubectl set image deployment/voyage-app voyage-container=nginx:broken-voyage -n njord --record=false 2>/dev/null; then
-				print_success "Q9: Created broken deployment revision (nginx:broken-voyage)"
-			else
-				print_fail "Q9: Failed to create broken revision"
-				((errors++))
-			fi
-		fi
-	fi
-
-	# ============================================================================
-	# CKAD-SIMULATION6: Q7 - Create broken revision for rollback exercise
-	# ============================================================================
-	if [[ "${CURRENT_EXAM_ID:-}" == "ckad-simulation6" ]]; then
-		if kubectl get deployment rollback-deploy -n cave &>/dev/null; then
-			# Wait for deployment to be available
-			kubectl rollout status deployment rollback-deploy -n cave --timeout=60s 2>/dev/null
-
-			# Update with broken image to create revision 2
-			if kubectl set image deployment/rollback-deploy nginx=nginx:1.91 -n cave --record=false 2>/dev/null; then
-				print_success "Q7: Created broken deployment revision (nginx:1.91)"
-			else
-				print_fail "Q7: Failed to create broken revision"
-				((errors++))
-			fi
-		fi
-	fi
-
-	# ============================================================================
-	# BOTH EXAMS: Create broken Helm release for Q4/Q13
+	# SHARED: Create broken Helm release for exams that use Helm
 	# ============================================================================
 	local helm_ns="${HELM_NAMESPACE:-}"
 	if [ -n "$helm_ns" ] && namespace_exists "$helm_ns"; then
@@ -326,6 +290,18 @@ setup_post_resources() {
 			else
 				print_skip "Q4/Q13: Broken Helm release may not be in expected state"
 			fi
+		fi
+	fi
+
+	# ============================================================================
+	# EXAM-SPECIFIC: Source per-exam post-setup script if it exists
+	# ============================================================================
+	local post_setup_script="${CURRENT_EXAM_DIR}/post-setup.sh"
+	if [ -f "$post_setup_script" ]; then
+		print_section "Running exam-specific post-setup..."
+		source "$post_setup_script"
+		if declare -f exam_post_setup &>/dev/null; then
+			exam_post_setup || ((errors++))
 		fi
 	fi
 
