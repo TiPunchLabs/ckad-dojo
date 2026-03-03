@@ -114,12 +114,17 @@ scripts/
  │  templates   │        │  browser     │        │  score_q1()  │       │ Delete PV    │
  │ Registry     │        │              │        │  ...         │       │ Remove       │
  │ Helm charts  │        │              │        │  score_qN()  │       │  registry    │
- │ Post-setup   │        │              │        │ Display      │       │ Clean up     │
+ │ Post-setup * │        │              │        │ Display      │       │ Clean up     │
  │              │        │              │        │  results     │       │  Docker      │
  └──────────────┘        └──────────────┘        └──────────────┘       └──────────────┘
         │                                                                       │
         └── State saved in /tmp/ckad-dojo/active-exam.state ────────────────────┘
 ```
+
+\* **Post-setup**: After applying shared logic (broken Helm release), `setup_post_resources()` sources
+`exams/{exam-id}/post-setup.sh` if it exists and calls the `exam_post_setup()` function. This allows
+each exam to define its own multi-step initialization (e.g., creating broken deployment revisions for
+rollback exercises) without modifying the shared `setup-functions.sh`.
 
 ------
 
@@ -133,6 +138,7 @@ exams/ckad-simulation1/
   ├── questions.md           # Questions in Markdown with metadata table
   ├── solutions.md           # Solutions for post-exam review
   ├── scoring-functions.sh   # Bash functions: score_q1(), score_q2(), ...
+  ├── post-setup.sh          # Optional exam-specific post-setup (sourced by setup-functions.sh)
   ├── manifests/
   │   └── setup/
   │       ├── namespaces.yaml    # Namespace definitions
