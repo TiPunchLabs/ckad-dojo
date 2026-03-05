@@ -1,0 +1,28 @@
+# Q10 - Pre-existing Pod for kubectl debug exercise
+# Pod with /data volume that student will debug with ephemeral container
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: troubled-app
+  namespace: anchor
+  labels:
+    app: troubled-app
+    exam: ckad-simulation5
+spec:
+  containers:
+  - name: app
+    image: nginx:1.21
+    volumeMounts:
+    - name: data
+      mountPath: /data
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "100m"
+      limits:
+        memory: "128Mi"
+        cpu: "200m"
+  volumes:
+  - name: data
+    emptyDir: {}

@@ -6,7 +6,7 @@ metadata:
   name: app-settings
   namespace: flame
   labels:
-    exam: ckad-simulation2
+    exam: ckad-simulation1
 data:
   database.host: "db.flame.svc.cluster.local"
   database.port: "5432"

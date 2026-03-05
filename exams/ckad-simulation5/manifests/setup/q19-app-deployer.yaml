@@ -1,0 +1,38 @@
+# Q19 - Pre-existing ServiceAccount with RBAC for kubectl auth can-i exercise
+# Student will check permissions using kubectl auth can-i
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app-deployer
+  namespace: current
+  labels:
+    exam: ckad-simulation5
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: app-deployer-role
+  namespace: current
+  labels:
+    exam: ckad-simulation5
+rules:
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["create", "delete", "get", "list", "patch", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: app-deployer-binding
+  namespace: current
+  labels:
+    exam: ckad-simulation5
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: app-deployer-role
+subjects:
+- kind: ServiceAccount
+  name: app-deployer
+  namespace: current

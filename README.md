@@ -108,15 +108,15 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 
 | Dojo | Quote |
 |------|-------|
-| 🔥 Suzaku | *「朱雀は灰から蘇る」— Le phénix renaît de ses cendres* |
-| 🐯 Byakko | *「白虎は正確に打つ」— Le tigre frappe avec précision* |
-| 🐢 Genbu | *「玄武は世界を支える」— La tortue porte le monde* |
-| 🐸 Kappa | *「河童は水を知る」— Le kappa connait les eaux* |
-| 🦌 Kirin | *「麒麟は平和をもたらす」— Le kirin apporte la paix* |
-| 👺 Tengu | *「天狗は山を守る」— Le tengu protège la montagne* |
-| 🦝 Tanuki | *「狸は森に潜む」— Le tanuki se cache dans la forêt* |
-| 🦊 Inari | *「稲荷は豊穣を祝う」— Inari célèbre l'abondance* |
-| 🐲 Ryujin | *「龍神は波を操る」— Ryujin commande les vagues* |
+| 🔥 Suzaku | *「朱雀は灰から蘇る」— The phoenix rises from the ashes* |
+| 🐯 Byakko | *「白虎は正確に打つ」— The tiger strikes with precision* |
+| 🐢 Genbu | *「玄武は世界を支える」— The turtle carries the world* |
+| 🐸 Kappa | *「河童は水を知る」— The kappa knows the waters* |
+| 🦌 Kirin | *「麒麟は平和をもたらす」— The kirin brings peace* |
+| 👺 Tengu | *「天狗は山を守る」— The tengu guards the mountain* |
+| 🦝 Tanuki | *「狸は森に潜む」— The tanuki hides in the forest* |
+| 🦊 Inari | *「稲荷は豊穣を祝う」— Inari celebrates the harvest* |
+| 🐲 Ryujin | *「龍神は波を操る」— Ryujin commands the waves* |
 
 </details>
 
@@ -468,6 +468,13 @@ ckad-dojo/
 │   ├── ckad-simulation7/     # Dojo Tanuki 🦝 - 20 questions, 100 points
 │   ├── ckad-simulation8/     # Dojo Inari 🦊 - 20 questions, 100 points
 │   └── ckad-simulation9/     # Dojo Ryujin 🐲 - 20 questions, 100 points
+│       ├── exam.conf         # Configuration
+│       ├── questions.md      # Questions
+│       ├── solutions.md      # Solutions
+│       ├── scoring-functions.sh # Scoring
+│       ├── post-setup.sh     # Optional post-setup
+│       ├── manifests/setup/  # K8s resources
+│       └── templates/        # Template files
 ├── exam/course/              # Your answers (created by setup)
 └── tests/                    # Unit tests
 ```

@@ -1,31 +1,29 @@
-# Q18 - Web deployment for named ports service
+# Q18 - Pre-existing Deployment for safe rollout exercise
+# Student will configure minReadySeconds, progressDeadlineSeconds, and update image
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-deploy
-  namespace: flame
+  name: safe-deploy
+  namespace: fang
   labels:
-    app: web-app
-    exam: ckad-simulation1
+    app: safe-deploy
+    exam: ckad-simulation3
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
-      app: web-app
+      app: safe-deploy
   template:
     metadata:
       labels:
-        app: web-app
+        app: safe-deploy
     spec:
       containers:
-      - name: web
+      - name: nginx
         image: nginx:1.21
         ports:
         - containerPort: 80
-          name: http-web
-        - containerPort: 443
-          name: https-web
         resources:
           requests:
             memory: "64Mi"

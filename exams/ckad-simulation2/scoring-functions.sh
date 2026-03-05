@@ -222,7 +222,7 @@ score_q5() {
 
 		# Check volumes mounted
 		local volume_count
-		volume_count=$(kubectl get pod secure-app -n hades -o jsonpath='{.spec.volumes}' 2>/dev/null | grep -c "emptyDir" || echo "0")
+		volume_count=$(kubectl get pod secure-app -n hades -o jsonpath='{range .spec.volumes[?(@.emptyDir)]}{.name}{"\n"}{end}' 2>/dev/null | grep -c . || echo "0")
 		if [[ "$volume_count" -ge 3 ]]; then
 			((score += 2))
 			details+="EmptyDir volumes mounted correctly."
@@ -251,7 +251,7 @@ score_q6() {
 
 		# Check init containers count
 		local init_count
-		init_count=$(kubectl get pod multi-init -n poseidon -o jsonpath='{.spec.initContainers}' 2>/dev/null | grep -c "name" || echo "0")
+		init_count=$(kubectl get pod multi-init -n poseidon -o jsonpath='{.spec.initContainers[*].name}' 2>/dev/null | wc -w)
 		if [[ "$init_count" -ge 2 ]]; then
 			((score += 2))
 			details+="Two init containers configured. "
@@ -338,7 +338,7 @@ score_q8() {
 
 		# Check container count
 		local container_count
-		container_count=$(kubectl get pod ambassador-pod -n olympus -o jsonpath='{.spec.containers}' 2>/dev/null | grep -c "name" || echo "0")
+		container_count=$(kubectl get pod ambassador-pod -n olympus -o jsonpath='{.spec.containers[*].name}' 2>/dev/null | wc -w)
 		if [[ "$container_count" -ge 2 ]]; then
 			((score += 2))
 			details+="Two containers configured. "
@@ -472,7 +472,7 @@ score_q11() {
 
 		# Check container count
 		local container_count
-		container_count=$(kubectl get pod adapter-pod -n zeus -o jsonpath='{.spec.containers}' 2>/dev/null | grep -c "name" || echo "0")
+		container_count=$(kubectl get pod adapter-pod -n zeus -o jsonpath='{.spec.containers[*].name}' 2>/dev/null | wc -w)
 		if [[ "$container_count" -ge 2 ]]; then
 			((score += 2))
 			details+="Two containers configured. "
@@ -870,7 +870,7 @@ score_q20() {
 
 		# Check container count
 		local container_count
-		container_count=$(kubectl get pod shared-pid -n artemis -o jsonpath='{.spec.containers}' 2>/dev/null | grep -c "name" || echo "0")
+		container_count=$(kubectl get pod shared-pid -n artemis -o jsonpath='{.spec.containers[*].name}' 2>/dev/null | wc -w)
 		if [[ "$container_count" -ge 2 ]]; then
 			((score += 2))
 			details+="Two containers configured."

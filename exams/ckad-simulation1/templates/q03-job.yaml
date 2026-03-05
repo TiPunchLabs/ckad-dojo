@@ -7,7 +7,6 @@ metadata:
   name: data-processor
   namespace: spark
 spec:
-  # TODO: Add activeDeadlineSeconds: 60
   template:
     spec:
       containers:
