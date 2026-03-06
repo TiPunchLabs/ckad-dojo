@@ -1,6 +1,6 @@
 # CKAD Exam Simulator - Dojo Genbu 🐢
 
-> **Total Score**: 105 points | **Passing Score**: ~66% (69 points)
+> **Total Score**: 107 points | **Passing Score**: ~66% (71 points)
 >
 > *「玄武は深海を守る」 - La tortue noire garde les profondeurs*
 >
@@ -245,7 +245,7 @@ Create a **LimitRange** named `container-limits` in namespace `pounce` that sets
 
 | | |
 |---|---|
-| **Points** | 7 |
+| **Points** | 8 |
 | **Namespace** | `stalker` |
 | **Resources** | Pod `secure-pod` |
 
@@ -273,7 +273,7 @@ Create a **Pod** named `secure-pod` in namespace `stalker` with comprehensive se
 | `readOnlyRootFilesystem` | `true` |
 | `allowPrivilegeEscalation` | `false` |
 
-Add an **emptyDir** volume mounted at `/tmp` to allow the container to write temporary files.
+Add **emptyDir** volumes to allow nginx to run with a read-only root filesystem. Mount writable volumes at `/tmp`, `/var/cache/nginx`, `/var/run`, and `/etc/nginx/conf.d`.
 
 ---
 
@@ -392,7 +392,7 @@ The Job should automatically delete itself **60 seconds** after completion.
 
 | | |
 |---|---|
-| **Points** | 6 |
+| **Points** | 7 |
 | **Namespace** | `predator` |
 | **Resources** | Pod `hardened-pod` |
 
@@ -411,6 +411,8 @@ Create a **Pod** named `hardened-pod` in namespace `predator` with security hard
 - Add only: `NET_BIND_SERVICE`
 - Set `runAsNonRoot: true`
 - Set `runAsUser: 101` (nginx user)
+
+Add **emptyDir** volumes at `/var/cache/nginx`, `/var/run`, and `/etc/nginx/conf.d` so nginx can start as a non-root user.
 
 ---
 
