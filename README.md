@@ -124,6 +124,8 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 
 ## 🚀 Quick Start (5 minutes)
 
+> ⚠️ **Requires** a running Kubernetes cluster, `kubectl`, `helm`, `docker`, and `ttyd`. See [Prerequisites](#prerequisites) for details.
+
 Get your first exam running in under 5 minutes:
 
 ```bash
@@ -310,7 +312,7 @@ Then reload: `source ~/.bashrc`
 ```bash
 ckad-dojo <TAB>           # → setup, exam, score, cleanup, list
 ckad-dojo exam <TAB>      # → start, --exam, --help
-ckad-dojo -e <TAB>        # → ckad-simulation2, ckad-simulation2, ...
+ckad-dojo -e <TAB>        # → ckad-simulation1, ckad-simulation2, ...
 ```
 
 **Alternative: Built-in completion scripts**
@@ -352,6 +354,8 @@ uv run ckad-dojo completion fish > ~/.config/fish/completions/ckad-dojo.fish
 ---
 
 ## Bash Scripts Usage
+
+> 💡 The CLI (`uv run ckad-dojo`) wraps these bash scripts with a friendlier interface. Both approaches are equivalent — use whichever you prefer.
 
 ### Web Interface (Recommended)
 
@@ -436,7 +440,23 @@ PASS - Congratulations!
 
 ---
 
+## Typical Workflow
+
+```
+1. Start an exam        →  uv run ckad-dojo exam start -e ckad-simulation1
+2. Solve questions      →  Work in the embedded terminal (or your own)
+3. Score your answers   →  uv run ckad-dojo score -e ckad-simulation1
+4. Review solutions     →  Open exams/ckad-simulation1/solutions.md
+5. Cleanup & retry      →  uv run ckad-dojo cleanup -e ckad-simulation1
+```
+
+> 💡 **Tip**: You can score at any time during the exam — no need to wait until the end. This lets you iterate question by question.
+
+---
+
 ## Path Mappings
+
+Questions reference paths like `/opt/course/N/` (as in the real CKAD exam). Locally, these are mapped to your working directory:
 
 | Exam Path | Local Path |
 |-----------|------------|
