@@ -26,11 +26,11 @@
 
 ### Task
 
-Create a namespace called `mynamespace` and a Pod with image `nginx` called `nginx` in this namespace.
+Create a namespace called `mynamespace` and a Pod with image `nginx:1.25` called `nginx` in this namespace.
 
 The Pod should:
 
-- Use the `nginx` image
+- Use the `nginx:1.25` image
 - Have `restartPolicy: Never`
 
 **Hint**: Use `kubectl create namespace` and `kubectl run` commands.
@@ -49,7 +49,7 @@ The Pod should:
 
 Create a Pod named `envpod` in namespace `summit` with the following specifications:
 
-- Image: `busybox`
+- Image: `busybox:1.36`
 - Command: `env` (to print environment variables)
 - Environment variable: `VAR1=value1`
 - `restartPolicy: Never`
@@ -92,7 +92,7 @@ Create a ResourceQuota named `cliff-quota` in namespace `cliff` with the followi
 
 In namespace `ridge`:
 
-1. Create 3 Pods with names `nginx1`, `nginx2`, `nginx3`. All of them should have the label `app=v1`
+1. Create 3 Pods with names `nginx1`, `nginx2`, `nginx3` using image `nginx:1.25`. All of them should have the label `app=v1`
 2. Change the label of Pod `nginx2` to `app=v2`
 3. Add a new label `tier=web` to all Pods having label `app=v1`
 
@@ -174,7 +174,7 @@ A Deployment `rollback-deploy` exists in namespace `cave` with a wrong image `ng
 
 Create a Job named `echo-job` in namespace `stone` that:
 
-- Uses image `busybox`
+- Uses image `busybox:1.36`
 - Runs the command: `echo hello; sleep 5; echo world`
 - Should complete `5` times sequentially (one after the other)
 
@@ -194,7 +194,7 @@ Create a Job named `echo-job` in namespace `stone` that:
 
 Create a CronJob named `date-job` in namespace `mist` that:
 
-- Uses image `busybox`
+- Uses image `busybox:1.36`
 - Runs every minute (`*/1 * * * *`)
 - Executes the command: `date; echo Hello from Kubernetes`
 
@@ -217,13 +217,13 @@ Create a Pod named `multi-container` in namespace `alpine` with two containers:
 **Container 1:**
 
 - Name: `container1`
-- Image: `busybox`
+- Image: `busybox:1.36`
 - Command: `echo hello; sleep 3600`
 
 **Container 2:**
 
 - Name: `container2`
-- Image: `busybox`
+- Image: `busybox:1.36`
 - Command: `echo hello; sleep 3600`
 
 **Hint**: Generate YAML with `--dry-run=client -o yaml` and add the second container.
@@ -245,14 +245,14 @@ Create a Pod named `init-pod` in namespace `crest` with:
 **Main container:**
 
 - Name: `nginx`
-- Image: `nginx`
+- Image: `nginx:1.25`
 - Port: `80`
 - Volume mount: `/usr/share/nginx/html`
 
 **Init container:**
 
 - Name: `init`
-- Image: `busybox`
+- Image: `busybox:1.36`
 - Command: `echo "Initialized" > /work-dir/index.html`
 - Volume mount: `/work-dir`
 
@@ -292,7 +292,7 @@ Create a ConfigMap named `app-config` in namespace `peak` with the following key
 ### Task
 
 1. Create a ConfigMap named `options` in namespace `summit` with value `var5=val5`
-2. Create a Pod named `config-pod` with image `nginx` that loads the value from key `var5` into an environment variable called `OPTION`
+2. Create a Pod named `config-pod` with image `nginx:1.25` that loads the value from key `var5` into an environment variable called `OPTION`
 
 **Hint**: Use `valueFrom.configMapKeyRef` in the Pod spec.
 
@@ -309,7 +309,7 @@ Create a ConfigMap named `app-config` in namespace `peak` with the following key
 ### Task
 
 1. Create a ConfigMap named `cmvolume` in namespace `cliff` with values `var8=val8` and `var9=val9`
-2. Create a Pod named `vol-pod` with image `nginx` that mounts this ConfigMap as a volume at `/etc/lala`
+2. Create a Pod named `vol-pod` with image `nginx:1.25` that mounts this ConfigMap as a volume at `/etc/lala`
 
 **Hint**: Use `volumes` and `volumeMounts` in the Pod spec.
 
@@ -326,7 +326,7 @@ Create a ConfigMap named `app-config` in namespace `peak` with the following key
 ### Task
 
 1. Create a Secret named `mysecret` in namespace `ridge` with value `password=mypass`
-2. Create a Pod named `secret-pod` with image `nginx` that mounts the Secret as a volume at `/etc/foo`
+2. Create a Pod named `secret-pod` with image `nginx:1.25` that mounts the Secret as a volume at `/etc/foo`
 
 **Hint**: Use `kubectl create secret generic` and mount it as a volume.
 
@@ -344,7 +344,7 @@ Create a ConfigMap named `app-config` in namespace `peak` with the following key
 
 Create a Pod named `secure-pod` in namespace `valley` with:
 
-- Image: `busybox`
+- Image: `busybox:1.36`
 - Command: `sleep 3600`
 - Run as user ID: `101`
 - `restartPolicy: Never`
@@ -365,7 +365,7 @@ Create a Pod named `secure-pod` in namespace `valley` with:
 
 Create a Pod named `resource-pod` in namespace `cave` with:
 
-- Image: `nginx`
+- Image: `nginx:1.25`
 - Resource requests: `cpu=100m`, `memory=256Mi`
 - Resource limits: `cpu=200m`, `memory=512Mi`
 
@@ -385,7 +385,7 @@ Create a Pod named `resource-pod` in namespace `cave` with:
 
 Create a Pod named `liveness-pod` in namespace `stone` with:
 
-- Image: `nginx`
+- Image: `nginx:1.25`
 - Liveness probe that executes the command `ls`
 - Initial delay: `5` seconds
 - Period: `5` seconds
@@ -404,7 +404,7 @@ Create a Pod named `liveness-pod` in namespace `stone` with:
 
 ### Task
 
-1. Create a Deployment named `web` in namespace `mist` with image `nginx` and 2 replicas
+1. Create a Deployment named `web` in namespace `mist` with image `nginx:1.25` and 2 replicas
 2. Expose it via a ClusterIP Service named `web` on port `80`
 3. Create a NetworkPolicy named `web-policy` that only allows ingress traffic to this Deployment from Pods with label `access=granted`
 
