@@ -15,7 +15,7 @@
 kubectl create namespace mynamespace
 
 # Create pod
-kubectl run nginx --image=nginx --restart=Never -n mynamespace
+kubectl run nginx --image=nginx:1.25 --restart=Never -n mynamespace
 ```
 
 Or using YAML:
@@ -29,7 +29,7 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
   restartPolicy: Never
 ```
 
@@ -40,7 +40,7 @@ spec:
 ### Solution
 
 ```bash
-kubectl run envpod --image=busybox --restart=Never -n summit --env=VAR1=value1 -- env
+kubectl run envpod --image=busybox:1.36 --restart=Never -n summit --env=VAR1=value1 -- env
 ```
 
 Or using YAML:
@@ -54,7 +54,7 @@ metadata:
 spec:
   containers:
   - name: envpod
-    image: busybox
+    image: busybox:1.36
     command: ["env"]
     env:
     - name: VAR1
@@ -95,9 +95,9 @@ spec:
 
 ```bash
 # Create 3 pods with label app=v1
-kubectl run nginx1 --image=nginx --restart=Never -n ridge --labels=app=v1
-kubectl run nginx2 --image=nginx --restart=Never -n ridge --labels=app=v1
-kubectl run nginx3 --image=nginx --restart=Never -n ridge --labels=app=v1
+kubectl run nginx1 --image=nginx:1.25 --restart=Never -n ridge --labels=app=v1
+kubectl run nginx2 --image=nginx:1.25 --restart=Never -n ridge --labels=app=v1
+kubectl run nginx3 --image=nginx:1.25 --restart=Never -n ridge --labels=app=v1
 
 # Change nginx2 label to app=v2
 kubectl label po nginx2 -n ridge app=v2 --overwrite
@@ -182,7 +182,7 @@ kubectl get pods -n cave -l app=rollback-deploy
 ### Solution
 
 ```bash
-kubectl create job echo-job --image=busybox -n stone --dry-run=client -o yaml -- /bin/sh -c 'echo hello; sleep 5; echo world' > job.yaml
+kubectl create job echo-job --image=busybox:1.36 -n stone --dry-run=client -o yaml -- /bin/sh -c 'echo hello; sleep 5; echo world' > job.yaml
 ```
 
 Edit job.yaml to add `completions: 5`:
@@ -199,7 +199,7 @@ spec:
     spec:
       containers:
       - name: echo-job
-        image: busybox
+        image: busybox:1.36
         command: ["/bin/sh", "-c", "echo hello; sleep 5; echo world"]
       restartPolicy: Never
 ```
@@ -215,7 +215,7 @@ kubectl apply -f job.yaml
 ### Solution
 
 ```bash
-kubectl create cronjob date-job --image=busybox --schedule="*/1 * * * *" -n mist -- /bin/sh -c 'date; echo Hello from Kubernetes'
+kubectl create cronjob date-job --image=busybox:1.36 --schedule="*/1 * * * *" -n mist -- /bin/sh -c 'date; echo Hello from Kubernetes'
 ```
 
 ---
@@ -233,10 +233,10 @@ metadata:
 spec:
   containers:
   - name: container1
-    image: busybox
+    image: busybox:1.36
     command: ["/bin/sh", "-c", "echo hello; sleep 3600"]
   - name: container2
-    image: busybox
+    image: busybox:1.36
     command: ["/bin/sh", "-c", "echo hello; sleep 3600"]
 ```
 
@@ -255,14 +255,14 @@ metadata:
 spec:
   initContainers:
   - name: init
-    image: busybox
+    image: busybox:1.36
     command: ["/bin/sh", "-c", "echo 'Initialized' > /work-dir/index.html"]
     volumeMounts:
     - name: workdir
       mountPath: /work-dir
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
     ports:
     - containerPort: 80
     volumeMounts:
@@ -304,7 +304,7 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
     env:
     - name: OPTION
       valueFrom:
@@ -334,7 +334,7 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
     volumeMounts:
     - name: config-volume
       mountPath: /etc/lala
@@ -365,7 +365,7 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
     volumeMounts:
     - name: secret-volume
       mountPath: /etc/foo
@@ -393,7 +393,7 @@ spec:
   restartPolicy: Never
   containers:
   - name: secure-pod
-    image: busybox
+    image: busybox:1.36
     command: ["sleep", "3600"]
 ```
 
@@ -414,7 +414,7 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
     resources:
       requests:
         cpu: "100m"
@@ -439,7 +439,7 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
     livenessProbe:
       exec:
         command:
@@ -456,7 +456,7 @@ spec:
 
 ```bash
 # Create Deployment
-kubectl create deployment web --image=nginx --replicas=2 -n mist
+kubectl create deployment web --image=nginx:1.25 --replicas=2 -n mist
 
 # Expose as Service
 kubectl expose deployment web --port=80 -n mist
@@ -527,7 +527,7 @@ metadata:
 spec:
   containers:
   - name: busybox
-    image: busybox
+    image: busybox:1.36
     command: ["sleep", "3600"]
     volumeMounts:
     - name: pv-storage
