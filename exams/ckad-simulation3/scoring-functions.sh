@@ -161,8 +161,9 @@ score_q4() {
 	local schedule=$(kubectl get cronjob data-sync -n prowl -o jsonpath='{.spec.schedule}' 2>/dev/null)
 	check_criterion "CronJob has valid schedule" "$([ -n "$schedule" ] && echo true || echo false)" && ((score++))
 
-	# Check CronJob is active
-	check_criterion "CronJob is actively scheduling" "$([ "$suspend" != "true" ] && echo true || echo false)" && ((score++))
+	# Check CronJob image
+	local cj_image=$(kubectl get cronjob data-sync -n prowl -o jsonpath='{.spec.jobTemplate.spec.template.spec.containers[0].image}' 2>/dev/null)
+	check_criterion "CronJob has container image" "$([ -n "$cj_image" ] && echo true || echo false)" && ((score++))
 
 	echo "$score/$total"
 	return 0
@@ -255,15 +256,15 @@ score_q7() {
 	local selector=$(kubectl get pdb critical-pdb -n jungle -o jsonpath='{.spec.selector.matchLabels.app}' 2>/dev/null)
 	check_criterion "PDB targets app=critical-app" "$([ "$selector" = "critical-app" ] && echo true || echo false)" && ((score++))
 
-	# Check allowed disruptions
-	local allowed=$(kubectl get pdb critical-pdb -n jungle -o jsonpath='{.status.disruptionsAllowed}' 2>/dev/null)
-	check_criterion "PDB has allowed disruptions calculated" "$([ -n "$allowed" ] && echo true || echo false)" && ((score++))
+	# Check PDB uses correct API version
+	local api_version=$(kubectl get pdb critical-pdb -n jungle -o jsonpath='{.apiVersion}' 2>/dev/null)
+	check_criterion "PDB uses policy/v1 API" "$([ "$api_version" = "policy/v1" ] && echo true || echo false)" && ((score++))
 
-	# Check current healthy
-	local healthy=$(kubectl get pdb critical-pdb -n jungle -o jsonpath='{.status.currentHealthy}' 2>/dev/null)
-	check_criterion "PDB tracks current healthy pods" "$([ -n "$healthy" ] && echo true || echo false)" && ((score++))
+	# Check PDB has correct maxUnavailable or minAvailable strategy
+	local max_unavailable=$(kubectl get pdb critical-pdb -n jungle -o jsonpath='{.spec.maxUnavailable}' 2>/dev/null)
+	check_criterion "PDB does not set maxUnavailable (uses minAvailable)" "$([ -z "$max_unavailable" ] && echo true || echo false)" && ((score++))
 
-	# Check expected pods
+	# Check expected pods match deployment replicas
 	local expected=$(kubectl get pdb critical-pdb -n jungle -o jsonpath='{.status.expectedPods}' 2>/dev/null)
 	check_criterion "PDB tracks expected pods (5)" "$([ "$expected" = "5" ] && echo true || echo false)" && ((score++))
 
@@ -334,11 +335,11 @@ score_q9() {
 }
 
 # ============================================================================
-# QUESTION 10 - Pod Security Context (7 points)
+# QUESTION 10 - Pod Security Context (8 points)
 # ============================================================================
 score_q10() {
 	local score=0
-	local total=7
+	local total=8
 
 	echo "Question 10 | Pod Security Context"
 
@@ -366,9 +367,19 @@ score_q10() {
 	local priv_escalation=$(kubectl get pod secure-pod -n stalker -o jsonpath='{.spec.containers[0].securityContext.allowPrivilegeEscalation}' 2>/dev/null)
 	check_criterion "Container has allowPrivilegeEscalation=false" "$([ "$priv_escalation" = "false" ] && echo true || echo false)" && ((score++))
 
-	# Check emptyDir volume at /tmp
+	# Check emptyDir volumes for writable paths
 	local tmp_mount=$(kubectl get pod secure-pod -n stalker -o jsonpath='{.spec.containers[0].volumeMounts[?(@.mountPath=="/tmp")].name}' 2>/dev/null)
 	check_criterion "EmptyDir volume mounted at /tmp" "$([ -n "$tmp_mount" ] && echo true || echo false)" && ((score++))
+
+	# Check cache volume
+	local cache_mount=$(kubectl get pod secure-pod -n stalker -o jsonpath='{.spec.containers[0].volumeMounts[?(@.mountPath=="/var/cache/nginx")].name}' 2>/dev/null)
+	local run_mount=$(kubectl get pod secure-pod -n stalker -o jsonpath='{.spec.containers[0].volumeMounts[?(@.mountPath=="/var/run")].name}' 2>/dev/null)
+	local conf_mount=$(kubectl get pod secure-pod -n stalker -o jsonpath='{.spec.containers[0].volumeMounts[?(@.mountPath=="/etc/nginx/conf.d")].name}' 2>/dev/null)
+	local writable_count=0
+	[ -n "$cache_mount" ] && ((writable_count++))
+	[ -n "$run_mount" ] && ((writable_count++))
+	[ -n "$conf_mount" ] && ((writable_count++))
+	check_criterion "Writable volumes for nginx (cache, run, conf.d)" "$([ "$writable_count" -ge 2 ] && echo true || echo false)" && ((score++))
 
 	echo "$score/$total"
 	return 0
@@ -520,8 +531,16 @@ score_q15() {
 	# Check Job exists (or was created and deleted by TTL)
 	local job_exists=$(kubectl get job cleanup-job -n stripe >/dev/null 2>&1 && echo true || echo false)
 
+	# If job was deleted by TTL, check if a completed pod still exists
+	if [ "$job_exists" != "true" ]; then
+		local job_pod=$(kubectl get pods -n stripe -l job-name=cleanup-job -o name 2>/dev/null)
+		if [ -n "$job_pod" ]; then
+			job_exists="true"
+		fi
+	fi
+
 	if [ "$job_exists" = "true" ]; then
-		# Job still exists - check all criteria
+		# Job or its pod still exists
 		check_criterion "Job cleanup-job exists" "true" && ((score++))
 
 		# Check ttlSecondsAfterFinished
@@ -553,11 +572,11 @@ score_q15() {
 }
 
 # ============================================================================
-# QUESTION 16 - Container Capabilities (6 points)
+# QUESTION 16 - Container Capabilities (7 points)
 # ============================================================================
 score_q16() {
 	local score=0
-	local total=6
+	local total=7
 
 	echo "Question 16 | Container Capabilities"
 
@@ -566,12 +585,12 @@ score_q16() {
 	check_criterion "Pod hardened-pod exists" "$pod_exists" && ((score++))
 
 	# Check capabilities drop ALL
-	local drop_all=$(kubectl get pod hardened-pod -n predator -o json 2>/dev/null | grep -q '"drop".*"ALL"' && echo true || echo false)
-	check_criterion "Capabilities drop ALL" "$drop_all" && ((score++))
+	local drop_all=$(kubectl get pod hardened-pod -n predator -o jsonpath='{.spec.containers[0].securityContext.capabilities.drop[0]}' 2>/dev/null)
+	check_criterion "Capabilities drop ALL" "$([ "$drop_all" = "ALL" ] && echo true || echo false)" && ((score++))
 
 	# Check capabilities add NET_BIND_SERVICE
-	local add_cap=$(kubectl get pod hardened-pod -n predator -o json 2>/dev/null | grep -q '"add".*"NET_BIND_SERVICE"' && echo true || echo false)
-	check_criterion "Capabilities add NET_BIND_SERVICE" "$add_cap" && ((score++))
+	local add_cap=$(kubectl get pod hardened-pod -n predator -o jsonpath='{.spec.containers[0].securityContext.capabilities.add[0]}' 2>/dev/null)
+	check_criterion "Capabilities add NET_BIND_SERVICE" "$([ "$add_cap" = "NET_BIND_SERVICE" ] && echo true || echo false)" && ((score++))
 
 	# Check runAsNonRoot
 	local non_root=$(kubectl get pod hardened-pod -n predator -o jsonpath='{.spec.containers[0].securityContext.runAsNonRoot}' 2>/dev/null)
@@ -584,6 +603,14 @@ score_q16() {
 	# Check container name
 	local container=$(kubectl get pod hardened-pod -n predator -o jsonpath='{.spec.containers[0].name}' 2>/dev/null)
 	check_criterion "Container named secure-app" "$([ "$container" = "secure-app" ] && echo true || echo false)" && ((score++))
+
+	# Check writable volumes for nginx non-root
+	local cache_mount=$(kubectl get pod hardened-pod -n predator -o jsonpath='{.spec.containers[0].volumeMounts[?(@.mountPath=="/var/cache/nginx")].name}' 2>/dev/null)
+	local run_mount=$(kubectl get pod hardened-pod -n predator -o jsonpath='{.spec.containers[0].volumeMounts[?(@.mountPath=="/var/run")].name}' 2>/dev/null)
+	local writable_count=0
+	[ -n "$cache_mount" ] && ((writable_count++))
+	[ -n "$run_mount" ] && ((writable_count++))
+	check_criterion "Writable volumes for nginx (cache, run)" "$([ "$writable_count" -ge 2 ] && echo true || echo false)" && ((score++))
 
 	echo "$score/$total"
 	return 0
@@ -719,8 +746,8 @@ score_q20() {
 	check_criterion "allow policy targets tier=backend" "$([ "$allow_selector" = "backend" ] && echo true || echo false)" && ((score++))
 
 	# Check allow policy allows from frontend
-	local from_frontend=$(kubectl get networkpolicy allow-frontend-to-api -n predator -o json 2>/dev/null | grep -q '"tier":"frontend"' && echo true || echo false)
-	check_criterion "allow policy allows from tier=frontend" "$from_frontend" && ((score++))
+	local from_frontend=$(kubectl get networkpolicy allow-frontend-to-api -n predator -o jsonpath='{.spec.ingress[0].from[0].podSelector.matchLabels.tier}' 2>/dev/null)
+	check_criterion "allow policy allows from tier=frontend" "$([ "$from_frontend" = "frontend" ] && echo true || echo false)" && ((score++))
 
 	echo "$score/$total"
 	return 0

@@ -319,6 +319,8 @@ spec:
       mountPath: /var/cache/nginx
     - name: run-volume
       mountPath: /var/run
+    - name: conf-volume
+      mountPath: /etc/nginx/conf.d
   volumes:
   - name: tmp-volume
     emptyDir: {}
@@ -326,10 +328,12 @@ spec:
     emptyDir: {}
   - name: run-volume
     emptyDir: {}
+  - name: conf-volume
+    emptyDir: {}
 EOF
 ```
 
-**Explanation:** Security contexts control pod/container privileges. `runAsUser/Group` sets the user identity. `fsGroup` sets group ownership for volumes. `readOnlyRootFilesystem` prevents writes to the container filesystem (requires writable volumes for temp files).
+**Explanation:** Security contexts control pod/container privileges. `runAsUser/Group` sets the user identity. `fsGroup` sets group ownership for volumes. `readOnlyRootFilesystem` prevents writes to the container filesystem — nginx needs writable volumes at `/tmp`, `/var/cache/nginx`, `/var/run`, and `/etc/nginx/conf.d` (the entrypoint script modifies `default.conf` at startup).
 
 ---
 
@@ -490,10 +494,24 @@ spec:
         - ALL
         add:
         - NET_BIND_SERVICE
+    volumeMounts:
+    - name: cache-volume
+      mountPath: /var/cache/nginx
+    - name: run-volume
+      mountPath: /var/run
+    - name: conf-volume
+      mountPath: /etc/nginx/conf.d
+  volumes:
+  - name: cache-volume
+    emptyDir: {}
+  - name: run-volume
+    emptyDir: {}
+  - name: conf-volume
+    emptyDir: {}
 EOF
 ```
 
-**Explanation:** Linux capabilities provide fine-grained privilege control. Dropping ALL capabilities and adding only what's needed follows the principle of least privilege. `NET_BIND_SERVICE` allows binding to privileged ports (<1024) without full root.
+**Explanation:** Linux capabilities provide fine-grained privilege control. Dropping ALL capabilities and adding only what's needed follows the principle of least privilege. `NET_BIND_SERVICE` allows binding to privileged ports (<1024) without full root. Running as user 101 (nginx) requires writable volumes for `/var/cache/nginx`, `/var/run`, and `/etc/nginx/conf.d` since the entrypoint modifies these paths.
 
 ---
 
