@@ -433,6 +433,6 @@ Create a Pod named `liveness-pod` in namespace `stone` with:
    - Access mode: `ReadWriteOnce`
    - Storage class: `normal`
 
-3. Create a Pod named `pv-pod` in namespace `alpine` that uses the PVC and mounts it at `/etc/foo`
+3. Create a Pod named `pv-pod` in namespace `alpine` with image `busybox:1.36` that uses the PVC and mounts it at `/etc/foo`
 
 **Hint**: PersistentVolumes are cluster-scoped (no namespace).
