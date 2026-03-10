@@ -26,7 +26,7 @@
 
 ### Task
 
-Create a Pod with image `nginx` called `nginx` in namespace `grove` and expose its port `80`.
+Create a Pod with image `nginx:1.25` called `nginx` in namespace `grove` and expose its port `80`.
 
 The `--expose` flag should create both the Pod and a ClusterIP Service.
 
@@ -44,9 +44,9 @@ The `--expose` flag should create both the Pod and a ClusterIP Service.
 
 ### Task
 
-1. Create a Pod named `web` with image `nginx` in namespace `thicket`
+1. Create a Pod named `web` with image `nginx:1.25` in namespace `thicket`
 2. Get the Pod's IP address and save it to `./exam/course/2/pod-ip.txt`
-3. Verify connectivity by running a temporary busybox Pod that wget's the IP
+3. Verify connectivity by running a temporary `busybox:1.36` Pod that wget's the IP
 
 **Hint**: Use `kubectl get pod -o wide` or `-o jsonpath` to get the IP.
 
@@ -62,7 +62,7 @@ The `--expose` flag should create both the Pod and a ClusterIP Service.
 
 ### Task
 
-Create a Pod named `logger` in namespace `glade` with image `busybox` that runs the command:
+Create a Pod named `logger` in namespace `glade` with image `busybox:1.36` that runs the command:
 
 ```
 i=0; while true; do echo "$i: $(date)"; i=$((i+1)); sleep 1; done
@@ -84,7 +84,7 @@ After the Pod is running, save the first 10 lines of logs to `./exam/course/3/lo
 
 ### Task
 
-Create a Pod named `debug-pod` in namespace `meadow` with image `busybox` that runs the command `ls /notexist`.
+Create a Pod named `debug-pod` in namespace `meadow` with image `busybox:1.36` that runs the command `ls /notexist`.
 
 1. Get the Pod's logs and save to `./exam/course/4/error.txt`
 2. The file should contain the error message
@@ -103,7 +103,7 @@ Create a Pod named `debug-pod` in namespace `meadow` with image `busybox` that r
 
 ### Task
 
-Create a Pod named `gpu-pod` in namespace `fern` with image `nginx` that will be scheduled on a Node with the label `accelerator=nvidia`.
+Create a Pod named `gpu-pod` in namespace `fern` with image `nginx:1.25` that will be scheduled on a Node with the label `accelerator=nvidia`.
 
 Use `nodeSelector` to achieve this.
 
@@ -123,7 +123,7 @@ Use `nodeSelector` to achieve this.
 
 ### Task
 
-Create a Pod named `tolerate-pod` in namespace `moss` with image `nginx` that tolerates the taint `tier=frontend:NoSchedule`.
+Create a Pod named `tolerate-pod` in namespace `moss` with image `nginx:1.25` that tolerates the taint `tier=frontend:NoSchedule`.
 
 The Pod should have:
 
@@ -231,7 +231,7 @@ A Deployment `pause-deploy` exists in namespace `bark` with image `nginx:1.18.0`
 
 Create a Job named `parallel-job` in namespace `canopy` that:
 
-- Uses image `busybox`
+- Uses image `busybox:1.36`
 - Runs the command: `echo hello; sleep 5; echo world`
 - Runs `5` Pods in parallel (parallelism)
 
@@ -251,7 +251,7 @@ Create a Job named `parallel-job` in namespace `canopy` that:
 
 Create a Job named `deadline-job` in namespace `hollow` that:
 
-- Uses image `busybox`
+- Uses image `busybox:1.36`
 - Runs the command: `while true; do echo hello; sleep 10; done`
 - Should be automatically terminated if it takes more than `30` seconds
 
@@ -271,7 +271,7 @@ Create a Job named `deadline-job` in namespace `hollow` that:
 
 Create a CronJob named `deadline-cron` in namespace `grove` that:
 
-- Uses image `busybox`
+- Uses image `busybox:1.36`
 - Runs every minute (`* * * * *`)
 - Executes: `date; echo Hello from CronJob`
 - Should be terminated if it takes more than `17` seconds to start after its scheduled time
@@ -290,7 +290,7 @@ Create a CronJob named `deadline-cron` in namespace `grove` that:
 
 ### Task
 
-1. Create a CronJob named `source-cron` in namespace `thicket` with image `busybox`, schedule `*/5 * * * *`, command `echo "source job"`
+1. Create a CronJob named `source-cron` in namespace `thicket` with image `busybox:1.36`, schedule `*/5 * * * *`, command `echo "source job"`
 2. Create a Job named `manual-job` from this CronJob
 
 **Hint**: Use `kubectl create job --from=cronjob/NAME`.
@@ -331,7 +331,7 @@ Create a CronJob named `deadline-cron` in namespace `grove` that:
 ### Task
 
 1. Create a ConfigMap named `env-config` in namespace `meadow` with values `var6=val6` and `var7=val7`
-2. Create a Pod named `env-pod` with image `nginx` that loads ALL keys from this ConfigMap as environment variables (use `envFrom`)
+2. Create a Pod named `env-pod` with image `nginx:1.25` that loads ALL keys from this ConfigMap as environment variables (use `envFrom`)
 
 **Hint**: Use `envFrom.configMapRef` in the Pod spec.
 
@@ -365,7 +365,7 @@ Create a CronJob named `deadline-cron` in namespace `grove` that:
 ### Task
 
 1. Create a Secret named `api-secret` in namespace `moss` with key `API_KEY=LmLHbYhsgWZwNifiqaRorH8T`
-2. Create a Pod named `api-pod` with image `nginx` that loads this key into an environment variable called `API_KEY`
+2. Create a Pod named `api-pod` with image `nginx:1.25` that loads this key into an environment variable called `API_KEY`
 
 **Hint**: Use `env.valueFrom.secretKeyRef` in the Pod spec.
 
@@ -382,7 +382,7 @@ Create a CronJob named `deadline-cron` in namespace `grove` that:
 ### Task
 
 1. Create a ServiceAccount named `app-sa` in namespace `root`
-2. Create a Pod named `sa-pod` with image `nginx` that uses this ServiceAccount
+2. Create a Pod named `sa-pod` with image `nginx:1.25` that uses this ServiceAccount
 
 **Hint**: Use `spec.serviceAccountName` in the Pod spec.
 
@@ -398,7 +398,7 @@ Create a CronJob named `deadline-cron` in namespace `grove` that:
 
 ### Task
 
-1. Create a Pod named `copy-pod` in namespace `bark` with image `busybox` and command `sleep 3600`
+1. Create a Pod named `copy-pod` in namespace `bark` with image `busybox:1.36` and command `sleep 3600`
 2. Copy `/etc/passwd` from the Pod to `./exam/course/20/passwd`
 
 **Hint**: Use `kubectl cp` command.

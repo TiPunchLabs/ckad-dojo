@@ -11,7 +11,7 @@
 ### Solution
 
 ```bash
-kubectl run nginx --image=nginx --restart=Never --port=80 --expose -n grove
+kubectl run nginx --image=nginx:1.25 --restart=Never --port=80 --expose -n grove
 ```
 
 This creates both a Pod and a ClusterIP Service.
@@ -32,7 +32,7 @@ kubectl get ep nginx -n grove
 
 ```bash
 # Create the Pod
-kubectl run web --image=nginx --restart=Never -n thicket
+kubectl run web --image=nginx:1.25 --restart=Never -n thicket
 
 # Get the Pod IP and save to file
 mkdir -p ./exam/course/2
@@ -40,7 +40,7 @@ kubectl get pod web -n thicket -o jsonpath='{.status.podIP}' > ./exam/course/2/p
 
 # Test connectivity
 IP=$(cat ./exam/course/2/pod-ip.txt)
-kubectl run busybox --rm -it --restart=Never --image=busybox -n thicket -- wget -O- $IP:80
+kubectl run busybox --rm -it --restart=Never --image=busybox:1.36 -n thicket -- wget -O- $IP:80
 ```
 
 ---
@@ -51,7 +51,7 @@ kubectl run busybox --rm -it --restart=Never --image=busybox -n thicket -- wget 
 
 ```bash
 # Create the Pod
-kubectl run logger --image=busybox --restart=Never -n glade -- /bin/sh -c 'i=0; while true; do echo "$i: $(date)"; i=$((i+1)); sleep 1; done'
+kubectl run logger --image=busybox:1.36 --restart=Never -n glade -- /bin/sh -c 'i=0; while true; do echo "$i: $(date)"; i=$((i+1)); sleep 1; done'
 
 # Wait for Pod to start
 kubectl wait --for=condition=Ready pod/logger -n glade --timeout=30s
@@ -69,7 +69,7 @@ kubectl logs logger -n glade | head -10 > ./exam/course/3/logs.txt
 
 ```bash
 # Create the Pod with error command
-kubectl run debug-pod --image=busybox --restart=Never -n meadow -- ls /notexist
+kubectl run debug-pod --image=busybox:1.36 --restart=Never -n meadow -- ls /notexist
 
 # Wait a moment for the Pod to complete
 sleep 2
@@ -96,7 +96,7 @@ spec:
     accelerator: nvidia
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
 ```
 
 ```bash
@@ -118,7 +118,7 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
   tolerations:
   - key: "tier"
     operator: "Equal"
@@ -239,7 +239,7 @@ spec:
     spec:
       containers:
       - name: busybox
-        image: busybox
+        image: busybox:1.36
         command: ["/bin/sh", "-c", "echo hello; sleep 5; echo world"]
       restartPolicy: Never
 ```
@@ -266,7 +266,7 @@ spec:
     spec:
       containers:
       - name: busybox
-        image: busybox
+        image: busybox:1.36
         command: ["/bin/sh", "-c", "while true; do echo hello; sleep 10; done"]
       restartPolicy: Never
 ```
@@ -296,7 +296,7 @@ spec:
         spec:
           containers:
           - name: busybox
-            image: busybox
+            image: busybox:1.36
             command: ["/bin/sh", "-c", "date; echo Hello from CronJob"]
           restartPolicy: Never
 ```
@@ -313,7 +313,7 @@ kubectl apply -f deadline-cron.yaml
 
 ```bash
 # Create the CronJob
-kubectl create cronjob source-cron --image=busybox --schedule="*/5 * * * *" -n thicket -- echo "source job"
+kubectl create cronjob source-cron --image=busybox:1.36 --schedule="*/5 * * * *" -n thicket -- echo "source job"
 
 # Create a Job from the CronJob
 kubectl create job manual-job --from=cronjob/source-cron -n thicket
@@ -361,7 +361,7 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
     envFrom:
     - configMapRef:
         name: env-config
@@ -414,7 +414,7 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
     env:
     - name: API_KEY
       valueFrom:
@@ -450,7 +450,7 @@ spec:
   serviceAccountName: app-sa
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
 ```
 
 ```bash
@@ -466,7 +466,7 @@ kubectl get pod sa-pod -n root -o jsonpath='{.spec.serviceAccountName}'
 
 ```bash
 # Create Pod
-kubectl run copy-pod --image=busybox --restart=Never -n bark -- sleep 3600
+kubectl run copy-pod --image=busybox:1.36 --restart=Never -n bark -- sleep 3600
 
 # Wait for Pod to be ready
 kubectl wait --for=condition=Ready pod/copy-pod -n bark --timeout=30s
