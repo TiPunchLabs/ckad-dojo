@@ -470,6 +470,9 @@ Questions reference paths like `/opt/course/N/` (as in the real CKAD exam). Loca
 
 ```
 ckad-dojo/
+├── .github/
+│   └── workflows/
+│       └── scorecard.yml     # OpenSSF Scorecard security analysis
 ├── ckad_dojo.py              # Unified Python CLI
 ├── pyproject.toml            # Python project config (uv)
 ├── scripts/
