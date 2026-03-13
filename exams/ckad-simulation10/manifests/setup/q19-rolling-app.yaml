@@ -1,0 +1,22 @@
+# Q19: Deployment with default strategy (user must configure rolling update)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rolling-app
+  namespace: parapet
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rolling-app
+  template:
+    metadata:
+      labels:
+        app: rolling-app
+    spec:
+      containers:
+      - name: rolling-app
+        image: nginx:1.25
+        ports:
+        - containerPort: 80

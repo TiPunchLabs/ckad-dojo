@@ -1,0 +1,42 @@
+# Q6: ResourceQuota with Deployment that exceeds it
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-quota
+  namespace: garrison
+spec:
+  hard:
+    requests.cpu: "500m"
+    requests.memory: "512Mi"
+    limits.cpu: "1"
+    limits.memory: "1Gi"
+---
+# Deployment requesting too much (cpu: 1, memory: 1Gi exceeds quota)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quota-app
+  namespace: garrison
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quota-app
+  template:
+    metadata:
+      labels:
+        app: quota-app
+    spec:
+      containers:
+      - name: quota-app
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "1"
+            memory: "1Gi"
+          limits:
+            cpu: "2"
+            memory: "2Gi"

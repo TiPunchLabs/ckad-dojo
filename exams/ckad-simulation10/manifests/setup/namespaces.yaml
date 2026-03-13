@@ -1,0 +1,51 @@
+# Namespaces for CKAD Simulation 10 - Dojo Oni (Fortification theme)
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fortress
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bastion
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: citadel
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rampart
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tower
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: garrison
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gate
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bulwark
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: parapet
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: stronghold

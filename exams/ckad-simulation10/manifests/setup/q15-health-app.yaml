@@ -1,0 +1,29 @@
+# Q15: Deployment with wrong liveness probe port (causes CrashLoopBackOff)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-app
+  namespace: tower
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: health-app
+  template:
+    metadata:
+      labels:
+        app: health-app
+    spec:
+      containers:
+      - name: health-app
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 5
+          failureThreshold: 3

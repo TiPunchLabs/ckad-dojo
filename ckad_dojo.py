@@ -173,10 +173,20 @@ def discover_exams() -> list[str]:
         return []
 
     exams = []
-    for item in sorted(exams_dir.iterdir()):
+    for item in exams_dir.iterdir():
         if item.is_dir() and (item / "exam.conf").exists():
             exams.append(item.name)
-    return exams
+
+    def _natural_sort_key(name: str) -> tuple[str, int]:
+        """Sort exam IDs naturally: ckad-simulation1, ..., 9, 10."""
+        import re
+
+        match = re.match(r"^(.*?)(\d+)$", name)
+        if match:
+            return (match.group(1), int(match.group(2)))
+        return (name, 0)
+
+    return sorted(exams, key=_natural_sort_key)
 
 
 def normalize_exam_id(exam_id: str) -> str:

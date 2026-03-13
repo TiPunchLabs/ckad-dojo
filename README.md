@@ -24,8 +24,8 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/version-1.8.0-blue" alt="Version 1.8.0">
-  <img src="https://img.shields.io/badge/exams-9-blue" alt="9 Exams">
-  <img src="https://img.shields.io/badge/questions-178-blue" alt="178 Questions">
+  <img src="https://img.shields.io/badge/exams-10-blue" alt="10 Exams">
+  <img src="https://img.shields.io/badge/questions-198-blue" alt="198 Questions">
   <img src="https://img.shields.io/badge/scoring_criteria-400+-blue" alt="400+ Scoring Criteria">
   <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
   <img src="https://img.shields.io/badge/difficulty-exam--realistic-red" alt="Exam Realistic Difficulty">
@@ -69,7 +69,7 @@
 
 | Feature | Description |
 |---------|-------------|
-| **9 Dojos** | 178 questions across 9 themed dojos |
+| **10 Dojos** | 198 questions across 10 themed dojos |
 | **Unified CLI** | Single `uv run ckad-dojo` command for all operations |
 | **Web Interface** | Modern UI with 120-minute countdown timer |
 | **Auto-Scoring** | 400+ criteria automatically evaluated |
@@ -88,9 +88,9 @@
 
 ---
 
-## The Nine Dojos
+## The Ten Dojos
 
-Three dojos are themed after the Shishin (四神) — Celestial Guardians from East Asian mythology. The remaining six dojos feature mythical creatures from Japanese folklore.
+Three dojos are themed after the Shishin (四神) — Celestial Guardians from East Asian mythology. The remaining seven dojos feature mythical creatures from Japanese folklore.
 
 | # | Dojo | Title | Questions | Points | Theme | Credit |
 |:-:|------|-------|:---------:|:------:|-------|--------|
@@ -103,6 +103,7 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 | 7 | 🦝 **Tanuki** | Tanuki des Forêts | 20 | 100 | Forest (grove, thicket...) | [@dgkanatsios](https://github.com/dgkanatsios) |
 | 8 | 🦊 **Inari** | Inari des Moissons | 20 | 100 | Harvest (harvest, grain...) | [@dgkanatsios](https://github.com/dgkanatsios) |
 | 9 | 🐲 **Ryujin** | Ryujin des Profondeurs | 20 | 100 | Sea (tide, wave, depths...) | [@dgkanatsios](https://github.com/dgkanatsios) |
+| 10 | 👹 **Oni** | Oni of the Demon Gate | 20 | 102 | Fortification (fortress, bastion...) | — |
 
 <details>
 <summary><strong>Dojo Quotes</strong></summary>
@@ -118,6 +119,7 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 | 🦝 Tanuki | *「狸は森に潜む」— The tanuki hides in the forest* |
 | 🦊 Inari | *「稲荷は豊穣を祝う」— Inari celebrates the harvest* |
 | 🐲 Ryujin | *「龍神は波を操る」— Ryujin commands the waves* |
+| 👹 Oni | *「鬼の目にも涙」— Even the demon sheds tears* |
 
 </details>
 
@@ -491,7 +493,8 @@ ckad-dojo/
 │   ├── ckad-simulation6/     # Dojo Tengu 👺 - 20 questions, 100 points
 │   ├── ckad-simulation7/     # Dojo Tanuki 🦝 - 20 questions, 100 points
 │   ├── ckad-simulation8/     # Dojo Inari 🦊 - 20 questions, 100 points
-│   └── ckad-simulation9/     # Dojo Ryujin 🐲 - 20 questions, 100 points
+│   ├── ckad-simulation9/     # Dojo Ryujin 🐲 - 20 questions, 100 points
+│   └── ckad-simulation10/    # Dojo Oni 👹 - 20 questions, 102 points
 │       ├── exam.conf         # Configuration
 │       ├── questions.md      # Questions
 │       ├── solutions.md      # Solutions
