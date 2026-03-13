@@ -26,7 +26,7 @@
 
 ### Task
 
-1. Create a Pod named `web` with image `nginx` in namespace `harvest`, exposing port `80`
+1. Create a Pod named `web` with image `nginx:1.25` in namespace `harvest`, exposing port `80`
 2. Create a ClusterIP Service named `web` that exposes the Pod on port `80`
 3. Verify the Service has endpoints
 
@@ -62,7 +62,7 @@ Convert this Service to a `NodePort` type.
 
 ### Task
 
-1. Create a Deployment named `backend` in namespace `rice` with image `nginx` and 3 replicas, exposing port `8080`
+1. Create a Deployment named `backend` in namespace `rice` with image `nginx:1.25` and 3 replicas, exposing port `8080`
 2. Create a Service named `backend` that exposes the Deployment on port `6262` targeting port `8080`
 
 **Hint**: Use `kubectl create deployment` and `kubectl expose`.
@@ -79,7 +79,7 @@ Convert this Service to a `NodePort` type.
 
 ### Task
 
-Create a Pod named `ready-pod` in namespace `field` with image `nginx` that includes:
+Create a Pod named `ready-pod` in namespace `field` with image `nginx:1.25` that includes:
 
 - Container port: `80`
 - HTTP readiness probe on path `/` on port `80`
@@ -98,7 +98,7 @@ Create a Pod named `ready-pod` in namespace `field` with image `nginx` that incl
 
 ### Task
 
-Create a Pod named `live-pod` in namespace `shrine` with image `nginx` that includes:
+Create a Pod named `live-pod` in namespace `shrine` with image `nginx:1.25` that includes:
 
 - Liveness probe that executes the command `ls`
 - Initial delay: `5` seconds
@@ -158,7 +158,7 @@ Create a ResourceQuota named `compute-quota` in namespace `fortune` with:
 
 In namespace `fortune` (which has a ResourceQuota), create a Pod named `quota-pod` with:
 
-- Image: `nginx`
+- Image: `nginx:1.25`
 - Resource requests: `cpu=0.5`, `memory=512Mi`
 - Resource limits: `cpu=1`, `memory=1Gi`
 
@@ -176,7 +176,7 @@ In namespace `fortune` (which has a ResourceQuota), create a Pod named `quota-po
 
 ### Task
 
-Create a Pod named `cap-pod` in namespace `golden` with image `nginx` that adds the capabilities:
+Create a Pod named `cap-pod` in namespace `golden` with image `nginx:1.25` that adds the capabilities:
 
 - `NET_ADMIN`
 - `SYS_TIME`
@@ -200,14 +200,14 @@ Create a Pod named `shared-pod` in namespace `bounty` with two containers:
 **Container 1:**
 
 - Name: `writer`
-- Image: `busybox`
+- Image: `busybox:1.36`
 - Command: `sleep 3600`
 - Mount emptyDir volume at `/data`
 
 **Container 2:**
 
 - Name: `reader`
-- Image: `busybox`
+- Image: `busybox:1.36`
 - Command: `sleep 3600`
 - Mount same emptyDir volume at `/data`
 
@@ -227,7 +227,7 @@ Both containers should share the same `emptyDir` volume named `shared-data`.
 
 ### Task
 
-1. Create a Pod named `annotated-pod` with image `nginx` in namespace `prosperity`
+1. Create a Pod named `annotated-pod` with image `nginx:1.25` in namespace `prosperity`
 2. Add the annotation `owner=marketing` to the Pod
 
 **Hint**: Use `kubectl annotate` or add `metadata.annotations` in YAML.
@@ -244,7 +244,7 @@ Both containers should share the same `emptyDir` volume named `shared-data`.
 
 ### Task
 
-1. Create 3 Pods in namespace `harvest`: `pod1`, `pod2`, `pod3` all with image `nginx`
+1. Create 3 Pods in namespace `harvest`: `pod1`, `pod2`, `pod3` all with image `nginx:1.25`
 2. Label `pod1` and `pod2` with `env=prod`
 3. Label `pod3` with `env=dev`
 4. List all Pods with label `env=prod` and save the output to `./exam/course/12/pods.txt`
@@ -341,7 +341,7 @@ This achieves a 75%-25% traffic split.
 Create a Pod named `data-pod` in namespace `rice` with:
 
 - Two containers: `producer` and `consumer`
-- Both use image `busybox` with command `sleep 3600`
+- Both use image `busybox:1.36` with command `sleep 3600`
 - Both mount an emptyDir volume at `/shared`
 - Volume name: `data-volume`
 
@@ -361,7 +361,7 @@ Create a Pod named `data-pod` in namespace `rice` with:
 
 A Service named `web-svc` exists in namespace `field`.
 
-From a temporary busybox Pod, resolve the DNS name of this Service and save the IP to `./exam/course/18/dns.txt`.
+From a temporary `busybox:1.36` Pod, resolve the DNS name of this Service and save the IP to `./exam/course/18/dns.txt`.
 
 **Hint**: Use `nslookup web-svc.field.svc.cluster.local`.
 

@@ -140,7 +140,7 @@ Create a PersistentVolumeClaim named `sea-pvc` in namespace `depths` that:
 
 Create a Pod named `pvc-pod` in namespace `depths` that:
 
-- Uses image `busybox` with command `sleep 3600`
+- Uses image `busybox:1.36` with command `sleep 3600`
 - Mounts the PVC `sea-pvc` at `/data`
 
 **Hint**: Use `spec.volumes` with `persistentVolumeClaim`.
@@ -157,7 +157,7 @@ Create a Pod named `pvc-pod` in namespace `depths` that:
 
 ### Task
 
-Create a Pod named `direct-pod` in namespace `coral` with image `nginx` that is scheduled directly on a specific node using `nodeName`.
+Create a Pod named `direct-pod` in namespace `coral` with image `nginx:1.25` that is scheduled directly on a specific node using `nodeName`.
 
 Use the first node in your cluster (get it with `kubectl get nodes`).
 
@@ -175,7 +175,7 @@ Use the first node in your cluster (get it with `kubectl get nodes`).
 
 ### Task
 
-Create a Pod named `echo-pod` in namespace `current` with image `busybox` that:
+Create a Pod named `echo-pod` in namespace `current` with image `busybox:1.36` that:
 
 - Echoes "hello world"
 - Then exits
@@ -196,7 +196,7 @@ The Pod should automatically be deleted when it completes (use `--rm` if using k
 
 ### Task
 
-1. Create a Pod named `inspect-pod` with image `nginx` in namespace `abyss`
+1. Create a Pod named `inspect-pod` with image `nginx:1.25` in namespace `abyss`
 2. Export its YAML to `./exam/course/10/pod.yaml`
 
 **Hint**: Use `kubectl get pod -o yaml`.
@@ -232,7 +232,7 @@ A Pod named `problem-pod` exists in namespace `pearl` but is not running correct
 
 ### Task
 
-1. Create a Pod named `exec-pod` with image `nginx` in namespace `storm`
+1. Create a Pod named `exec-pod` with image `nginx:1.25` in namespace `storm`
 2. Execute the `hostname` command inside the Pod
 3. Save the output to `./exam/course/12/hostname.txt`
 
@@ -370,14 +370,14 @@ Create a Pod named `sidecar-pod` in namespace `abyss` with:
 **Container 1 (main):**
 
 - Name: `app`
-- Image: `busybox`
+- Image: `busybox:1.36`
 - Command: `while true; do echo "$(date)" >> /logs/app.log; sleep 5; done`
 - Mount volume at `/logs`
 
 **Container 2 (sidecar):**
 
 - Name: `sidecar`
-- Image: `busybox`
+- Image: `busybox:1.36`
 - Command: `tail -f /logs/app.log`
 - Mount same volume at `/logs`
 
