@@ -108,7 +108,7 @@ metadata:
 spec:
   containers:
   - name: busybox
-    image: busybox
+    image: busybox:1.36
     command: ["sleep", "3600"]
     volumeMounts:
     - name: data-volume
@@ -139,7 +139,7 @@ spec:
   nodeName: $NODE
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
 EOF
 ```
 
@@ -149,10 +149,10 @@ EOF
 
 ```bash
 # Create Pod that echoes and exits
-kubectl run echo-pod -n current --image=busybox --restart=Never -- /bin/sh -c 'echo "hello world"'
+kubectl run echo-pod -n current --image=busybox:1.36 --restart=Never -- /bin/sh -c 'echo "hello world"'
 
 # Alternatively with --rm flag (auto-delete after completion)
-kubectl run echo-pod -n current --image=busybox --restart=Never --rm -it -- /bin/sh -c 'echo "hello world"'
+kubectl run echo-pod -n current --image=busybox:1.36 --restart=Never --rm -it -- /bin/sh -c 'echo "hello world"'
 ```
 
 ---
@@ -164,7 +164,7 @@ kubectl run echo-pod -n current --image=busybox --restart=Never --rm -it -- /bin
 mkdir -p ./exam/course/10
 
 # Create the Pod
-kubectl run inspect-pod --image=nginx -n abyss
+kubectl run inspect-pod --image=nginx:1.25 -n abyss
 
 # Export YAML
 kubectl get pod inspect-pod -n abyss -o yaml > ./exam/course/10/pod.yaml
@@ -191,7 +191,7 @@ kubectl describe pod problem-pod -n pearl | sed -n '/^Events:/,$p' > ./exam/cour
 mkdir -p ./exam/course/12
 
 # Create the Pod
-kubectl run exec-pod --image=nginx -n storm
+kubectl run exec-pod --image=nginx:1.25 -n storm
 
 # Wait for Pod to be ready
 kubectl wait --for=condition=Ready pod/exec-pod -n storm --timeout=60s
@@ -308,14 +308,14 @@ metadata:
 spec:
   containers:
   - name: app
-    image: busybox
+    image: busybox:1.36
     command: ["/bin/sh", "-c"]
     args: ["while true; do echo \"\$(date)\" >> /logs/app.log; sleep 5; done"]
     volumeMounts:
     - name: log-volume
       mountPath: /logs
   - name: sidecar
-    image: busybox
+    image: busybox:1.36
     command: ["/bin/sh", "-c"]
     args: ["tail -f /logs/app.log"]
     volumeMounts:

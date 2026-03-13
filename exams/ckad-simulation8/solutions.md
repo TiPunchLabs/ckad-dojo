@@ -11,13 +11,13 @@
 ### Solution
 
 ```bash
-kubectl run web --image=nginx --restart=Never --port=80 --expose -n harvest
+kubectl run web --image=nginx:1.25 --restart=Never --port=80 --expose -n harvest
 ```
 
 Or separately:
 
 ```bash
-kubectl run web --image=nginx --restart=Never --port=80 -n harvest
+kubectl run web --image=nginx:1.25 --restart=Never --port=80 -n harvest
 kubectl expose pod web --port=80 -n harvest
 ```
 
@@ -53,7 +53,7 @@ kubectl edit svc app-svc -n grain
 
 ```bash
 # Create Deployment
-kubectl create deployment backend --image=nginx --replicas=3 --port=8080 -n rice
+kubectl create deployment backend --image=nginx:1.25 --replicas=3 --port=8080 -n rice
 
 # Expose Deployment
 kubectl expose deployment backend --port=6262 --target-port=8080 -n rice
@@ -74,7 +74,7 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
     ports:
     - containerPort: 80
     readinessProbe:
@@ -98,7 +98,7 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
     livenessProbe:
       exec:
         command:
@@ -170,7 +170,7 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
     resources:
       requests:
         cpu: "0.5"
@@ -195,7 +195,7 @@ metadata:
 spec:
   containers:
   - name: nginx
-    image: nginx
+    image: nginx:1.25
     securityContext:
       capabilities:
         add:
@@ -218,13 +218,13 @@ metadata:
 spec:
   containers:
   - name: writer
-    image: busybox
+    image: busybox:1.36
     command: ["sleep", "3600"]
     volumeMounts:
     - name: shared-data
       mountPath: /data
   - name: reader
-    image: busybox
+    image: busybox:1.36
     command: ["sleep", "3600"]
     volumeMounts:
     - name: shared-data
@@ -241,7 +241,7 @@ spec:
 ### Solution
 
 ```bash
-kubectl run annotated-pod --image=nginx --restart=Never -n prosperity
+kubectl run annotated-pod --image=nginx:1.25 --restart=Never -n prosperity
 kubectl annotate pod annotated-pod owner=marketing -n prosperity
 ```
 
@@ -253,9 +253,9 @@ kubectl annotate pod annotated-pod owner=marketing -n prosperity
 
 ```bash
 # Create pods
-kubectl run pod1 --image=nginx --restart=Never -n harvest
-kubectl run pod2 --image=nginx --restart=Never -n harvest
-kubectl run pod3 --image=nginx --restart=Never -n harvest
+kubectl run pod1 --image=nginx:1.25 --restart=Never -n harvest
+kubectl run pod2 --image=nginx:1.25 --restart=Never -n harvest
+kubectl run pod3 --image=nginx:1.25 --restart=Never -n harvest
 
 # Label pods
 kubectl label pod pod1 pod2 env=prod -n harvest
@@ -383,13 +383,13 @@ metadata:
 spec:
   containers:
   - name: producer
-    image: busybox
+    image: busybox:1.36
     command: ["sleep", "3600"]
     volumeMounts:
     - name: data-volume
       mountPath: /shared
   - name: consumer
-    image: busybox
+    image: busybox:1.36
     command: ["sleep", "3600"]
     volumeMounts:
     - name: data-volume
@@ -407,13 +407,13 @@ spec:
 
 ```bash
 mkdir -p ./exam/course/18
-kubectl run busybox --rm -it --restart=Never --image=busybox -n field -- nslookup web-svc.field.svc.cluster.local | grep -A1 "Name:" | tail -1 | awk '{print $2}' > ./exam/course/18/dns.txt
+kubectl run busybox --rm -it --restart=Never --image=busybox:1.36 -n field -- nslookup web-svc.field.svc.cluster.local | grep -A1 "Name:" | tail -1 | awk '{print $2}' > ./exam/course/18/dns.txt
 ```
 
 Or:
 
 ```bash
-kubectl run busybox --rm -it --restart=Never --image=busybox -n field -- sh -c 'nslookup web-svc' > ./exam/course/18/dns.txt
+kubectl run busybox --rm -it --restart=Never --image=busybox:1.36 -n field -- sh -c 'nslookup web-svc' > ./exam/course/18/dns.txt
 ```
 
 ---
