@@ -7,12 +7,13 @@ on:
     - cron: "0 8 * * *"
   workflow_dispatch:
 
-permissions:
-  contents: write
+permissions: read-all
 
 jobs:
   remove-badge:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     # Auto-remove after 2026-03-27 (2 weeks from 2026-03-13)
     if: github.ref == 'refs/heads/main'
     steps:
