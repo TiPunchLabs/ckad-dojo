@@ -29,6 +29,7 @@
   <img src="https://img.shields.io/badge/scoring_criteria-400+-blue" alt="400+ Scoring Criteria">
   <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
   <img src="https://img.shields.io/badge/difficulty-exam--realistic-red" alt="Exam Realistic Difficulty">
+  <a href="docs/ckad-curriculum.md"><img src="https://img.shields.io/badge/CKAD_Curriculum-v1.35-326CE5" alt="CKAD Curriculum v1.35"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-lightgrey" alt="License: CC BY-NC-SA 4.0"></a>
   <a href="https://scorecard.dev/viewer/?uri=github.com/TiPunchLabs/ckad-dojo"><img src="https://api.scorecard.dev/projects/github.com/TiPunchLabs/ckad-dojo/badge" alt="OpenSSF Scorecard"></a>
 </p>
@@ -584,21 +585,35 @@ kubectl delete validatingwebhookconfiguration ingress-nginx-admission
 
 ---
 
-## Topics Covered
+## CKAD Curriculum Coverage
 
-- Namespaces, Pods, Jobs, Deployments
-- Helm management
-- ServiceAccounts and Secrets
-- Probes (Readiness/Liveness)
-- Rollouts and rollbacks
-- Services (ClusterIP, NodePort)
-- Storage (PV, PVC, StorageClass)
-- ConfigMaps and Secrets
-- Logging sidecars
-- InitContainers
-- NetworkPolicies
-- Resource requests and limits
-- Labels and Annotations
+Aligned with the **[official CNCF CKAD Curriculum v1.35](docs/ckad-curriculum.md)** (Kubernetes 1.35).
+
+| Domain | Weight | Coverage | Key Topics |
+|--------|:------:|:--------:|------------|
+| Application Design & Build | 20% | `██████████░░` 66% | Pods, Jobs, CronJobs, Multi-container, Volumes, Images |
+| Application Deployment | 20% | `█████████░░░` 71% | Deployments, Rollouts, Helm, Canary |
+| Observability & Maintenance | 15% | `██████████░░` 81% | Probes, Logs, Debugging, API deprecations |
+| Config & Security | 25% | `█████████░░░` 73% | ConfigMaps, Secrets, RBAC, SecurityContext, Quotas |
+| Services & Networking | 20% | `██████████░░` 84% | Services, NetworkPolicies, Ingress |
+
+<details>
+<summary><strong>Uncovered skills (priority for future simulations)</strong></summary>
+
+**Design & Build**: Multi-stage Dockerfile builds, Ambassador/Adapter patterns, ReplicaSets, hostPath volumes
+
+**Deployment**: Blue/Green strategy, Kustomize (kustomization.yaml, overlays, `kubectl apply -k`)
+
+**Observability**: Startup probes, `kubectl debug` (ephemeral containers), Node drain/cordon
+
+**Config & Security**: CRDs/Operators, docker-registry & TLS secrets, Token projection, seccompProfile
+
+**Networking**: NetworkPolicy ipBlock, Ingress TLS termination
+
+</details>
+
+> Full coverage matrix: [`docs/simulation-coverage.csv`](docs/simulation-coverage.csv)
+> Complete curriculum reference: [`docs/ckad-curriculum.md`](docs/ckad-curriculum.md)
 
 ---
 
@@ -652,6 +667,15 @@ pre-commit install --hook-type commit-msg
 | `markdownlint` | Markdown formatting |
 | `gitleaks` | Secret detection |
 | `commitizen` | Conventional commit messages |
+
+### Add a New Simulation
+
+Want to contribute a new dojo? Start here:
+
+1. Check the **[CKAD Curriculum Coverage](docs/ckad-curriculum.md)** for the official exam domains and weights
+2. Review the **[coverage matrix](docs/simulation-coverage.csv)** to identify uncovered skills (empty `covered_in` column)
+3. Aim for ~20 questions distributed across domains: Design & Build (20%), Deployment (20%), Observability (15%), Config & Security (25%), Networking (20%)
+4. Follow the existing simulation structure in `exams/ckad-simulation*/`
 
 ### Submit a Pull Request
 
