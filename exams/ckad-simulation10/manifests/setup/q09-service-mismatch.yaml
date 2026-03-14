@@ -1,0 +1,36 @@
+# Q9: Service with wrong selector (mismatch with pod labels)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: parapet
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-api
+  template:
+    metadata:
+      labels:
+        app: backend-api
+    spec:
+      containers:
+      - name: backend
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
+---
+# Service with WRONG selector (backend-wrong instead of backend-api)
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-svc
+  namespace: parapet
+spec:
+  type: ClusterIP
+  selector:
+    app: backend-wrong
+  ports:
+  - port: 80
+    targetPort: 80

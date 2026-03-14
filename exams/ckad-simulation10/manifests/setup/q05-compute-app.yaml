@@ -1,0 +1,22 @@
+# Q5: Deployment without resource settings (user must add requests/limits)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: compute-app
+  namespace: tower
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: compute-app
+  template:
+    metadata:
+      labels:
+        app: compute-app
+    spec:
+      containers:
+      - name: compute-app
+        image: nginx:1.25
+        ports:
+        - containerPort: 80

@@ -1,0 +1,22 @@
+# Q17: Deployment without a Service (user must create one)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-app
+  namespace: gate
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-app
+  template:
+    metadata:
+      labels:
+        app: backend-app
+    spec:
+      containers:
+      - name: backend-app
+        image: nginx:1.25
+        ports:
+        - containerPort: 80

@@ -1,0 +1,100 @@
+# Q4: NetworkPolicy setup - pods without proper labels, policies with selectors
+---
+# Pods without tier labels (user must add them)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend
+  namespace: rampart
+  labels:
+    app: frontend
+spec:
+  containers:
+  - name: frontend
+    image: nginx:1.25
+    ports:
+    - containerPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend
+  namespace: rampart
+  labels:
+    app: backend
+spec:
+  containers:
+  - name: backend
+    image: nginx:1.25
+    ports:
+    - containerPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: database
+  namespace: rampart
+  labels:
+    app: database
+spec:
+  containers:
+  - name: database
+    image: postgres:16-alpine
+    ports:
+    - containerPort: 5432
+    env:
+    - name: POSTGRES_PASSWORD
+      value: "exam-password"
+---
+# Default deny all ingress
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: rampart
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+---
+# Allow frontend -> backend on port 80
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-to-backend
+  namespace: rampart
+spec:
+  podSelector:
+    matchLabels:
+      tier: backend
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          tier: frontend
+    ports:
+    - protocol: TCP
+      port: 80
+---
+# Allow backend -> database on port 5432
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-backend-to-db
+  namespace: rampart
+spec:
+  podSelector:
+    matchLabels:
+      tier: database
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          tier: backend
+    ports:
+    - protocol: TCP
+      port: 5432

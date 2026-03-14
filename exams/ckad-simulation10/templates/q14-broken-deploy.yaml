@@ -1,0 +1,21 @@
+# This manifest contains deprecated API version and fields
+# Fix it so it can be applied to the cluster
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: legacy-app
+  namespace: rampart
+spec:
+  replicas: 2
+  rollbackTo:
+    revision: 0
+  template:
+    metadata:
+      labels:
+        app: legacy-app
+    spec:
+      containers:
+      - name: legacy-app
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
