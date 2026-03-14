@@ -1,0 +1,58 @@
+---
+name: Remove NEW badge
+
+on:
+  schedule:
+    # Run daily at 08:00 UTC
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  remove-badge:
+    runs-on: ubuntu-latest
+    # Auto-remove after 2026-03-27 (2 weeks from 2026-03-13)
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check if badge should be removed
+        id: check
+        run: |
+          EXPIRY_DATE="2026-03-27"
+          TODAY=$(date -u +%Y-%m-%d)
+          if [[ "$TODAY" > "$EXPIRY_DATE" || "$TODAY" == "$EXPIRY_DATE" ]]; then
+            echo "expired=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "expired=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Remove NEW badge from README
+        if: steps.check.outputs.expired == 'true'
+        run: |
+          if grep -q "AUTO-REMOVE-NEW-BADGE" README.md; then
+            sed -i 's/ !\[New\](https:\/\/img\.shields\.io\/badge\/NEW-brightgreen) <!-- AUTO-REMOVE-NEW-BADGE -->//' README.md
+            echo "Badge removed from README.md"
+          else
+            echo "No badge found, nothing to do"
+          fi
+
+      - name: Commit and push
+        if: steps.check.outputs.expired == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git diff --quiet README.md && exit 0
+          git add README.md
+          git commit -m "chore: auto-remove NEW badge from Dojo Oni after 2 weeks"
+          git push
+
+      - name: Disable this workflow
+        if: steps.check.outputs.expired == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow disable "Remove NEW badge" || true
+          echo "Workflow disabled after badge removal"

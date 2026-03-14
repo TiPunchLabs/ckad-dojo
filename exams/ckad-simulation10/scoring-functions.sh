@@ -829,14 +829,14 @@ score_q16() {
 	local details=""
 
 	# Check ConfigMap exists
-	if resource_exists "configmap" "app-config" "garrison"; then
+	if resource_exists "configmap" "app-config" "gate"; then
 		((score++))
 		details+="ConfigMap app-config exists. "
 
 		# Check keys
 		local app_env app_debug
-		app_env=$(kubectl get configmap app-config -n garrison -o jsonpath='{.data.APP_ENV}' 2>/dev/null)
-		app_debug=$(kubectl get configmap app-config -n garrison -o jsonpath='{.data.APP_DEBUG}' 2>/dev/null)
+		app_env=$(kubectl get configmap app-config -n gate -o jsonpath='{.data.APP_ENV}' 2>/dev/null)
+		app_debug=$(kubectl get configmap app-config -n gate -o jsonpath='{.data.APP_DEBUG}' 2>/dev/null)
 		if [[ "$app_env" == "production" && "$app_debug" == "false" ]]; then
 			((score++))
 			details+="ConfigMap keys correct. "
@@ -848,20 +848,20 @@ score_q16() {
 	fi
 
 	# Check Pod exists and uses envFrom
-	if resource_exists "pod" "config-app" "garrison"; then
+	if resource_exists "pod" "config-app" "gate"; then
 		((score++))
 		details+="Pod config-app exists. "
 
 		# Check envFrom configMapRef
 		local cm_ref
-		cm_ref=$(kubectl get pod config-app -n garrison -o jsonpath='{.spec.containers[0].envFrom[0].configMapRef.name}' 2>/dev/null)
+		cm_ref=$(kubectl get pod config-app -n gate -o jsonpath='{.spec.containers[0].envFrom[0].configMapRef.name}' 2>/dev/null)
 		if [[ "$cm_ref" == "app-config" ]]; then
 			((score++))
 			details+="envFrom configMapRef correct. "
 		else
 			# Also accept individual env vars via configMapKeyRef
 			local env_source
-			env_source=$(kubectl get pod config-app -n garrison -o jsonpath='{.spec.containers[0].env[*].valueFrom.configMapKeyRef.name}' 2>/dev/null)
+			env_source=$(kubectl get pod config-app -n gate -o jsonpath='{.spec.containers[0].env[*].valueFrom.configMapKeyRef.name}' 2>/dev/null)
 			if [[ "$env_source" == *"app-config"* ]]; then
 				((score++))
 				details+="configMapKeyRef used for app-config. "
@@ -872,7 +872,7 @@ score_q16() {
 
 		# Check pod running
 		local phase
-		phase=$(kubectl get pod config-app -n garrison -o jsonpath='{.status.phase}' 2>/dev/null)
+		phase=$(kubectl get pod config-app -n gate -o jsonpath='{.status.phase}' 2>/dev/null)
 		if [[ "$phase" == "Running" ]]; then
 			((score++))
 			details+="Pod running."
@@ -1057,7 +1057,7 @@ score_q20() {
 	if resource_exists "pod" "logger-app" "stronghold"; then
 		# Check container count
 		local container_count
-		container_count=$(kubectl get pod logger-app -n stronghold -o jsonpath='{.spec.containers}' 2>/dev/null | grep -c "name" 2>/dev/null || echo "0")
+		container_count=$(kubectl get pod logger-app -n stronghold -o jsonpath='{.spec.containers[*].name}' 2>/dev/null | wc -w)
 		if [[ "$container_count" -ge 2 ]]; then
 			((score++))
 			details+="Pod has 2+ containers. "

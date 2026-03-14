@@ -153,11 +153,11 @@ The ResourceQuota allows: `requests.cpu: 500m`, `requests.memory: 512Mi`.
 |---|---|
 | **Points** | 5 |
 | **Namespace** | N/A (local task) |
-| **Resources** | Dockerfile at `./exam/course/7/Dockerfile` |
+| **Resources** | Dockerfile at `./exam/course/7/image/Dockerfile` |
 
 ### Task
 
-1. Build a Docker image from the Dockerfile at `./exam/course/7/Dockerfile`
+1. Build a Docker image using `./exam/course/7/image/` as build context
 2. Tag the image as `localhost:5000/oni-app:1.0`
 3. Save the image as a tar archive to `./exam/course/7/oni-app.tar`
 4. Push the image to the local registry at `localhost:5000`
@@ -351,16 +351,16 @@ Save the root cause description to `./exam/course/15/root-cause.txt`.
 | | |
 |---|---|
 | **Points** | 5 |
-| **Namespace** | `garrison` |
+| **Namespace** | `gate` |
 | **Resources** | None (create from scratch) |
 
 ### Task
 
-1. Create a ConfigMap named `app-config` in namespace `garrison` with:
+1. Create a ConfigMap named `app-config` in namespace `gate` with:
    - `APP_ENV=production`
    - `APP_DEBUG=false`
 
-2. Create a Pod named `config-app` in namespace `garrison`:
+2. Create a Pod named `config-app` in namespace `gate`:
    - Image: `nginx:1.25`
    - Use `envFrom` to load **all** keys from the ConfigMap `app-config` as environment variables
 

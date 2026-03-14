@@ -263,7 +263,7 @@ kubectl get pods -n garrison
 
 ```bash
 # Build the image
-docker build -t localhost:5000/oni-app:1.0 ./exam/course/7/
+docker build -t localhost:5000/oni-app:1.0 ./exam/course/7/image/
 
 # Save as tar archive
 docker save -o ./exam/course/7/oni-app.tar localhost:5000/oni-app:1.0
@@ -613,7 +613,7 @@ Create the ConfigMap:
 kubectl create configmap app-config \
   --from-literal=APP_ENV=production \
   --from-literal=APP_DEBUG=false \
-  -n garrison
+  -n gate
 ```
 
 Create the Pod:
@@ -623,7 +623,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: config-app
-  namespace: garrison
+  namespace: gate
 spec:
   containers:
   - name: config-app
@@ -640,7 +640,7 @@ kubectl apply -f config-app.yaml
 Verify:
 
 ```bash
-kubectl exec config-app -n garrison -- env | grep APP_
+kubectl exec config-app -n gate -- env | grep APP_
 # APP_ENV=production
 # APP_DEBUG=false
 ```
