@@ -128,21 +128,12 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 
 ## 🚀 Quick Start (5 minutes)
 
-> ⚠️ **Requires** a running Kubernetes cluster, `kubectl`, `helm`, `docker`, and `ttyd`. See [Prerequisites](#prerequisites) for details.
-
-Get your first exam running in under 5 minutes:
+> **New here?** See the [QUICKSTART.md](QUICKSTART.md) — 3 steps, zero fluff.
 
 ```bash
-# 1. Install uv (Python package manager)
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# 2. Clone and launch
-git clone https://github.com/TiPunchLabs/ckad-dojo.git
-cd ckad-dojo
+git clone https://github.com/TiPunchLabs/ckad-dojo.git && cd ckad-dojo
 uv run ckad-dojo
 ```
-
-That's it. The interactive menu guides you from there. Opens `http://localhost:9090` with timer, questions, and embedded terminal.
 
 > **Already cloned?** Just run `uv run ckad-dojo` from the repo directory.
 
