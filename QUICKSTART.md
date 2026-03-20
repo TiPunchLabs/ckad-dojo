@@ -25,6 +25,7 @@ Si une commande échoue, installez l'outil manquant. Détails : [README.md#prere
 
 ```bash
 git clone https://github.com/TiPunchLabs/ckad-dojo.git && cd ckad-dojo
+direnv allow   # if you use direnv (otherwise ignore)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 uv run ckad-dojo
 ```
