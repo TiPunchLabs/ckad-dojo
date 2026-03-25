@@ -70,7 +70,7 @@ jobs:
         run: uv sync
 
       - name: Audit dependencies
-        run: uvx pip-audit
+        run: uvx pip-audit --ignore-vuln CVE-2026-4539  # pygments 2.19.2 - no fix available yet
 
       - name: Secret scan
         run: |
