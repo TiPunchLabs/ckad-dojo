@@ -104,7 +104,7 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 | 7 | 🦝 **Tanuki** | Tanuki des Forêts | 20 | 100 | Forest (grove, thicket...) | [@dgkanatsios](https://github.com/dgkanatsios) |
 | 8 | 🦊 **Inari** | Inari des Moissons | 20 | 100 | Harvest (harvest, grain...) | [@dgkanatsios](https://github.com/dgkanatsios) |
 | 9 | 🐲 **Ryujin** | Ryujin des Profondeurs | 20 | 100 | Sea (tide, wave, depths...) | [@dgkanatsios](https://github.com/dgkanatsios) |
-| 10 | 👹 **Oni** ![New](https://img.shields.io/badge/NEW-brightgreen) <!-- AUTO-REMOVE-NEW-BADGE --> | Oni of the Demon Gate | 20 | 102 | Fortification (fortress, bastion...) | — |
+| 10 | 👹 **Oni** | Oni of the Demon Gate | 20 | 102 | Fortification (fortress, bastion...) | — |
 
 <details>
 <summary><strong>Dojo Quotes</strong></summary>
