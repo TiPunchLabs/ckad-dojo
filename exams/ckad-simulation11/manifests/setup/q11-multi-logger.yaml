@@ -1,0 +1,20 @@
+# Q11 - Multi-container Log Extraction setup
+# Pod with two containers in corona namespace
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multi-logger
+  namespace: corona
+  labels:
+    app: logger
+spec:
+  containers:
+    - name: app
+      image: busybox:1.36
+      command: ["/bin/sh", "-c"]
+      args: ["i=0; while true; do i=$((i+1)); echo \"$i: app processing request\"; sleep 3; done"]
+    - name: sidecar
+      image: busybox:1.36
+      command: ["/bin/sh", "-c"]
+      args: ["i=0; while true; do i=$((i+1)); echo \"$i: sidecar syncing data\"; sleep 5; done"]

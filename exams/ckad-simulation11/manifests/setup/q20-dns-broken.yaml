@@ -1,0 +1,36 @@
+# Q20 - Fix Service DNS Resolution setup
+# Deployment + broken Service in sunbeam namespace
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dns-app
+  namespace: sunbeam
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dns-app
+  template:
+    metadata:
+      labels:
+        app: dns-app
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.25
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dns-svc
+  namespace: sunbeam
+spec:
+  selector:
+    app: wrong-dns
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP

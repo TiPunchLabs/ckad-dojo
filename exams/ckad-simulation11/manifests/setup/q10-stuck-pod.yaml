@@ -1,0 +1,16 @@
+# Q10 - Troubleshoot Pending Pod setup
+# Pod with wrong nodeSelector in solar namespace
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stuck-pod
+  namespace: solar
+  labels:
+    app: stuck
+spec:
+  nodeSelector:
+    disktype: ssd
+  containers:
+    - name: web
+      image: nginx:1.25

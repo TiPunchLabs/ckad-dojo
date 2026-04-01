@@ -1,0 +1,39 @@
+# Q5 - Blue/Green Deployment setup
+# Blue deployment + service in flare namespace
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-blue
+  namespace: flare
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webapp
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: webapp
+        version: blue
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.25
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp-svc
+  namespace: flare
+spec:
+  selector:
+    app: webapp
+    version: blue
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP

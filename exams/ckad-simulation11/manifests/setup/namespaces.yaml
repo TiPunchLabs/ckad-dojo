@@ -1,0 +1,51 @@
+# Namespaces for CKAD Simulation 11 - Dojo Amaterasu (Sun/Light theme)
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: solar
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: corona
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aurora
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flare
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dawn
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zenith
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: eclipse
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: radiance
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sunbeam
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: solstice

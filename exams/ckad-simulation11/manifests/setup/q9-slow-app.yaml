@@ -1,0 +1,23 @@
+# Q9 - Startup Probe setup
+# Deployment without probes in eclipse namespace
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slow-app
+  namespace: eclipse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slow
+  template:
+    metadata:
+      labels:
+        app: slow
+    spec:
+      containers:
+        - name: app
+          image: nginx:1.25
+          ports:
+            - containerPort: 8080
