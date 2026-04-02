@@ -1,64 +1,58 @@
 # CKAD Simulation 11 - Solutions (Dojo Amaterasu ☀️)
 
-> **Total Score**: 102 points | **Passing Score**: ~66% (67 points)
+> **Total Score**: 104 points | **Passing Score**: ~66% (69 points)
 
 ---
 
-## Question 1 | Multi-stage Dockerfile Build (6 points)
+## Question 1 | Build Container Image and Save as Tarball (6 points)
 
 ### Solution
-
-Edit `./exam/course/1/image/Dockerfile` to use multi-stage:
-
-```dockerfile
-# Stage 1: Build
-FROM golang:1.21-alpine AS builder
-WORKDIR /app
-COPY main.go .
-RUN go build -o server main.go
-
-# Stage 2: Runtime
-FROM alpine:3.19
-COPY --from=builder /app/server /server
-EXPOSE 8080
-CMD ["/server"]
-```
 
 ```bash
 # Build the image
-cd ./exam/course/1/image
-docker build -t multi-app:1.0 .
-
-# Save as tarball
-docker save -o ../multi-app.tar multi-app:1.0
+docker build -t solar-app:1.0 ./exam/course/1/image/
 
 # Verify
-docker images multi-app:1.0
-ls -lh ../multi-app.tar
+docker images solar-app:1.0
+
+# Save as tarball
+docker save -o ./exam/course/1/solar-app.tar solar-app:1.0
+
+# Verify
+ls -lh ./exam/course/1/solar-app.tar
 ```
 
 ---
 
-## Question 2 | Create ReplicaSet (4 points)
+## Question 2 | Create Deployment with Labels and Annotations (4 points)
 
 ### Solution
 
 ```bash
+# Generate base YAML
+kubectl create deployment frontend-app --image=nginx:1.25 --replicas=3 \
+  -n solar --dry-run=client -o yaml > /tmp/frontend.yaml
+
+# Edit to add labels, annotations, and container port, then apply
 kubectl apply -f - <<EOF
 apiVersion: apps/v1
-kind: ReplicaSet
+kind: Deployment
 metadata:
-  name: web-rs
+  name: frontend-app
   namespace: solar
+  annotations:
+    kubernetes.io/change-cause: "initial deployment"
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: web
+      app: frontend
+      tier: web
   template:
     metadata:
       labels:
-        app: web
+        app: frontend
+        tier: web
     spec:
       containers:
         - name: web
@@ -68,13 +62,13 @@ spec:
 EOF
 
 # Verify
-kubectl get rs web-rs -n solar
-kubectl get pods -n solar -l app=web
+kubectl get deploy frontend-app -n solar
+kubectl get pods -n solar -l app=frontend --show-labels
 ```
 
 ---
 
-## Question 3 | Adapter Pattern Multi-container Pod (6 points)
+## Question 3 | Sidecar Container with Shared Volume (6 points)
 
 ### Solution
 
@@ -83,7 +77,7 @@ kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Pod
 metadata:
-  name: log-adapter
+  name: web-with-sidecar
   namespace: corona
 spec:
   volumes:
@@ -91,56 +85,69 @@ spec:
       emptyDir: {}
   containers:
     - name: app
-      image: busybox:1.36
-      command: ["/bin/sh", "-c"]
-      args: ["while true; do echo \"\$(date +%s) INFO request processed\" >> /var/log/app/raw.log; sleep 5; done"]
+      image: nginx:1.25
       volumeMounts:
         - name: log-volume
-          mountPath: /var/log/app
-    - name: adapter
+          mountPath: /var/log/nginx
+    - name: log-shipper
       image: busybox:1.36
       command: ["/bin/sh", "-c"]
-      args: ["tail -f /var/log/app/raw.log | sed 's/^/[FORMATTED] /'"]
+      args: ["tail -f /var/log/nginx/access.log 2>/dev/null || sleep 3600"]
       volumeMounts:
         - name: log-volume
-          mountPath: /var/log/app
+          mountPath: /var/log/nginx
 EOF
 
 # Verify
-kubectl get pod log-adapter -n corona
-kubectl logs log-adapter -n corona -c adapter
+kubectl get pod web-with-sidecar -n corona
+kubectl describe pod web-with-sidecar -n corona | grep -A5 Containers
 ```
 
 ---
 
-## Question 4 | Pod with hostPath Volume (4 points)
+## Question 4 | Create PVC and Mount in Pod (6 points)
 
 ### Solution
 
 ```bash
+# Step 1: Create PVC
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-data-pvc
+  namespace: aurora
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+EOF
+
+# Step 2: Create Pod using the PVC
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Pod
 metadata:
-  name: cache-pod
+  name: data-pod
   namespace: aurora
 spec:
   containers:
     - name: web
       image: nginx:1.25
       volumeMounts:
-        - name: cache-vol
-          mountPath: /cache
+        - name: data-vol
+          mountPath: /usr/share/nginx/html
   volumes:
-    - name: cache-vol
-      hostPath:
-        path: /data/cache
-        type: DirectoryOrCreate
+    - name: data-vol
+      persistentVolumeClaim:
+        claimName: app-data-pvc
 EOF
 
 # Verify
-kubectl get pod cache-pod -n aurora
-kubectl describe pod cache-pod -n aurora | grep -A5 Volumes
+kubectl get pvc app-data-pvc -n aurora
+kubectl get pod data-pod -n aurora
 ```
 
 ---
@@ -404,7 +411,7 @@ kubectl describe secret web-tls -n flare
 
 ---
 
-## Question 14 | SecurityContext with seccompProfile (4 points)
+## Question 14 | Harden Deployment with SecurityContext (4 points)
 
 ### Solution
 
@@ -412,60 +419,63 @@ kubectl describe secret web-tls -n flare
 kubectl edit deploy hardened-app -n dawn
 ```
 
-Add seccompProfile under pod-level security context:
+Add security contexts:
 
 ```yaml
 spec:
   template:
     spec:
       securityContext:
-        seccompProfile:
-          type: RuntimeDefault
+        runAsNonRoot: true
+      containers:
+        - name: app
+          securityContext:
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
 ```
 
 ```bash
 # Verify
 kubectl rollout status deploy hardened-app -n dawn
-kubectl get deploy hardened-app -n dawn -o jsonpath='{.spec.template.spec.securityContext.seccompProfile.type}'
+kubectl get deploy hardened-app -n dawn -o yaml | grep -A 10 securityContext
 ```
 
 ---
 
-## Question 15 | ServiceAccount with Token Projection (6 points)
+## Question 15 | ServiceAccount with RBAC and Verification (6 points)
 
 ### Solution
 
 ```bash
 # Step 1: Create ServiceAccount
-kubectl create sa app-sa -n zenith
+kubectl create sa deploy-sa -n zenith
 
-# Step 2: Create Pod with projected token
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Pod
-metadata:
-  name: token-pod
-  namespace: zenith
-spec:
-  serviceAccountName: app-sa
-  containers:
-    - name: web
-      image: nginx:1.25
-      volumeMounts:
-        - name: token-vol
-          mountPath: /var/run/secrets/tokens
-  volumes:
-    - name: token-vol
-      projected:
-        sources:
-          - serviceAccountToken:
-              path: app-token
-              expirationSeconds: 3600
-EOF
+# Step 2: Create Role
+kubectl create role deploy-role -n zenith \
+  --verb=get,list,create,update \
+  --resource=deployments
+
+# Step 3: Create RoleBinding
+kubectl create rolebinding deploy-rb -n zenith \
+  --role=deploy-role \
+  --serviceaccount=zenith:deploy-sa
+
+# Step 4: Verify permissions
+kubectl auth can-i list deployments \
+  --as=system:serviceaccount:zenith:deploy-sa -n zenith
+
+# Step 5: Save output to file
+kubectl auth can-i list deployments \
+  --as=system:serviceaccount:zenith:deploy-sa -n zenith \
+  > ./exam/course/15/auth-check.txt
 
 # Verify
-kubectl get pod token-pod -n zenith
-kubectl exec token-pod -n zenith -- ls /var/run/secrets/tokens/
+cat ./exam/course/15/auth-check.txt
+kubectl get sa deploy-sa -n zenith
+kubectl get role deploy-role -n zenith
+kubectl get rolebinding deploy-rb -n zenith
 ```
 
 ---

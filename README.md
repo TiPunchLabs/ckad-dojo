@@ -105,7 +105,7 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 | 8 | 🦊 **Inari** | Inari des Moissons | 20 | 100 | Harvest (harvest, grain...) | [@dgkanatsios](https://github.com/dgkanatsios) |
 | 9 | 🐲 **Ryujin** | Ryujin des Profondeurs | 20 | 100 | Sea (tide, wave, depths...) | [@dgkanatsios](https://github.com/dgkanatsios) |
 | 10 | 👹 **Oni** | Oni of the Demon Gate | 20 | 102 | Fortification (fortress, bastion...) | — |
-| 11 | ☀️ **Amaterasu** ![New](https://img.shields.io/badge/NEW-brightgreen) <!-- AUTO-REMOVE-NEW-BADGE --> | Amaterasu of the Rising Sun | 20 | 102 | Sun/Light (solar, corona...) | — |
+| 11 | ☀️ **Amaterasu** ![New](https://img.shields.io/badge/NEW-brightgreen) <!-- AUTO-REMOVE-NEW-BADGE --> | Amaterasu of the Rising Sun | 20 | 104 | Sun/Light (solar, corona...) | — |
 
 <details>
 <summary><strong>Dojo Quotes</strong></summary>
@@ -489,7 +489,7 @@ ckad-dojo/
 │   ├── ckad-simulation8/     # Dojo Inari 🦊 - 20 questions, 100 points
 │   ├── ckad-simulation9/     # Dojo Ryujin 🐲 - 20 questions, 100 points
 │   ├── ckad-simulation10/    # Dojo Oni 👹 - 20 questions, 102 points
-│   └── ckad-simulation11/    # Dojo Amaterasu ☀️ - 20 questions, 102 points
+│   └── ckad-simulation11/    # Dojo Amaterasu ☀️ - 20 questions, 104 points
 │       ├── exam.conf         # Configuration
 │       ├── questions.md      # Questions
 │       ├── solutions.md      # Solutions

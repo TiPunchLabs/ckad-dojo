@@ -1,16 +1,16 @@
 #!/bin/bash
 # scoring-functions.sh - CKAD Simulation 11 Scoring Functions
-# Dojo Amaterasu (Sun/Light theme) - 20 questions, 102 points total
-# Covers CKAD curriculum gaps: multi-stage builds, ReplicaSets, adapter pattern,
-# hostPath, Blue/Green, Kustomize, startup probes, CRDs, TLS/docker-registry secrets,
-# seccompProfile, token projection, NetworkPolicy ipBlock, Ingress TLS
+# Dojo Amaterasu (Sun/Light theme) - 20 questions, 104 points total
+# Covers CKAD curriculum: container builds, Deployments with labels/annotations,
+# sidecar containers, PVC, Blue/Green, Kustomize, startup probes, CRDs,
+# TLS/docker-registry secrets, SecurityContext hardening, RBAC, NetworkPolicy ipBlock, Ingress TLS
 
 # Source common utilities
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../../scripts/lib/common.sh" 2>/dev/null || true
 
 # ============================================================================
-# Q1: Multi-stage Dockerfile Build (6 points)
+# Q1: Build Container Image and Save as Tarball (6 points)
 # ============================================================================
 score_q1() {
 	local score=0
@@ -19,20 +19,20 @@ score_q1() {
 
 	# Check image exists
 	local image_exists
-	image_exists=$(docker images multi-app:1.0 --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | grep -q "multi-app:1.0" && echo true || echo false)
+	image_exists=$(docker images solar-app:1.0 --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | grep -q "solar-app:1.0" && echo true || echo false)
 	if [[ "$image_exists" == "true" ]]; then
 		((score += 3))
-		details+="Image multi-app:1.0 exists. "
+		details+="Image solar-app:1.0 exists. "
 	else
-		details+="Image multi-app:1.0 not found. "
+		details+="Image solar-app:1.0 not found. "
 	fi
 
 	# Check tarball exists
-	if [[ -f "$EXAM_DIR/1/multi-app.tar" ]]; then
+	if [[ -f "$EXAM_DIR/1/solar-app.tar" ]]; then
 		((score += 3))
-		details+="Tarball exists at exam/course/1/multi-app.tar."
+		details+="Tarball exists at exam/course/1/solar-app.tar."
 	else
-		details+="Tarball not found at exam/course/1/multi-app.tar."
+		details+="Tarball not found at exam/course/1/solar-app.tar."
 	fi
 
 	echo "$score/$max_points"
@@ -40,20 +40,20 @@ score_q1() {
 }
 
 # ============================================================================
-# Q2: Create ReplicaSet (4 points)
+# Q2: Create Deployment with Labels and Annotations (4 points)
 # ============================================================================
 score_q2() {
 	local score=0
 	local max_points=4
 	local details=""
 
-	if resource_exists "replicaset" "web-rs" "solar"; then
+	if resource_exists "deployment" "frontend-app" "solar"; then
 		((score++))
-		details+="ReplicaSet web-rs exists. "
+		details+="Deployment frontend-app exists. "
 
 		# Check replicas
 		local replicas
-		replicas=$(kubectl get rs web-rs -n solar -o jsonpath='{.spec.replicas}' 2>/dev/null)
+		replicas=$(kubectl get deploy frontend-app -n solar -o jsonpath='{.spec.replicas}' 2>/dev/null)
 		if [[ "$replicas" == "3" ]]; then
 			((score++))
 			details+="Replicas is 3. "
@@ -61,27 +61,29 @@ score_q2() {
 			details+="Replicas is $replicas (expected: 3). "
 		fi
 
-		# Check image
-		local image
-		image=$(kubectl get rs web-rs -n solar -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
-		if [[ "$image" == *"nginx"* ]]; then
+		# Check pod labels
+		local app_label
+		app_label=$(kubectl get deploy frontend-app -n solar -o jsonpath='{.spec.template.metadata.labels.app}' 2>/dev/null)
+		local tier_label
+		tier_label=$(kubectl get deploy frontend-app -n solar -o jsonpath='{.spec.template.metadata.labels.tier}' 2>/dev/null)
+		if [[ "$app_label" == "frontend" ]] && [[ "$tier_label" == "web" ]]; then
 			((score++))
-			details+="Image is nginx. "
+			details+="Pod labels correct (app=frontend, tier=web). "
 		else
-			details+="Image incorrect ($image). "
+			details+="Pod labels incorrect (app=$app_label, tier=$tier_label). "
 		fi
 
-		# Check ready replicas
-		local ready
-		ready=$(kubectl get rs web-rs -n solar -o jsonpath='{.status.readyReplicas}' 2>/dev/null)
-		if [[ -n "$ready" ]] && [[ "$ready" -ge 3 ]]; then
+		# Check annotation
+		local annotation
+		annotation=$(kubectl get deploy frontend-app -n solar -o jsonpath='{.metadata.annotations.kubernetes\.io/change-cause}' 2>/dev/null)
+		if [[ "$annotation" == "initial deployment" ]]; then
 			((score++))
-			details+="All replicas ready."
+			details+="Annotation kubernetes.io/change-cause correct."
 		else
-			details+="Not all replicas ready ($ready/3)."
+			details+="Annotation kubernetes.io/change-cause is '${annotation:-missing}'."
 		fi
 	else
-		details+="ReplicaSet web-rs not found."
+		details+="Deployment frontend-app not found."
 	fi
 
 	echo "$score/$max_points"
@@ -89,20 +91,20 @@ score_q2() {
 }
 
 # ============================================================================
-# Q3: Adapter Pattern Multi-container Pod (6 points)
+# Q3: Sidecar Container with Shared Volume (6 points)
 # ============================================================================
 score_q3() {
 	local score=0
 	local max_points=6
 	local details=""
 
-	if resource_exists "pod" "log-adapter" "corona"; then
+	if resource_exists "pod" "web-with-sidecar" "corona"; then
 		((score++))
-		details+="Pod log-adapter exists. "
+		details+="Pod web-with-sidecar exists. "
 
 		# Check container count
 		local container_count
-		container_count=$(kubectl get pod log-adapter -n corona -o jsonpath='{.spec.containers}' 2>/dev/null | grep -o '"name"' | wc -l)
+		container_count=$(kubectl get pod web-with-sidecar -n corona -o jsonpath='{.spec.containers[*].name}' 2>/dev/null | wc -w)
 		if [[ "$container_count" -ge 2 ]]; then
 			((score += 2))
 			details+="Pod has $container_count containers. "
@@ -112,7 +114,7 @@ score_q3() {
 
 		# Check emptyDir volume exists
 		local volumes
-		volumes=$(kubectl get pod log-adapter -n corona -o jsonpath='{.spec.volumes}' 2>/dev/null)
+		volumes=$(kubectl get pod web-with-sidecar -n corona -o jsonpath='{.spec.volumes}' 2>/dev/null)
 		if [[ "$volumes" == *"emptyDir"* ]]; then
 			((score++))
 			details+="emptyDir volume configured. "
@@ -122,7 +124,7 @@ score_q3() {
 
 		# Check both containers mount the volume
 		local mount_count
-		mount_count=$(kubectl get pod log-adapter -n corona -o jsonpath='{range .spec.containers[*]}{.volumeMounts}{"\n"}{end}' 2>/dev/null | grep -c "log-volume\|/var/log/app")
+		mount_count=$(kubectl get pod web-with-sidecar -n corona -o jsonpath='{range .spec.containers[*]}{.volumeMounts}{"\n"}{end}' 2>/dev/null | grep -c "log-volume\|/var/log/nginx")
 		if [[ "$mount_count" -ge 2 ]]; then
 			((score += 2))
 			details+="Both containers mount shared volume."
@@ -130,7 +132,7 @@ score_q3() {
 			details+="Not all containers mount the shared volume ($mount_count/2)."
 		fi
 	else
-		details+="Pod log-adapter not found."
+		details+="Pod web-with-sidecar not found."
 	fi
 
 	echo "$score/$max_points"
@@ -138,49 +140,68 @@ score_q3() {
 }
 
 # ============================================================================
-# Q4: Pod with hostPath Volume (4 points)
+# Q4: Create PVC and Mount in Pod (6 points)
 # ============================================================================
 score_q4() {
 	local score=0
-	local max_points=4
+	local max_points=6
 	local details=""
 
-	if resource_exists "pod" "cache-pod" "aurora"; then
+	# Check PVC exists
+	if resource_exists "persistentvolumeclaim" "app-data-pvc" "aurora"; then
 		((score++))
-		details+="Pod cache-pod exists. "
+		details+="PVC app-data-pvc exists. "
 
-		# Check hostPath volume
-		local host_path
-		host_path=$(kubectl get pod cache-pod -n aurora -o jsonpath='{.spec.volumes[0].hostPath.path}' 2>/dev/null)
-		if [[ "$host_path" == "/data/cache" ]]; then
+		# Check access mode
+		local access_mode
+		access_mode=$(kubectl get pvc app-data-pvc -n aurora -o jsonpath='{.spec.accessModes[0]}' 2>/dev/null)
+		if [[ "$access_mode" == "ReadWriteOnce" ]]; then
 			((score++))
-			details+="hostPath is /data/cache. "
+			details+="Access mode is ReadWriteOnce. "
 		else
-			details+="hostPath is $host_path (expected: /data/cache). "
+			details+="Access mode is $access_mode (expected: ReadWriteOnce). "
 		fi
 
-		# Check hostPath type
-		local host_type
-		host_type=$(kubectl get pod cache-pod -n aurora -o jsonpath='{.spec.volumes[0].hostPath.type}' 2>/dev/null)
-		if [[ "$host_type" == "DirectoryOrCreate" ]]; then
+		# Check storage request
+		local storage
+		storage=$(kubectl get pvc app-data-pvc -n aurora -o jsonpath='{.spec.resources.requests.storage}' 2>/dev/null)
+		if [[ "$storage" == "500Mi" ]]; then
 			((score++))
-			details+="hostPath type is DirectoryOrCreate. "
+			details+="Storage request is 500Mi. "
 		else
-			details+="hostPath type is $host_type (expected: DirectoryOrCreate). "
+			details+="Storage request is $storage (expected: 500Mi). "
+		fi
+	else
+		details+="PVC app-data-pvc not found. "
+	fi
+
+	# Check Pod exists and uses PVC
+	if resource_exists "pod" "data-pod" "aurora"; then
+		((score++))
+		details+="Pod data-pod exists. "
+
+		# Check PVC is mounted
+		local claim_name
+		claim_name=$(kubectl get pod data-pod -n aurora -o jsonpath='{.spec.volumes[0].persistentVolumeClaim.claimName}' 2>/dev/null)
+		if [[ "$claim_name" == "app-data-pvc" ]]; then
+			((score++))
+			details+="Pod uses PVC app-data-pvc. "
+		else
+			details+="Pod does not use PVC app-data-pvc (found: ${claim_name:-none}). "
 		fi
 
 		# Check mount path
 		local mount_path
-		mount_path=$(kubectl get pod cache-pod -n aurora -o jsonpath='{.spec.containers[0].volumeMounts[0].mountPath}' 2>/dev/null)
+		mount_path=$(kubectl get pod data-pod -n aurora -o jsonpath='{.spec.containers[0].volumeMounts[0].mountPath}' 2>/dev/null)
 		mount_path="${mount_path%/}"
-		if [[ "$mount_path" == "/cache" ]]; then
+		if [[ "$mount_path" == "/usr/share/nginx/html" ]]; then
 			((score++))
-			details+="Volume mounted at /cache."
+			details+="Volume mounted at /usr/share/nginx/html."
 		else
-			details+="Mount path is $mount_path (expected: /cache)."
+			details+="Mount path is $mount_path (expected: /usr/share/nginx/html)."
 		fi
 	else
-		details+="Pod cache-pod not found."
+		details+="Pod data-pod not found."
 	fi
 
 	echo "$score/$max_points"
@@ -604,7 +625,7 @@ score_q13() {
 }
 
 # ============================================================================
-# Q14: SecurityContext with seccompProfile (4 points)
+# Q14: Harden Deployment with SecurityContext (4 points)
 # ============================================================================
 score_q14() {
 	local score=0
@@ -615,16 +636,26 @@ score_q14() {
 		((score++))
 		details+="Deployment hardened-app exists. "
 
-		# Check seccompProfile at pod-level or container-level
-		local seccomp_pod
-		seccomp_pod=$(kubectl get deploy hardened-app -n dawn -o jsonpath='{.spec.template.spec.securityContext.seccompProfile.type}' 2>/dev/null)
-		local seccomp_container
-		seccomp_container=$(kubectl get deploy hardened-app -n dawn -o jsonpath='{.spec.template.spec.containers[0].securityContext.seccompProfile.type}' 2>/dev/null)
-		if [[ "$seccomp_pod" == "RuntimeDefault" ]] || [[ "$seccomp_container" == "RuntimeDefault" ]]; then
-			((score += 2))
-			details+="seccompProfile is RuntimeDefault. "
+		# Check runAsNonRoot at pod level
+		local run_as_non_root
+		run_as_non_root=$(kubectl get deploy hardened-app -n dawn -o jsonpath='{.spec.template.spec.securityContext.runAsNonRoot}' 2>/dev/null)
+		if [[ "$run_as_non_root" == "true" ]]; then
+			((score++))
+			details+="runAsNonRoot is true. "
 		else
-			details+="seccompProfile type is ${seccomp_pod:-${seccomp_container:-missing}} (expected: RuntimeDefault). "
+			details+="runAsNonRoot is ${run_as_non_root:-missing} (expected: true). "
+		fi
+
+		# Check readOnlyRootFilesystem and drop ALL at container level
+		local read_only
+		read_only=$(kubectl get deploy hardened-app -n dawn -o jsonpath='{.spec.template.spec.containers[0].securityContext.readOnlyRootFilesystem}' 2>/dev/null)
+		local drop_caps
+		drop_caps=$(kubectl get deploy hardened-app -n dawn -o jsonpath='{.spec.template.spec.containers[0].securityContext.capabilities.drop}' 2>/dev/null)
+		if [[ "$read_only" == "true" ]] && [[ "$drop_caps" == *"ALL"* ]]; then
+			((score++))
+			details+="readOnlyRootFilesystem and drop ALL configured. "
+		else
+			details+="readOnlyRootFilesystem=${read_only:-missing}, drop=${drop_caps:-missing}. "
 		fi
 
 		# Check deployment is running
@@ -645,7 +676,7 @@ score_q14() {
 }
 
 # ============================================================================
-# Q15: ServiceAccount with Token Projection (6 points)
+# Q15: ServiceAccount with RBAC and Verification (6 points)
 # ============================================================================
 score_q15() {
 	local score=0
@@ -653,49 +684,51 @@ score_q15() {
 	local details=""
 
 	# Check ServiceAccount exists
-	if resource_exists "serviceaccount" "app-sa" "zenith"; then
+	if resource_exists "serviceaccount" "deploy-sa" "zenith"; then
 		((score++))
-		details+="ServiceAccount app-sa exists. "
+		details+="ServiceAccount deploy-sa exists. "
 	else
-		details+="ServiceAccount app-sa not found. "
+		details+="ServiceAccount deploy-sa not found. "
 	fi
 
-	# Check Pod exists
-	if resource_exists "pod" "token-pod" "zenith"; then
+	# Check Role exists
+	if resource_exists "role" "deploy-role" "zenith"; then
 		((score++))
-		details+="Pod token-pod exists. "
+		details+="Role deploy-role exists. "
 
-		# Check projected volume
-		local volume_type
-		volume_type=$(kubectl get pod token-pod -n zenith -o jsonpath='{.spec.volumes}' 2>/dev/null)
-		if [[ "$volume_type" == *"projected"* ]] && [[ "$volume_type" == *"serviceAccountToken"* ]]; then
-			((score += 2))
-			details+="Projected volume with serviceAccountToken configured. "
-		else
-			details+="Projected volume with serviceAccountToken missing. "
-		fi
-
-		# Check mount path
-		local mount_path
-		mount_path=$(kubectl get pod token-pod -n zenith -o jsonpath='{range .spec.containers[0].volumeMounts[*]}{.mountPath}{"\n"}{end}' 2>/dev/null)
-		if [[ "$mount_path" == *"/var/run/secrets/tokens"* ]]; then
+		# Check Role grants correct verbs on deployments
+		local role_yaml
+		role_yaml=$(kubectl get role deploy-role -n zenith -o yaml 2>/dev/null)
+		if echo "$role_yaml" | grep -q "deployments" && echo "$role_yaml" | grep -q "list" && echo "$role_yaml" | grep -q "create"; then
 			((score++))
-			details+="Volume mounted at /var/run/secrets/tokens. "
+			details+="Role grants correct verbs on deployments. "
 		else
-			details+="Volume mount path incorrect. "
-		fi
-
-		# Check pod is running
-		local pod_status
-		pod_status=$(kubectl get pod token-pod -n zenith -o jsonpath='{.status.phase}' 2>/dev/null)
-		if [[ "$pod_status" == "Running" ]]; then
-			((score++))
-			details+="Pod is Running."
-		else
-			details+="Pod status is ${pod_status:-unknown}."
+			details+="Role verbs or resources incorrect. "
 		fi
 	else
-		details+="Pod token-pod not found."
+		details+="Role deploy-role not found. "
+	fi
+
+	# Check RoleBinding exists
+	if resource_exists "rolebinding" "deploy-rb" "zenith"; then
+		((score++))
+		details+="RoleBinding deploy-rb exists. "
+	else
+		details+="RoleBinding deploy-rb not found. "
+	fi
+
+	# Check auth-check.txt file
+	if [[ -f "$EXAM_DIR/15/auth-check.txt" ]]; then
+		local auth_result
+		auth_result=$(cat "$EXAM_DIR/15/auth-check.txt" 2>/dev/null | tr -d '[:space:]')
+		if [[ "$auth_result" == "yes" ]]; then
+			((score += 2))
+			details+="auth-check.txt contains 'yes'."
+		else
+			details+="auth-check.txt contains '$auth_result' (expected: yes)."
+		fi
+	else
+		details+="File auth-check.txt not found."
 	fi
 
 	echo "$score/$max_points"

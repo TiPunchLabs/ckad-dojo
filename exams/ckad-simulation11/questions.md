@@ -1,105 +1,106 @@
 # CKAD Exam Simulator - Dojo Amaterasu ☀️
 
-> **Total Score**: 102 points | **Passing Score**: ~66% (67 points)
+> **Total Score**: 104 points | **Passing Score**: ~66% (69 points)
 >
 > *「天照は光を導く」 - Amaterasu guides the light*
 
 ---
 
-## Question 1 | Multi-stage Dockerfile Build (6 points)
+## Question 1 | Build Container Image and Save as Tarball (6 points)
 
 |                     |                                          |
 | ------------------- | ---------------------------------------- |
 | **Points**    | 6                                        |
 | **Namespace** | -                                        |
-| **Resources** | Container image `multi-app:1.0`          |
-| **Files**     | `./exam/course/1/image/Dockerfile`, `./exam/course/1/image/main.go` |
+| **Resources** | Container image `solar-app:1.0`          |
+| **Files**     | `./exam/course/1/image/Dockerfile`, `./exam/course/1/image/index.html` |
 
 ### Task
 
-Directory `./exam/course/1/image/` contains a Go application (`main.go`) and a single-stage `Dockerfile` that produces a large image.
+Directory `./exam/course/1/image/` contains a `Dockerfile` and an `index.html` file.
 
 Your tasks:
 
-1. Modify the `Dockerfile` to use a **multi-stage build**:
-   - **Stage 1** (builder): Use `golang:1.21-alpine`, build the Go binary
-   - **Stage 2** (runtime): Use `alpine:3.19`, copy only the compiled binary from stage 1
-2. Build the image with name **`multi-app:1.0`**
-3. Save the image as a tarball to **`./exam/course/1/multi-app.tar`**
+1. Build a container image using Docker with name **`solar-app:1.0`** using `./exam/course/1/image/` as build context
+2. Save the image as a tarball to **`./exam/course/1/solar-app.tar`**
 
-**Hint**: Use `COPY --from=builder /app/server /server` to copy the binary between stages.
+**Hint**: Use `docker build -t <name>:<tag> <context>` and `docker save -o <file> <image>`.
 
 ---
 
-## Question 2 | Create ReplicaSet (4 points)
+## Question 2 | Create Deployment with Labels and Annotations (4 points)
 
-|                     |                          |
-| ------------------- | ------------------------ |
-| **Points**    | 4                        |
-| **Namespace** | `solar`                |
-| **Resources** | ReplicaSet `web-rs`    |
+|                     |                             |
+| ------------------- | --------------------------- |
+| **Points**    | 4                           |
+| **Namespace** | `solar`                   |
+| **Resources** | Deployment `frontend-app` |
 
 ### Task
 
-Create a ReplicaSet named **`web-rs`** in namespace `solar` with:
+Create a Deployment named **`frontend-app`** in namespace `solar` with:
 
 - Replicas: **3**
-- Pod labels: `app=web`
-- Selector: `matchLabels` with `app=web`
+- Pod labels: `app=frontend, tier=web`
 - Container name: `web`
 - Image: `nginx:1.25`
 - Container port: `80`
+- Deployment annotation: `kubernetes.io/change-cause: "initial deployment"`
 
-**Hint**: Use `kubectl explain replicaset.spec` to find the correct fields.
+**Hint**: Use `kubectl create deployment` with `--dry-run=client -o yaml` to generate YAML, then add labels and annotations.
 
 ---
 
-## Question 3 | Adapter Pattern Multi-container Pod (6 points)
+## Question 3 | Sidecar Container with Shared Volume (6 points)
 
 |                     |                                  |
 | ------------------- | -------------------------------- |
 | **Points**    | 6                                |
 | **Namespace** | `corona`                       |
-| **Resources** | Pod `log-adapter`              |
+| **Resources** | Pod `web-with-sidecar`         |
 
 ### Task
 
-Create a Pod named **`log-adapter`** in namespace `corona` that uses the **adapter pattern** with two containers sharing a volume:
+Create a Pod named **`web-with-sidecar`** in namespace `corona` with a main container and a **sidecar** that ships logs:
 
 1. **Main container** named `app`:
-   - Image: `busybox:1.36`
-   - Command: writes raw logs to `/var/log/app/raw.log`
-   - Command: `["/bin/sh", "-c", "while true; do echo \"$(date +%s) INFO request processed\" >> /var/log/app/raw.log; sleep 5; done"]`
-   - Mount shared volume at `/var/log/app`
+   - Image: `nginx:1.25`
+   - Mount shared volume at `/var/log/nginx`
 
-2. **Adapter container** named `adapter`:
+2. **Sidecar container** named `log-shipper`:
    - Image: `busybox:1.36`
-   - Command: reads and transforms logs from the shared volume
-   - Command: `["/bin/sh", "-c", "tail -f /var/log/app/raw.log | sed 's/^/[FORMATTED] /'"]`
-   - Mount shared volume at `/var/log/app`
+   - Command: `["/bin/sh", "-c", "tail -f /var/log/nginx/access.log 2>/dev/null || sleep 3600"]`
+   - Mount shared volume at `/var/log/nginx`
 
 3. Use an **`emptyDir`** volume named `log-volume` shared between both containers
 
+**Hint**: Both containers must reference the same volume name in their `volumeMounts`.
+
 ---
 
-## Question 4 | Pod with hostPath Volume (4 points)
+## Question 4 | Create PVC and Mount in Pod (6 points)
 
-|                     |                       |
-| ------------------- | --------------------- |
-| **Points**    | 4                     |
-| **Namespace** | `aurora`            |
-| **Resources** | Pod `cache-pod`     |
+|                     |                                               |
+| ------------------- | --------------------------------------------- |
+| **Points**    | 6                                             |
+| **Namespace** | `aurora`                                    |
+| **Resources** | PVC `app-data-pvc`, Pod `data-pod`, PV `app-data-pv` |
 
 ### Task
 
-Create a Pod named **`cache-pod`** in namespace `aurora` with:
+In the cluster, a PersistentVolume named **`app-data-pv`** (1Gi, ReadWriteOnce) already exists.
 
-- Image: `nginx:1.25`
-- Container name: `web`
-- A **hostPath** volume named `cache-vol`:
-  - Path on host: `/data/cache`
-  - Type: `DirectoryOrCreate`
-- Mount the volume at `/cache` in the container
+Your tasks:
+
+1. Create a PersistentVolumeClaim named **`app-data-pvc`** in namespace `aurora` with:
+   - Storage request: **500Mi**
+   - Access mode: `ReadWriteOnce`
+2. Create a Pod named **`data-pod`** in namespace `aurora` with:
+   - Image: `nginx:1.25`
+   - Container name: `web`
+   - Mount `app-data-pvc` at **`/usr/share/nginx/html`**
+
+**Hint**: Use `kubectl explain pvc.spec` to find the correct fields.
 
 ---
 
@@ -319,7 +320,7 @@ Create a **TLS Secret** named **`web-tls`** in namespace `flare` using these fil
 
 ---
 
-## Question 14 | SecurityContext with seccompProfile (4 points)
+## Question 14 | Harden Deployment with SecurityContext (4 points)
 
 |                     |                              |
 | ------------------- | ---------------------------- |
@@ -331,39 +332,38 @@ Create a **TLS Secret** named **`web-tls`** in namespace `flare` using these fil
 
 In namespace `dawn`, Deployment `hardened-app` exists without any security hardening.
 
-Add a **seccompProfile** to the Pod-level security context:
+Add security constraints to the container named `app`:
 
-- Type: **`RuntimeDefault`**
+1. **`runAsNonRoot: true`** at the Pod level
+2. **`readOnlyRootFilesystem: true`** at the container level
+3. Drop **all** capabilities: `drop: ["ALL"]` at the container level
 
-Ensure the Deployment rolls out successfully after the change.
+Ensure the Deployment rolls out successfully after the changes.
 
-**Hint**: The seccompProfile is set under `spec.securityContext.seccompProfile.type`.
+**Hint**: Use `kubectl edit deploy hardened-app -n dawn` and add the securityContext fields.
 
 ---
 
-## Question 15 | ServiceAccount with Token Projection (6 points)
+## Question 15 | ServiceAccount with RBAC and Verification (6 points)
 
-|                     |                                          |
-| ------------------- | ---------------------------------------- |
-| **Points**    | 6                                        |
-| **Namespace** | `zenith`                               |
-| **Resources** | ServiceAccount `app-sa`, Pod `token-pod` |
+|                     |                                                                              |
+| ------------------- | ---------------------------------------------------------------------------- |
+| **Points**    | 6                                                                            |
+| **Namespace** | `zenith`                                                                   |
+| **Resources** | ServiceAccount `deploy-sa`, Role `deploy-role`, RoleBinding `deploy-rb`    |
+| **Files to create** | `./exam/course/15/auth-check.txt`                                          |
 
 ### Task
 
-Create the following resources in namespace `zenith`:
+Create RBAC resources in namespace `zenith` to allow a ServiceAccount to manage deployments:
 
-1. ServiceAccount named **`app-sa`**
-2. Pod named **`token-pod`** with:
-   - Image: `nginx:1.25`
-   - Container name: `web`
-   - ServiceAccount: `app-sa`
-   - A **projected volume** named `token-vol` that projects the ServiceAccount token:
-     - Path: `app-token`
-     - `expirationSeconds: 3600`
-   - Mount the projected volume at **`/var/run/secrets/tokens`**
+1. Create ServiceAccount **`deploy-sa`**
+2. Create Role **`deploy-role`** that grants `get`, `list`, `create`, and `update` on `deployments`
+3. Create RoleBinding **`deploy-rb`** binding `deploy-role` to `deploy-sa`
+4. Verify the permissions using `kubectl auth can-i list deployments --as=system:serviceaccount:zenith:deploy-sa -n zenith`
+5. Save the output (`yes` or `no`) to **`./exam/course/15/auth-check.txt`**
 
-**Hint**: Use a `projected` volume with `serviceAccountToken` source.
+**Hint**: Use `kubectl create role` and `kubectl create rolebinding` for quick imperative creation.
 
 ---
 
