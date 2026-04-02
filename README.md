@@ -24,8 +24,8 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/version-1.8.0-blue" alt="Version 1.8.0">
-  <img src="https://img.shields.io/badge/exams-10-blue" alt="10 Exams">
-  <img src="https://img.shields.io/badge/questions-198-blue" alt="198 Questions">
+  <img src="https://img.shields.io/badge/exams-11-blue" alt="11 Exams">
+  <img src="https://img.shields.io/badge/questions-218-blue" alt="218 Questions">
   <img src="https://img.shields.io/badge/scoring_criteria-400+-blue" alt="400+ Scoring Criteria">
   <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
   <img src="https://img.shields.io/badge/difficulty-exam--realistic-red" alt="Exam Realistic Difficulty">
@@ -70,7 +70,7 @@
 
 | Feature | Description |
 |---------|-------------|
-| **10 Dojos** | 198 questions across 10 themed dojos |
+| **11 Dojos** | 218 questions across 11 themed dojos |
 | **Unified CLI** | Single `uv run ckad-dojo` command for all operations |
 | **Web Interface** | Modern UI with 120-minute countdown timer |
 | **Auto-Scoring** | 400+ criteria automatically evaluated |
@@ -89,9 +89,9 @@
 
 ---
 
-## The Ten Dojos
+## The Eleven Dojos
 
-Three dojos are themed after the Shishin (四神) — Celestial Guardians from East Asian mythology. The remaining seven dojos feature mythical creatures from Japanese folklore.
+Three dojos are themed after the Shishin (四神) — Celestial Guardians from East Asian mythology. The remaining eight dojos feature mythical creatures and deities from Japanese folklore.
 
 | # | Dojo | Title | Questions | Points | Theme | Credit |
 |:-:|------|-------|:---------:|:------:|-------|--------|
@@ -105,6 +105,7 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 | 8 | 🦊 **Inari** | Inari des Moissons | 20 | 100 | Harvest (harvest, grain...) | [@dgkanatsios](https://github.com/dgkanatsios) |
 | 9 | 🐲 **Ryujin** | Ryujin des Profondeurs | 20 | 100 | Sea (tide, wave, depths...) | [@dgkanatsios](https://github.com/dgkanatsios) |
 | 10 | 👹 **Oni** | Oni of the Demon Gate | 20 | 102 | Fortification (fortress, bastion...) | — |
+| 11 | ☀️ **Amaterasu** ![New](https://img.shields.io/badge/NEW-brightgreen) <!-- AUTO-REMOVE-NEW-BADGE --> | Amaterasu of the Rising Sun | 20 | 104 | Sun/Light (solar, corona...) | — |
 
 <details>
 <summary><strong>Dojo Quotes</strong></summary>
@@ -121,6 +122,7 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 | 🦊 Inari | *「稲荷は豊穣を祝う」— Inari celebrates the harvest* |
 | 🐲 Ryujin | *「龍神は波を操る」— Ryujin commands the waves* |
 | 👹 Oni | *「鬼の目にも涙」— Even the demon sheds tears* |
+| ☀️ Amaterasu | *「天照は光を導く」— Amaterasu guides the light* |
 
 </details>
 
@@ -486,7 +488,8 @@ ckad-dojo/
 │   ├── ckad-simulation7/     # Dojo Tanuki 🦝 - 20 questions, 100 points
 │   ├── ckad-simulation8/     # Dojo Inari 🦊 - 20 questions, 100 points
 │   ├── ckad-simulation9/     # Dojo Ryujin 🐲 - 20 questions, 100 points
-│   └── ckad-simulation10/    # Dojo Oni 👹 - 20 questions, 102 points
+│   ├── ckad-simulation10/    # Dojo Oni 👹 - 20 questions, 102 points
+│   └── ckad-simulation11/    # Dojo Amaterasu ☀️ - 20 questions, 104 points
 │       ├── exam.conf         # Configuration
 │       ├── questions.md      # Questions
 │       ├── solutions.md      # Solutions

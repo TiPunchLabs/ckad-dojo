@@ -1,54 +1,54 @@
 id,domain,weight,competency,skill,covered_in
-DB-01,Application Design and Build,20%,Define build and modify container images,Build images with Dockerfile,"sim1,sim10"
-DB-01,Application Design and Build,20%,Define build and modify container images,Multi-stage Dockerfile builds,
+DB-01,Application Design and Build,20%,Define build and modify container images,Build images with Dockerfile,"sim1,sim10,sim11"
+DB-01,Application Design and Build,20%,Define build and modify container images,Multi-stage Dockerfile builds,"sim11"
 DB-01,Application Design and Build,20%,Define build and modify container images,Modify/tag existing images,"sim10"
 DB-01,Application Design and Build,20%,Define build and modify container images,Push to local registry,"sim10"
 DB-02,Application Design and Build,20%,Choose and use the right workload resource,Deployments (create/scale/update),"sim1,sim2,sim3,sim5,sim6,sim7,sim8,sim10"
 DB-02,Application Design and Build,20%,Choose and use the right workload resource,DaemonSets,"sim3"
 DB-02,Application Design and Build,20%,Choose and use the right workload resource,CronJobs/Jobs,"sim1,sim4,sim5,sim6,sim7,sim9,sim10"
 DB-02,Application Design and Build,20%,Choose and use the right workload resource,StatefulSets,"sim3"
-DB-02,Application Design and Build,20%,Choose and use the right workload resource,ReplicaSets,
+DB-02,Application Design and Build,20%,Choose and use the right workload resource,ReplicaSets,"sim11"
 DB-03,Application Design and Build,20%,Understand multi-container Pod design patterns,Sidecar containers,"sim9,sim10"
 DB-03,Application Design and Build,20%,Understand multi-container Pod design patterns,Init containers,"sim1,sim6"
 DB-03,Application Design and Build,20%,Understand multi-container Pod design patterns,Multiple init containers,
 DB-03,Application Design and Build,20%,Understand multi-container Pod design patterns,Ambassador pattern,
-DB-03,Application Design and Build,20%,Understand multi-container Pod design patterns,Adapter pattern,
+DB-03,Application Design and Build,20%,Understand multi-container Pod design patterns,Adapter pattern,"sim11"
 DB-04,Application Design and Build,20%,Utilize persistent and ephemeral volumes,PersistentVolumes/PersistentVolumeClaims,"sim1,sim4,sim6,sim9"
-DB-04,Application Design and Build,20%,Utilize persistent and ephemeral volumes,emptyDir,"sim5,sim8"
-DB-04,Application Design and Build,20%,Utilize persistent and ephemeral volumes,hostPath,
+DB-04,Application Design and Build,20%,Utilize persistent and ephemeral volumes,emptyDir,"sim5,sim8,sim11"
+DB-04,Application Design and Build,20%,Utilize persistent and ephemeral volumes,hostPath,"sim11"
 DB-04,Application Design and Build,20%,Utilize persistent and ephemeral volumes,ConfigMap/Secret as volumes,"sim1,sim5,sim6,sim8"
-AD-01,Application Deployment,20%,Common deployment strategies,Blue/Green deployment,
+AD-01,Application Deployment,20%,Common deployment strategies,Blue/Green deployment,"sim11"
 AD-01,Application Deployment,20%,Common deployment strategies,Canary deployment,"sim8,sim10"
 AD-01,Application Deployment,20%,Common deployment strategies,Rollback to specific revision,"sim9,sim10"
-AD-02,Application Deployment,20%,Deployments and rolling updates,Rolling update strategy (maxSurge/maxUnavailable),"sim10"
+AD-02,Application Deployment,20%,Deployments and rolling updates,Rolling update strategy (maxSurge/maxUnavailable),"sim10,sim11"
 AD-02,Application Deployment,20%,Deployments and rolling updates,Rollout history/undo,"sim1,sim4,sim7,sim10"
 AD-02,Application Deployment,20%,Deployments and rolling updates,Pause/resume rollouts,"sim7"
-AD-03,Application Deployment,20%,Helm package manager,Install/upgrade/rollback releases,"sim1,sim9"
+AD-03,Application Deployment,20%,Helm package manager,Install/upgrade/rollback releases,"sim1,sim9,sim11"
 AD-03,Application Deployment,20%,Helm package manager,Search and add repositories,"sim8"
-AD-03,Application Deployment,20%,Helm package manager,Inspect values,"sim8"
+AD-03,Application Deployment,20%,Helm package manager,Inspect values,"sim8,sim11"
 AD-03,Application Deployment,20%,Helm package manager,Create charts (helm create),"sim9"
 AD-03,Application Deployment,20%,Helm package manager,Template rendering,"sim9"
-AD-04,Application Deployment,20%,Kustomize,kustomization.yaml,
-AD-04,Application Deployment,20%,Kustomize,Overlays and patches,
-AD-04,Application Deployment,20%,Kustomize,kubectl apply -k,
+AD-04,Application Deployment,20%,Kustomize,kustomization.yaml,"sim11"
+AD-04,Application Deployment,20%,Kustomize,Overlays and patches,"sim11"
+AD-04,Application Deployment,20%,Kustomize,kubectl apply -k,"sim11"
 OM-01,Application Observability and Maintenance,15%,Understand API deprecations,Identify deprecated API versions,"sim10"
 OM-01,Application Observability and Maintenance,15%,Understand API deprecations,Migrate resources to current API versions,"sim10"
 OM-02,Application Observability and Maintenance,15%,Implement probes and health checks,Liveness probes,"sim1,sim2,sim6,sim8"
 OM-02,Application Observability and Maintenance,15%,Implement probes and health checks,Readiness probes,"sim1,sim8"
-OM-02,Application Observability and Maintenance,15%,Implement probes and health checks,Startup probes,
+OM-02,Application Observability and Maintenance,15%,Implement probes and health checks,Startup probes,"sim11"
 OM-02,Application Observability and Maintenance,15%,Implement probes and health checks,Probe parameters,"sim1,sim6"
 OM-03,Application Observability and Maintenance,15%,CLI monitoring tools,kubectl top,"sim9"
-OM-03,Application Observability and Maintenance,15%,CLI monitoring tools,kubectl describe/events,"sim4,sim9,sim10"
+OM-03,Application Observability and Maintenance,15%,CLI monitoring tools,kubectl describe/events,"sim4,sim9,sim10,sim11"
 OM-03,Application Observability and Maintenance,15%,CLI monitoring tools,kubectl debug (ephemeral containers),
 OM-04,Application Observability and Maintenance,15%,Utilize container logs,kubectl logs (current/previous),"sim1,sim4,sim7,sim9"
-OM-04,Application Observability and Maintenance,15%,Utilize container logs,Multi-container log selection,"sim5"
+OM-04,Application Observability and Maintenance,15%,Utilize container logs,Multi-container log selection,"sim5,sim11"
 OM-05,Application Observability and Maintenance,15%,Debugging in Kubernetes,Troubleshoot CrashLoopBackOff,"sim10"
 OM-05,Application Observability and Maintenance,15%,Debugging in Kubernetes,Troubleshoot ImagePullBackOff,"sim3,sim4"
 OM-05,Application Observability and Maintenance,15%,Debugging in Kubernetes,kubectl exec,"sim5,sim9"
-OM-05,Application Observability and Maintenance,15%,Debugging in Kubernetes,Events analysis,"sim4,sim9,sim10"
+OM-05,Application Observability and Maintenance,15%,Debugging in Kubernetes,Events analysis,"sim4,sim9,sim10,sim11"
 OM-05,Application Observability and Maintenance,15%,Debugging in Kubernetes,Node drain/cordon,
-CS-01,Application Environment Configuration and Security,25%,CRDs and Operators,Discover CRDs (kubectl get crd),
-CS-01,Application Environment Configuration and Security,25%,CRDs and Operators,Use custom resources,
+CS-01,Application Environment Configuration and Security,25%,CRDs and Operators,Discover CRDs (kubectl get crd),"sim11"
+CS-01,Application Environment Configuration and Security,25%,CRDs and Operators,Use custom resources,"sim11"
 CS-02,Application Environment Configuration and Security,25%,Authentication authorization and admission control,RBAC (Roles/RoleBindings/ClusterRoles),"sim3,sim10"
 CS-02,Application Environment Configuration and Security,25%,Authentication authorization and admission control,kubectl auth can-i,"sim10"
 CS-02,Application Environment Configuration and Security,25%,Authentication authorization and admission control,ServiceAccount token mounting,"sim8"
@@ -56,30 +56,30 @@ CS-03,Application Environment Configuration and Security,25%,Requests limits quo
 CS-03,Application Environment Configuration and Security,25%,Requests limits quotas,LimitRange,"sim2,sim8"
 CS-03,Application Environment Configuration and Security,25%,Requests limits quotas,ResourceQuota,"sim3,sim5,sim10"
 CS-03,Application Environment Configuration and Security,25%,Requests limits quotas,Troubleshoot quota violations,"sim10"
-CS-04,Application Environment Configuration and Security,25%,Understand ConfigMaps,Create from literal/file/env-file,"sim1,sim5,sim6,sim7,sim9"
+CS-04,Application Environment Configuration and Security,25%,Understand ConfigMaps,Create from literal/file/env-file,"sim1,sim5,sim6,sim7,sim9,sim11"
 CS-04,Application Environment Configuration and Security,25%,Understand ConfigMaps,Mount as volume,"sim5,sim6"
-CS-04,Application Environment Configuration and Security,25%,Understand ConfigMaps,Use as environment variables (envFrom/valueFrom),"sim1,sim7,sim10"
+CS-04,Application Environment Configuration and Security,25%,Understand ConfigMaps,Use as environment variables (envFrom/valueFrom),"sim1,sim7,sim10,sim11"
 CS-05,Application Environment Configuration and Security,25%,Create and consume Secrets,Create generic secrets,"sim1,sim4,sim5,sim6,sim10"
-CS-05,Application Environment Configuration and Security,25%,Create and consume Secrets,Create docker-registry secrets,
-CS-05,Application Environment Configuration and Security,25%,Create and consume Secrets,Create tls secrets,
+CS-05,Application Environment Configuration and Security,25%,Create and consume Secrets,Create docker-registry secrets,"sim11"
+CS-05,Application Environment Configuration and Security,25%,Create and consume Secrets,Create tls secrets,"sim11"
 CS-05,Application Environment Configuration and Security,25%,Create and consume Secrets,Mount as volume/env (secretKeyRef),"sim1,sim5,sim6,sim10"
-CS-06,Application Environment Configuration and Security,25%,Understand ServiceAccounts,Create and assign to pods,"sim1,sim4,sim8"
-CS-06,Application Environment Configuration and Security,25%,Understand ServiceAccounts,Token projection,
+CS-06,Application Environment Configuration and Security,25%,Understand ServiceAccounts,Create and assign to pods,"sim1,sim4,sim8,sim11"
+CS-06,Application Environment Configuration and Security,25%,Understand ServiceAccounts,Token projection,"sim11"
 CS-06,Application Environment Configuration and Security,25%,Understand ServiceAccounts,Automount control,"sim2"
 CS-07,Application Environment Configuration and Security,25%,Application Security,SecurityContext (runAsUser/runAsGroup/runAsNonRoot),"sim2,sim6,sim10"
 CS-07,Application Environment Configuration and Security,25%,Application Security,Capabilities (add/drop),"sim2,sim8"
-CS-07,Application Environment Configuration and Security,25%,Application Security,seccompProfile,
+CS-07,Application Environment Configuration and Security,25%,Application Security,seccompProfile,"sim11"
 CS-07,Application Environment Configuration and Security,25%,Application Security,readOnlyRootFilesystem,"sim2"
 SN-01,Services and Networking,20%,Understand NetworkPolicies,Ingress rules (podSelector/namespaceSelector),"sim1,sim5,sim6,sim8,sim10"
 SN-01,Services and Networking,20%,Understand NetworkPolicies,Egress rules,"sim5"
 SN-01,Services and Networking,20%,Understand NetworkPolicies,Default deny policies,"sim5"
-SN-01,Services and Networking,20%,Understand NetworkPolicies,NetworkPolicy ipBlock,
+SN-01,Services and Networking,20%,Understand NetworkPolicies,NetworkPolicy ipBlock,"sim11"
 SN-02,Services and Networking,20%,Access to applications via services,ClusterIP/NodePort/LoadBalancer,"sim1,sim4,sim7,sim8,sim10"
 SN-02,Services and Networking,20%,Access to applications via services,ExternalName services,"sim2"
-SN-02,Services and Networking,20%,Access to applications via services,Service selector troubleshooting,"sim10"
+SN-02,Services and Networking,20%,Access to applications via services,Service selector troubleshooting,"sim10,sim11"
 SN-02,Services and Networking,20%,Access to applications via services,kubectl expose,"sim5,sim7,sim10"
-SN-02,Services and Networking,20%,Access to applications via services,DNS resolution,"sim8"
+SN-02,Services and Networking,20%,Access to applications via services,DNS resolution,"sim8,sim11"
 SN-03,Services and Networking,20%,Ingress rules to expose applications,Path-based routing,"sim10"
-SN-03,Services and Networking,20%,Ingress rules to expose applications,Host-based routing,"sim10"
-SN-03,Services and Networking,20%,Ingress rules to expose applications,TLS termination,
+SN-03,Services and Networking,20%,Ingress rules to expose applications,Host-based routing,"sim10,sim11"
+SN-03,Services and Networking,20%,Ingress rules to expose applications,TLS termination,"sim11"
 SN-03,Services and Networking,20%,Ingress rules to expose applications,Ingress controller troubleshooting,"sim10"

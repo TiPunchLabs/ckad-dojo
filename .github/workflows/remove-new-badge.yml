@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    # Auto-remove after 2026-03-27 (2 weeks from 2026-03-13)
+    # Auto-remove after 2026-04-15 (2 weeks from 2026-04-01)
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -22,7 +22,7 @@ jobs:
       - name: Check if badge should be removed
         id: check
         run: |
-          EXPIRY_DATE="2026-03-27"
+          EXPIRY_DATE="2026-04-15"
           TODAY=$(date -u +%Y-%m-%d)
           if [[ "$TODAY" > "$EXPIRY_DATE" || "$TODAY" == "$EXPIRY_DATE" ]]; then
             echo "expired=true" >> "$GITHUB_OUTPUT"
@@ -47,7 +47,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git diff --quiet README.md && exit 0
           git add README.md
-          git commit -m "chore: auto-remove NEW badge from Dojo Oni after 2 weeks"
+          git commit -m "chore: auto-remove NEW badge from Dojo Amaterasu after 2 weeks"
           git push
 
       - name: Disable this workflow

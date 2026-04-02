@@ -1,0 +1,23 @@
+# Q6 - Rolling Update Strategy setup
+# Deployment with default strategy in dawn namespace
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-app
+  namespace: dawn
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: nginx:1.25
+          ports:
+            - containerPort: 80

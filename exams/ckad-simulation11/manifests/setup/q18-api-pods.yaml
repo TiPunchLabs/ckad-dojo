@@ -1,0 +1,28 @@
+# Q18 - NetworkPolicy ipBlock setup
+# Pods in sunbeam namespace for NetworkPolicy testing
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: api-server
+  namespace: sunbeam
+  labels:
+    app: api
+spec:
+  containers:
+    - name: api
+      image: nginx:1.25
+      ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-frontend
+  namespace: sunbeam
+  labels:
+    role: frontend
+spec:
+  containers:
+    - name: web
+      image: nginx:1.25

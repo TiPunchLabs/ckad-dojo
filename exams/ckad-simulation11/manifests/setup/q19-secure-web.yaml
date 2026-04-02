@@ -1,0 +1,36 @@
+# Q19 - Ingress TLS Termination setup
+# Deployment + Service in solstice namespace
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secure-web
+  namespace: solstice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: secure-web
+  template:
+    metadata:
+      labels:
+        app: secure-web
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.25
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: secure-svc
+  namespace: solstice
+spec:
+  selector:
+    app: secure-web
+  ports:
+    - port: 443
+      targetPort: 80
+      protocol: TCP

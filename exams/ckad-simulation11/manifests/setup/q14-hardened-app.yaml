@@ -1,0 +1,23 @@
+# Q14 - SecurityContext seccompProfile setup
+# Deployment without seccomp in dawn namespace
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hardened-app
+  namespace: dawn
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hardened
+  template:
+    metadata:
+      labels:
+        app: hardened
+    spec:
+      containers:
+        - name: app
+          image: nginx:1.25
+          ports:
+            - containerPort: 80
