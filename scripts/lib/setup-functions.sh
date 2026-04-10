@@ -657,6 +657,39 @@ cleanup_storage_classes() {
 	fi
 }
 
+# Clean up ClusterRoles and ClusterRoleBindings created during exam
+cleanup_cluster_roles() {
+	print_section "Cleaning up ClusterRoles and ClusterRoleBindings..."
+
+	local deleted=0
+
+	# Known exam ClusterRole/ClusterRoleBinding names from scoring functions
+	local exam_cr_names=("node-reader" "healthz-access")
+	local exam_crb_names=("node-reader-binding" "healthz-access-binding")
+
+	# Delete matching ClusterRoles
+	for cr_name in "${exam_cr_names[@]}"; do
+		if kubectl get clusterrole "$cr_name" &>/dev/null; then
+			kubectl delete clusterrole "$cr_name" 2>/dev/null || true
+			print_success "Deleted ClusterRole: $cr_name"
+			((++deleted))
+		fi
+	done
+
+	# Delete matching ClusterRoleBindings
+	for crb_name in "${exam_crb_names[@]}"; do
+		if kubectl get clusterrolebinding "$crb_name" &>/dev/null; then
+			kubectl delete clusterrolebinding "$crb_name" 2>/dev/null || true
+			print_success "Deleted ClusterRoleBinding: $crb_name"
+			((++deleted))
+		fi
+	done
+
+	if [ $deleted -eq 0 ]; then
+		print_skip "No exam ClusterRoles/ClusterRoleBindings found"
+	fi
+}
+
 # Wait for namespace deletion to complete
 wait_for_namespace_deletion() {
 	print_section "Waiting for namespace deletion..."
