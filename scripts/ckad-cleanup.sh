@@ -29,8 +29,9 @@ show_help() {
 	echo "  2. Uninstall Helm releases"
 	echo "  3. Clean up resources in default namespace"
 	echo "  4. Delete all exam namespaces"
-	echo "  5. Remove ./exam/course/ directory"
-	echo "  6. Stop and remove local Docker registry"
+	echo "  5. Clean up cluster-scoped resources (PVs, StorageClasses, ClusterRoles)"
+	echo "  6. Remove ./exam/course/ directory"
+	echo "  7. Stop and remove local Docker registry"
 	echo ""
 	echo "WARNING: This will delete all exam resources!"
 }
@@ -175,27 +176,30 @@ main() {
 	# Step 5: Clean up custom StorageClasses (cluster-scoped)
 	cleanup_storage_classes
 
-	# Step 6: Remove exam directories
+	# Step 6: Clean up ClusterRoles and ClusterRoleBindings (cluster-scoped)
+	cleanup_cluster_roles
+
+	# Step 7: Remove exam directories
 	if [ "$KEEP_DIRS" = false ]; then
 		cleanup_directories
 	else
 		print_section "Keeping exam directories (--keep-dirs)"
 	fi
 
-	# Step 7: Stop registry
+	# Step 8: Stop registry
 	if [ "$KEEP_REGISTRY" = false ]; then
 		cleanup_registry
 	else
 		print_section "Keeping local registry (--keep-registry)"
 	fi
 
-	# Step 8: Clean up exam Docker containers
+	# Step 9: Clean up exam Docker containers
 	cleanup_docker_containers
 
-	# Step 9: Clean up exam Docker images (localhost:5000/*)
+	# Step 10: Clean up exam Docker images (localhost:5000/*)
 	cleanup_docker_images
 
-	# Step 10: Reset timer state
+	# Step 11: Reset timer state
 	timer_reset 2>/dev/null || true
 
 	# Wait for namespace deletion
