@@ -46,10 +46,8 @@
 
 
 
-![](./img/ckad-dojo.png)
-
 <p align="center">
-  <video src="https://github.com/user-attachments/assets/c0191341-4dd0-4e2c-aea7-3a6858ab1271" controls width="800"></video>
+  <video src="https://github.com/user-attachments/assets/a3c91238-b7ad-4433-b61c-4aa9663e85ce" controls width="800"></video>
 </p>
 
 ## Overview
