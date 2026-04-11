@@ -23,12 +23,6 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.8.0-blue" alt="Version 1.8.0">
-  <img src="https://img.shields.io/badge/exams-11-blue" alt="11 Exams">
-  <img src="https://img.shields.io/badge/questions-218-blue" alt="218 Questions">
-  <img src="https://img.shields.io/badge/scoring_criteria-400+-blue" alt="400+ Scoring Criteria">
-  <img src="https://img.shields.io/badge/duration-120min-orange" alt="120 Minutes">
-  <img src="https://img.shields.io/badge/difficulty-exam--realistic-red" alt="Exam Realistic Difficulty">
   <a href="docs/ckad-curriculum.md"><img src="https://img.shields.io/badge/CKAD_Curriculum-v1.35-326CE5" alt="CKAD Curriculum v1.35"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-lightgrey" alt="License: CC BY-NC-SA 4.0"></a>
   <a href="https://scorecard.dev/viewer/?uri=github.com/TiPunchLabs/ckad-dojo"><img src="https://api.scorecard.dev/projects/github.com/TiPunchLabs/ckad-dojo/badge" alt="OpenSSF Scorecard"></a>
