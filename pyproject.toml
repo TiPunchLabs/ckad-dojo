@@ -98,4 +98,4 @@ exclude_lines = [
 ]
 
 [dependency-groups]
-dev = ["mypy>=1.0", "pre-commit>=4.0", "pytest>=8.0", "pytest-cov>=6.0"]
+dev = ["mypy>=1.20.1", "pre-commit>=4.5.1", "pytest>=9.0.3", "pytest-cov>=7.1.0"]
