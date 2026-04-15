@@ -99,7 +99,7 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 | 8 | 🦊 **Inari** | Inari des Moissons | 20 | 100 | Harvest (harvest, grain...) | [@dgkanatsios](https://github.com/dgkanatsios) |
 | 9 | 🐲 **Ryujin** | Ryujin des Profondeurs | 20 | 100 | Sea (tide, wave, depths...) | [@dgkanatsios](https://github.com/dgkanatsios) |
 | 10 | 👹 **Oni** | Oni of the Demon Gate | 20 | 102 | Fortification (fortress, bastion...) | — |
-| 11 | ☀️ **Amaterasu** ![New](https://img.shields.io/badge/NEW-brightgreen) <!-- AUTO-REMOVE-NEW-BADGE --> | Amaterasu of the Rising Sun | 20 | 104 | Sun/Light (solar, corona...) | — |
+| 11 | ☀️ **Amaterasu** | Amaterasu of the Rising Sun | 20 | 104 | Sun/Light (solar, corona...) | — |
 
 <details>
 <summary><strong>Dojo Quotes</strong></summary>
