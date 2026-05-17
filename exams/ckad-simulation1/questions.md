@@ -19,6 +19,8 @@
 |                          |                                   |
 | ------------------------ | --------------------------------- |
 | **Points**         | 1                                 |
+|  **CNCF Domain**   | Application Observability and Maintenance |
+|  **CNCF Weight**   | 15%                               |
 | **Namespace**      | -                                 |
 | **File to create** | `./exam/course/1/api-resources` |
 
@@ -35,6 +37,8 @@ Save the complete output to `./exam/course/1/api-resources`.
 |                          |                                   |
 | ------------------------ | --------------------------------- |
 | **Points**         | 6                                 |
+|  **CNCF Domain**   | Application Deployment            |
+|  **CNCF Weight**   | 20%                               |
 | **Namespace**      | `blaze`                         |
 | **Resources**      | Deployment `fire-app`           |
 | **File to create** | `./exam/course/2/fire-app.yaml` |
@@ -57,6 +61,8 @@ Save the Deployment YAML to `./exam/course/2/fire-app.yaml` and apply it to the 
 |                          |                              |
 | ------------------------ | ---------------------------- |
 | **Points**         | 6                            |
+|  **CNCF Domain**   | Application Design and Build |
+|  **CNCF Weight**   | 20%                          |
 | **Namespace**      | `spark`                    |
 | **Resources**      | Job `data-processor`       |
 | **File to create** | `./exam/course/3/job.yaml` |
@@ -81,6 +87,8 @@ Apply the Job to the cluster.
 |                          |                                   |
 | ------------------------ | --------------------------------- |
 | **Points**         | 5                                 |
+|  **CNCF Domain**   | Application Deployment            |
+|  **CNCF Weight**   | 20%                               |
 | **Namespace**      | `flare`                         |
 | **File to create** | `./exam/course/4/rendered.yaml` |
 
@@ -97,6 +105,8 @@ A Helm release `phoenix-web` is installed in namespace `flare`. Use `helm templa
 |                     |                   |
 | ------------------- | ----------------- |
 | **Points**    | 6                 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15%               |
 | **Namespace** | `ember`         |
 | **Resources** | Pod `crash-app` |
 
@@ -117,6 +127,8 @@ A Pod named `crash-app` in namespace `ember` is in **CrashLoopBackOff** state. T
 |                     |                                                   |
 | ------------------- | ------------------------------------------------- |
 | **Points**    | 6                                                 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25%                                               |
 | **Namespace** | `flame`                                         |
 | **Resources** | ConfigMap `app-settings`, Pod `config-reader` |
 
@@ -139,6 +151,8 @@ The Pod should only have those two specific keys mounted, not all keys from the 
 |                          |                                  |
 | ------------------------ | -------------------------------- |
 | **Points**         | 5                                |
+|  **CNCF Domain**   | Application Environment, Configuration & Security |
+|  **CNCF Weight**   | 25%                              |
 | **Namespace**      | `magma`                        |
 | **Resources**      | Secret `db-credentials`        |
 | **File to create** | `./exam/course/7/password.txt` |
@@ -156,6 +170,8 @@ Then create a **Secret** named `db-credentials` in namespace `magma` from this f
 |                     |                              |
 | ------------------- | ---------------------------- |
 | **Points**    | 6                            |
+| **CNCF Domain** | Services and Networking      |
+| **CNCF Weight** | 20%                          |
 | **Namespace** | `corona`                   |
 | **Resources** | Service `backend-headless` |
 
@@ -175,6 +191,8 @@ Create a **Headless Service** named `backend-headless` in namespace `corona` tha
 |                     |                                                    |
 | ------------------- | -------------------------------------------------- |
 | **Points**    | 7                                                  |
+| **CNCF Domain** | Application Deployment                             |
+| **CNCF Weight** | 20%                                                |
 | **Namespace** | `blaze`                                          |
 | **Resources** | Deployment `canary-v2`, Service `frontend-svc` |
 
@@ -204,6 +222,8 @@ The traffic split should be approximately 75% stable / 25% canary (3:1 replica r
 |                     |                        |
 | ------------------- | ---------------------- |
 | **Points**    | 6                      |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20%                    |
 | **Namespace** | `phoenix`            |
 | **Resources** | Pod `data-transform` |
 
@@ -232,6 +252,8 @@ Use an **emptyDir** volume named `shared-data`.
 |                     |                                    |
 | ------------------- | ---------------------------------- |
 | **Points**    | 6                                  |
+| **CNCF Domain** | Services and Networking            |
+| **CNCF Weight** | 20%                                |
 | **Namespace** | `corona`                         |
 | **Resources** | NetworkPolicy `allow-from-flame` |
 
@@ -253,6 +275,8 @@ Create a **NetworkPolicy** named `allow-from-flame` in namespace `corona` that:
 |                           |                                      |
 | ------------------------- | ------------------------------------ |
 | **Points**          | 6                                    |
+|   **CNCF Domain**   | Application Design and Build         |
+|   **CNCF Weight**   | 20%                                  |
 | **Namespace**       | `inferno`                          |
 | **File to modify**  | `./exam/course/12/Dockerfile`      |
 | **Image to create** | `localhost:5000/phoenix-app:2.0.0` |
@@ -278,6 +302,8 @@ Push the image to the local registry.
 |                       |                                  |
 | --------------------- | -------------------------------- |
 | **Points**      | 5                                |
+| **CNCF Domain** | Application Deployment           |
+| **CNCF Weight** | 20%                              |
 | **Namespace**   | `flare`                        |
 | **Resources**   | Helm release `phoenix-api`     |
 | **File to use** | `./exam/course/13/values.yaml` |
@@ -300,6 +326,8 @@ The values file specifies 3 replicas and service port 8080.
 |                     |                       |
 | ------------------- | --------------------- |
 | **Points**    | 6                     |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20%                   |
 | **Namespace** | `phoenix`           |
 | **Resources** | Pod `lifecycle-pod` |
 
@@ -324,6 +352,8 @@ The hook should create a file indicating when the container started.
 |                     |                        |
 | ------------------- | ---------------------- |
 | **Points**    | 5                      |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25%                    |
 | **Namespace** | `spark`              |
 | **Resources** | Pod `qos-guaranteed` |
 
@@ -344,6 +374,8 @@ Create a Pod named `qos-guaranteed` in namespace `spark` that achieves **Guarant
 |                     |                   |
 | ------------------- | ----------------- |
 | **Points**    | 4                 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25%               |
 | **Namespace** | `magma`         |
 | **Resources** | Pod `token-pod` |
 
@@ -365,6 +397,8 @@ A ServiceAccount named `fire-sa` exists in namespace `magma`. Create a Pod named
 |                     |                    |
 | ------------------- | ------------------ |
 | **Points**    | 6                  |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15%                |
 | **Namespace** | `ember`          |
 | **Resources** | Pod `tcp-health` |
 
@@ -385,6 +419,8 @@ Create a Pod named `tcp-health` in namespace `ember` that:
 |                     |                     |
 | ------------------- | ------------------- |
 | **Points**    | 6                   |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20%                 |
 | **Namespace** | `flame`           |
 | **Resources** | Service `web-svc` |
 
@@ -406,6 +442,8 @@ Create a Service named `web-svc` that:
 |                     |                              |
 | ------------------- | ---------------------------- |
 | **Points**    | 6                            |
+| **CNCF Domain** | Application Deployment       |
+| **CNCF Weight** | 20%                          |
 | **Namespace** | `blaze`                    |
 | **Resources** | Deployment `spread-deploy` |
 
@@ -429,6 +467,8 @@ Create a Deployment named `spread-deploy` in namespace `blaze` that:
 |                          |                                       |
 | ------------------------ | ------------------------------------- |
 | **Points**         | 4                                     |
+|  **CNCF Domain**   | Application Observability and Maintenance |
+|  **CNCF Weight**   | 15%                                   |
 | **Namespace**      | -                                     |
 | **File to create** | `./exam/course/20/running-pods.txt` |
 
@@ -447,6 +487,8 @@ Save the Pod names (one per line) to `./exam/course/20/running-pods.txt`.
 |                          |                                       |
 | ------------------------ | ------------------------------------- |
 | **Points**         | 4                                     |
+|  **CNCF Domain**   | Application Observability and Maintenance |
+|  **CNCF Weight**   | 15%                                   |
 | **Namespace**      | `solar`                             |
 | **File to create** | `./exam/course/21/drain-command.sh` |
 
