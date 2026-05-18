@@ -185,14 +185,15 @@ score_q5() {
 		((score += 2))
 		details+="Deployment nginx-deploy exists. "
 
-		# Check image
-		local image
-		image=$(kubectl get deployment nginx-deploy -n valley -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
-		if [[ "$image" == "nginx:1.18.0" ]]; then
+		# Q6 mutates this deployment's image, so accept current spec OR revision 1
+		local image_current image_rev1
+		image_current=$(kubectl get deployment nginx-deploy -n valley -o jsonpath='{.spec.template.spec.containers[0].image}' 2>/dev/null)
+		image_rev1=$(kubectl rollout history deployment nginx-deploy -n valley --revision=1 2>/dev/null | awk '/Image:/ {print $2; exit}')
+		if [[ "$image_current" == "nginx:1.18.0" || "$image_rev1" == "nginx:1.18.0" ]]; then
 			((score += 2))
-			details+="Image is nginx:1.18.0. "
+			details+="Image nginx:1.18.0 (rev1=$image_rev1, current=$image_current). "
 		else
-			details+="Image is $image (expected nginx:1.18.0). "
+			details+="Image nginx:1.18.0 not found (rev1=$image_rev1, current=$image_current). "
 		fi
 
 		# Check replicas
