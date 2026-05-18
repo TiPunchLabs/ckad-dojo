@@ -19,6 +19,8 @@
 |                     |                    |
 | ------------------- | ------------------ |
 | **Points**    | 6                  |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `zeus`           |
 | **Resources** | Pod `titan-alpha`|
 
@@ -39,6 +41,8 @@ The anti-affinity should use `preferredDuringSchedulingIgnoredDuringExecution` w
 |                     |                                                 |
 | ------------------- | ----------------------------------------------- |
 | **Points**    | 5                                               |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `athena`                                      |
 | **Resources** | ConfigMap `app-config`, Pod `config-reader` |
 
@@ -62,6 +66,8 @@ In namespace `athena`:
 |                     |                          |
 | ------------------- | ------------------------ |
 | **Points**    | 4                        |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `hermes`               |
 | **Resources** | Service `external-api` |
 
@@ -81,6 +87,8 @@ This service should allow pods in the namespace to access the external API using
 |                     |                                               |
 | ------------------- | --------------------------------------------- |
 | **Points**    | 6                                             |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `apollo`                                    |
 | **Resources** | LimitRange `resource-limits`, Pod `limited-pod` |
 
@@ -104,6 +112,8 @@ In namespace `apollo`:
 |                     |                    |
 | ------------------- | ------------------ |
 | **Points**    | 5                  |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `hades`          |
 | **Resources** | Pod `secure-app` |
 
@@ -127,6 +137,8 @@ The pod should be able to run nginx successfully despite the read-only root file
 |                     |                   |
 | ------------------- | ----------------- |
 | **Points**    | 6                 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `poseidon`      |
 | **Resources** | Pod `multi-init`|
 
@@ -147,6 +159,8 @@ All containers should share an emptyDir volume named `workdir` mounted at `/work
 |                          |                                       |
 | ------------------------ | ------------------------------------- |
 | **Points**         | 5                                     |
+| **CNCF Domain**    | Application Deployment                |
+| **CNCF Weight**    | 20%                                   |
 | **Namespace**      | `ares`                              |
 | **Resources**      | Deployment `battle-app`             |
 | **File to create** | `./exam/course/7/rollout-status.txt`|
@@ -168,6 +182,8 @@ A Deployment named `battle-app` exists in namespace `ares` with 3 replicas using
 |                     |                       |
 | ------------------- | --------------------- |
 | **Points**    | 7                     |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `olympus`           |
 | **Resources** | Pod `ambassador-pod`|
 
@@ -190,6 +206,8 @@ Both containers should be in the same Pod to share the network namespace.
 |                     |                  |
 | ------------------- | ---------------- |
 | **Points**    | 5                |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `artemis`      |
 | **Resources** | Job `retry-job`|
 
@@ -211,6 +229,8 @@ The job should attempt to run 3 times before being marked as failed.
 |                     |                                                   |
 | ------------------- | ------------------------------------------------- |
 | **Points**    | 6                                                 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `hera`                                          |
 | **Resources** | Secret `registry-creds`, Pod `private-app`    |
 
@@ -234,6 +254,8 @@ In namespace `hera`:
 |                     |                    |
 | ------------------- | ------------------ |
 | **Points**    | 6                  |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `zeus`           |
 | **Resources** | Pod `adapter-pod`|
 
@@ -253,6 +275,8 @@ Both containers share an emptyDir volume named `logs` mounted at `/var/log`.
 |                     |                              |
 | ------------------- | ---------------------------- |
 | **Points**    | 5                            |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `athena`                   |
 | **Resources** | NetworkPolicy `egress-policy`|
 
@@ -274,6 +298,8 @@ Deny all other egress traffic.
 |                     |                                                                 |
 | ------------------- | --------------------------------------------------------------- |
 | **Points**    | 6                                                               |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `hermes`                                                      |
 | **Resources** | ServiceAccount `deployment-manager`, Role, RoleBinding      |
 
@@ -294,6 +320,8 @@ In namespace `hermes`:
 |                     |                        |
 | ------------------- | ---------------------- |
 | **Points**    | 5                      |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `apollo`             |
 | **Resources** | Deployment `rolling-app`|
 
@@ -316,6 +344,8 @@ Create a Deployment named `rolling-app` in namespace `apollo` with:
 |                     |                        |
 | ------------------- | ---------------------- |
 | **Points**    | 6                      |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `poseidon`           |
 | **Resources** | Ingress `path-ingress`|
 
@@ -336,6 +366,8 @@ Create an Ingress named `path-ingress` in namespace `poseidon` that:
 |                     |                   |
 | ------------------- | ----------------- |
 | **Points**    | 5                 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `hades`         |
 | **Resources** | Pod `token-pod` |
 
@@ -356,6 +388,8 @@ Create a Pod named `token-pod` in namespace `hades` with:
 |                     |                        |
 | ------------------- | ---------------------- |
 | **Points**    | 5                      |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `ares`               |
 | **Resources** | CronJob `scheduled-task`|
 
@@ -377,6 +411,8 @@ Create a CronJob named `scheduled-task` in namespace `ares` with:
 |                     |                    |
 | ------------------- | ------------------ |
 | **Points**    | 4                  |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `hera`           |
 | **Resources** | PDB `app-pdb`    |
 
@@ -394,6 +430,8 @@ Create a PodDisruptionBudget named `app-pdb` in namespace `hera` that:
 |                     |                          |
 | ------------------- | ------------------------ |
 | **Points**    | 4                        |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `olympus`              |
 | **Resources** | Deployment `annotated-app`|
 
@@ -414,6 +452,8 @@ Create a Deployment named `annotated-app` in namespace `olympus` with:
 |                     |                    |
 | ------------------- | ------------------ |
 | **Points**    | 5                  |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `artemis`        |
 | **Resources** | Pod `shared-pid` |
 
