@@ -19,6 +19,8 @@
 | | |
 |---|---|
 | **Points** | 2 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | - |
 | **File to create** | `./exam/course/1/pod-spec-fields.txt` |
 
@@ -38,6 +40,8 @@ The output should show all available sub-fields and their descriptions.
 | | |
 |---|---|
 | **Points** | 7 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `tiger` |
 | **Resources** | Deployment `spread-pods` |
 
@@ -66,6 +70,8 @@ Configure **requiredDuringSchedulingIgnoredDuringExecution** pod anti-affinity t
 | | |
 |---|---|
 | **Points** | 7 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `stripe` |
 | **Resources** | Deployment `stable-green`, Service `web-service` |
 
@@ -94,6 +100,8 @@ Implement a **Blue-Green deployment switch**:
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `prowl` |
 | **Resources** | CronJob `data-sync` |
 
@@ -122,6 +130,8 @@ The CronJob should now:
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `hunt` |
 | **Resources** | ConfigMap `locked-config` |
 
@@ -148,6 +158,8 @@ Create a **ConfigMap** named `locked-config` in namespace `hunt` that:
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `hunt` |
 | **Resources** | Pod `config-aggregator` |
 
@@ -177,6 +189,8 @@ The projected volume should expose both the token and ConfigMap at the same moun
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `jungle` |
 | **Resources** | PodDisruptionBudget `critical-pdb` |
 
@@ -199,6 +213,8 @@ Verify the PDB is correctly applied with `kubectl get pdb`.
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `fang` |
 | **Resources** | Service `external-api` |
 
@@ -218,6 +234,8 @@ This allows pods to access the external service using the internal DNS name `ext
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `pounce` |
 | **Resources** | LimitRange `container-limits` |
 
@@ -246,6 +264,8 @@ Create a **LimitRange** named `container-limits` in namespace `pounce` that sets
 | | |
 |---|---|
 | **Points** | 8 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `stalker` |
 | **Resources** | Pod `secure-pod` |
 
@@ -282,6 +302,8 @@ Add **emptyDir** volumes to allow nginx to run with a read-only root filesystem.
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `pounce` |
 | **Resources** | Deployment `rolling-app` |
 
@@ -303,6 +325,8 @@ Verify the rollout completes successfully with `kubectl rollout status`.
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `stalker` |
 | **Resources** | Pod `config-pod` |
 | **File to create** | `./exam/course/12/nginx-config.txt` |
@@ -322,6 +346,8 @@ A Pod named `config-pod` exists in namespace `stalker` running nginx with a cust
 | | |
 |---|---|
 | **Points** | 3 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `jungle` |
 | **File to create** | `./exam/course/13/pod-resources.txt` |
 
@@ -342,6 +368,8 @@ Use `kubectl top` to analyze resource usage:
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `claw` |
 | **Resources** | Pod `metadata-pod` |
 
@@ -369,6 +397,8 @@ Create a **Pod** named `metadata-pod` in namespace `claw` that exposes pod metad
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `stripe` |
 | **Resources** | Job `cleanup-job` |
 
@@ -393,6 +423,8 @@ The Job should automatically delete itself **60 seconds** after completion.
 | | |
 |---|---|
 | **Points** | 7 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `predator` |
 | **Resources** | Pod `hardened-pod` |
 
@@ -421,6 +453,8 @@ Add **emptyDir** volumes at `/var/cache/nginx`, `/var/run`, and `/etc/nginx/conf
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `claw` |
 | **Resources** | Service `backend-svc` |
 
@@ -442,6 +476,8 @@ This ensures requests from the same client IP are routed to the same pod for 1 h
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `fang` |
 | **Resources** | Deployment `safe-deploy` |
 
@@ -465,6 +501,8 @@ Update the image to `nginx:1.22` and verify the rollout respects the minReadySec
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `tiger` |
 | **Resources** | Pod `graceful-pod` |
 
@@ -491,6 +529,8 @@ Also set `terminationGracePeriodSeconds: 30` at pod level.
 | | |
 |---|---|
 | **Points** | 7 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `predator` |
 | **Resources** | NetworkPolicy `default-deny-all`, `allow-frontend-to-api` |
 
