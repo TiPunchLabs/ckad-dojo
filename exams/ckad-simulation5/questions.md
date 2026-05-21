@@ -19,6 +19,8 @@
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `shell` |
 | **Resources** | ResourceQuota `namespace-limits` |
 
@@ -45,6 +47,8 @@ Verify the quota is applied with `kubectl describe quota`.
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `ocean` |
 | **Resources** | HPA `web-app-hpa` |
 
@@ -74,6 +78,8 @@ Verify the HPA is created with `kubectl get hpa`.
 | | |
 |---|---|
 | **Points** | 8 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `reef` |
 | **Resources** | StatefulSet `db-cluster`, Headless Service `db-headless` |
 
@@ -104,6 +110,8 @@ Verify pods are created with ordinal names (db-cluster-0, db-cluster-1, db-clust
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `deep` |
 | **Resources** | DaemonSet `node-monitor` |
 
@@ -132,6 +140,8 @@ Add a **toleration** to run on all nodes including control-plane nodes:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `tide` |
 | **Resources** | PriorityClass `critical-priority`, Pod `critical-pod` |
 
@@ -156,6 +166,8 @@ Verify the pod has the correct priority with `kubectl get pod critical-pod -o ya
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `wave` |
 | **Resources** | Pod `slow-starter` |
 
@@ -188,6 +200,8 @@ Also add a **livenessProbe** with HTTP GET on `/` port `80` with default setting
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `coral` |
 | **Resources** | Deployment `web-frontend` |
 
@@ -217,6 +231,8 @@ Configure **preferredDuringSchedulingIgnoredDuringExecution** pod affinity:
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `lagoon` |
 | **Resources** | Ingress `api-routing` |
 
@@ -244,6 +260,8 @@ Configuration:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `current` |
 | **Resources** | Job `parallel-processor` |
 
@@ -271,6 +289,8 @@ Verify with `kubectl get jobs` that completions reach 6/6.
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `anchor` |
 | **Resources** | Pod `troubled-app` |
 | **File to create** | `./exam/course/10/debug-output.txt` |
@@ -294,6 +314,8 @@ A Pod named `troubled-app` exists in namespace `anchor` but you need to debug it
 | | |
 |---|---|
 | **Points** | 3 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `shell` |
 | **File to create** | `./exam/course/11/endpoints-info.txt` |
 
@@ -316,6 +338,8 @@ Use `kubectl get endpointslices` and `kubectl describe endpointslice`.
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `ocean` |
 | **Resources** | Service `local-svc` |
 
@@ -338,6 +362,8 @@ Verify the change with `kubectl get svc local-svc -o yaml`.
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `reef` |
 | **Resources** | Pod `cache-pod` |
 
@@ -367,6 +393,8 @@ This creates a memory-backed cache limited to 100Mi.
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `deep` |
 | **Resources** | Secret `app-credentials`, Pod `secret-consumer` |
 
@@ -393,6 +421,8 @@ This creates a memory-backed cache limited to 100Mi.
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `tide` |
 | **Resources** | Deployment `patch-demo` |
 | **File to create** | `./exam/course/15/patch-commands.sh` |
@@ -418,6 +448,8 @@ Verify changes with `kubectl describe deployment patch-demo`.
 | | |
 |---|---|
 | **Points** | 8 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `wave` |
 | **Resources** | NetworkPolicy `external-access` |
 
@@ -445,6 +477,8 @@ Create a **NetworkPolicy** named `external-access` that:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `coral` |
 | **Resources** | Pod `network-diagnostic` |
 
@@ -474,6 +508,8 @@ Verify with `kubectl exec` that the pod can see host network interfaces (`ip add
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `lagoon` (ServiceAccount only) |
 | **Resources** | ClusterRole `node-reader`, ClusterRoleBinding `node-reader-binding` |
 
@@ -500,6 +536,8 @@ Verify with `kubectl auth can-i list nodes --as=system:serviceaccount:lagoon:nod
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `current` |
 | **File to create** | `./exam/course/19/permissions.txt` |
 
@@ -533,6 +571,8 @@ Use `kubectl auth can-i` to check and document its permissions:
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `anchor` |
 | **Resources** | Pod `data-pipeline` |
 
