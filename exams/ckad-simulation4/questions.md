@@ -21,6 +21,8 @@
 | | |
 |---|---|
 | **Points** | 4/88 (5%) |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `stream` |
 | **Resources** | Secret `db-credentials`, Deployment `api-server` |
 | **Files** | - |
@@ -45,6 +47,8 @@ Your tasks:
 | | |
 |---|---|
 | **Points** | 8/88 (9%) |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `pond` |
 | **Resources** | CronJob `backup-job` |
 | **Files** | - |
@@ -71,6 +75,8 @@ Create a CronJob named **`backup-job`** in namespace `pond` with the following s
 | | |
 |---|---|
 | **Points** | 8/88 (9%) |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `marsh` |
 | **Resources** | ServiceAccount `log-sa`, Role `log-role`, RoleBinding `log-rb`, Pod `log-collector` |
 | **Files** | - |
@@ -99,6 +105,8 @@ Your tasks:
 | | |
 |---|---|
 | **Points** | 4/88 (5%) |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `delta` |
 | **Resources** | Pod `metrics-pod`, ServiceAccounts, Roles, RoleBindings |
 | **Files** | - |
@@ -128,6 +136,8 @@ Your tasks:
 | | |
 |---|---|
 | **Points** | 8/88 (9%) |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | N/A (host system) |
 | **Resources** | Container image `my-app:1.0` |
 | **Files** | `./exam/course/5/image/Dockerfile` |
@@ -148,6 +158,8 @@ Your tasks:
 | | |
 |---|---|
 | **Points** | 8/88 (9%) |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `default` |
 | **Resources** | Deployment `web-app`, Deployment `web-app-canary`, Service `web-service` |
 | **Files** | - |
@@ -174,6 +186,8 @@ Your tasks:
 | | |
 |---|---|
 | **Points** | 8/88 (9%) |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `spring` |
 | **Resources** | Pods `frontend`, `backend`, `database`, NetworkPolicies |
 | **Files** | - |
@@ -207,6 +221,8 @@ Update the **Pod labels** (do NOT modify NetworkPolicies) to enable the communic
 | | |
 |---|---|
 | **Points** | 4/88 (5%) |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `default` |
 | **Resources** | Deployment `broken-app` |
 | **Files** | `./exam/course/8/broken-deploy.yaml` |
@@ -234,6 +250,8 @@ Your tasks:
 | | |
 |---|---|
 | **Points** | 8/88 (9%) |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `brook` |
 | **Resources** | Deployment `app-v1` |
 | **Files** | `./exam/course/9/rollback-revision.txt` |
@@ -257,6 +275,8 @@ Your tasks:
 | | |
 |---|---|
 | **Points** | 4/88 (5%) |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `rapids` |
 | **Resources** | Deployment `api-deploy` |
 | **Files** | - |
@@ -283,6 +303,8 @@ Ensure the Deployment rolls out successfully.
 | | |
 |---|---|
 | **Points** | 6/88 (7%) |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `cascade` |
 | **Resources** | Deployment `secure-app` |
 | **Files** | - |
@@ -305,6 +327,8 @@ Your tasks:
 | | |
 |---|---|
 | **Points** | 2/88 (2%) |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `shoal` |
 | **Resources** | Deployment `web-app`, Service `web-svc` |
 | **Files** | - |
@@ -326,6 +350,8 @@ Update Service `web-svc` to correctly select Pods from Deployment `web-app`.
 | | |
 |---|---|
 | **Points** | 4/88 (5%) |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `default` |
 | **Resources** | Deployment `api-server`, Service `api-nodeport` |
 | **Files** | - |
@@ -349,6 +375,8 @@ Create a Service named **`api-nodeport`** that:
 | | |
 |---|---|
 | **Points** | 4/88 (5%) |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `eddy` |
 | **Resources** | Ingress `web-ingress`, Service `web-svc` |
 | **Files** | - |
@@ -376,6 +404,8 @@ Create an Ingress named **`web-ingress`** that:
 | | |
 |---|---|
 | **Points** | 4/88 (5%) |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `default` |
 | **Resources** | Ingress `api-ingress`, Service `api-svc` |
 | **Files** | `./exam/course/15/fix-ingress.yaml` |
@@ -398,6 +428,8 @@ Your tasks:
 | | |
 |---|---|
 | **Points** | 4/88 (5%) |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `pond` |
 | **Resources** | ResourceQuota, Pod `resource-pod` |
 | **Files** | - |
@@ -422,6 +454,8 @@ Your tasks:
 | | |
 |---|---|
 | **Points** | 3 (bonus) |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `eddy` |
 | **Resources** | Pod `spread-pod` |
 | **Files** | - |
