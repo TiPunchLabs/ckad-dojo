@@ -21,6 +21,8 @@
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `mynamespace` |
 | **Resources** | Namespace `mynamespace`, Pod `nginx` |
 
@@ -42,6 +44,8 @@ The Pod should:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `summit` |
 | **Resources** | Pod `envpod` |
 
@@ -63,6 +67,8 @@ Create a Pod named `envpod` in namespace `summit` with the following specificati
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `cliff` |
 | **Resources** | ResourceQuota `cliff-quota` |
 
@@ -85,6 +91,8 @@ Create a ResourceQuota named `cliff-quota` in namespace `cliff` with the followi
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `ridge` |
 | **Resources** | Pods `nginx1`, `nginx2`, `nginx3` |
 
@@ -105,6 +113,8 @@ In namespace `ridge`:
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `valley` |
 | **Resources** | Deployment `nginx-deploy` |
 
@@ -127,6 +137,8 @@ Do NOT create a Service for this Deployment.
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `valley` |
 | **Resources** | Deployment `nginx-deploy` |
 
@@ -147,6 +159,8 @@ The Deployment `nginx-deploy` from Question 5 exists in namespace `valley`.
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `cave` |
 | **Resources** | Deployment `rollback-deploy` |
 
@@ -167,6 +181,8 @@ A Deployment `rollback-deploy` exists in namespace `cave` with a wrong image `ng
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `stone` |
 | **Resources** | Job `echo-job` |
 
@@ -187,6 +203,8 @@ Create a Job named `echo-job` in namespace `stone` that:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `mist` |
 | **Resources** | CronJob `date-job` |
 
@@ -207,6 +225,8 @@ Create a CronJob named `date-job` in namespace `mist` that:
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `alpine` |
 | **Resources** | Pod `multi-container` |
 
@@ -235,6 +255,8 @@ Create a Pod named `multi-container` in namespace `alpine` with two containers:
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `crest` |
 | **Resources** | Pod `init-pod` |
 
@@ -267,6 +289,8 @@ Both containers should share an `emptyDir` volume.
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `peak` |
 | **Resources** | ConfigMap `app-config` |
 
@@ -286,6 +310,8 @@ Create a ConfigMap named `app-config` in namespace `peak` with the following key
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `summit` |
 | **Resources** | ConfigMap `options`, Pod `config-pod` |
 
@@ -303,6 +329,8 @@ Create a ConfigMap named `app-config` in namespace `peak` with the following key
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `cliff` |
 | **Resources** | ConfigMap `cmvolume`, Pod `vol-pod` |
 
@@ -320,6 +348,8 @@ Create a ConfigMap named `app-config` in namespace `peak` with the following key
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `ridge` |
 | **Resources** | Secret `mysecret`, Pod `secret-pod` |
 
@@ -337,6 +367,8 @@ Create a ConfigMap named `app-config` in namespace `peak` with the following key
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `valley` |
 | **Resources** | Pod `secure-pod` |
 
@@ -358,6 +390,8 @@ Create a Pod named `secure-pod` in namespace `valley` with:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `cave` |
 | **Resources** | Pod `resource-pod` |
 
@@ -378,6 +412,8 @@ Create a Pod named `resource-pod` in namespace `cave` with:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `stone` |
 | **Resources** | Pod `liveness-pod` |
 
@@ -399,6 +435,8 @@ Create a Pod named `liveness-pod` in namespace `stone` with:
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `mist` |
 | **Resources** | Deployment `web`, Service `web`, NetworkPolicy `web-policy` |
 
@@ -417,6 +455,8 @@ Create a Pod named `liveness-pod` in namespace `stone` with:
 | | |
 |---|---|
 | **Points** | 8 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `alpine` |
 | **Resources** | PV `myvolume`, PVC `mypvc`, Pod `pv-pod` |
 
