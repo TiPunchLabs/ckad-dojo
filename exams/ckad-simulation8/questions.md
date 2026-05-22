@@ -21,6 +21,8 @@
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `harvest` |
 | **Resources** | Pod `web`, Service `web` |
 
@@ -39,6 +41,8 @@
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `grain` |
 | **Resources** | Service `app-svc` |
 
@@ -57,6 +61,8 @@ Convert this Service to a `NodePort` type.
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `rice` |
 | **Resources** | Deployment `backend`, Service `backend` |
 
@@ -74,6 +80,8 @@ Convert this Service to a `NodePort` type.
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `field` |
 | **Resources** | Pod `ready-pod` |
 
@@ -93,6 +101,8 @@ Create a Pod named `ready-pod` in namespace `field` with image `nginx:1.25` that
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `shrine` |
 | **Resources** | Pod `live-pod` |
 
@@ -113,6 +123,8 @@ Create a Pod named `live-pod` in namespace `shrine` with image `nginx:1.25` that
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `blessing` |
 | **Resources** | LimitRange `pod-limits` |
 
@@ -132,6 +144,8 @@ Create a LimitRange named `pod-limits` in namespace `blessing` that limits Pod m
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `fortune` |
 | **Resources** | ResourceQuota `compute-quota` |
 
@@ -151,6 +165,8 @@ Create a ResourceQuota named `compute-quota` in namespace `fortune` with:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `fortune` |
 | **Resources** | Pod `quota-pod` |
 
@@ -171,6 +187,8 @@ In namespace `fortune` (which has a ResourceQuota), create a Pod named `quota-po
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `golden` |
 | **Resources** | Pod `cap-pod` |
 
@@ -190,6 +208,8 @@ Create a Pod named `cap-pod` in namespace `golden` with image `nginx:1.25` that 
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `bounty` |
 | **Resources** | Pod `shared-pod` |
 
@@ -222,6 +242,8 @@ Both containers should share the same `emptyDir` volume named `shared-data`.
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `prosperity` |
 | **Resources** | Pod `annotated-pod` |
 
@@ -239,6 +261,8 @@ Both containers should share the same `emptyDir` volume named `shared-data`.
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `harvest` |
 | **Resources** | Pods, file `./exam/course/12/pods.txt` |
 
@@ -258,6 +282,8 @@ Both containers should share the same `emptyDir` volume named `shared-data`.
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | N/A |
 | **Resources** | Helm repo `bitnami` |
 
@@ -277,6 +303,8 @@ Add the Bitnami Helm repository to your Helm configuration:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | N/A |
 | **Resources** | file `./exam/course/14/values.txt` |
 
@@ -295,6 +323,8 @@ Only save the first 50 lines.
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | N/A |
 | **Resources** | file `./exam/course/15/releases.txt` |
 
@@ -311,6 +341,8 @@ List all Helm releases across all namespaces and save to `./exam/course/15/relea
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `grain` |
 | **Resources** | Deployments `app-v1`, `app-v2`, Service `app` |
 
@@ -333,6 +365,8 @@ This achieves a 75%-25% traffic split.
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `rice` |
 | **Resources** | Pod `data-pod` |
 
@@ -354,6 +388,8 @@ Create a Pod named `data-pod` in namespace `rice` with:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `field` |
 | **Resources** | file `./exam/course/18/dns.txt` |
 
@@ -372,6 +408,8 @@ From a temporary `busybox:1.36` Pod, resolve the DNS name of this Service and sa
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `shrine` |
 | **Resources** | NetworkPolicy `db-policy` |
 
@@ -391,6 +429,8 @@ Create a NetworkPolicy named `db-policy` in namespace `shrine` that:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `blessing` |
 | **Resources** | ServiceAccount `token-sa`, file `./exam/course/20/token.txt` |
 
