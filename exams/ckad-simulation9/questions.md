@@ -21,6 +21,8 @@
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | N/A |
 | **Resources** | Helm chart `sea-app` |
 
@@ -39,6 +41,8 @@ The chart should be created with `helm create`.
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `tide` |
 | **Resources** | Helm release `my-release` |
 
@@ -58,6 +62,8 @@ Install the `bitnami/nginx` chart in namespace `tide` with:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `tide` |
 | **Resources** | Helm release `my-release` |
 
@@ -74,6 +80,8 @@ Upgrade the `my-release` Helm release in namespace `tide` to have `replicaCount=
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `wave` |
 | **Resources** | Helm release `rollback-app` |
 
@@ -92,6 +100,8 @@ Rollback to revision 1.
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | N/A (cluster-scoped) |
 | **Resources** | PersistentVolume `sea-pv` |
 
@@ -113,6 +123,8 @@ Create a PersistentVolume named `sea-pv` with:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `depths` |
 | **Resources** | PersistentVolumeClaim `sea-pvc` |
 
@@ -133,6 +145,8 @@ Create a PersistentVolumeClaim named `sea-pvc` in namespace `depths` that:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `depths` |
 | **Resources** | Pod `pvc-pod` |
 
@@ -152,6 +166,8 @@ Create a Pod named `pvc-pod` in namespace `depths` that:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `coral` |
 | **Resources** | Pod `direct-pod` |
 
@@ -170,6 +186,8 @@ Use the first node in your cluster (get it with `kubectl get nodes`).
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `current` |
 | **Resources** | Pod `echo-pod` |
 
@@ -191,6 +209,8 @@ The Pod should automatically be deleted when it completes (use `--rm` if using k
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `abyss` |
 | **Resources** | Pod `inspect-pod`, file `./exam/course/10/pod.yaml` |
 
@@ -208,6 +228,8 @@ The Pod should automatically be deleted when it completes (use `--rm` if using k
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `pearl` |
 | **Resources** | file `./exam/course/11/events.txt` |
 
@@ -227,6 +249,8 @@ A Pod named `problem-pod` exists in namespace `pearl` but is not running correct
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `storm` |
 | **Resources** | Pod `exec-pod`, file `./exam/course/12/hostname.txt` |
 
@@ -245,6 +269,8 @@ A Pod named `problem-pod` exists in namespace `pearl` but is not running correct
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `harbor` |
 | **Resources** | Pod `restart-pod`, file `./exam/course/13/previous.txt` |
 
@@ -263,6 +289,8 @@ Get the logs from the previous container instance and save to `./exam/course/13/
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | N/A |
 | **Resources** | file `./exam/course/14/nodes.txt` |
 
@@ -281,6 +309,8 @@ Get the CPU and memory utilization of all nodes and save to `./exam/course/14/no
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `voyage` |
 | **Resources** | ConfigMap `env-config`, file `./exam/course/15/config.env` |
 
@@ -304,6 +334,8 @@ Get the CPU and memory utilization of all nodes and save to `./exam/course/14/no
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `tide` |
 | **Resources** | Deployment `web-deploy` |
 
@@ -322,6 +354,8 @@ Rollback to revision `2`.
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `wave` |
 | **Resources** | file `./exam/course/17/revision.txt` |
 
@@ -340,6 +374,8 @@ Get the details of revision `3` and save to `./exam/course/17/revision.txt`.
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `coral` |
 | **Resources** | Job `pi-job` |
 
@@ -360,6 +396,8 @@ Create a Job named `pi-job` in namespace `coral` that:
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `abyss` |
 | **Resources** | Pod `sidecar-pod` |
 
@@ -392,6 +430,8 @@ Use an emptyDir volume named `log-volume`.
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `storm` |
 | **Resources** | file `./exam/course/20/top-pods.txt` |
 
