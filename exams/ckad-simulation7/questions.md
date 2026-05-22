@@ -21,6 +21,8 @@
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `grove` |
 | **Resources** | Pod `nginx`, Service `nginx` |
 
@@ -39,6 +41,8 @@ The `--expose` flag should create both the Pod and a ClusterIP Service.
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `thicket` |
 | **Resources** | Pod `web`, file `./exam/course/2/pod-ip.txt` |
 
@@ -57,6 +61,8 @@ The `--expose` flag should create both the Pod and a ClusterIP Service.
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `glade` |
 | **Resources** | Pod `logger`, file `./exam/course/3/logs.txt` |
 
@@ -79,6 +85,8 @@ After the Pod is running, save the first 10 lines of logs to `./exam/course/3/lo
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `meadow` |
 | **Resources** | Pod `debug-pod`, file `./exam/course/4/error.txt` |
 
@@ -98,6 +106,8 @@ Create a Pod named `debug-pod` in namespace `meadow` with image `busybox:1.36` t
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `fern` |
 | **Resources** | Pod `gpu-pod` |
 
@@ -118,6 +128,8 @@ Use `nodeSelector` to achieve this.
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `moss` |
 | **Resources** | Pod `tolerate-pod` |
 
@@ -141,6 +153,8 @@ The Pod should have:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `root` |
 | **Resources** | Deployment `app-deploy` |
 
@@ -164,6 +178,8 @@ Do NOT create a Service.
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `root` |
 | **Resources** | Deployment `app-deploy` |
 
@@ -182,6 +198,8 @@ Scale the Deployment to `5` replicas.
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `root` |
 | **Resources** | HorizontalPodAutoscaler `app-deploy` |
 
@@ -202,6 +220,8 @@ Create a HorizontalPodAutoscaler for Deployment `app-deploy` in namespace `root`
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `bark` |
 | **Resources** | Deployment `pause-deploy` |
 
@@ -224,6 +244,8 @@ A Deployment `pause-deploy` exists in namespace `bark` with image `nginx:1.18.0`
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `canopy` |
 | **Resources** | Job `parallel-job` |
 
@@ -244,6 +266,8 @@ Create a Job named `parallel-job` in namespace `canopy` that:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `hollow` |
 | **Resources** | Job `deadline-job` |
 
@@ -264,6 +288,8 @@ Create a Job named `deadline-job` in namespace `hollow` that:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `grove` |
 | **Resources** | CronJob `deadline-cron` |
 
@@ -285,6 +311,8 @@ Create a CronJob named `deadline-cron` in namespace `grove` that:
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `thicket` |
 | **Resources** | CronJob `source-cron`, Job `manual-job` |
 
@@ -302,6 +330,8 @@ Create a CronJob named `deadline-cron` in namespace `grove` that:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `glade` |
 | **Resources** | ConfigMap `file-config`, file `./exam/course/15/config.txt` |
 
@@ -325,6 +355,8 @@ Create a CronJob named `deadline-cron` in namespace `grove` that:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `meadow` |
 | **Resources** | ConfigMap `env-config`, Pod `env-pod` |
 
@@ -342,6 +374,8 @@ Create a CronJob named `deadline-cron` in namespace `grove` that:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `fern` |
 | **Resources** | Secret `file-secret`, file `./exam/course/17/username` |
 
@@ -359,6 +393,8 @@ Create a CronJob named `deadline-cron` in namespace `grove` that:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `moss` |
 | **Resources** | Secret `api-secret`, Pod `api-pod` |
 
@@ -376,6 +412,8 @@ Create a CronJob named `deadline-cron` in namespace `grove` that:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration & Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `root` |
 | **Resources** | ServiceAccount `app-sa`, Pod `sa-pod` |
 
@@ -393,6 +431,8 @@ Create a CronJob named `deadline-cron` in namespace `grove` that:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `bark` |
 | **Resources** | Pod `copy-pod`, file `./exam/course/20/passwd` |
 
