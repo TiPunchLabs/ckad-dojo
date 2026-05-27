@@ -21,6 +21,8 @@
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration and Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `fortress` |
 | **Resources** | Pod `webapp` |
 
@@ -41,6 +43,8 @@ The Pod must be running with the environment variables sourced from the Secret.
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `bastion` |
 | **Resources** | Deployment `frontend`, Service `frontend-svc`, Ingress `frontend-ingress` |
 
@@ -64,6 +68,8 @@ Inspect the existing Service and Ingress, identify the problems, and fix the Ing
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `citadel` |
 | **Resources** | Deployment `api-server`, Service `api-svc` |
 
@@ -84,6 +90,8 @@ Create an Ingress named `api-ingress` in namespace `citadel` that:
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `rampart` |
 | **Resources** | Pods `frontend`, `backend`, `database`; NetworkPolicies `default-deny`, `allow-frontend-to-backend`, `allow-backend-to-db` |
 
@@ -109,6 +117,8 @@ Instead:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration and Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `tower` |
 | **Resources** | Deployment `compute-app` |
 
@@ -130,6 +140,8 @@ The Deployment must have running Pods after the update.
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration and Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `garrison` |
 | **Resources** | ResourceQuota `compute-quota`, Deployment `quota-app` |
 
@@ -152,6 +164,8 @@ The ResourceQuota allows: `requests.cpu: 500m`, `requests.memory: 512Mi`.
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | N/A (local task) |
 | **Resources** | Dockerfile at `./exam/course/7/image/Dockerfile` |
 
@@ -169,6 +183,8 @@ The ResourceQuota allows: `requests.cpu: 500m`, `requests.memory: 512Mi`.
 | | |
 |---|---|
 | **Points** | 6 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `bulwark` |
 | **Resources** | Deployment `stable-app`, Service `app-svc` |
 
@@ -194,6 +210,8 @@ Create a **canary** Deployment named `canary-app` in namespace `bulwark` with:
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `parapet` |
 | **Resources** | Deployment `backend`, Service `backend-svc` |
 
@@ -214,6 +232,8 @@ A Service `backend-svc` exists in namespace `parapet` but has no endpoints — t
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `stronghold` |
 | **Resources** | None (create from scratch) |
 
@@ -236,6 +256,8 @@ Create a CronJob named `cleanup-job` in namespace `stronghold`:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration and Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `fortress` |
 | **Resources** | Deployment `secure-app` |
 
@@ -259,6 +281,8 @@ The Deployment must have running Pods after the update.
 | | |
 |---|---|
 | **Points** | 7 |
+| **CNCF Domain** | Application Environment, Configuration and Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `bastion` |
 | **Resources** | Deployment `pod-reader`, ServiceAccount `pod-reader-sa` |
 
@@ -285,6 +309,8 @@ Fix this by:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `citadel` |
 | **Resources** | Deployment `web-server` |
 
@@ -305,6 +331,8 @@ Save the rollout history output to `./exam/course/13/rollout-history.txt`.
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `rampart` |
 | **Resources** | Manifest at `./exam/course/14/broken-deploy.yaml` |
 
@@ -331,6 +359,8 @@ Fix the manifest:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `tower` |
 | **Resources** | Deployment `health-app` |
 
@@ -351,6 +381,8 @@ Save the root cause description to `./exam/course/15/root-cause.txt`.
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Environment, Configuration and Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `gate` |
 | **Resources** | None (create from scratch) |
 
@@ -371,6 +403,8 @@ Save the root cause description to `./exam/course/15/root-cause.txt`.
 | | |
 |---|---|
 | **Points** | 4 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `gate` |
 | **Resources** | Deployment `backend-app` |
 
@@ -393,6 +427,8 @@ Verify the Service has endpoints.
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `bulwark` |
 | **Resources** | None (create from scratch) |
 
@@ -413,6 +449,8 @@ Create a Job named `batch-processor` in namespace `bulwark`:
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `parapet` |
 | **Resources** | Deployment `rolling-app` |
 
@@ -434,6 +472,8 @@ This ensures zero-downtime deployments. The Deployment must have running Pods af
 | | |
 |---|---|
 | **Points** | 5 |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `stronghold` |
 | **Resources** | Template at `./exam/course/20/sidecar-pod.yaml` |
 
