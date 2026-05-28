@@ -11,6 +11,8 @@
 |                     |                                          |
 | ------------------- | ---------------------------------------- |
 | **Points**    | 6                                        |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | -                                        |
 | **Resources** | Container image `solar-app:1.0`          |
 | **Files**     | `./exam/course/1/image/Dockerfile`, `./exam/course/1/image/index.html` |
@@ -33,6 +35,8 @@ Your tasks:
 |                     |                             |
 | ------------------- | --------------------------- |
 | **Points**    | 4                           |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `solar`                   |
 | **Resources** | Deployment `frontend-app` |
 
@@ -56,6 +60,8 @@ Create a Deployment named **`frontend-app`** in namespace `solar` with:
 |                     |                                  |
 | ------------------- | -------------------------------- |
 | **Points**    | 6                                |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `corona`                       |
 | **Resources** | Pod `web-with-sidecar`         |
 
@@ -83,6 +89,8 @@ Create a Pod named **`web-with-sidecar`** in namespace `corona` with a main cont
 |                     |                                               |
 | ------------------- | --------------------------------------------- |
 | **Points**    | 6                                             |
+| **CNCF Domain** | Application Design and Build |
+| **CNCF Weight** | 20% |
 | **Namespace** | `aurora`                                    |
 | **Resources** | PVC `app-data-pvc`, Pod `data-pod`, PV `app-data-pv` |
 
@@ -109,6 +117,8 @@ Your tasks:
 |                     |                                                                  |
 | ------------------- | ---------------------------------------------------------------- |
 | **Points**    | 8                                                                |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `flare`                                                        |
 | **Resources** | Deployment `app-blue`, Deployment `app-green`, Service `webapp-svc` |
 
@@ -138,6 +148,8 @@ Implement a **Blue/Green deployment** by:
 |                     |                          |
 | ------------------- | ------------------------ |
 | **Points**    | 6                        |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `dawn`                 |
 | **Resources** | Deployment `api-app`   |
 
@@ -162,6 +174,8 @@ Your tasks:
 |                     |                                                      |
 | ------------------- | ---------------------------------------------------- |
 | **Points**    | 6                                                    |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `zenith`                                           |
 | **Resources** | Deployment `prod-web-app`, Service `prod-web-svc`  |
 | **Files**     | `./exam/course/7/deployment.yaml`, `./exam/course/7/service.yaml` |
@@ -188,6 +202,8 @@ Your tasks:
 |                     |                                    |
 | ------------------- | ---------------------------------- |
 | **Points**    | 4                                  |
+| **CNCF Domain** | Application Deployment |
+| **CNCF Weight** | 20% |
 | **Namespace** | `radiance`                       |
 | **Resources** | Helm release `web-release`       |
 
@@ -210,6 +226,8 @@ Your tasks:
 |                     |                            |
 | ------------------- | -------------------------- |
 | **Points**    | 4                          |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `eclipse`                |
 | **Resources** | Deployment `slow-app`    |
 
@@ -235,6 +253,8 @@ Ensure the Deployment rolls out successfully.
 |                     |                                         |
 | ------------------- | --------------------------------------- |
 | **Points**    | 6                                       |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `solar`                               |
 | **Resources** | Pod `stuck-pod`                       |
 | **Files to create** | `./exam/course/10/pending-reason.txt` |
@@ -256,6 +276,8 @@ Your tasks:
 |                     |                                          |
 | ------------------- | ---------------------------------------- |
 | **Points**    | 4                                        |
+| **CNCF Domain** | Application Observability and Maintenance |
+| **CNCF Weight** | 15% |
 | **Namespace** | `corona`                               |
 | **Resources** | Pod `multi-logger`                     |
 | **Files to create** | `./exam/course/11/sidecar-logs.txt`    |
@@ -278,6 +300,8 @@ Your tasks:
 |                     |                                        |
 | ------------------- | -------------------------------------- |
 | **Points**    | 6                                      |
+| **CNCF Domain** | Application Environment, Configuration and Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `aurora`                             |
 | **Resources** | CRD `backups.ckad.example.com`, Backup `daily-backup` |
 | **Files to create** | `./exam/course/12/crd-group.txt`     |
@@ -306,6 +330,8 @@ Your tasks:
 |                     |                                      |
 | ------------------- | ------------------------------------ |
 | **Points**    | 4                                    |
+| **CNCF Domain** | Application Environment, Configuration and Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `flare`                            |
 | **Resources** | Secret `web-tls`                   |
 | **Files**     | `./exam/course/13/tls.crt`, `./exam/course/13/tls.key` |
@@ -325,6 +351,8 @@ Create a **TLS Secret** named **`web-tls`** in namespace `flare` using these fil
 |                     |                              |
 | ------------------- | ---------------------------- |
 | **Points**    | 4                            |
+| **CNCF Domain** | Application Environment, Configuration and Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `dawn`                     |
 | **Resources** | Deployment `hardened-app`  |
 
@@ -349,6 +377,8 @@ Ensure the Deployment rolls out successfully after the changes.
 |                     |                                                                              |
 | ------------------- | ---------------------------------------------------------------------------- |
 | **Points**    | 6                                                                            |
+| **CNCF Domain** | Application Environment, Configuration and Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `zenith`                                                                   |
 | **Resources** | ServiceAccount `deploy-sa`, Role `deploy-role`, RoleBinding `deploy-rb`    |
 | **Files to create** | `./exam/course/15/auth-check.txt`                                          |
@@ -372,6 +402,8 @@ Create RBAC resources in namespace `zenith` to allow a ServiceAccount to manage 
 |                     |                                     |
 | ------------------- | ----------------------------------- |
 | **Points**    | 4                                   |
+| **CNCF Domain** | Application Environment, Configuration and Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `eclipse`                         |
 | **Resources** | ConfigMap `app-config`, Pod `config-pod` |
 | **Files**     | `./exam/course/16/app.env`        |
@@ -397,6 +429,8 @@ Your tasks:
 |                     |                                |
 | ------------------- | ------------------------------ |
 | **Points**    | 4                              |
+| **CNCF Domain** | Application Environment, Configuration and Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `radiance`                   |
 | **Resources** | Secret `registry-creds`      |
 
@@ -417,6 +451,8 @@ Create a **docker-registry** Secret named **`registry-creds`** in namespace `rad
 |                     |                                   |
 | ------------------- | --------------------------------- |
 | **Points**    | 6                                 |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `sunbeam`                       |
 | **Resources** | NetworkPolicy `api-allow`       |
 
@@ -441,6 +477,8 @@ Create a NetworkPolicy named **`api-allow`** in namespace `sunbeam` that:
 |                     |                                                          |
 | ------------------- | -------------------------------------------------------- |
 | **Points**    | 6                                                        |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `solstice`                                             |
 | **Resources** | Ingress `secure-ingress`, Secret `secure-tls`, Service `secure-svc` |
 
@@ -465,6 +503,8 @@ Create an Ingress named **`secure-ingress`** in namespace `solstice` that:
 |                     |                                          |
 | ------------------- | ---------------------------------------- |
 | **Points**    | 4                                        |
+| **CNCF Domain** | Services and Networking |
+| **CNCF Weight** | 20% |
 | **Namespace** | `sunbeam`                              |
 | **Resources** | Deployment `dns-app`, Service `dns-svc` |
 | **Files to create** | `./exam/course/20/dns-output.txt`      |
