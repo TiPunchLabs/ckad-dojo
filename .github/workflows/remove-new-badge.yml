@@ -17,7 +17,7 @@ jobs:
     # Auto-remove after 2026-04-15 (2 weeks from 2026-04-01)
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
       - name: Check if badge should be removed
         id: check
