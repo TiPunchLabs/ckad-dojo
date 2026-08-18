@@ -7,6 +7,18 @@ SCRIPT_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_LIB_DIR/common.sh"
 
 # ============================================================================
+# HELPERS
+# ============================================================================
+
+# Extract the question number from a template file or directory name
+# Strips the "q" prefix and any zero padding, so that q07-image and q7-image
+# both resolve to the same exam/course/7 target directory
+# Usage: extract_question_number <template_basename>
+extract_question_number() {
+	echo "$1" | sed 's/^q0*\([0-9]*\)-.*/\1/'
+}
+
+# ============================================================================
 # SETUP FUNCTIONS
 # ============================================================================
 
@@ -93,7 +105,7 @@ setup_directories() {
 		for image_dir in "$templates_dir"/q*-image/; do
 			if [ -d "$image_dir" ]; then
 				local q_num
-				q_num=$(basename "$image_dir" | sed 's/q\([0-9]*\)-.*/\1/')
+				q_num=$(extract_question_number "$(basename "$image_dir")")
 				mkdir -p "$EXAM_DIR/$q_num/image"
 			fi
 		done
@@ -123,7 +135,7 @@ setup_templates() {
 			filename=$(basename "$template")
 			# Extract question number (e.g., q09-pod.yaml -> 9, q15-web-moon.html -> 15)
 			local q_num
-			q_num=$(echo "$filename" | sed 's/q0*\([0-9]*\)-.*/\1/')
+			q_num=$(extract_question_number "$filename")
 			# Extract target filename (e.g., q09-pod.yaml -> pod.yaml, q15-web-moon.html -> web-moon.html)
 			local target_name
 			target_name=$(echo "$filename" | sed 's/q[0-9]*-//')
@@ -163,12 +175,15 @@ setup_templates() {
 			dirname=$(basename "$image_dir")
 			# Extract question number
 			local q_num
-			q_num=$(echo "$dirname" | sed 's/q0*\([0-9]*\)-.*/\1/')
+			q_num=$(extract_question_number "$dirname")
 
 			if [ -d "$EXAM_DIR/$q_num/image" ]; then
 				cp -r "$image_dir"* "$EXAM_DIR/$q_num/image/"
 				print_success "Q$q_num: image files (Dockerfile, etc.)"
 				((++copied))
+			else
+				print_fail "Q$q_num: no target directory $EXAM_DIR/$q_num/image for template $dirname"
+				((++errors))
 			fi
 		fi
 	done
