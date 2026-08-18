@@ -106,6 +106,40 @@ assert_not_empty "$HELM_NAMESPACE" "HELM_NAMESPACE should be set for simulation2
 load_exam "ckad-simulation3"
 assert_not_empty "$HELM_NAMESPACE" "HELM_NAMESPACE should be set for simulation3"
 
+# ----------------------------------------------------------------------------
+# Test: Question number extraction (regression - issue #103)
+# ----------------------------------------------------------------------------
+test_case "Question numbers are extracted consistently from template names"
+
+assert_function_exists "extract_question_number" "extract_question_number function should exist"
+
+assert_equals "7" "$(extract_question_number "q07-image")" "Zero-padded image dir q07-image should yield 7"
+assert_equals "7" "$(extract_question_number "q07-pod.yaml")" "Zero-padded file q07-pod.yaml should yield 7"
+assert_equals "1" "$(extract_question_number "q1-image")" "Unpadded image dir q1-image should yield 1"
+assert_equals "12" "$(extract_question_number "q12-image")" "Two-digit image dir q12-image should yield 12"
+assert_equals "15" "$(extract_question_number "q15-web-moon.html")" "Multi-dash file name should yield 15"
+
+# ----------------------------------------------------------------------------
+# Test: Image templates are copied (regression - issue #103)
+# ----------------------------------------------------------------------------
+test_case "Image templates are copied for zero-padded question numbers"
+
+# simulation10 is the only exam with a zero-padded image template (q07-image)
+load_exam "ckad-simulation10" >/dev/null 2>&1
+
+TEST_EXAM_DIR=$(mktemp -d)
+SAVED_EXAM_DIR="$EXAM_DIR"
+EXAM_DIR="$TEST_EXAM_DIR"
+
+setup_directories >/dev/null 2>&1
+setup_templates >/dev/null 2>&1
+
+assert_file_exists "$TEST_EXAM_DIR/7/image/Dockerfile" "Q7 Dockerfile should land in exam/course/7/image"
+assert_true '[ ! -d "$TEST_EXAM_DIR/07" ]' "No zero-padded exam/course/07 directory should be created"
+
+EXAM_DIR="$SAVED_EXAM_DIR"
+rm -rf "$TEST_EXAM_DIR"
+
 # ============================================================================
 # SUMMARY
 # ============================================================================
