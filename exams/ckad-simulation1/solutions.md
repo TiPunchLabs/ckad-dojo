@@ -2,7 +2,7 @@
 
 *「朱雀は灰から蘇る」 - Le phénix renaît de ses cendres*
 
-This document contains the solutions for all 21 questions in CKAD Simulation 2.
+This document contains the solutions for all 21 questions in CKAD Simulation 1.
 
 ---
 

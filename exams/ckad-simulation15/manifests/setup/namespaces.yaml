@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ocean
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tide
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: coral
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: abyss
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: reef
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lagoon
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: trench
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: current
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: wave
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: depths

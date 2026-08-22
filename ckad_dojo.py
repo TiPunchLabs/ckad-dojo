@@ -128,7 +128,7 @@ def show_version() -> None:
     print("  environment setup, real-time scoring, and a modern web interface.")
     print()
     print(color("Features:", Colors.BOLD))
-    print("  - 4 exam simulations with 85+ questions")
+    print(f"  - {len(discover_exams())} exam simulations with 400+ questions")
     print("  - Automated Kubernetes environment setup")
     print("  - Real-time scoring with 400+ criteria")
     print("  - Web interface with 120-minute countdown timer")

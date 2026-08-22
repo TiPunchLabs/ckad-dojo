@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fortress
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: siege
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bastion
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: citadel
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rampart
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vanguard
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sentinel
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: garrison
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: outpost
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: armory
