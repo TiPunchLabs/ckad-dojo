@@ -374,8 +374,9 @@ def parse_questions_md(exam_id: str) -> list:
     content = questions_file.read_text(encoding="utf-8")
     questions = []
 
-    # Split by question headers (## Question N | Topic)
-    question_pattern = r"^## Question (\d+|P\d+) \| (.+?)$"
+    # Handle multiple question header formats:
+    # "## Question 1 | Topic", "### Question 1: Topic", "### Question 1"
+    question_pattern = r"^#{2,3}\s+Question\s+(\d+|P\d+)(?:[\s:\|]+(.*))?$"
 
     # Find all question sections
     lines = content.split("\n")
@@ -383,7 +384,7 @@ def parse_questions_md(exam_id: str) -> list:
     current_content: list[str] = []
 
     for line in lines:
-        match = re.match(question_pattern, line)
+        match = re.match(question_pattern, line, re.IGNORECASE)
         if match:
             # Save previous question
             if current_question:
@@ -392,7 +393,7 @@ def parse_questions_md(exam_id: str) -> list:
 
             # Start new question
             q_num = match.group(1)
-            topic = match.group(2)
+            topic = match.group(2).strip() if match.group(2) else "Task"
             current_question = {
                 "id": q_num,
                 "number": int(q_num) if q_num.isdigit() else q_num,

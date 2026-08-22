@@ -6,6 +6,8 @@
 
 ---
 
+## Question 1 | Application Design and Build
+
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
 | 6 | Application Design and Build | 20% | `lunar` | `Dockerfile` | `./exam/course/12/q1/Dockerfile` |
@@ -27,6 +29,8 @@ You do not need to build the image, just ensure the `Dockerfile` is correctly de
 
 ---
 
+## Question 2 | Application Design and Build
+
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
 | 5 | Application Design and Build | 20% | `crescent` | `Pod` |  |
@@ -41,6 +45,8 @@ Add an init container named `wait-for-service` using the `busybox:1.36` image. T
 
 ---
 
+## Question 3 | Application Design and Build
+
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
 | 5 | Application Design and Build | 20% | `twilight` | `CronJob` |  |
@@ -54,6 +60,8 @@ In the `twilight` namespace, create a CronJob named `nightly-backup`.
 - Configure the CronJob to `Forbid` concurrent executions.
 
 ---
+
+## Question 4 | Application Design and Build
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
@@ -71,6 +79,8 @@ Create a Pod named `legacy-app` in the `eclipse` namespace.
 
 ---
 
+## Question 5 | Application Deployment
+
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
 | 5 | Application Deployment | 20% | `nebula` | `Helm` |  |
@@ -82,6 +92,8 @@ It was recently upgraded to a broken version, resulting in failed deployments.
 Roll back the `api-release` release to its previous revision (revision 1).
 
 ---
+
+## Question 6 | Application Deployment
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
@@ -96,6 +108,8 @@ Create a Deployment named `slow-start-app` in the `shadow` namespace.
 
 ---
 
+## Question 7 | Application Deployment
+
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
 | 5 | Application Deployment | 20% | `nightfall` | `Deployment` |  |
@@ -107,6 +121,8 @@ You have been instructed to pause the rollout of this deployment to investigate 
 Pause the rollout of the `critical-processor` deployment.
 
 ---
+
+## Question 8 | Application Deployment
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
@@ -123,6 +139,8 @@ You do not need to apply the Kustomization, just set up the files.
 
 ---
 
+## Question 9 | Application Observability and Maintenance
+
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
 | 5 | Application Observability and Maintenance | 15% | `starlight` | `Pod` |  |
@@ -135,6 +153,8 @@ Identify the issue and fix it. The pod should be running smoothly.
 
 ---
 
+## Question 10 | Application Observability and Maintenance
+
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
 | 5 | Application Observability and Maintenance | 15% | `void` | `Metrics` | `./exam/course/12/q10/cpu-usage.txt` |
@@ -146,6 +166,8 @@ Write the name of the Pod into the file `./exam/course/12/q10/cpu-usage.txt`.
 (If multiple pods are similar, just record the top one based on `kubectl top`).
 
 ---
+
+## Question 11 | Application Observability and Maintenance
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
@@ -161,6 +183,8 @@ Use an `emptyDir` volume to share the `/var/log` directory between the two conta
 
 ---
 
+## Question 12 | Application Environment, Configuration and Security
+
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
 | 6 | Application Environment, Configuration and Security | 25% | `crescent` | `Pod` |  |
@@ -175,6 +199,8 @@ Use a single `projected` volume mounted at `/opt/config` to expose:
 
 ---
 
+## Question 13 | Application Environment, Configuration and Security
+
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
 | 4 | Application Environment, Configuration and Security | 25% | `twilight` | `ConfigMap` |  |
@@ -186,6 +212,8 @@ Create a ConfigMap named `static-config` in the `twilight` namespace with the fo
 Configure the ConfigMap to be immutable to prevent accidental changes.
 
 ---
+
+## Question 14 | Application Environment, Configuration and Security
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
@@ -202,6 +230,8 @@ Apply the following security constraints:
 
 ---
 
+## Question 15 | Application Environment, Configuration and Security
+
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
 | 5 | Application Environment, Configuration and Security | 25% | `shadow` | `Secret` |  |
@@ -213,6 +243,8 @@ Update the Secret to have the new value `token=super-secret-v2` (base64 encoded 
 A Pod named `token-reader` in the same namespace mounts this secret. No changes are required to the Pod, just update the Secret.
 
 ---
+
+## Question 16 | Application Environment, Configuration and Security
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
@@ -228,6 +260,8 @@ Enforce the following limits:
 
 ---
 
+## Question 17 | Services and Networking
+
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
 | 5 | Services and Networking | 20% | `dusk` | `NetworkPolicy` |  |
@@ -240,6 +274,8 @@ Allow all INGRESS traffic.
 DENY all EGRESS traffic, except for traffic to DNS (UDP port 53).
 
 ---
+
+## Question 18 | Services and Networking
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
@@ -255,6 +291,8 @@ Set the ingress class to `nginx`.
 
 ---
 
+## Question 19 | Services and Networking
+
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
 | 5 | Services and Networking | 20% | `nebula` | `Service` |  |
@@ -265,6 +303,8 @@ Create an ExternalName Service named `db-ext-svc` in the `nebula` namespace.
 It should map to the external name `database.external.example.com`.
 
 ---
+
+## Question 20 | Services and Networking
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files/File to create |
 |--------|-------------|-------------|-----------|-----------|----------------------|
