@@ -61,7 +61,7 @@
 
 | Feature | Description |
 |---------|-------------|
-| **11 Dojos** | 218 questions across 11 themed dojos |
+| **20 Dojos** | ~398 questions across 20 themed dojos |
 | **Unified CLI** | Single `uv run ckad-dojo` command for all operations |
 | **Web Interface** | Modern UI with 120-minute countdown timer |
 | **Auto-Scoring** | 400+ criteria automatically evaluated |
@@ -80,9 +80,9 @@
 
 ---
 
-## The Eleven Dojos
+## The Twenty Dojos
 
-Three dojos are themed after the Shishin (四神) — Celestial Guardians from East Asian mythology. The remaining eight dojos feature mythical creatures and deities from Japanese folklore.
+Three dojos are themed after the Shishin (四神) — Celestial Guardians from East Asian mythology. The remaining seventeen dojos feature mythical creatures and deities from Japanese folklore.
 
 | # | Dojo | Title | Questions | Points | Theme | Credit |
 |:-:|------|-------|:---------:|:------:|-------|--------|
@@ -97,6 +97,15 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 | 9 | 🐲 **Ryujin** | Ryujin des Profondeurs | 20 | 100 | Sea (tide, wave, depths...) | [@dgkanatsios](https://github.com/dgkanatsios) |
 | 10 | 👹 **Oni** | Oni of the Demon Gate | 20 | 102 | Fortification (fortress, bastion...) | — |
 | 11 | ☀️ **Amaterasu** | Amaterasu of the Rising Sun | 20 | 104 | Sun/Light (solar, corona...) | — |
+| 12 | 🌙 **Tsukuyomi** | Tsukuyomi of the Silver Moon | 20 | 108 | Moon/Night (lunar, twilight...) | — |
+| 13 | 🌬️ **Fujin** | Fujin of the Howling Winds | 20 | 110 | Wind/Storm (gale, tempest...) | — |
+| 14 | ⚡ **Raijin** | Raijin of the Thunder | 20 | 112 | Thunder (voltage, spark...) | — |
+| 15 | 🌊 **Susanoo** | Susanoo of the Raging Seas | 20 | 110 | Ocean/Sea (tide, abyss...) | — |
+| 16 | 🎶 **Benzaiten** | Benzaiten of Flowing Wisdom | 20 | 114 | Wisdom/Music (harmony, melody...) | — |
+| 17 | ⚔️ **Hachiman** | Hachiman of War | 20 | 116 | War/Strategy (fortress, siege...) | — |
+| 18 | ✨ **Izanagi** | Izanagi the Creator | 20 | 118 | Creation (genesis, dawn...) | — |
+| 19 | 🛡️ **Bishamonten** | Bishamonten the Guardian | 20 | 120 | Guardian (ward, aegis...) | — |
+| 20 | 🏆 **Musashi** | Musashi of the Two Heavens | 20 | 122 | Mastery (apex, summit...) | — |
 
 <details>
 <summary><strong>Dojo Quotes</strong></summary>
@@ -114,6 +123,15 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 | 🐲 Ryujin | *「龍神は波を操る」— Ryujin commands the waves* |
 | 👹 Oni | *「鬼の目にも涙」— Even the demon sheds tears* |
 | ☀️ Amaterasu | *「天照は光を導く」— Amaterasu guides the light* |
+| 🌙 Tsukuyomi | *「月読は闇を照らす」— Tsukuyomi illuminates the darkness* |
+| 🌬️ Fujin | *「風神は嵐を呼ぶ」— Fujin summons the storm* |
+| ⚡ Raijin | *「雷神は天を裂く」— Raijin splits the heavens* |
+| 🌊 Susanoo | *「スサノオは海を支配する」— Susanoo commands the seas* |
+| 🎶 Benzaiten | *「弁財天は智慧を授ける」— Benzaiten bestows wisdom* |
+| ⚔️ Hachiman | *「八幡は戦略を練る」— Hachiman hones strategy* |
+| ✨ Izanagi | *「イザナギは世界を創る」— Izanagi creates the world* |
+| 🛡️ Bishamonten | *「毘沙門天は邪悪を討つ」— Bishamonten strikes down evil* |
+| 🏆 Musashi | *「武蔵は天下無双」— Musashi is unparalleled under heaven* |
 
 </details>
 
