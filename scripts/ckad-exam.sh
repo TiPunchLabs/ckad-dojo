@@ -232,6 +232,12 @@ select_starting_question() {
 # Load exam configuration
 load_exam_config() {
 	local exam_id=$1
+	
+	# Normalize exam ID (e.g. '12' or 'sim12' -> 'ckad-simulation12')
+	if [[ "$exam_id" =~ ^(ckad-)?(sim(ulation)?)?[-_]?([0-9]+)$ ]]; then
+		exam_id="ckad-simulation${BASH_REMATCH[4]}"
+	fi
+	
 	local exam_conf="$EXAMS_DIR/$exam_id/exam.conf"
 
 	if [ ! -f "$exam_conf" ]; then
@@ -746,6 +752,11 @@ while [[ $# -gt 0 ]]; do
 		;;
 	esac
 done
+
+# Normalize EXAM_ID if it was provided (e.g. '12' or 'sim12' -> 'ckad-simulation12')
+if [[ -n "$EXAM_ID" ]] && [[ "$EXAM_ID" =~ ^(ckad-)?(sim(ulation)?)?[-_]?([0-9]+)$ ]]; then
+	EXAM_ID="ckad-simulation${BASH_REMATCH[4]}"
+fi
 
 # Default command is web
 if [ -z "$COMMAND" ]; then

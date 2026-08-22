@@ -190,9 +190,18 @@ def discover_exams() -> list[str]:
 
 
 def normalize_exam_id(exam_id: str) -> str:
-    """Normalize exam ID, expanding shortcuts like '1' to 'ckad-simulation1'."""
-    if exam_id and exam_id.isdigit():
+    """Normalize exam ID, expanding shortcuts like '1' or 'sim12' to 'ckad-simulation1'."""
+    if not exam_id:
+        return exam_id
+    if exam_id.isdigit():
         return f"ckad-simulation{exam_id}"
+    
+    # Handle sim1, simulation1, ckad-sim1 shortcuts
+    import re
+    match = re.match(r"^(?:ckad-)?(?:sim(?:ulation)?)?[-_]?(\d+)$", exam_id.lower())
+    if match:
+        return f"ckad-simulation{match.group(1)}"
+        
     return exam_id
 
 
