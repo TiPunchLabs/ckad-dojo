@@ -304,8 +304,10 @@ def parse_solutions_md(exam_id: str) -> list[dict[str, object]]:
     content = solutions_file.read_text(encoding="utf-8")
     solutions = []
 
-    # Split by question headers (## Question N | Topic or ## Preview Question N | Topic)
-    solution_pattern = r"^## (Question|Preview Question) (\d+|P\d+) \| (.+?)$"
+    # Split by question/solution headers (various formats used across old and new exams):
+    # "## Question N | Topic", "## Preview Question N | Topic",
+    # "### Solution N | Topic", "## Solution N | Topic"
+    solution_pattern = r"^#{2,3}\s+(Question|Preview Question|Solution) (\d+|P\d+) \| (.+?)$"
 
     lines = content.split("\n")
     current_solution = None
@@ -410,10 +412,20 @@ def parse_questions_md(exam_id: str) -> list:
             # Only process as metadata if it's a key-value table row with **bold** key
             if line.startswith("|"):
                 parts = [p.strip() for p in line.split("|")[1:-1]]
+                # Skip separator rows (e.g. |---|---|, | :--- | :--- |, etc.)
+                if re.match(r"^\|[\s\-:|\s]+\|?\s*$", line.strip()):
+                    continue
                 # Check if this is a metadata row (has **Key** format in first column)
                 if len(parts) >= 2 and parts[0].startswith("**") and parts[0].endswith("**"):
                     key = parts[0].strip("*").lower()
                     value = parts[1]
+                elif len(parts) >= 4 and not any("**" in p for p in parts):
+                    if re.match(r"^\d+$", parts[0]):
+                        current_question["points"] = int(parts[0])
+                        current_question["namespace"] = parts[3].strip("`") if len(parts) > 3 else ""
+                        current_question["resources"] = parts[4] if len(parts) > 4 else ""
+                        current_question["files"] = parts[5] if len(parts) > 5 else ""
+                    continue
                     if key == "points":
                         # Extract points from format like "7/113 (6%)"
                         points_match = re.match(r"(\d+)", value)
@@ -427,7 +439,17 @@ def parse_questions_md(exam_id: str) -> list:
                         current_question["files"] = value
                     # Skip metadata rows from content
                     continue
-                elif line.strip() in ("| | |", "|---|---|"):
+                # Check if this is a new-format 6-column table row:
+                # | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files |
+                # where parts[0] is a digit (points value)
+                elif len(parts) >= 6 and parts[0].isdigit():
+                    current_question["points"] = int(parts[0])
+                    current_question["namespace"] = parts[3].strip("`")
+                    current_question["resources"] = parts[4]
+                    current_question["files"] = parts[5]
+                    # Skip this metadata row from content
+                    continue
+                elif re.match(r"^\\|\\s*[-:|]+\\s*(\\|\\s*[-:|]+\\s*)+\\|?\\s*$", line.strip()) or line.strip() in ("| | |", "|---|---|"):
                     # Skip empty header and separator rows of metadata table
                     continue
             # Add all other lines (including task tables) to content
@@ -546,7 +568,7 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_json({"enabled": False, "running": False, "port": 0, "url": None})
             else:
                 # Check if ttyd is running
-                ttyd_port = int(os.environ.get("TTYD_PORT", "7681"))
+                ttyd_port = int(os.environ.get("TTYD_PORT", "7682"))
                 ttyd_running = self.check_ttyd_status(ttyd_port)
                 self.send_json(
                     {

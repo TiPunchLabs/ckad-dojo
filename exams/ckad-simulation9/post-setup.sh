@@ -51,4 +51,47 @@ exam_post_setup() {
 	fi
 
 	return $errors
+
+  # === Auto-generated starter files ===
+  local BASE_DIR="./exam/course"
+  mkdir -p "$BASE_DIR/10"
+  cat << 'EOF_FILE' > "$BASE_DIR/10/pod.yaml"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stub-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+# TODO: Complete this manifest per the task instructions
+EOF_FILE
+  mkdir -p "$BASE_DIR/11"
+  cat << 'EOF_FILE' > "$BASE_DIR/11/events.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/12"
+  cat << 'EOF_FILE' > "$BASE_DIR/12/hostname.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/13"
+  cat << 'EOF_FILE' > "$BASE_DIR/13/previous.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/14"
+  cat << 'EOF_FILE' > "$BASE_DIR/14/nodes.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/15"
+  cat << 'EOF_FILE' > "$BASE_DIR/15/config.env"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/17"
+  cat << 'EOF_FILE' > "$BASE_DIR/17/revision.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/20"
+  cat << 'EOF_FILE' > "$BASE_DIR/20/top-pods.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
 }

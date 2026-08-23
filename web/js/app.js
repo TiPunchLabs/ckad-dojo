@@ -24,7 +24,7 @@ const state = {
     viewingSolutions: false,
     // Terminal state
     terminalEnabled: true,
-    terminalPort: 7681,
+    terminalPort: 7682,
     terminalConnected: false,
     splitRatio: 0.5,  // 50% split by default
     // Hints state
@@ -328,7 +328,7 @@ function updateTerminalVisibility() {
 function loadTerminalFrame() {
     if (!elements.terminalFrame) return;
 
-    const terminalUrl = `http://localhost:${state.terminalPort}`;
+    const terminalUrl = `http://${window.location.hostname}:${state.terminalPort}`;
     elements.terminalFrame.src = terminalUrl;
 
     // Monitor iframe load
@@ -562,9 +562,7 @@ async function updateTimer() {
         // Update timer color based on remaining time
         elements.timer.classList.remove('warning', 'danger');
 
-        if (state.timeRemaining <= 60) {
-            elements.timer.classList.add('danger');
-        } else if (state.timeRemaining <= 5 * 60) {
+        if (state.timeRemaining <= 5 * 60) {
             elements.timer.classList.add('danger');
         } else if (state.timeRemaining <= 15 * 60) {
             elements.timer.classList.add('warning');
@@ -718,6 +716,7 @@ async function executeStopExam() {
         elements.scoreResultTitle.textContent = 'Error';
         elements.scoreStatus.textContent = 'Failed to connect to server';
         elements.scoreStatus.className = 'score-status failed';
+        elements.scoreQuestionsList.innerHTML = '<div class="score-error">Could not retrieve scoring data. Check the terminal.</div>';
     }
 }
 
@@ -971,8 +970,11 @@ async function closeExamAndCleanup() {
         } else {
             // Restore original content on error
             scoreContainer.innerHTML = originalContent;
-            elements.scoreStatus.textContent = 'Cleanup failed: ' + (result.error || 'Unknown error');
-            elements.scoreStatus.className = 'score-status failed';
+            const statusEl2 = scoreContainer.querySelector('.score-status');
+            if (statusEl2) {
+                statusEl2.textContent = 'Cleanup failed: ' + (result.error || 'Unknown error');
+                statusEl2.className = 'score-status failed';
+            }
         }
     } catch (error) {
         console.error('Cleanup failed:', error);
@@ -1211,7 +1213,7 @@ function toggleHint(hintBox) {
 
 function showQuestion(index) {
     if (index < 0 || index >= state.questions.length) return;
-    if (state.examEnded) return;
+    if (state.examEnded && !elements.scoreModal.classList.contains('hidden')) return;
 
     state.currentQuestionIndex = index;
     const question = state.questions[index];
@@ -1341,6 +1343,7 @@ function showFlaggedList() {
 function closeScoreModal() {
     // Simply hide the score modal and return to the exam interface
     elements.scoreModal.classList.add('hidden');
+    state.examEnded = false;
 }
 
 function backToSelection() {

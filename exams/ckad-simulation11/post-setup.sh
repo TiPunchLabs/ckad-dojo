@@ -66,4 +66,75 @@ exam_post_setup() {
 	fi
 
 	return $errors
+
+  # === Auto-generated starter files ===
+  local BASE_DIR="./exam/course"
+  mkdir -p "$BASE_DIR/1/image/"
+  touch "$BASE_DIR/1/image//.gitkeep"
+  mkdir -p "$BASE_DIR/1/image/Dockerfile"
+  touch "$BASE_DIR/1/image/Dockerfile/.gitkeep"
+  mkdir -p "$BASE_DIR/1/image"
+  cat << 'EOF_FILE' > "$BASE_DIR/1/image/index.html"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/1"
+  cat << 'EOF_FILE' > "$BASE_DIR/1/solar-app.tar"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/10"
+  cat << 'EOF_FILE' > "$BASE_DIR/10/pending-reason.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/11"
+  cat << 'EOF_FILE' > "$BASE_DIR/11/sidecar-logs.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/12"
+  cat << 'EOF_FILE' > "$BASE_DIR/12/crd-group.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/13"
+  cat << 'EOF_FILE' > "$BASE_DIR/13/tls.crt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/13"
+  cat << 'EOF_FILE' > "$BASE_DIR/13/tls.key"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/15"
+  cat << 'EOF_FILE' > "$BASE_DIR/15/auth-check.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/16"
+  cat << 'EOF_FILE' > "$BASE_DIR/16/app.env"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/20"
+  cat << 'EOF_FILE' > "$BASE_DIR/20/dns-output.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/7"
+  cat << 'EOF_FILE' > "$BASE_DIR/7/deployment.yaml"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stub-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+# TODO: Complete this manifest per the task instructions
+EOF_FILE
+  mkdir -p "$BASE_DIR/7"
+  cat << 'EOF_FILE' > "$BASE_DIR/7/service.yaml"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stub-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+# TODO: Complete this manifest per the task instructions
+EOF_FILE
 }

@@ -32,4 +32,47 @@ exam_post_setup() {
 	fi
 
 	return $errors
+
+  # === Auto-generated starter files ===
+  local BASE_DIR="./exam/course"
+  mkdir -p "$BASE_DIR/13"
+  cat << 'EOF_FILE' > "$BASE_DIR/13/rollout-history.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/14"
+  cat << 'EOF_FILE' > "$BASE_DIR/14/broken-deploy.yaml"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stub-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+# TODO: Complete this manifest per the task instructions
+EOF_FILE
+  mkdir -p "$BASE_DIR/15"
+  cat << 'EOF_FILE' > "$BASE_DIR/15/root-cause.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/20"
+  cat << 'EOF_FILE' > "$BASE_DIR/20/sidecar-pod.yaml"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stub-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+# TODO: Complete this manifest per the task instructions
+EOF_FILE
+  mkdir -p "$BASE_DIR/7/image/"
+  touch "$BASE_DIR/7/image//.gitkeep"
+  mkdir -p "$BASE_DIR/7/image/Dockerfile"
+  touch "$BASE_DIR/7/image/Dockerfile/.gitkeep"
+  mkdir -p "$BASE_DIR/7"
+  cat << 'EOF_FILE' > "$BASE_DIR/7/oni-app.tar"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
 }

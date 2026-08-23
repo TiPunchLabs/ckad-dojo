@@ -53,4 +53,57 @@ EOF
     mkdir -p /opt/course/19/q13
 
     echo "Post-setup complete."
+
+  # === Auto-generated starter files ===
+  local BASE_DIR="./exam/course"
+  mkdir -p "$BASE_DIR/19/q1/"
+  touch "$BASE_DIR/19/q1//.gitkeep"
+  mkdir -p "$BASE_DIR/19/q1/Dockerfile"
+  touch "$BASE_DIR/19/q1/Dockerfile/.gitkeep"
+  mkdir -p "$BASE_DIR/19/q10"
+  cat << 'EOF_FILE' > "$BASE_DIR/19/q10/cpu-usage.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/19/q13"
+  cat << 'EOF_FILE' > "$BASE_DIR/19/q13/token.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/19/q5"
+  cat << 'EOF_FILE' > "$BASE_DIR/19/q5/new-values.yaml"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stub-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+# TODO: Complete this manifest per the task instructions
+EOF_FILE
+  mkdir -p "$BASE_DIR/19/q5"
+  cat << 'EOF_FILE' > "$BASE_DIR/19/q5/old-values.yaml"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stub-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+# TODO: Complete this manifest per the task instructions
+EOF_FILE
+  mkdir -p "$BASE_DIR/19/q5"
+  cat << 'EOF_FILE' > "$BASE_DIR/19/q5/values.yaml"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stub-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+# TODO: Complete this manifest per the task instructions
+EOF_FILE
+  mkdir -p "$BASE_DIR/19/q8/"
+  touch "$BASE_DIR/19/q8//.gitkeep"
 }

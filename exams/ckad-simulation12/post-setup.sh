@@ -85,4 +85,27 @@ EOF
   
   echo "Triggering rollout deployment update for Q7..."
   kubectl set image deployment/critical-processor app=nginx:1.25 -n nightfall
+
+  # === Auto-generated starter files ===
+  local BASE_DIR="./exam/course"
+  mkdir -p "$BASE_DIR/12/q1/Dockerfile"
+  touch "$BASE_DIR/12/q1/Dockerfile/.gitkeep"
+  mkdir -p "$BASE_DIR/12/q1"
+  cat << 'EOF_FILE' > "$BASE_DIR/12/q1/main.go"
+package main
+import "fmt"
+func main() {
+    fmt.Println("Stub main.go")
+}
+EOF_FILE
+  mkdir -p "$BASE_DIR/12/q10"
+  cat << 'EOF_FILE' > "$BASE_DIR/12/q10/cpu-usage.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/12/q20"
+  cat << 'EOF_FILE' > "$BASE_DIR/12/q20/nslookup.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/12/q8/"
+  touch "$BASE_DIR/12/q8//.gitkeep"
 }
