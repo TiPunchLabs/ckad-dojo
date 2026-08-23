@@ -18,10 +18,12 @@ exam_post_setup() {
 		fi
 	fi
 
-	return $errors
-
   # === Auto-generated starter files ===
   local BASE_DIR="./exam/course"
+  mkdir -p "$BASE_DIR/9"
+  cat << 'EOF_FILE' > "$BASE_DIR/9/rollback-revision.txt"
+# This file will be populated when you run the relevant kubectl commands
+EOF_FILE
   mkdir -p "$BASE_DIR/15"
   cat << 'EOF_FILE' > "$BASE_DIR/15/fix-ingress.yaml"
 apiVersion: v1
@@ -34,13 +36,14 @@ spec:
     image: nginx
 # TODO: Complete this manifest per the task instructions
 EOF_FILE
-  mkdir -p "$BASE_DIR/5/image/"
-  touch "$BASE_DIR/5/image//.gitkeep"
-  mkdir -p "$BASE_DIR/5/image/Dockerfile"
-  touch "$BASE_DIR/5/image/Dockerfile/.gitkeep"
   mkdir -p "$BASE_DIR/5"
   cat << 'EOF_FILE' > "$BASE_DIR/5/my-app.tar"
 # This file will be populated when you run the relevant kubectl commands
+EOF_FILE
+  mkdir -p "$BASE_DIR/5/image"
+  cat << 'EOF_FILE' > "$BASE_DIR/5/image/Dockerfile"
+FROM nginx:latest
+# TODO: Complete this Dockerfile per the task instructions
 EOF_FILE
   mkdir -p "$BASE_DIR/8"
   cat << 'EOF_FILE' > "$BASE_DIR/8/broken-deploy.yaml"
@@ -54,8 +57,7 @@ spec:
     image: nginx
 # TODO: Complete this manifest per the task instructions
 EOF_FILE
-  mkdir -p "$BASE_DIR/9"
-  cat << 'EOF_FILE' > "$BASE_DIR/9/rollback-revision.txt"
-# This file will be populated when you run the relevant kubectl commands
-EOF_FILE
+  mkdir -p "$BASE_DIR/5/image"
+
+  return $errors
 }

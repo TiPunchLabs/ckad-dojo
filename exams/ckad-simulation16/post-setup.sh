@@ -1,17 +1,23 @@
 #!/bin/bash
 exam_post_setup() {
-  kubectl apply -f "$EXAM_DIR/manifests/setup/setup.yaml"
+  local BASE_DIR="./exam/course/16"
+  
+  kubectl apply -f "exams/ckad-simulation16/manifests/setup/setup.yaml" 2>/dev/null || true
   kubectl set image deployment/legacy-app -n verse app=nginx:1.15
   kubectl rollout status deployment/legacy-app -n verse --timeout=60s || true
   kubectl set image deployment/legacy-app -n verse app=nginx:1.16
   kubectl rollout status deployment/legacy-app -n verse --timeout=60s || true
   kubectl set image deployment/legacy-app -n verse app=nginx:missing-tag
   
-  mkdir -p $EXAM_DIR/1/app
-  echo "Benzaiten Wisdom" > $EXAM_DIR/1/app/index.html
+  mkdir -p $BASE_DIR/q1/app
+  echo "Benzaiten Wisdom" > $BASE_DIR/q1/app/index.html
+  cat << 'EOF_FILE' > $BASE_DIR/q1/Dockerfile
+FROM nginx:alpine
+# TODO: Complete Dockerfile
+EOF_FILE
   
-  mkdir -p $EXAM_DIR/5/chart/templates
-  cat <<'EOF' > $EXAM_DIR/5/chart/Chart.yaml
+  mkdir -p $BASE_DIR/q5/chart/templates
+  cat <<'EOF' > $BASE_DIR/q5/chart/Chart.yaml
 apiVersion: v2
 name: wisdom-app
 version: 0.1.0
@@ -20,18 +26,21 @@ dependencies:
     version: 15.1.0
     repository: https://charts.bitnami.com/bitnami
 EOF
-  cat <<'EOF' > $EXAM_DIR/5/chart/values.yaml
+  cat <<'EOF' > $BASE_DIR/q5/chart/values.yaml
 replicaCount: 1
 service:
   port: 80
 EOF
+  cat << 'EOF_FILE' > $BASE_DIR/q5/values.yaml
+# override values here
+EOF_FILE
 
-  mkdir -p $EXAM_DIR/8/base
-  cat <<'EOF' > $EXAM_DIR/8/base/kustomization.yaml
+  mkdir -p $BASE_DIR/q8/base
+  cat <<'EOF' > $BASE_DIR/q8/base/kustomization.yaml
 resources:
   - deployment.yaml
 EOF
-  cat <<'EOF' > $EXAM_DIR/8/base/deployment.yaml
+  cat <<'EOF' > $BASE_DIR/q8/base/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -51,62 +60,19 @@ spec:
         image: nginx:alpine
 EOF
 
-  mkdir -p $EXAM_DIR/10
-  mkdir -p $EXAM_DIR/13
-  echo -n "binary-data-test" > $EXAM_DIR/13/data.bin
-  mkdir -p $EXAM_DIR/15
-  mkdir -p $EXAM_DIR/19
+  mkdir -p $BASE_DIR/q8/overlays/production
+  cat <<'EOF' > $BASE_DIR/q8/kustomization.yaml
+# TODO: Complete Kustomize config
+EOF
 
-  # === Auto-generated starter files ===
-  local BASE_DIR="./exam/course"
-  mkdir -p "$BASE_DIR/1/Dockerfile"
-  touch "$BASE_DIR/1/Dockerfile/.gitkeep"
-  mkdir -p "$BASE_DIR/1/app"
-  touch "$BASE_DIR/1/app/.gitkeep"
-  mkdir -p "$BASE_DIR/10"
-  cat << 'EOF_FILE' > "$BASE_DIR/10/metrics.txt"
-# This file will be populated when you run the relevant kubectl commands
-EOF_FILE
-  mkdir -p "$BASE_DIR/13"
-  cat << 'EOF_FILE' > "$BASE_DIR/13/data.bin"
-# This file will be populated when you run the relevant kubectl commands
-EOF_FILE
-  mkdir -p "$BASE_DIR/15"
-  cat << 'EOF_FILE' > "$BASE_DIR/15/token.txt"
-# This file will be populated when you run the relevant kubectl commands
-EOF_FILE
-  mkdir -p "$BASE_DIR/19"
-  cat << 'EOF_FILE' > "$BASE_DIR/19/endpoints.txt"
-# This file will be populated when you run the relevant kubectl commands
-EOF_FILE
-  mkdir -p "$BASE_DIR/5/chart"
-  touch "$BASE_DIR/5/chart/.gitkeep"
-  mkdir -p "$BASE_DIR/5"
-  cat << 'EOF_FILE' > "$BASE_DIR/5/values.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/8/base"
-  touch "$BASE_DIR/8/base/.gitkeep"
-  mkdir -p "$BASE_DIR/8"
-  cat << 'EOF_FILE' > "$BASE_DIR/8/kustomization.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/8/overlays/production"
-  touch "$BASE_DIR/8/overlays/production/.gitkeep"
+  mkdir -p $BASE_DIR/q10
+  touch $BASE_DIR/q10/metrics.txt
+  mkdir -p $BASE_DIR/q13
+  echo -n "binary-data-test" > $BASE_DIR/q13/data.bin
+  mkdir -p $BASE_DIR/q15
+  touch $BASE_DIR/q15/token.txt
+  mkdir -p $BASE_DIR/q19
+  touch $BASE_DIR/q19/endpoints.txt
+
+  return 0
 }

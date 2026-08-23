@@ -360,10 +360,6 @@ EOF
 **Solution:**
 
 ```bash
-# Copy template
-mkdir -p ./exam/course/12
-cp ./templates/q12-image/* ./exam/course/12/
-
 # Modify Dockerfile
 cat <<EOF > ./exam/course/12/image/Dockerfile
 FROM nginx:1.21
@@ -379,7 +375,7 @@ CMD ["nginx", "-g", "daemon off;"]
 EOF
 
 # Build with custom ARG value
-cd ./exam/course/12
+cd ./exam/course/12/image
 sudo docker build --build-arg APP_VERSION=2.0.0 -t localhost:5000/phoenix-app:2.0.0 .
 
 # Push to registry
@@ -395,10 +391,6 @@ sudo docker push localhost:5000/phoenix-app:2.0.0
 **Solution:**
 
 ```bash
-# Copy values template
-mkdir -p ./exam/course/13
-cp ./templates/q13-values.yaml ./exam/course/13/values.yaml
-
 # Install with values file
 helm install phoenix-api bitnami/nginx \
   -n flare \

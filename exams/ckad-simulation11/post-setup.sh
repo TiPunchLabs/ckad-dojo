@@ -65,15 +65,13 @@ exam_post_setup() {
 		print_skip "Q19: secure-tls already exists"
 	fi
 
-	return $errors
-
   # === Auto-generated starter files ===
   local BASE_DIR="./exam/course"
-  mkdir -p "$BASE_DIR/1/image/"
-  touch "$BASE_DIR/1/image//.gitkeep"
-  mkdir -p "$BASE_DIR/1/image/Dockerfile"
-  touch "$BASE_DIR/1/image/Dockerfile/.gitkeep"
   mkdir -p "$BASE_DIR/1/image"
+  cat << 'EOF_FILE' > "$BASE_DIR/1/image/Dockerfile"
+FROM nginx:1.25
+# TODO: Complete this Dockerfile per the task instructions
+EOF_FILE
   cat << 'EOF_FILE' > "$BASE_DIR/1/image/index.html"
 # This file will be populated when you run the relevant kubectl commands
 EOF_FILE
@@ -93,21 +91,14 @@ EOF_FILE
   cat << 'EOF_FILE' > "$BASE_DIR/12/crd-group.txt"
 # This file will be populated when you run the relevant kubectl commands
 EOF_FILE
-  mkdir -p "$BASE_DIR/13"
-  cat << 'EOF_FILE' > "$BASE_DIR/13/tls.crt"
-# This file will be populated when you run the relevant kubectl commands
-EOF_FILE
-  mkdir -p "$BASE_DIR/13"
-  cat << 'EOF_FILE' > "$BASE_DIR/13/tls.key"
-# This file will be populated when you run the relevant kubectl commands
-EOF_FILE
   mkdir -p "$BASE_DIR/15"
   cat << 'EOF_FILE' > "$BASE_DIR/15/auth-check.txt"
 # This file will be populated when you run the relevant kubectl commands
 EOF_FILE
   mkdir -p "$BASE_DIR/16"
   cat << 'EOF_FILE' > "$BASE_DIR/16/app.env"
-# This file will be populated when you run the relevant kubectl commands
+APP_NAME=my-app
+APP_ENV=production
 EOF_FILE
   mkdir -p "$BASE_DIR/20"
   cat << 'EOF_FILE' > "$BASE_DIR/20/dns-output.txt"
@@ -115,26 +106,40 @@ EOF_FILE
 EOF_FILE
   mkdir -p "$BASE_DIR/7"
   cat << 'EOF_FILE' > "$BASE_DIR/7/deployment.yaml"
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: stub-pod
+  name: web-app
+  namespace: zenith
 spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
 EOF_FILE
   mkdir -p "$BASE_DIR/7"
   cat << 'EOF_FILE' > "$BASE_DIR/7/service.yaml"
 apiVersion: v1
-kind: Pod
+kind: Service
 metadata:
-  name: stub-pod
+  name: web-svc
+  namespace: zenith
 spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
+  selector:
+    app: web
+  ports:
+  - port: 80
+    targetPort: 80
 EOF_FILE
+  return $errors
 }

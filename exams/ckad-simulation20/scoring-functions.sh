@@ -5,7 +5,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../../scripts/lib/common.sh" 2>/dev/null || true
 
-EXAM_DIR="/opt/course"
+EXAM_DIR="./exam/course"
 
 score_q1() {
   local score=0
@@ -192,10 +192,10 @@ score_q10() {
   local score=0
   local max_points=6
   local details=""
-  if [ -f "/opt/course/10/logs.txt" ] || [ -f "./exam/course/10/logs.txt" ]; then
+  if [ -f "./exam/course/10/logs.txt" ] || [ -f "./exam/course/10/logs.txt" ]; then
     score=$((score + 3))
     details+="File logs.txt created. "
-    if grep -q "ERROR" ./exam/course/10/logs.txt 2>/dev/null || grep -q "ERROR" /opt/course/10/logs.txt 2>/dev/null; then
+    if grep -q "ERROR" ./exam/course/10/logs.txt 2>/dev/null || grep -q "ERROR" ./exam/course/10/logs.txt 2>/dev/null; then
       score=$((score + 3))
       details+="Contains ERROR. "
     else
@@ -373,7 +373,7 @@ score_q20() {
   local score=0
   local max_points=6
   local details=""
-  if [ -f "/opt/course/20/dns-output.txt" ] || [ -f "./exam/course/20/dns-output.txt" ]; then
+  if [ -f "./exam/course/20/dns-output.txt" ] || [ -f "./exam/course/20/dns-output.txt" ]; then
     score=6
     details+="Output file dns-output.txt exists. "
   else

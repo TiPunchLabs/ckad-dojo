@@ -5,7 +5,7 @@
 ### Question 1
 
 ```bash
-kubectl run entry-override -n fortress --image=nginx:alpine --dry-run=client -o yaml --command -- sleep 3600 > /opt/course/1/pod.yaml
+kubectl run entry-override -n fortress --image=nginx:alpine --dry-run=client -o yaml --command -- sleep 3600 > ./exam/course/1/pod.yaml
 # Ensure command and args are separated if needed, but --command puts it into `command`.
 ```
 
@@ -22,9 +22,9 @@ kubectl create configmap init-script-cm -n fortress --from-literal=setup.sh="#!/
 echo \"Initialization successful!\" > /work-dir/index.html"
 
 # Create Pod template
-kubectl run web-setup -n fortress --image=nginx:alpine --dry-run=client -o yaml > /opt/course/2/init-pod.yaml
+kubectl run web-setup -n fortress --image=nginx:alpine --dry-run=client -o yaml > ./exam/course/2/init-pod.yaml
 
-# Edit /opt/course/2/init-pod.yaml to add volumes and initContainers
+# Edit ./exam/course/2/init-pod.yaml to add volumes and initContainers
 ```
 
 Explanation:
@@ -35,9 +35,9 @@ Init containers run to completion before the main containers start. Shared empty
 ### Question 3
 
 ```bash
-kubectl create cronjob siege-report -n siege --image=busybox:1.36 --schedule="30 * * * *" --dry-run=client -o yaml -- /bin/sh -c "date; echo Hello from siege" > /opt/course/3/cronjob.yaml
+kubectl create cronjob siege-report -n siege --image=busybox:1.36 --schedule="30 * * * *" --dry-run=client -o yaml -- /bin/sh -c "date; echo Hello from siege" > ./exam/course/3/cronjob.yaml
 
-# Edit /opt/course/3/cronjob.yaml and add `timeZone: "Asia/Tokyo"` to the spec
+# Edit ./exam/course/3/cronjob.yaml and add `timeZone: "Asia/Tokyo"` to the spec
 ```
 
 Explanation:
@@ -49,7 +49,7 @@ CronJobs support a `timeZone` field (since 1.27) directly under `spec`.
 
 ```bash
 # Create pod template
-kubectl run process-monitor -n bastion --image=nginx:alpine --dry-run=client -o yaml > /opt/course/4/shared-pid.yaml
+kubectl run process-monitor -n bastion --image=nginx:alpine --dry-run=client -o yaml > ./exam/course/4/shared-pid.yaml
 # Edit the file to add shareProcessNamespace: true and the second container.
 ```
 
@@ -61,7 +61,7 @@ Setting `shareProcessNamespace: true` at the pod `spec` level allows containers 
 ### Question 5
 
 ```bash
-helm upgrade battle-web /opt/course/5/battle-chart/ -n garrison --atomic --timeout 1m --set replicaCount=3
+helm upgrade battle-web ./exam/course/5/battle-chart/ -n garrison --atomic --timeout 1m --set replicaCount=3
 ```
 
 Explanation:
@@ -72,9 +72,9 @@ The `--atomic` flag ensures that if the deployment does not become ready within 
 ### Question 6
 
 ```bash
-kubectl create deployment citadel-guard -n citadel --image=nginx:1.24.0-alpine --dry-run=client -o yaml > /opt/course/6/deploy.yaml
+kubectl create deployment citadel-guard -n citadel --image=nginx:1.24.0-alpine --dry-run=client -o yaml > ./exam/course/6/deploy.yaml
 # Edit deploy.yaml and add `progressDeadlineSeconds: 15` under `spec`
-kubectl apply -f /opt/course/6/deploy.yaml
+kubectl apply -f ./exam/course/6/deploy.yaml
 ```
 
 Explanation:
@@ -99,7 +99,7 @@ Blue/Green deployments involve deploying a new version alongside the old one and
 ### Question 8
 
 ```yaml
-# In /opt/course/8/kustomization.yaml
+# In ./exam/course/8/kustomization.yaml
 resources:
   - deployment.yaml
 images:
@@ -116,8 +116,8 @@ patches:
         value: 5
 ```
 ```bash
-kubectl kustomize /opt/course/8/ > /opt/course/8/kustomize-output.yaml
-kubectl apply -f /opt/course/8/kustomize-output.yaml -n vanguard
+kubectl kustomize ./exam/course/8/ > ./exam/course/8/kustomize-output.yaml
+kubectl apply -f ./exam/course/8/kustomize-output.yaml -n vanguard
 ```
 
 Explanation:

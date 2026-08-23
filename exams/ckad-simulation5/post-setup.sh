@@ -9,8 +9,8 @@ function exam_post_setup() {
   cat << 'EOF_FILE' > "$BASE_DIR/10/debug-output.txt"
 # This file will be populated when you run the relevant kubectl commands
 EOF_FILE
-  mkdir -p "$BASE_DIR/11"
-  cat << 'EOF_FILE' > "$BASE_DIR/11/endpoints-info.txt"
+  mkdir -p "$BASE_DIR/19"
+  cat << 'EOF_FILE' > "$BASE_DIR/19/permissions.txt"
 # This file will be populated when you run the relevant kubectl commands
 EOF_FILE
   mkdir -p "$BASE_DIR/15"
@@ -20,8 +20,10 @@ EOF_FILE
 echo "Stub script"
 EOF_FILE
   chmod +x "$BASE_DIR/15/patch-commands.sh"
-  mkdir -p "$BASE_DIR/19"
-  cat << 'EOF_FILE' > "$BASE_DIR/19/permissions.txt"
+  mkdir -p "$BASE_DIR/11"
+  cat << 'EOF_FILE' > "$BASE_DIR/11/endpoints-info.txt"
 # This file will be populated when you run the relevant kubectl commands
 EOF_FILE
+
+  return $errors
 }

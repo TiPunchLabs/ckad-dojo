@@ -346,7 +346,7 @@ EOF
 kubectl rollout pause deployment/rolling-app -n pounce
 
 # Step 2: Update the image
-kubectl set image deployment/rolling-app app=nginx:1.22 -n pounce
+kubectl set image deployment/rolling-app nginx=nginx:1.22 -n pounce
 
 # Step 3: Set revisionHistoryLimit
 kubectl patch deployment rolling-app -n pounce -p '{"spec":{"revisionHistoryLimit":5}}'
@@ -554,7 +554,7 @@ kubectl patch deployment safe-deploy -n fang -p '{
 }'
 
 # Update the image
-kubectl set image deployment/safe-deploy app=nginx:1.22 -n fang
+kubectl set image deployment/safe-deploy nginx=nginx:1.22 -n fang
 
 # Watch the rollout (should take at least 30 seconds per pod)
 kubectl rollout status deployment/safe-deploy -n fang

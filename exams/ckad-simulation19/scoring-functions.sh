@@ -5,7 +5,7 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 source "$SCRIPT_DIR/../../scripts/lib/common.sh" 2>/dev/null || true
 
-EXAM_DIR="/opt/course/19"
+EXAM_DIR="./exam/course/19"
 
 score_q1() {
   local score=0
@@ -116,7 +116,7 @@ score_q5() {
   local max_points=6
   local details=""
 
-  local reps=$(helm get values guardian-app -n haven -o json | grep replicaCount | grep -o "[0-9]")
+  local reps=$(helm get values guardian-app -n haven -o json | grep replicaCount | grep -o '"replicaCount":[0-9]*' | grep -o '[0-9]*')
   if [[ "$reps" == "3" ]]; then
     score=$((score + 3))
     details="Replica count updated to 3 (3/3). "

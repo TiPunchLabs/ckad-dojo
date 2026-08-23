@@ -11,25 +11,29 @@ exam_post_setup() {
   kubectl delete pod failing-pod --namespace depths --force --grace-period=0 > /dev/null 2>&1
 
   # === Auto-generated starter files ===
-  local BASE_DIR="./exam/course"
-  mkdir -p "$BASE_DIR/1/Dockerfile"
-  touch "$BASE_DIR/1/Dockerfile/.gitkeep"
-  mkdir -p "$BASE_DIR/10"
-  cat << 'EOF_FILE' > "$BASE_DIR/10/events.txt"
+  local BASE_DIR="./exam/course/15"
+  
+  mkdir -p "$BASE_DIR/q1"
+  cat << 'EOF_FILE' > "$BASE_DIR/q1/Dockerfile"
+FROM golang:1.20-alpine
+COPY . /app
+WORKDIR /app
+RUN go build -o app main.go
+CMD ["./app"]
+EOF_FILE
+
+  mkdir -p "$BASE_DIR/q10"
+  cat << 'EOF_FILE' > "$BASE_DIR/q10/events.txt"
 # This file will be populated when you run the relevant kubectl commands
 EOF_FILE
-  mkdir -p "$BASE_DIR/12/config-files/"
-  touch "$BASE_DIR/12/config-files//.gitkeep"
-  mkdir -p "$BASE_DIR/8"
-  cat << 'EOF_FILE' > "$BASE_DIR/8/kustomization.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
+
+  mkdir -p "$BASE_DIR/q12/config-files"
+  echo "key1=value1" > "$BASE_DIR/q12/config-files/app.conf"
+  
+  mkdir -p "$BASE_DIR/q8"
+  cat << 'EOF_FILE' > "$BASE_DIR/q8/kustomization.yaml"
+# TODO: Complete Kustomize config
 EOF_FILE
+
+  return 0
 }

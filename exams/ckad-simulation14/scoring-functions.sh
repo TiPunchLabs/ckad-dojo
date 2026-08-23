@@ -4,7 +4,7 @@
 
 source "$SCRIPT_DIR/../../scripts/lib/common.sh" 2>/dev/null || true
 
-EXAM_DIR="/opt/course/14"
+EXAM_DIR="./exam/course/14"
 
 score_q1() {
   local score=0

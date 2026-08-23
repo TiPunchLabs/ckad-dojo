@@ -365,11 +365,11 @@ spec:
     pods: "5"
     requests.cpu: "2"
   scopes:
-  - PriorityClassIn
+  - PriorityClass
   scopeSelector:
     matchExpressions:
     - operator: In
-      scopeName: PriorityClassIn
+      scopeName: PriorityClass
       values:
       - high-priority
 EOF

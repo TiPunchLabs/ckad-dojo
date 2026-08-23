@@ -5,7 +5,7 @@
 
 ---
 
-### Question 1
+## Question 1 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 5 |
@@ -25,7 +25,7 @@ Save the manifest to `./exam/course/1/pod.yaml`.
 
 ---
 
-### Question 2
+## Question 2 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 5 |
@@ -54,7 +54,7 @@ Save the Pod manifest to `./exam/course/2/init-pod.yaml`.
 
 ---
 
-### Question 3
+## Question 3 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 5 |
@@ -74,7 +74,7 @@ Save the CronJob manifest to `./exam/course/3/cronjob.yaml`.
 
 ---
 
-### Question 4
+## Question 4 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 8 |
@@ -97,7 +97,7 @@ Save the manifest to `./exam/course/4/shared-pid.yaml`.
 
 ---
 
-### Question 5
+## Question 5 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 5 |
@@ -108,14 +108,14 @@ Save the manifest to `./exam/course/4/shared-pid.yaml`.
 
 ### Task
 A Helm release named `battle-web` exists in the `garrison` namespace.
-Upgrade it using the chart located at `/opt/course/5/battle-chart/`.
+Upgrade it using the chart located at `./exam/course/5/battle-chart/`.
 However, the upgrade must be ATOMIC (if it fails, it rolls back automatically) and have a timeout of `1m` (1 minute).
 Set the chart value `replicaCount` to `3` during the upgrade.
 Note: The underlying deployment may have a failing probe if configured incorrectly, but your task is purely to execute the Helm upgrade command with the correct flags.
 
 ---
 
-### Question 6
+## Question 6 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 6 |
@@ -135,7 +135,7 @@ Save the manifest to `./exam/course/6/deploy.yaml` and apply it.
 
 ---
 
-### Question 7
+## Question 7 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 6 |
@@ -153,7 +153,7 @@ Currently, `api-svc` routes traffic to the `api-server-blue` pods.
 
 ---
 
-### Question 8
+## Question 8 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 6 |
@@ -161,10 +161,10 @@ Currently, `api-svc` routes traffic to the `api-server-blue` pods.
 | **CNCF Weight** | 20% |
 | **Namespace** | vanguard |
 | **Resources** | Kustomize |
-| **Files** | `/opt/course/8/kustomization.yaml` |
+| **Files** | `./exam/course/8/kustomization.yaml` |
 
 ### Task
-A base kustomization structure exists at `/opt/course/8/`.
+A base kustomization structure exists at `./exam/course/8/`.
 Modify the `kustomization.yaml` file in this directory to apply two transformations to the base resources:
 1. Override the `nginx` image to use `nginx:1.23.0-alpine`.
 2. Apply a patch to scale the `vanguard-web` deployment to `5` replicas. (You can create a patch file in the same directory or use inline patches).
@@ -173,7 +173,7 @@ Save your built manifests to `./exam/course/8/kustomize-output.yaml`.
 
 ---
 
-### Question 9
+## Question 9 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 5 |
@@ -190,7 +190,7 @@ Ensure the Pod reaches the `Running` state.
 
 ---
 
-### Question 10
+## Question 10 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 6 |
@@ -208,7 +208,7 @@ Ensure the ephemeral container can run interactively (it must stay running so th
 
 ---
 
-### Question 11
+## Question 11 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 6 |
@@ -227,7 +227,7 @@ Scale the deployment to `3` replicas if it's not already.
 
 ---
 
-### Question 12
+## Question 12 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 5 |
@@ -250,7 +250,7 @@ Save the manifest to `./exam/course/12/downward.yaml`.
 
 ---
 
-### Question 13
+## Question 13 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 6 |
@@ -269,7 +269,7 @@ Save the manifest to `./exam/course/13/sa-pod.yaml`.
 
 ---
 
-### Question 14
+## Question 14 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 5 |
@@ -287,7 +287,7 @@ Save the manifest to `./exam/course/14/seccomp.yaml`.
 
 ---
 
-### Question 15
+## Question 15 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 7 |
@@ -306,7 +306,7 @@ Save the manifest to `./exam/course/15/multi-secret.yaml`.
 
 ---
 
-### Question 16
+## Question 16 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 6 |
@@ -327,7 +327,7 @@ Save the LimitRange and Pod manifests to `./exam/course/16/limit-range.yaml`.
 
 ---
 
-### Question 17
+## Question 17 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 6 |
@@ -348,7 +348,7 @@ Save the manifest to `./exam/course/17/netpol.yaml`.
 
 ---
 
-### Question 18
+## Question 18 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 6 |
@@ -368,7 +368,7 @@ Save the manifest to `./exam/course/18/ingress.yaml`.
 
 ---
 
-### Question 19
+## Question 19 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 6 |
@@ -387,7 +387,7 @@ Save the manifests to `./exam/course/19/manual-svc.yaml`.
 
 ---
 
-### Question 20
+## Question 20 | Topic
 | Field | Value |
 | --- | --- |
 | **Points** | 6 |

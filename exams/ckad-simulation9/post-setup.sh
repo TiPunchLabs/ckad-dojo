@@ -50,10 +50,10 @@ exam_post_setup() {
 		print_success "Q17: Created deployment revisions for history-deploy"
 	fi
 
-	return $errors
-
   # === Auto-generated starter files ===
   local BASE_DIR="./exam/course"
+  mkdir -p "$BASE_DIR/1"
+  touch "$BASE_DIR/1/.gitkeep"
   mkdir -p "$BASE_DIR/10"
   cat << 'EOF_FILE' > "$BASE_DIR/10/pod.yaml"
 apiVersion: v1
@@ -94,4 +94,5 @@ EOF_FILE
   cat << 'EOF_FILE' > "$BASE_DIR/20/top-pods.txt"
 # This file will be populated when you run the relevant kubectl commands
 EOF_FILE
+  return $errors
 }

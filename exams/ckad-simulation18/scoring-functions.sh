@@ -278,7 +278,7 @@ score_q10() {
   local score=0
   local max_points=5
   local details=""
-  local file_path="/opt/course/10/events.txt"
+  local file_path="./exam/course/10/events.txt"
   
   if [ -f "$file_path" ]; then
     score=$((score + 2))
@@ -303,7 +303,7 @@ score_q11() {
   local score=0
   local max_points=6
   local details=""
-  local script_path="/opt/course/11/check.sh"
+  local script_path="./exam/course/11/check.sh"
   
   if [ -f "$script_path" ]; then
     score=$((score + 2))
@@ -450,7 +450,7 @@ score_q16() {
     if [[ "$cpu" == "2" ]]; then score=$((score + 1)); fi
     
     local scopes=$(kubectl get resourcequota priority-quota -n eden -o jsonpath='{.spec.scopeSelector.matchExpressions[0].scopeName}')
-    if [[ "$scopes" == "PriorityClassIn" ]]; then 
+    if [[ "$scopes" == "PriorityClass" ]]; then 
       score=$((score + 2))
       details+="Scope correctly defined. "
     fi
@@ -517,7 +517,7 @@ score_q19() {
   local score=0
   local max_points=6
   local details=""
-  local fqdn_file="/opt/course/19/fqdn.txt"
+  local fqdn_file="./exam/course/19/fqdn.txt"
 
   if resource_exists pod dns-tester zenith; then
     score=$((score + 2))

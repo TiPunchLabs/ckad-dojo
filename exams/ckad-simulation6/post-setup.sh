@@ -18,5 +18,8 @@ exam_post_setup() {
 		fi
 	fi
 
-	return $errors
+  # === Auto-generated starter files ===
+  local BASE_DIR="./exam/course"
+
+  return $errors
 }

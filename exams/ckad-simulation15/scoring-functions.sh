@@ -10,15 +10,15 @@ score_q1() {
   local max_points=5
   local details=""
   
-  if [ -f "$LOCAL_PATH_PREFIX/1/Dockerfile" ]; then
-    if grep -q "AS builder" "$LOCAL_PATH_PREFIX/1/Dockerfile" || grep -q "as builder" "$LOCAL_PATH_PREFIX/1/Dockerfile"; then
+  if [ -f "./exam/course/15/q1/Dockerfile" ]; then
+    if grep -q "AS builder" "./exam/course/15/q1/Dockerfile" || grep -q "as builder" "./exam/course/15/q1/Dockerfile"; then
       score=$((score + 2))
       details+="Builder stage used. "
     else
       details+="Builder stage not found. "
     fi
     
-    if grep -q "COPY --from=builder" "$LOCAL_PATH_PREFIX/1/Dockerfile"; then
+    if grep -q "COPY --from=builder" "./exam/course/15/q1/Dockerfile"; then
       score=$((score + 3))
       details+="Copy from builder used. "
     else
@@ -290,10 +290,10 @@ score_q10() {
   local max_points=5
   local details=""
   
-  if [ -s "$LOCAL_PATH_PREFIX/10/events.txt" ]; then
+  if [ -s "./exam/course/15/q10/events.txt" ]; then
     score=$((score + 3))
     details+="File events.txt exists. "
-    if grep -q "Warning" "$LOCAL_PATH_PREFIX/10/events.txt"; then
+    if grep -q "Warning" "./exam/course/15/q10/events.txt"; then
       score=$((score + 2))
       details+="Warning events found in file. "
     else

@@ -437,7 +437,7 @@ score_q12() {
 	echo "Question 12 | Docker Build with ARG"
 
 	# Check Dockerfile exists
-	local dockerfile="$EXAM_DIR/12/Dockerfile"
+	local dockerfile="$EXAM_DIR/12/image/Dockerfile"
 	check_criterion "Dockerfile exists" "$([ -f "$dockerfile" ] && echo true || echo false)" && ((score++))
 
 	if [ -f "$dockerfile" ]; then
@@ -460,7 +460,7 @@ score_q12() {
 	check_criterion "Image has version=2.0.0 label" "$([ "$label" = "2.0.0" ] && echo true || echo false)" && ((score++))
 
 	# Check pushed to registry (try to pull)
-	local pushed=$(docker manifest inspect localhost:5000/phoenix-app:2.0.0 2>/dev/null && echo true || echo false)
+	local pushed=$(docker manifest inspect --insecure localhost:5000/phoenix-app:2.0.0 >/dev/null 2>&1 && echo true || echo false)
 	check_criterion "Image pushed to localhost:5000" "$pushed" && ((score++))
 
 	echo "$score/$total"
@@ -485,7 +485,7 @@ score_q13() {
 	check_criterion "Helm release phoenix-api exists in flare" "$release_exists" && ((score++))
 
 	# Check release status
-	local status=$(helm list -n flare -o json 2>/dev/null | grep -o '"status":"[^"]*"' | head -1 | cut -d'"' -f4)
+	local status=$(helm status phoenix-api -n flare -o json 2>/dev/null | grep -o '"status":"[^"]*"' | head -1 | cut -d'"' -f4)
 	check_criterion "Release status is deployed" "$([ "$status" = "deployed" ] && echo true || echo false)" && ((score++))
 
 	# Check replicas (should be 3 from values file)

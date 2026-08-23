@@ -9,12 +9,12 @@
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
-| 5 | Application Design and Build | 20% | `harmony` | Pod | `./exam/course/1/Dockerfile` |
+| 5 | Application Design and Build | 20% | `harmony` | Pod | `./exam/course/16/q1/Dockerfile` |
 
 ### Task
 
-You have been asked to build an application container image. A directory has been provided at `./exam/course/1/app` with the application source code.
-Create a `Dockerfile` at `./exam/course/1/Dockerfile` to build an image named `localhost:5000/benzaiten-wisdom:v1` using `nginx:alpine` as the base image.
+You have been asked to build an application container image. A directory has been provided at `./exam/course/16/q1/app` with the application source code.
+Create a `Dockerfile` at `./exam/course/16/q1/Dockerfile` to build an image named `localhost:5000/benzaiten-wisdom:v1` using `nginx:alpine` as the base image.
 Copy the contents of the `app` directory into `/usr/share/nginx/html/` in the container.
 Build the image and push it to the local registry.
 Then create a pod named `wisdom-server` in the `harmony` namespace using this image.
@@ -70,13 +70,13 @@ Enable process namespace sharing between the containers in this Pod so the `debu
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
-| 6 | Application Deployment | 20% | `chorus` | Helm Release | `./exam/course/5/values.yaml` |
+| 6 | Application Deployment | 20% | `chorus` | Helm Release | `./exam/course/16/q5/values.yaml` |
 
 ### Task
 
-A Helm chart is located at `./exam/course/5/chart`. It has a dependency on a subchart.
+A Helm chart is located at `./exam/course/16/q5/chart`. It has a dependency on a subchart.
 First, update the chart dependencies.
-Then, create a values file at `./exam/course/5/values.yaml` to set `replicaCount: 3` and `service.port: 8080`.
+Then, create a values file at `./exam/course/16/q5/values.yaml` to set `replicaCount: 3` and `service.port: 8080`.
 Install the chart as a release named `wisdom-app` in the `chorus` namespace using the values file.
 
 ---
@@ -112,12 +112,12 @@ Undo the rollout and rollback to exactly revision 2.
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
-| 8 | Application Deployment | 20% | `lyric` | Kustomize | `./exam/course/8/kustomization.yaml` |
+| 8 | Application Deployment | 20% | `lyric` | Kustomize | `./exam/course/16/q8/kustomization.yaml` |
 
 ### Task
 
-A base kustomize configuration is at `./exam/course/8/base`.
-Create an overlay for a `production` environment at `./exam/course/8/overlays/production`.
+A base kustomize configuration is at `./exam/course/16/q8/base`.
+Create an overlay for a `production` environment at `./exam/course/16/q8/overlays/production`.
 The overlay should:
 1. Change the namespace to `lyric`
 2. Apply a common label `env: production` to all resources
@@ -143,13 +143,13 @@ Identify the cause of the issue and fix it. The pod should be running. Do not ch
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
-| 6 | Application Observability and Maintenance | 15% | `aria` | Metrics | `./exam/course/10/metrics.txt` |
+| 6 | Application Observability and Maintenance | 15% | `aria` | Metrics | `./exam/course/16/q10/metrics.txt` |
 
 ### Task
 
 Use the `kubectl` raw API to query the metrics API server.
 Find the memory usage of the pod `heavy-worker` in the `aria` namespace.
-Write the memory usage (in Ki or Mi, exactly as output by the API) to `./exam/course/10/metrics.txt`.
+Write the memory usage (in Ki or Mi, exactly as output by the API) to `./exam/course/16/q10/metrics.txt`.
 
 ---
 
@@ -193,7 +193,7 @@ The volume should project:
 
 ### Task
 
-A binary file is provided at `./exam/course/13/data.bin`.
+A binary file is provided at `./exam/course/16/q13/data.bin`.
 Create a ConfigMap named `binary-config` in the `rhythm` namespace containing this file as binary data.
 
 ---
@@ -216,13 +216,13 @@ Configure the Pod's SecurityContext to set the SELinux options:
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
-| 4 | Application Environment, Configuration and Security | 25% | `sonata` | Token | `./exam/course/15/token.txt` |
+| 4 | Application Environment, Configuration and Security | 25% | `sonata` | Token | `./exam/course/16/q15/token.txt` |
 
 ### Task
 
 Create a ServiceAccount named `vault-accessor` in the `sonata` namespace.
 Create a token for this ServiceAccount with a duration of 1 hour (3600 seconds) using the TokenRequest API (via kubectl).
-Save the raw token string to `./exam/course/15/token.txt`.
+Save the raw token string to `./exam/course/16/q15/token.txt`.
 
 ---
 
@@ -275,12 +275,12 @@ Configure TLS for both hosts. Use the existing secret `app1-tls` for `app1.benza
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
-| 5 | Services and Networking | 20% | `tempo` | EndpointSlice | `./exam/course/19/endpoints.txt` |
+| 5 | Services and Networking | 20% | `tempo` | EndpointSlice | `./exam/course/16/q19/endpoints.txt` |
 
 ### Task
 
 Find the EndpointSlice for the Service `external-db-svc` in the `tempo` namespace.
-Extract the IPv4 addresses from this EndpointSlice and write them to `./exam/course/19/endpoints.txt`, one address per line.
+Extract the IPv4 addresses from this EndpointSlice and write them to `./exam/course/16/q19/endpoints.txt`, one address per line.
 
 ---
 

@@ -5,7 +5,7 @@
 
 source "$SCRIPT_DIR/../../scripts/lib/common.sh" 2>/dev/null || true
 
-EXAM_DIR=${EXAM_DIR:-"/opt/course"}
+EXAM_DIR="./exam/course/16"
 
 score_q1() {
   local score=0
@@ -209,8 +209,8 @@ score_q10() {
   local max_points=6
   local details=""
   
-  if [ -f "$LOCAL_PATH_PREFIX/10/metrics.txt" ] || [ -f "/opt/course/10/metrics.txt" ]; then
-    local val=$(cat $LOCAL_PATH_PREFIX/10/metrics.txt 2>/dev/null || cat /opt/course/10/metrics.txt 2>/dev/null)
+  if [ -f "./exam/course/16/q10/metrics.txt" ] || [ -f "./exam/course/16/q10/metrics.txt" ]; then
+    local val=$(cat ./exam/course/16/q10/metrics.txt 2>/dev/null || cat ./exam/course/16/q10/metrics.txt 2>/dev/null)
     if [[ -n "$val" ]]; then
       score=$((score + 6))
       details="Metrics file found and has content"
@@ -318,8 +318,8 @@ score_q15() {
   local max_points=4
   local details=""
   
-  if [ -f "$LOCAL_PATH_PREFIX/15/token.txt" ] || [ -f "/opt/course/15/token.txt" ]; then
-    local val=$(cat $LOCAL_PATH_PREFIX/15/token.txt 2>/dev/null || cat /opt/course/15/token.txt 2>/dev/null)
+  if [ -f "./exam/course/16/q15/token.txt" ] || [ -f "./exam/course/16/q15/token.txt" ]; then
+    local val=$(cat ./exam/course/16/q15/token.txt 2>/dev/null || cat ./exam/course/16/q15/token.txt 2>/dev/null)
     if [[ -n "$val" ]]; then
       score=$((score + 4))
       details="Token file found and has content"
@@ -405,8 +405,8 @@ score_q19() {
   local max_points=5
   local details=""
   
-  if [ -f "$LOCAL_PATH_PREFIX/19/endpoints.txt" ] || [ -f "/opt/course/19/endpoints.txt" ]; then
-    local val=$(cat $LOCAL_PATH_PREFIX/19/endpoints.txt 2>/dev/null || cat /opt/course/19/endpoints.txt 2>/dev/null)
+  if [ -f "./exam/course/16/q19/endpoints.txt" ] || [ -f "./exam/course/16/q19/endpoints.txt" ]; then
+    local val=$(cat ./exam/course/16/q19/endpoints.txt 2>/dev/null || cat ./exam/course/16/q19/endpoints.txt 2>/dev/null)
     if [[ -n "$val" ]]; then
       score=$((score + 5))
       details="Endpoints file found and has content"

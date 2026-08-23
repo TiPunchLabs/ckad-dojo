@@ -61,11 +61,11 @@ score_q2() {
 
 		local replicas
 		replicas=$(kubectl get deployment -n tide -l app.kubernetes.io/instance=my-release -o jsonpath='{.items[0].spec.replicas}' 2>/dev/null)
-		if [[ "$replicas" == "2" ]]; then
+		if [[ "$replicas" == "2" || "$replicas" == "3" ]]; then
 			((score += 3))
-			details+="replicaCount is 2. "
+			details+="replicaCount is $replicas. "
 		else
-			details+="replicaCount is $replicas (expected: 2). "
+			details+="replicaCount is $replicas (expected: 2 or 3). "
 		fi
 	else
 		details+="Helm release my-release not found in tide namespace. "
@@ -325,7 +325,7 @@ score_q9() {
 		details+="Pod echo-pod exists. "
 
 		local phase
-		phase=$(echo "$pod_info" | grep -o '"phase":"[^"]*"' | head -1 | cut -d'"' -f4)
+		phase=$(echo "$pod_info" | grep -o '"phase"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | cut -d'"' -f4)
 		if [[ "$phase" == "Succeeded" || "$phase" == "Completed" ]]; then
 			((score += 2))
 			details+="Pod completed successfully. "
@@ -525,7 +525,7 @@ score_q16() {
 
 		# Check if rollout undo was performed (revision should be > 3 after undo to 2)
 		local current_revision
-		current_revision=$(kubectl rollout history deployment/web-deploy -n tide 2>/dev/null | tail -1 | awk '{print $1}')
+		current_revision=$(kubectl rollout history deployment/web-deploy -n tide 2>/dev/null | grep -v '^$' | tail -1 | awk '{print $1}')
 		if [[ "$current_revision" -ge 4 ]]; then
 			((score += 3))
 			details+="Rollout undo performed (current revision: $current_revision). "

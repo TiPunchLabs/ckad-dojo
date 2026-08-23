@@ -4,25 +4,25 @@ exam_post_setup() {
   echo "Running post-setup for CKAD Simulation 14..."
   
   # Q5 Helm Chart setup
-  mkdir -p /opt/course/14/q5/chart/templates
-  cat << 'EOF' > /opt/course/14/q5/chart/Chart.yaml
+  mkdir -p ./exam/course/14/q5/chart/templates
+  cat << 'EOF_FILE' > ./exam/course/14/q5/chart/Chart.yaml
 apiVersion: v2
 name: thunder-web
 description: A Helm chart for Kubernetes
 type: application
 version: 0.1.0
 appVersion: "1.16.0"
-EOF
+EOF_FILE
 
-  cat << 'EOF' > /opt/course/14/q5/chart/values.yaml
+  cat << 'EOF_FILE' > ./exam/course/14/q5/chart/values.yaml
 replicaCount: 1
 image:
   repository: nginx
   pullPolicy: IfNotPresent
   tag: "1.16.0"
-EOF
+EOF_FILE
 
-  cat << 'EOF' > /opt/course/14/q5/chart/templates/deployment.yaml
+  cat << 'EOF_FILE' > ./exam/course/14/q5/chart/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -43,9 +43,9 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-EOF
+EOF_FILE
 
-  cat << 'EOF' > /opt/course/14/q5/chart/templates/_helpers.tpl
+  cat << 'EOF_FILE' > ./exam/course/14/q5/chart/templates/_helpers.tpl
 {{- define "thunder-web.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
@@ -61,7 +61,7 @@ EOF
 {{- end }}
 {{- end }}
 {{- end }}
-EOF
+EOF_FILE
 
   # Q6 Deployment update to create a revision history
   kubectl create deployment api-gateway --image=nginx:1.23 -n voltage
@@ -69,8 +69,8 @@ EOF
   kubectl set image deployment/api-gateway nginx=nginx:broken-tag-123 -n voltage --record=true
   
   # Q8 Base files
-  mkdir -p /opt/course/14/q8/
-  cat << 'EOF' > /opt/course/14/q8/deployment.yaml
+  mkdir -p ./exam/course/14/q8/
+  cat << 'EOF_FILE' > ./exam/course/14/q8/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -89,105 +89,17 @@ spec:
       - name: worker
         image: busybox
         command: ["sleep", "3600"]
-EOF
+EOF_FILE
 
 
   # === Auto-generated starter files ===
   local BASE_DIR="./exam/course"
-  mkdir -p "$BASE_DIR/14/q1/"
-  touch "$BASE_DIR/14/q1//.gitkeep"
-  mkdir -p "$BASE_DIR/14/q1/Dockerfile"
-  touch "$BASE_DIR/14/q1/Dockerfile/.gitkeep"
-  mkdir -p "$BASE_DIR/14/q10"
-  cat << 'EOF_FILE' > "$BASE_DIR/14/q10/events.txt"
-# This file will be populated when you run the relevant kubectl commands
+  mkdir -p "$BASE_DIR/14/q1"
+  cat << 'EOF_FILE' > "$BASE_DIR/14/q1/Dockerfile"
+FROM nginx:1.23-alpine
+# TODO: Complete this Dockerfile
 EOF_FILE
-  mkdir -p "$BASE_DIR/14/q11"
-  cat << 'EOF_FILE' > "$BASE_DIR/14/q11/pod.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/14/q12"
-  cat << 'EOF_FILE' > "$BASE_DIR/14/q12/pod.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/14/q13"
-  cat << 'EOF_FILE' > "$BASE_DIR/14/q13/pod.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/14/q14"
-  cat << 'EOF_FILE' > "$BASE_DIR/14/q14/secret.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/14/q15/"
-  touch "$BASE_DIR/14/q15//.gitkeep"
-  mkdir -p "$BASE_DIR/14/q17"
-  cat << 'EOF_FILE' > "$BASE_DIR/14/q17/netpol.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/14/q18"
-  cat << 'EOF_FILE' > "$BASE_DIR/14/q18/ingress.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/14/q19"
-  cat << 'EOF_FILE' > "$BASE_DIR/14/q19/svc.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
+  
   mkdir -p "$BASE_DIR/14/q2"
   cat << 'EOF_FILE' > "$BASE_DIR/14/q2/pod.yaml"
 apiVersion: v1
@@ -198,24 +110,25 @@ spec:
   containers:
   - name: nginx
     image: nginx
-# TODO: Complete this manifest per the task instructions
 EOF_FILE
-  mkdir -p "$BASE_DIR/14/q20"
-  cat << 'EOF_FILE' > "$BASE_DIR/14/q20/response.txt"
-# This file will be populated when you run the relevant kubectl commands
-EOF_FILE
+  
   mkdir -p "$BASE_DIR/14/q3"
   cat << 'EOF_FILE' > "$BASE_DIR/14/q3/cronjob.yaml"
-apiVersion: v1
-kind: Pod
+apiVersion: batch/v1
+kind: CronJob
 metadata:
-  name: stub-pod
+  name: stub-cronjob
 spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: test
+            image: busybox
 EOF_FILE
+  
   mkdir -p "$BASE_DIR/14/q4"
   cat << 'EOF_FILE' > "$BASE_DIR/14/q4/pod.yaml"
 apiVersion: v1
@@ -226,26 +139,26 @@ spec:
   containers:
   - name: nginx
     image: nginx
-# TODO: Complete this manifest per the task instructions
 EOF_FILE
+  
   mkdir -p "$BASE_DIR/14/q5"
   cat << 'EOF_FILE' > "$BASE_DIR/14/q5/output.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
+# Rendered helm templates will go here
 EOF_FILE
-  mkdir -p "$BASE_DIR/14/q7/"
-  touch "$BASE_DIR/14/q7//.gitkeep"
-  mkdir -p "$BASE_DIR/14/q8/"
-  touch "$BASE_DIR/14/q8//.gitkeep"
+  
   mkdir -p "$BASE_DIR/14/q8"
   cat << 'EOF_FILE' > "$BASE_DIR/14/q8/kustomization.yaml"
+resources:
+  - deployment.yaml
+EOF_FILE
+  
+  mkdir -p "$BASE_DIR/14/q10"
+  cat << 'EOF_FILE' > "$BASE_DIR/14/q10/events.txt"
+# Output here
+EOF_FILE
+  
+  mkdir -p "$BASE_DIR/14/q11"
+  cat << 'EOF_FILE' > "$BASE_DIR/14/q11/pod.yaml"
 apiVersion: v1
 kind: Pod
 metadata:
@@ -254,6 +167,70 @@ spec:
   containers:
   - name: nginx
     image: nginx
-# TODO: Complete this manifest per the task instructions
 EOF_FILE
+  
+  mkdir -p "$BASE_DIR/14/q12"
+  cat << 'EOF_FILE' > "$BASE_DIR/14/q12/pod.yaml"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stub-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+EOF_FILE
+  
+  mkdir -p "$BASE_DIR/14/q13"
+  cat << 'EOF_FILE' > "$BASE_DIR/14/q13/pod.yaml"
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stub-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+EOF_FILE
+  
+  mkdir -p "$BASE_DIR/14/q14"
+  cat << 'EOF_FILE' > "$BASE_DIR/14/q14/secret.yaml"
+apiVersion: v1
+kind: Secret
+metadata:
+  name: stub
+EOF_FILE
+  
+  mkdir -p "$BASE_DIR/14/q15"
+  
+  mkdir -p "$BASE_DIR/14/q17"
+  cat << 'EOF_FILE' > "$BASE_DIR/14/q17/netpol.yaml"
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: stub
+EOF_FILE
+  
+  mkdir -p "$BASE_DIR/14/q18"
+  cat << 'EOF_FILE' > "$BASE_DIR/14/q18/ingress.yaml"
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stub
+EOF_FILE
+  
+  mkdir -p "$BASE_DIR/14/q19"
+  cat << 'EOF_FILE' > "$BASE_DIR/14/q19/svc.yaml"
+apiVersion: v1
+kind: Service
+metadata:
+  name: stub
+EOF_FILE
+  
+  mkdir -p "$BASE_DIR/14/q20"
+  cat << 'EOF_FILE' > "$BASE_DIR/14/q20/response.txt"
+# Output here
+EOF_FILE
+  
+  return 0
 }

@@ -14,11 +14,11 @@
 | **CNCF Domain** | Application Design and Build |
 | **CNCF Weight** | 20% |
 | **Namespace** | ocean |
-| **Files** | `./exam/course/1/Dockerfile` |
+| **Files** | `./exam/course/15/q1/Dockerfile` |
 
 ### Task
 
-There is a `Dockerfile` located at `./exam/course/1/Dockerfile` that builds a simple Go application. Currently, it uses a single-stage build resulting in a large image.
+There is a `Dockerfile` located at `./exam/course/15/q1/Dockerfile` that builds a simple Go application. Currently, it uses a single-stage build resulting in a large image.
 
 Modify the `Dockerfile` to use a multi-stage build to reduce the final image size:
 1. Use `golang:1.20-alpine` as the builder stage and name the stage `builder`.
@@ -159,11 +159,11 @@ There is an existing Deployment named `api-server` in the `lagoon` namespace.
 | **CNCF Domain** | Application Deployment |
 | **CNCF Weight** | 20% |
 | **Namespace** | trench |
-| **Files** | `./exam/course/8/kustomization.yaml` |
+| **Files** | `./exam/course/15/q8/kustomization.yaml` |
 
 ### Task
 
-Create a Kustomize configuration in `./exam/course/8/` to generate a Deployment and a Service.
+Create a Kustomize configuration in `./exam/course/15/q8/` to generate a Deployment and a Service.
 
 1. Create a basic Deployment named `app-deploy` and a Service named `app-svc` in separate YAML files within the directory.
 2. In the `kustomization.yaml` file, add `commonLabels`:
@@ -201,14 +201,14 @@ Troubleshoot and fix the issue. The Pod is attempting to pull an image from an i
 | **CNCF Domain** | Application Observability and Maintenance |
 | **CNCF Weight** | 15% |
 | **Namespace** | depths |
-| **Files** | `./exam/course/10/events.txt` |
+| **Files** | `./exam/course/15/q10/events.txt` |
 
 ### Task
 
 Analyze the cluster events in the `depths` namespace.
 
 1. Extract all Warning events in the `depths` namespace.
-2. Save the output of the events to the file `./exam/course/10/events.txt`.
+2. Save the output of the events to the file `./exam/course/15/q10/events.txt`.
 3. The format of the output should be standard `kubectl get events` output.
 
 ---
@@ -241,11 +241,11 @@ Create a Pod named `grpc-checker` in the `ocean` namespace.
 | **CNCF Domain** | Application Environment, Configuration and Security |
 | **CNCF Weight** | 25% |
 | **Namespace** | tide |
-| **Files** | `./exam/course/12/` |
+| **Files** | `./exam/course/15/q12/` |
 
 ### Task
 
-1. A directory `./exam/course/12/config-files/` contains some configuration files.
+1. A directory `./exam/course/15/q12/config-files/` contains some configuration files.
 2. Create a ConfigMap named `app-config-dir` in the `tide` namespace from this directory.
 3. Create a Pod named `config-consumer` using the `alpine` image in the `tide` namespace.
 4. Mount the ConfigMap `app-config-dir` to the path `/etc/config` within the Pod.

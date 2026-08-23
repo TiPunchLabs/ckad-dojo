@@ -3,7 +3,7 @@
 # Total Points: 110
 
 source "$SCRIPT_DIR/../../scripts/lib/common.sh" 2>/dev/null || true
-EXAM_DIR="$SCRIPT_DIR"
+EXAM_DIR="./exam/course/13"
 
 score_q1() {
   local score=0
@@ -99,9 +99,10 @@ score_q5() {
   local max_points=5
   local details=""
   
-  if resource_exists deploy storm-app-storm-chart typhoon; then
-    local reps=$(kubectl get deploy storm-app-storm-chart -n typhoon -o jsonpath='{.spec.replicas}')
-    local img=$(kubectl get deploy storm-app-storm-chart -n typhoon -o jsonpath='{.spec.template.spec.containers[0].image}')
+  local deploy_name=$(kubectl get deploy -n typhoon -o name | grep storm-app | head -n 1)
+  if [ -n "$deploy_name" ]; then
+    local reps=$(kubectl get $deploy_name -n typhoon -o jsonpath='{.spec.replicas}')
+    local img=$(kubectl get $deploy_name -n typhoon -o jsonpath='{.spec.template.spec.containers[0].image}')
     if [ "$reps" == "3" ]; then
       score=$((score + 2))
       details="Replicas correct"
@@ -163,13 +164,14 @@ score_q8() {
   local max_points=6
   local details=""
   
-  if resource_exists cm tornado-config tornado; then
+  local cm_name=$(kubectl get cm -n tornado -o name | grep tornado-config | head -n 1)
+  if [ -n "$cm_name" ]; then
     score=$((score + 3))
     details="ConfigMap created"
   else
     details="ConfigMap not found"
   fi
-  if [ -f "$LOCAL_PATH_PREFIX/13/q8/kustomization.yaml" ]; then
+  if [ -f "$EXAM_DIR/q8/kustomization.yaml" ]; then
     score=$((score + 3))
     details="$details; kustomization.yaml created"
   fi

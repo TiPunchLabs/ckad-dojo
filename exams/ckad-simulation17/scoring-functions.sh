@@ -5,7 +5,7 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 source "$SCRIPT_DIR/../../scripts/lib/common.sh" 2>/dev/null || true
 
-EXAM_DIR="/opt/course"
+EXAM_DIR="./exam/course"
 
 score_q1() {
     local score=0
@@ -142,7 +142,7 @@ score_q5() {
         ((score+=2))
         details+="Helm release is deployed. "
         
-        local replicas=$(kubectl get deploy battle-web -n garrison -o jsonpath='{.spec.replicas}' 2>/dev/null)
+        local replicas=$(kubectl get deploy battle-web-battle-chart -n garrison -o jsonpath='{.spec.replicas}' 2>/dev/null)
         if [[ "$replicas" == "3" ]]; then
             ((score+=3))
             details+="ReplicaCount is 3. "
@@ -537,11 +537,11 @@ score_q20() {
     local max_points=7
     local details=""
 
-    if [[ -f "/opt/course/20/coredns.yaml" ]]; then
+    if [[ -f "./exam/course/20/coredns.yaml" ]]; then
         ((score+=2))
         details+="coredns.yaml exists. "
         
-        local file_content=$(cat /opt/course/20/coredns.yaml)
+        local file_content=$(cat ./exam/course/20/coredns.yaml)
         if [[ "$file_content" == *"rewrite name exact hachiman.local hachiman.garrison.svc.cluster.local"* ]]; then
             ((score+=5))
             details+="Rewrite rule present. "
@@ -549,7 +549,7 @@ score_q20() {
             details+="Rewrite rule not found. "
         fi
     else
-        details+="File /opt/course/20/coredns.yaml not found. "
+        details+="File ./exam/course/20/coredns.yaml not found. "
     fi
 
     echo "$score/$max_points"

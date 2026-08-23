@@ -31,8 +31,6 @@ exam_post_setup() {
 		((errors++))
 	fi
 
-	return $errors
-
   # === Auto-generated starter files ===
   local BASE_DIR="./exam/course"
   mkdir -p "$BASE_DIR/13"
@@ -41,15 +39,25 @@ exam_post_setup() {
 EOF_FILE
   mkdir -p "$BASE_DIR/14"
   cat << 'EOF_FILE' > "$BASE_DIR/14/broken-deploy.yaml"
-apiVersion: v1
-kind: Pod
+apiVersion: extensions/v1beta1
+kind: Deployment
 metadata:
-  name: stub-pod
+  name: legacy-app
+  namespace: rampart
 spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
+  replicas: 2
+  rollbackTo:
+    revision: 1
+  template:
+    metadata:
+      labels:
+        app: legacy-app
+    spec:
+      containers:
+      - name: legacy-app
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
 EOF_FILE
   mkdir -p "$BASE_DIR/15"
   cat << 'EOF_FILE' > "$BASE_DIR/15/root-cause.txt"
@@ -67,12 +75,11 @@ spec:
     image: nginx
 # TODO: Complete this manifest per the task instructions
 EOF_FILE
-  mkdir -p "$BASE_DIR/7/image/"
-  touch "$BASE_DIR/7/image//.gitkeep"
-  mkdir -p "$BASE_DIR/7/image/Dockerfile"
-  touch "$BASE_DIR/7/image/Dockerfile/.gitkeep"
-  mkdir -p "$BASE_DIR/7"
-  cat << 'EOF_FILE' > "$BASE_DIR/7/oni-app.tar"
-# This file will be populated when you run the relevant kubectl commands
+  mkdir -p "$BASE_DIR/7/image"
+  cat << 'EOF_FILE' > "$BASE_DIR/7/image/Dockerfile"
+FROM nginx:1.25
+# TODO: Complete this Dockerfile per the task instructions
 EOF_FILE
+  mkdir -p "$BASE_DIR/7"
+  return $errors
 }

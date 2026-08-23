@@ -1,235 +1,127 @@
 #!/bin/bash
 exam_post_setup() {
-  echo "Post setup for Dojo Musashi complete"
-
-  # === Auto-generated starter files ===
   local BASE_DIR="./exam/course"
-  mkdir -p "$BASE_DIR/1/Dockerfile"
-  touch "$BASE_DIR/1/Dockerfile/.gitkeep"
-  mkdir -p "$BASE_DIR/1"
-  cat << 'EOF_FILE' > "$BASE_DIR/1/main.go"
+  mkdir -p "$BASE_DIR/1" "$BASE_DIR/2" "$BASE_DIR/3" "$BASE_DIR/4" "$BASE_DIR/5" "$BASE_DIR/6" "$BASE_DIR/7" "$BASE_DIR/8/base" "$BASE_DIR/8/prod" "$BASE_DIR/10" "$BASE_DIR/12" "$BASE_DIR/13" "$BASE_DIR/14" "$BASE_DIR/15" "$BASE_DIR/16" "$BASE_DIR/17" "$BASE_DIR/18" "$BASE_DIR/19" "$BASE_DIR/20"
+
+  cat << 'EOF2' > "$BASE_DIR/1/main.go"
 package main
 import "fmt"
-func main() {
-    fmt.Println("Stub main.go")
-}
-EOF_FILE
-  mkdir -p "$BASE_DIR/1"
-  cat << 'EOF_FILE' > "$BASE_DIR/1/pod.yaml"
+func main() { fmt.Println("Hello Dojo") }
+EOF2
+  cat << 'EOF2' > "$BASE_DIR/1/Dockerfile"
+FROM nginx:alpine
+# TODO
+EOF2
+  cat << 'EOF2' > "$BASE_DIR/1/pod.yaml"
 apiVersion: v1
 kind: Pod
 metadata:
-  name: stub-pod
+  name: stub
 spec:
   containers:
-  - name: nginx
+  - name: c
     image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/10"
-  cat << 'EOF_FILE' > "$BASE_DIR/10/logs.txt"
-# This file will be populated when you run the relevant kubectl commands
-EOF_FILE
-  mkdir -p "$BASE_DIR/12"
-  cat << 'EOF_FILE' > "$BASE_DIR/12/secure-pod.yaml"
+EOF2
+
+  for q in 2/multi-pod 6/deploy 7/canary 12/secure-pod 14/inject 19/svc 20/dns; do
+    cat << 'EOF2' > "$BASE_DIR/${q}.yaml"
 apiVersion: v1
 kind: Pod
 metadata:
-  name: stub-pod
+  name: stub
 spec:
   containers:
-  - name: nginx
+  - name: c
     image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/13"
-  cat << 'EOF_FILE' > "$BASE_DIR/13/rbac.yaml"
-apiVersion: v1
-kind: Pod
+EOF2
+  done
+
+  cat << 'EOF2' > "$BASE_DIR/3/job.yaml"
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: stub-pod
+  name: stub
 spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/14"
-  cat << 'EOF_FILE' > "$BASE_DIR/14/inject.yaml"
-apiVersion: v1
-kind: Pod
+  template:
+    spec:
+      containers:
+      - name: c
+        image: nginx
+      restartPolicy: Never
+EOF2
+
+  cat << 'EOF2' > "$BASE_DIR/4/cronjob.yaml"
+apiVersion: batch/v1
+kind: CronJob
 metadata:
-  name: stub-pod
+  name: stub
 spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/15"
-  cat << 'EOF_FILE' > "$BASE_DIR/15/quota.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/16"
-  cat << 'EOF_FILE' > "$BASE_DIR/16/storage.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/17"
-  cat << 'EOF_FILE' > "$BASE_DIR/17/netpol.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/18"
-  cat << 'EOF_FILE' > "$BASE_DIR/18/ingress.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/19"
-  cat << 'EOF_FILE' > "$BASE_DIR/19/svc.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/2"
-  cat << 'EOF_FILE' > "$BASE_DIR/2/multi-pod.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/20"
-  cat << 'EOF_FILE' > "$BASE_DIR/20/dns-output.txt"
-# This file will be populated when you run the relevant kubectl commands
-EOF_FILE
-  mkdir -p "$BASE_DIR/20"
-  cat << 'EOF_FILE' > "$BASE_DIR/20/dns.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/3"
-  cat << 'EOF_FILE' > "$BASE_DIR/3/job.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/4"
-  cat << 'EOF_FILE' > "$BASE_DIR/4/cronjob.yaml"
-apiVersion: v1
-kind: Pod
-metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: c
+            image: nginx
+          restartPolicy: Never
+EOF2
+
   mkdir -p "$BASE_DIR/5/my-chart"
-  touch "$BASE_DIR/5/my-chart/.gitkeep"
-  mkdir -p "$BASE_DIR/5"
-  cat << 'EOF_FILE' > "$BASE_DIR/5/values.yaml"
-apiVersion: v1
-kind: Pod
+  cat << 'EOF2' > "$BASE_DIR/5/values.yaml"
+# stub values
+EOF2
+
+  cat << 'EOF2' > "$BASE_DIR/8/kustomization.yaml"
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+EOF2
+
+  cat << 'EOF2' > "$BASE_DIR/13/rbac.yaml"
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
 metadata:
-  name: stub-pod
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/6"
-  cat << 'EOF_FILE' > "$BASE_DIR/6/deploy.yaml"
+  name: stub
+rules: []
+EOF2
+
+  cat << 'EOF2' > "$BASE_DIR/15/quota.yaml"
 apiVersion: v1
-kind: Pod
+kind: ResourceQuota
 metadata:
-  name: stub-pod
+  name: stub
 spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/7"
-  cat << 'EOF_FILE' > "$BASE_DIR/7/canary.yaml"
+  hard: {}
+EOF2
+
+  cat << 'EOF2' > "$BASE_DIR/16/storage.yaml"
 apiVersion: v1
-kind: Pod
+kind: PersistentVolumeClaim
 metadata:
-  name: stub-pod
+  name: stub
 spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/8/base"
-  touch "$BASE_DIR/8/base/.gitkeep"
-  mkdir -p "$BASE_DIR/8"
-  cat << 'EOF_FILE' > "$BASE_DIR/8/kustomization.yaml"
-apiVersion: v1
-kind: Pod
+  accessModes: []
+  resources: {}
+EOF2
+
+  cat << 'EOF2' > "$BASE_DIR/17/netpol.yaml"
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
 metadata:
-  name: stub-pod
+  name: stub
 spec:
-  containers:
-  - name: nginx
-    image: nginx
-# TODO: Complete this manifest per the task instructions
-EOF_FILE
-  mkdir -p "$BASE_DIR/8/prod"
-  touch "$BASE_DIR/8/prod/.gitkeep"
+  podSelector: {}
+EOF2
+
+  cat << 'EOF2' > "$BASE_DIR/18/ingress.yaml"
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stub
+spec:
+  rules: []
+EOF2
+
+  touch "$BASE_DIR/10/logs.txt"
+  touch "$BASE_DIR/20/dns-output.txt"
 }

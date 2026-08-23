@@ -1,7 +1,7 @@
 #!/bin/bash
 # CKAD Simulation 12 - Scoring Functions (108 points total)
 
-EXAM_DIR="/opt/course/12"
+EXAM_DIR="./exam/course/12"
 source "$SCRIPT_DIR/../../scripts/lib/common.sh" 2>/dev/null || true
 
 score_q1() {
@@ -9,7 +9,7 @@ score_q1() {
   local max_points=6
   local details=""
   
-  if [ -f "$EXAM_DIR/q1/Dockerfile" ]; text_file_exists; then
+  if [ -f "$EXAM_DIR/q1/Dockerfile" ]; then
     if grep -q -E "FROM golang:1.20-alpine AS builder|FROM golang:1.20-alpine as builder" "$EXAM_DIR/q1/Dockerfile"; then
       ((score+=2))
       details+="Builder stage defined. "

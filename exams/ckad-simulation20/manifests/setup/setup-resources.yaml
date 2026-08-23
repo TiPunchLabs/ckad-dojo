@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: glory-deploy
+  namespace: glory
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: glory
+  template:
+    metadata:
+      labels:
+        app: glory
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.24
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: legacy-main
+  namespace: legacy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: legacy-web
+  template:
+    metadata:
+      labels:
+        app: legacy-web
+    spec:
+      containers:
+      - name: web
+        image: nginx
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bug-1
+  namespace: ascend
+spec:
+  containers:
+  - name: main
+    image: busybox
+    command: ["eccho", "hello"]
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bug-2
+  namespace: ascend
+spec:
+  containers:
+  - name: main
+    image: busybox
+    command: ["sleep", "3600"]
+    resources:
+      requests:
+        cpu: "1000"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bug-3
+  namespace: ascend
+spec:
+  containers:
+  - name: main
+    image: nginx:1.999.9
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: triumph-app
+  namespace: triumph
+spec:
+  containers:
+  - name: main
+    image: busybox
+    command: ["sh", "-c", "while true; do echo 'ERROR: connection lost'; sleep 10; done"]
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: distroless-pod
+  namespace: apex
+spec:
+  containers:
+  - name: main
+    image: gcr.io/distroless/static
+    command: ["/ko-app/example"]

@@ -25,4 +25,5 @@ EOF_FILE
   cat << 'EOF_FILE' > "$BASE_DIR/20/token.txt"
 # This file will be populated when you run the relevant kubectl commands
 EOF_FILE
+  return $errors
 }
