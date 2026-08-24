@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ward
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aegis
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shield
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: guardian
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: haven
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: refuge
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bastion
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bulwark
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: anchor
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: helm

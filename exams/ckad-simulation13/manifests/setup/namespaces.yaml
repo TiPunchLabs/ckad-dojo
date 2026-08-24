@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gale
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: breeze
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tempest
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cyclone
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zephyr
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: typhoon
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tornado
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mistral
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sirocco
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monsoon

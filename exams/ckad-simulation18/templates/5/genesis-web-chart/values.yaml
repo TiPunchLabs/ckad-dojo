@@ -1,0 +1,12 @@
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  tag: "1.21"
+
+service:
+  type: ClusterIP
+  port: 80
+
+customLabel: "default-value"

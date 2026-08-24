@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lunar
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: crescent
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: twilight
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: eclipse
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: shadow
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nightfall
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dusk
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: starlight
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nebula
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: void

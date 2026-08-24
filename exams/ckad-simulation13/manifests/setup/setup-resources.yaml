@@ -1,0 +1,197 @@
+# Setup resources for CKAD Simulation 13
+apiVersion: v1
+kind: Pod
+metadata:
+  name: wind-logger
+  namespace: gale
+spec:
+  containers:
+  - name: app
+    image: busybox:1.31.1
+    command: ["sh", "-c", "while true; do echo 'Wind speed 100mph' >> /var/log/wind.log; sleep 5; done"]
+    volumeMounts:
+    - name: logs
+      mountPath: /var/log
+  volumes:
+  - name: logs
+    emptyDir: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tempest-app
+  namespace: tempest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tempest
+  template:
+    metadata:
+      labels:
+        app: tempest
+    spec:
+      containers:
+      - name: main
+        image: nginx:1.22
+        ports:
+        - containerPort: 80
+        env:
+        - name: WIND_FORCE
+          value: "high"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cyclone-web
+  namespace: cyclone
+spec:
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: cyclone-web
+  template:
+    metadata:
+      labels:
+        app: cyclone-web
+    spec:
+      containers:
+      - name: web
+        image: nginx:1.22
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blue
+  namespace: zephyr
+  labels:
+    app: zephyr-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zephyr-app
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: zephyr-app
+        version: blue
+    spec:
+      containers:
+      - name: app
+        image: nginx:alpine
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green
+  namespace: zephyr
+  labels:
+    app: zephyr-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zephyr-app
+      version: green
+  template:
+    metadata:
+      labels:
+        app: zephyr-app
+        version: green
+    spec:
+      containers:
+      - name: app
+        image: nginx:alpine
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zephyr-svc
+  namespace: zephyr
+spec:
+  selector:
+    app: zephyr-app
+    version: blue
+  ports:
+  - port: 80
+    targetPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: memory-hog
+  namespace: mistral
+spec:
+  containers:
+  - name: hog
+    image: polynya/stress
+    args: ["--vm", "1", "--vm-bytes", "150M", "--vm-hang", "1"]
+    resources:
+      requests:
+        memory: "64Mi"
+      limits:
+        memory: "64Mi"
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: breeze-admin
+  namespace: breeze
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: zephyr-api
+  namespace: zephyr
+spec:
+  containers:
+  - name: api
+    image: nginx:alpine
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mistral-db
+  namespace: mistral
+spec:
+  serviceName: "mistral-db-headless"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mistral-db
+  template:
+    metadata:
+      labels:
+        app: mistral-db
+    spec:
+      containers:
+      - name: db
+        image: mysql:5.7
+        env:
+        - name: MYSQL_ALLOW_EMPTY_PASSWORD
+          value: "1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sirocco-backend
+  namespace: sirocco
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sirocco-app
+  namespace: sirocco
+spec:
+  containers:
+  - name: app
+    image: busybox:1.31.1
+    command: ["sleep", "3600"]
