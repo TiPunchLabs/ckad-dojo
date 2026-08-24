@@ -1,0 +1,146 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-cj
+  namespace: shield
+spec:
+  schedule: "*/10 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: backup
+            image: busybox
+            command: ["echo", "backup"]
+          restartPolicy: OnFailure
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-server
+  namespace: refuge
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: api-server
+  template:
+    metadata:
+      labels:
+        app: api-server
+    spec:
+      containers:
+      - name: api
+        image: nginx:alpine
+        resources:
+          requests:
+            cpu: 100m
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api-hpa
+  namespace: refuge
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: wrong-deployment
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 50
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-deploy
+  namespace: bastion
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.24.0
+      - name: redis
+        image: redis:6.2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broken-app
+  namespace: anchor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: broken
+  template:
+    metadata:
+      labels:
+        app: broken
+    spec:
+      containers:
+      - name: app
+        image: ngnx:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-secret
+              key: PASSWORD
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend-pod-1
+  namespace: helm
+  labels:
+    tier: backend
+spec:
+  containers:
+  - name: c
+    image: nginx:alpine
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend-pod-2
+  namespace: helm
+  labels:
+    tier: backend
+spec:
+  containers:
+  - name: c
+    image: nginx:alpine
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: v1-service
+  namespace: bulwark
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: v2-service
+  namespace: bulwark
+spec:
+  ports:
+  - port: 80
+  selector:
+    app: v2

@@ -1,0 +1,84 @@
+# Setup resources for Simulation 14
+---
+# Q7: Canary Service and Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-v1
+  namespace: spark
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.22
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-svc
+  namespace: spark
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: 80
+    targetPort: 80
+---
+# Q9: CrashLoopBackOff Pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: data-processor
+  namespace: flash
+spec:
+  containers:
+  - name: processor
+    image: busybox
+    command: ["sh", "-c", "echo Starting...; sleep 2; exit 1"]
+---
+# Q10: Events generation
+apiVersion: v1
+kind: Pod
+metadata:
+  name: broken-pod
+  namespace: strike
+spec:
+  containers:
+  - name: broken
+    image: non-existent-image-12345
+---
+# Q18: Fallback service (optional but good)
+apiVersion: v1
+kind: Service
+metadata:
+  name: fallback-svc
+  namespace: surge
+spec:
+  selector:
+    app: fallback
+  ports:
+  - port: 8080
+    targetPort: 8080
+---
+# Q20: Port forwarding target
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hidden-api
+  namespace: strike
+  labels:
+    app: hidden
+spec:
+  containers:
+  - name: api
+    image: mendhak/http-https-echo
+    ports:
+    - containerPort: 8080
