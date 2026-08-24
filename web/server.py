@@ -545,7 +545,7 @@ class ExamHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_json({"enabled": False, "running": False, "port": 0, "url": None})
             else:
                 # Check if ttyd is running
-                ttyd_port = int(os.environ.get("TTYD_PORT", "7681"))
+                ttyd_port = int(os.environ.get("TTYD_PORT", "7682"))
                 ttyd_running = self.check_ttyd_status(ttyd_port)
                 self.send_json(
                     {

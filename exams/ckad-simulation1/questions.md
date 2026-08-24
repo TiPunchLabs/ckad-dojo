@@ -278,7 +278,7 @@ Create a **NetworkPolicy** named `allow-from-flame` in namespace `corona` that:
 |   **CNCF Domain**   | Application Design and Build         |
 |   **CNCF Weight**   | 20%                                  |
 | **Namespace**       | `inferno`                          |
-| **File to modify**  | `./exam/course/12/Dockerfile`      |
+| **File to modify**  | `./exam/course/12/image/Dockerfile`      |
 | **Image to create** | `localhost:5000/phoenix-app:2.0.0` |
 
 ### Task
