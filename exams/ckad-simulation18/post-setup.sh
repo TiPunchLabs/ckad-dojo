@@ -51,5 +51,5 @@ EOF_S
   touch "$BASE_DIR/11/health.log"
   touch "$BASE_DIR/19/fqdn.txt"
 
-  return $errors
+  return 0
 }

@@ -415,17 +415,9 @@ def parse_questions_md(exam_id: str) -> list:
                 # Skip separator rows (e.g. |---|---|, | :--- | :--- |, etc.)
                 if re.match(r"^\|[\s\-:|\s]+\|?\s*$", line.strip()):
                     continue
-                # Check if this is a metadata row (has **Key** format in first column)
                 if len(parts) >= 2 and parts[0].startswith("**") and parts[0].endswith("**"):
                     key = parts[0].strip("*").lower()
                     value = parts[1]
-                elif len(parts) >= 4 and not any("**" in p for p in parts):
-                    if re.match(r"^\d+$", parts[0]):
-                        current_question["points"] = int(parts[0])
-                        current_question["namespace"] = parts[3].strip("`") if len(parts) > 3 else ""
-                        current_question["resources"] = parts[4] if len(parts) > 4 else ""
-                        current_question["files"] = parts[5] if len(parts) > 5 else ""
-                    continue
                     if key == "points":
                         # Extract points from format like "7/113 (6%)"
                         points_match = re.match(r"(\d+)", value)
@@ -439,18 +431,7 @@ def parse_questions_md(exam_id: str) -> list:
                         current_question["files"] = value
                     # Skip metadata rows from content
                     continue
-                # Check if this is a new-format 6-column table row:
-                # | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files |
-                # where parts[0] is a digit (points value)
-                elif len(parts) >= 6 and parts[0].isdigit():
-                    current_question["points"] = int(parts[0])
-                    current_question["namespace"] = parts[3].strip("`")
-                    current_question["resources"] = parts[4]
-                    current_question["files"] = parts[5]
-                    # Skip this metadata row from content
-                    continue
-                elif re.match(r"^\\|\\s*[-:|]+\\s*(\\|\\s*[-:|]+\\s*)+\\|?\\s*$", line.strip()) or line.strip() in ("| | |", "|---|---|"):
-                    # Skip empty header and separator rows of metadata table
+                elif line.strip() in ("| | |", "|---|---|"):
                     continue
             # Add all other lines (including task tables) to content
             current_content.append(line)

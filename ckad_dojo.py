@@ -179,7 +179,6 @@ def discover_exams() -> list[str]:
 
     def _natural_sort_key(name: str) -> tuple[str, int]:
         """Sort exam IDs naturally: ckad-simulation1, ..., 9, 10."""
-        import re
 
         match = re.match(r"^(.*?)(\d+)$", name)
         if match:
@@ -195,13 +194,12 @@ def normalize_exam_id(exam_id: str) -> str:
         return exam_id
     if exam_id.isdigit():
         return f"ckad-simulation{exam_id}"
-    
+
     # Handle sim1, simulation1, ckad-sim1 shortcuts
-    import re
     match = re.match(r"^(?:ckad-)?(?:sim(?:ulation)?)?[-_]?(\d+)$", exam_id.lower())
     if match:
         return f"ckad-simulation{match.group(1)}"
-        
+
     return exam_id
 
 

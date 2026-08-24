@@ -5,7 +5,7 @@
 
 ---
 
-## Question 1
+## Question 1 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -17,7 +17,7 @@ Then create a pod named `musashi-pod` in the `apex` namespace using this image.
 
 ---
 
-## Question 2
+## Question 2 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -31,7 +31,7 @@ Create a multi-container pod named `tri-blade` in the `summit` namespace with th
 
 ---
 
-## Question 3
+## Question 3 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -44,7 +44,7 @@ Configure the Job to complete 3 successful pods, with 2 running in parallel.
 
 ---
 
-## Question 4
+## Question 4 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -59,7 +59,7 @@ Retain 3 successful jobs and 1 failed job.
 
 ---
 
-## Question 5
+## Question 5 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -72,7 +72,7 @@ Install the chart into the `crown` namespace with the release name `crown-releas
 
 ---
 
-## Question 6
+## Question 6 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -86,7 +86,7 @@ Finally, scale it to 5 replicas.
 
 ---
 
-## Question 7
+## Question 7 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -99,7 +99,7 @@ The canary should have 1 replica using `httpd:2.4`, while the main has 4. Ensure
 
 ---
 
-## Question 8
+## Question 8 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -115,7 +115,7 @@ The overlay should:
 
 ---
 
-## Question 9
+## Question 9 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -127,7 +127,7 @@ Troubleshoot and fix them. (You may delete and recreate if necessary, or edit th
 
 ---
 
-## Question 10
+## Question 10 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -139,7 +139,7 @@ Find all lines containing "ERROR" and save them to `./exam/course/10/logs.txt`.
 
 ---
 
-## Question 11
+## Question 11 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -151,7 +151,7 @@ Attach an ephemeral container using the `busybox` image and run `nslookup kubern
 
 ---
 
-## Question 12
+## Question 12 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -164,7 +164,7 @@ Container security context: `runAsUser: 2000`, `allowPrivilegeEscalation: false`
 
 ---
 
-## Question 13
+## Question 13 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -177,7 +177,7 @@ Create a RoleBinding `master-binding` binding the role to the service account.
 
 ---
 
-## Question 14
+## Question 14 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -190,7 +190,7 @@ Create a pod `inject-pod` in `zenith` that uses `app-config` as environment vari
 
 ---
 
-## Question 15
+## Question 15 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -202,7 +202,7 @@ Create a ResourceQuota `compute-quota` in `crown`: max 4 pods, max 2 CPU, max 4G
 
 ---
 
-## Question 16
+## Question 16 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -215,7 +215,7 @@ Create a pod `glory-pod` that mounts this PVC at `/var/data`.
 
 ---
 
-## Question 17
+## Question 17 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -227,7 +227,7 @@ Then create a NetworkPolicy `allow-web` that allows ingress traffic to pods with
 
 ---
 
-## Question 18
+## Question 18 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -240,7 +240,7 @@ Path `/web` (prefix) routes to service `web-svc` on port 80.
 
 ---
 
-## Question 19
+## Question 19 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -251,7 +251,7 @@ Create a NodePort service `ascend-svc` in `ascend` exposing port 80, targetPort 
 
 ---
 
-## Question 20
+## Question 20 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|

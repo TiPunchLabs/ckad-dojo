@@ -2,7 +2,7 @@
 
 ---
 
-### Question 1
+## Question 1 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q1
@@ -15,7 +15,7 @@ EOF
 
 ---
 
-### Question 2
+## Question 2 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q2
@@ -48,7 +48,7 @@ kubectl apply -f ./exam/course/14/q2/pod.yaml
 
 ---
 
-### Question 3
+## Question 3 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q3
@@ -83,7 +83,7 @@ kubectl apply -f ./exam/course/14/q3/cronjob.yaml
 
 ---
 
-### Question 4
+## Question 4 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q4
@@ -107,7 +107,7 @@ kubectl apply -f ./exam/course/14/q4/pod.yaml
 
 ---
 
-### Question 5
+## Question 5 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q5
@@ -116,7 +116,7 @@ helm template thunder-web /opt/course/14/q5/chart --namespace surge --set replic
 
 ---
 
-### Question 6
+## Question 6 | Kubernetes Practice
 
 ```bash
 kubectl rollout undo deployment api-gateway -n voltage --to-revision=1
@@ -124,7 +124,7 @@ kubectl rollout undo deployment api-gateway -n voltage --to-revision=1
 
 ---
 
-### Question 7
+## Question 7 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q7
@@ -157,7 +157,7 @@ kubectl apply -f ./exam/course/14/q7/backend-v2.yaml
 
 ---
 
-### Question 8
+## Question 8 | Kubernetes Practice
 
 ```bash
 cat <<EOF > ./exam/course/14/q8/kustomization.yaml
@@ -189,7 +189,7 @@ kubectl apply -k ./exam/course/14/q8/ -n charge
 
 ---
 
-### Question 9
+## Question 9 | Kubernetes Practice
 
 Find out why the pod is crashing:
 ```bash
@@ -204,7 +204,7 @@ kubectl edit pod data-processor -n flash
 
 ---
 
-### Question 10
+## Question 10 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q10
@@ -213,7 +213,7 @@ kubectl get events -n strike --sort-by='.metadata.creationTimestamp' > ./exam/co
 
 ---
 
-### Question 11
+## Question 11 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q11
@@ -251,7 +251,7 @@ kubectl apply -f ./exam/course/14/q11/pod.yaml
 
 ---
 
-### Question 12
+## Question 12 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q12
@@ -281,7 +281,7 @@ kubectl apply -f ./exam/course/14/q12/pod.yaml
 
 ---
 
-### Question 13
+## Question 13 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q13
@@ -306,7 +306,7 @@ kubectl apply -f ./exam/course/14/q13/pod.yaml
 
 ---
 
-### Question 14
+## Question 14 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q14
@@ -326,7 +326,7 @@ kubectl apply -f ./exam/course/14/q14/secret.yaml
 
 ---
 
-### Question 15
+## Question 15 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q15
@@ -356,7 +356,7 @@ kubectl apply -f ./exam/course/14/q15/pod.yaml
 
 ---
 
-### Question 16
+## Question 16 | Kubernetes Practice
 
 ```bash
 kubectl create serviceaccount app-sa -n spark
@@ -366,7 +366,7 @@ kubectl create clusterrolebinding secret-reader-binding --clusterrole=secret-rea
 
 ---
 
-### Question 17
+## Question 17 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q17
@@ -399,7 +399,7 @@ kubectl apply -f ./exam/course/14/q17/netpol.yaml
 
 ---
 
-### Question 18
+## Question 18 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q18
@@ -421,7 +421,7 @@ kubectl apply -f ./exam/course/14/q18/ingress.yaml
 
 ---
 
-### Question 19
+## Question 19 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q19
@@ -448,7 +448,7 @@ kubectl apply -f ./exam/course/14/q19/svc.yaml
 
 ---
 
-### Question 20
+## Question 20 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/14/q20

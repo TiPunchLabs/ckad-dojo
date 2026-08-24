@@ -1183,7 +1183,8 @@ html, body {
     color: var(--accent-success);
 }
 
-.criterion-pass .criterion-description, .criterion-text {
+.criterion-pass .criterion-description,
+.criterion-pass .criterion-text {
     color: var(--text-primary);
 }
 
@@ -1191,7 +1192,8 @@ html, body {
     color: var(--accent-danger);
 }
 
-.criterion-fail .criterion-description, .criterion-text {
+.criterion-fail .criterion-description,
+.criterion-fail .criterion-text {
     color: var(--text-secondary);
 }
 

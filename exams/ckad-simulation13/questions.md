@@ -4,7 +4,7 @@
 > 「風神は嵐を呼ぶ」- Fujin summons the storm
 
 ---
-### Question 1
+## Question 1 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -16,7 +16,7 @@ Build a container image using this Dockerfile and tag it as `localhost:5000/fuji
 Push the built image to the local registry at `localhost:5000`.
 
 ---
-### Question 2
+## Question 2 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -29,7 +29,7 @@ The main container `app` writes logs to `/var/log/wind.log`. The adapter contain
 Make sure the adapter container is named `adapter` and both containers share a volume named `logs` mounted at `/var/log`. The pod is already created but might need to be replaced.
 
 ---
-### Question 3
+## Question 3 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -41,7 +41,7 @@ The Job should use the `busybox:1.31.1` image and execute the command: `sh -c 's
 Configure the Job to run a total of `6` successful completions, with `3` pods running in parallel.
 
 ---
-### Question 4
+## Question 4 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -54,7 +54,7 @@ The `tempest-debug` Pod should have the exact same container specifications (ima
 Save the YAML definition used to create this Pod at `./exam/course/13/q4/pod.yaml`.
 
 ---
-### Question 5
+## Question 5 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -66,7 +66,7 @@ Update the release `storm-app` using the chart located at `./exam/course/13/q5/s
 Override the replica count to `3` and change the image tag to `v2.0.0` during the upgrade.
 
 ---
-### Question 6
+## Question 6 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -78,7 +78,7 @@ Change its `revisionHistoryLimit` to `2`.
 Then perform a rolling update to change the image of the container to `nginx:1.23.1`.
 
 ---
-### Question 7
+## Question 7 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -90,7 +90,7 @@ Switch the traffic to the `green` deployment by updating the service's selector.
 Ensure that the `zephyr-svc` routes all traffic to pods with the label `version: green`.
 
 ---
-### Question 8
+## Question 8 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -104,7 +104,7 @@ Also, generate a ConfigMap named `tornado-config` from a literal value `WIND_SPE
 Then apply the Kustomization to the `tornado` namespace.
 
 ---
-### Question 9
+## Question 9 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -115,7 +115,7 @@ A pod named `memory-hog` in the `mistral` namespace is repeatedly crashing with 
 Investigate and fix the issue by increasing the memory limit of the container named `hog` to `256Mi`. The memory request should remain unchanged at `64Mi`.
 
 ---
-### Question 10
+## Question 10 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -126,7 +126,7 @@ Identify the top 3 pods in the `sirocco` namespace that are consuming the most m
 Write the names of these pods (just the pod names, one per line) to `./exam/course/13/q10/top-pods.txt`, sorted from highest memory consumption to lowest.
 
 ---
-### Question 11
+## Question 11 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -139,7 +139,7 @@ Configure a readiness probe for the container that uses the `exec` action to run
 Set the initial delay to `5` seconds and period to `10` seconds.
 
 ---
-### Question 12
+## Question 12 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -151,7 +151,7 @@ Create a Pod named `secret-reader` in the `gale` namespace using image `alpine:3
 Mount the Secret into the pod such that only the file `password.txt` appears at `/etc/secrets/password.txt` without deleting any other files that might exist in `/etc/secrets` (use `subPath`).
 
 ---
-### Question 13
+## Question 13 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -162,7 +162,7 @@ Create a Role named `breeze-manager` in the `breeze` namespace that grants `crea
 Create a RoleBinding named `breeze-manager-binding` in the same namespace binding this Role to a ServiceAccount named `breeze-admin` (the ServiceAccount already exists).
 
 ---
-### Question 14
+## Question 14 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -173,7 +173,7 @@ Create a Pod named `secure-storage` in the `tempest` namespace using the image `
 Configure the pod's security context so that all processes in the containers run with the filesystem group (`fsGroup`) set to `2000`.
 
 ---
-### Question 15
+## Question 15 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -189,7 +189,7 @@ For Containers:
 - Default CPU request: `200m`
 
 ---
-### Question 16
+## Question 16 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -199,7 +199,7 @@ For Containers:
 Update the pod `zephyr-api` in the `zephyr` namespace so that it does NOT automatically mount the default ServiceAccount token. (You may need to recreate the pod).
 
 ---
-### Question 17
+## Question 17 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -212,7 +212,7 @@ Allow egress traffic only to port `53` (TCP and UDP) on all destinations.
 Ensure all other egress traffic from these pods is denied.
 
 ---
-### Question 18
+## Question 18 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -226,7 +226,7 @@ It should route traffic for host `tornado.dojo.com` as follows:
 Assume path type `Prefix` for both.
 
 ---
-### Question 19
+## Question 19 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|
@@ -237,7 +237,7 @@ There is a StatefulSet named `mistral-db` in the `mistral` namespace that expect
 Create a headless service named `mistral-db-headless` in the `mistral` namespace that targets pods with label `app: mistral-db`. The service should expose port `3306`.
 
 ---
-### Question 20
+## Question 20 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create |
 |--------|-------------|-------------|-----------|-----------|-----------------|

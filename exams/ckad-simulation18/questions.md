@@ -5,7 +5,7 @@
 
 ---
 
-## Question 1
+## Question 1 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -21,7 +21,7 @@ There is a skeleton Dockerfile located at `./exam/course/1/Dockerfile`.
 
 ---
 
-## Question 2
+## Question 2 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -44,7 +44,7 @@ Create a Pod named `data-transformer` in the `origin` namespace implementing the
 
 ---
 
-## Question 3
+## Question 3 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -60,7 +60,7 @@ Create a Job named `index-processor` in the `primal` namespace.
 
 ---
 
-## Question 4
+## Question 4 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -75,7 +75,7 @@ Create a Pod named `graceful-shutdown` in the `ancient` namespace.
 
 ---
 
-## Question 5
+## Question 5 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -90,7 +90,7 @@ A Helm release named `genesis-web` is deployed in the `nexus` namespace.
 
 ---
 
-## Question 6
+## Question 6 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -104,7 +104,7 @@ A Helm release named `genesis-web` is deployed in the `nexus` namespace.
 
 ---
 
-## Question 7
+## Question 7 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -119,7 +119,7 @@ A Deployment named `eden-api` exists in the `eden` namespace.
 
 ---
 
-## Question 8
+## Question 8 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -135,7 +135,7 @@ In `./exam/course/8/kustomize`, there is a `kustomization.yaml` file.
 
 ---
 
-## Question 9
+## Question 9 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -149,7 +149,7 @@ A Pod named `stuck-pod` in the `cosmos` namespace is stuck in the `Init:Error` s
 
 ---
 
-## Question 10
+## Question 10 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -163,7 +163,7 @@ Ensure the output has the exact headers `TYPE`, `REASON`, and `MESSAGE`.
 
 ---
 
-## Question 11
+## Question 11 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -179,7 +179,7 @@ There is a deployment `backend-api` in the `genesis` namespace that is exposing 
 
 ---
 
-## Question 12
+## Question 12 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -196,7 +196,7 @@ Use a single `projected` volume mounted at `/var/run/projected` to expose all of
 
 ---
 
-## Question 13
+## Question 13 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -210,7 +210,7 @@ Create a Secret named `static-creds` in the `primal` namespace.
 
 ---
 
-## Question 14
+## Question 14 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -228,7 +228,7 @@ Configure the container's security context with the following hardening settings
 
 ---
 
-## Question 15
+## Question 15 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -243,7 +243,7 @@ Create a ClusterRole named `monitor-viewer`.
 
 ---
 
-## Question 16
+## Question 16 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -257,7 +257,7 @@ Create a ResourceQuota named `priority-quota` in the `eden` namespace.
 
 ---
 
-## Question 17
+## Question 17 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -272,7 +272,7 @@ Create a NetworkPolicy named `allow-named-port` in the `matrix` namespace.
 
 ---
 
-## Question 18
+## Question 18 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -286,7 +286,7 @@ Ensure the routing rule points traffic for `cosmos.local` to the service `cosmos
 
 ---
 
-## Question 19
+## Question 19 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -301,7 +301,7 @@ Create a file at `./exam/course/19/fqdn.txt` containing the Fully Qualified Doma
 
 ---
 
-## Question 20
+## Question 20 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|

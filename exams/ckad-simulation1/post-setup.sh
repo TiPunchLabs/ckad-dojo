@@ -8,7 +8,6 @@ function exam_post_setup() {
   
   # Q2 file to create
   mkdir -p "$BASE_DIR/2"
-  cat << 'EOF_FILE' > "$BASE_DIR/2/fire-app.yaml"
 apiVersion: v1
 kind: Pod
 metadata:
@@ -27,7 +26,6 @@ EOF_FILE
   
   # Q7
   mkdir -p "$BASE_DIR/7"
-  cat << 'EOF_FILE' > "$BASE_DIR/7/password.txt"
 # This file will be populated when you run the relevant kubectl commands
 EOF_FILE
 
@@ -37,17 +35,14 @@ EOF_FILE
 
   # Q20
   mkdir -p "$BASE_DIR/20"
-  cat << 'EOF_FILE' > "$BASE_DIR/20/running-pods.txt"
 # This file will be populated when you run the relevant kubectl commands
 EOF_FILE
 
   # Q21
   mkdir -p "$BASE_DIR/21"
-  cat << 'EOF_FILE' > "$BASE_DIR/21/drain-command.sh"
 #!/bin/bash
 # TODO: Complete this script per the task instructions
 echo "Stub script"
 EOF_FILE
-  chmod +x "$BASE_DIR/21/drain-command.sh"
-  return $errors
+  return 0
 }

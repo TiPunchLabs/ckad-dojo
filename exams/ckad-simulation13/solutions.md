@@ -1,7 +1,7 @@
 # CKAD Simulation 13 - Solutions (Dojo Fujin 🌬️)
 
 ---
-### Question 1
+## Question 1 | Kubernetes Practice
 
 ```bash
 cd ./exam/course/13/q1
@@ -11,7 +11,7 @@ docker push localhost:5000/fujin-api:v2
 **Explanation:** Build the container image from the provided Dockerfile and tag it appropriately. Then push it to the local registry.
 
 ---
-### Question 2
+## Question 2 | Kubernetes Practice
 
 ```bash
 kubectl get pod wind-logger -n gale -o yaml > wind.yaml
@@ -32,7 +32,7 @@ kubectl replace --force -f wind.yaml
 **Explanation:** Extract the pod YAML, add the adapter container sharing the same volume mount, and force replace the pod since container changes aren't allowed dynamically.
 
 ---
-### Question 3
+## Question 3 | Kubernetes Practice
 
 ```bash
 kubectl create job storm-processor -n breeze --image=busybox:1.31.1 --dry-run=client -o yaml -- sh -c 'sleep 2; echo "Processing storm data"' > job.yaml
@@ -49,7 +49,7 @@ kubectl apply -f job.yaml
 **Explanation:** Create a Job with specific completions and parallelism directly in the spec.
 
 ---
-### Question 4
+## Question 4 | Kubernetes Practice
 
 ```bash
 kubectl get deployment tempest-app -n tempest -o yaml > dep.yaml
@@ -78,7 +78,7 @@ kubectl apply -f ./exam/course/13/q4/pod.yaml
 **Explanation:** Extract the template from the deployment and wrap it in a Pod definition, changing only the requested command.
 
 ---
-### Question 5
+## Question 5 | Kubernetes Practice
 
 ```bash
 helm upgrade storm-app ./exam/course/13/q5/storm-chart -n typhoon --set replicaCount=3 --set image.tag=v2.0.0
@@ -86,7 +86,7 @@ helm upgrade storm-app ./exam/course/13/q5/storm-chart -n typhoon --set replicaC
 **Explanation:** Upgrade the helm release using `--set` to override values defined in `values.yaml`.
 
 ---
-### Question 6
+## Question 6 | Kubernetes Practice
 
 ```bash
 kubectl patch deployment cyclone-web -n cyclone -p '{"spec":{"revisionHistoryLimit":2}}'
@@ -95,7 +95,7 @@ kubectl set image deployment/cyclone-web -n cyclone web=nginx:1.23.1
 **Explanation:** Patch the `revisionHistoryLimit` first, then trigger a rolling update by changing the image.
 
 ---
-### Question 7
+## Question 7 | Kubernetes Practice
 
 ```bash
 kubectl patch svc zephyr-svc -n zephyr -p '{"spec":{"selector":{"version":"green"}}}'
@@ -103,7 +103,7 @@ kubectl patch svc zephyr-svc -n zephyr -p '{"spec":{"selector":{"version":"green
 **Explanation:** Patching the service selector routes traffic to the pods with the label `version: green`.
 
 ---
-### Question 8
+## Question 8 | Kubernetes Practice
 
 ```bash
 cd ./exam/course/13/q8
@@ -122,7 +122,7 @@ kubectl apply -k . -n tornado
 **Explanation:** Create `kustomization.yaml` defining the resource and configMapGenerator, then apply it using `kubectl apply -k`.
 
 ---
-### Question 9
+## Question 9 | Kubernetes Practice
 
 ```bash
 kubectl get pod memory-hog -n mistral -o yaml > hog.yaml
@@ -132,7 +132,7 @@ kubectl replace --force -f hog.yaml
 **Explanation:** Since it's crashing with OOMKilled, extract the configuration, increase the memory limit, and force replace.
 
 ---
-### Question 10
+## Question 10 | Kubernetes Practice
 
 ```bash
 kubectl top pods -n sirocco --sort-by=memory
@@ -146,7 +146,7 @@ EOF
 **Explanation:** Use `kubectl top pods --sort-by=memory` to find the pods consuming the most memory.
 
 ---
-### Question 11
+## Question 11 | Kubernetes Practice
 
 ```bash
 cat <<EOF > q11.yaml
@@ -173,7 +173,7 @@ kubectl apply -f q11.yaml
 **Explanation:** Define a pod with an exec-based readiness probe using the exact requested parameters.
 
 ---
-### Question 12
+## Question 12 | Kubernetes Practice
 
 ```bash
 kubectl create secret generic gale-secret -n gale --from-literal=password.txt=super-secret-wind
@@ -202,7 +202,7 @@ kubectl apply -f q12.yaml
 **Explanation:** Create the secret, then define a pod mounting it using `subPath` to avoid overwriting the entire directory.
 
 ---
-### Question 13
+## Question 13 | Kubernetes Practice
 
 ```bash
 kubectl create role breeze-manager -n breeze --verb=create,delete,list,watch --resource=deployments,statefulsets --dry-run=client -o yaml > role.yaml
@@ -214,7 +214,7 @@ kubectl create rolebinding breeze-manager-binding -n breeze --role=breeze-manage
 **Explanation:** Use imperative commands to create the Role and RoleBinding mapping permissions to the service account.
 
 ---
-### Question 14
+## Question 14 | Kubernetes Practice
 
 ```bash
 cat <<EOF > q14.yaml
@@ -235,7 +235,7 @@ kubectl apply -f q14.yaml
 **Explanation:** Pod-level security context is used to set `fsGroup`.
 
 ---
-### Question 15
+## Question 15 | Kubernetes Practice
 
 ```bash
 cat <<EOF > q15.yaml
@@ -262,7 +262,7 @@ kubectl apply -f q15.yaml
 **Explanation:** Define a LimitRange containing constraints for both Pod (min/max) and Container (default/defaultRequest).
 
 ---
-### Question 16
+## Question 16 | Kubernetes Practice
 
 ```bash
 kubectl get pod zephyr-api -n zephyr -o yaml > q16.yaml
@@ -272,7 +272,7 @@ kubectl replace --force -f q16.yaml
 **Explanation:** `automountServiceAccountToken: false` must be set at the Pod spec level.
 
 ---
-### Question 17
+## Question 17 | Kubernetes Practice
 
 ```bash
 cat <<EOF > q17.yaml
@@ -299,7 +299,7 @@ kubectl apply -f q17.yaml
 **Explanation:** Egress policy matching label, allowing only TCP/UDP port 53. Since egress is defined, all other egress traffic is denied.
 
 ---
-### Question 18
+## Question 18 | Kubernetes Practice
 
 ```bash
 cat <<EOF > q18.yaml
@@ -333,7 +333,7 @@ kubectl apply -f q18.yaml
 **Explanation:** Create standard Ingress definition mapping paths to specific backend services and ports.
 
 ---
-### Question 19
+## Question 19 | Kubernetes Practice
 
 ```bash
 kubectl create service clusterip mistral-db-headless -n mistral --clusterip="None" --tcp=3306:3306 --dry-run=client -o yaml > svc.yaml
@@ -343,7 +343,7 @@ kubectl apply -f svc.yaml
 **Explanation:** A headless service sets `clusterIP: None`. Modify the generated selector to target the statefulset pods.
 
 ---
-### Question 20
+## Question 20 | Kubernetes Practice
 
 ```bash
 kubectl exec -it sirocco-app -n sirocco -- env | grep SIROCCO_BACKEND

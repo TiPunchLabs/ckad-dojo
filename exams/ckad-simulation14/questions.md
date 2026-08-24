@@ -5,7 +5,7 @@
 
 ---
 
-### Question 1: Container Image with Healthcheck
+## Question 1 | Container Image with Healthcheck
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 4 | Application Design and Build | 20% | N/A | Dockerfile | `./exam/course/14/q1/Dockerfile` |
@@ -20,7 +20,7 @@ Create a Dockerfile in `./exam/course/14/q1/` that fulfills the following requir
 
 ---
 
-### Question 2: Sidecar Logging and Filtering
+## Question 2 | Sidecar Logging and Filtering
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 6 | Application Design and Build | 20% | thunder | Pod | `./exam/course/14/q2/pod.yaml` |
@@ -34,7 +34,7 @@ Create a Pod named `thunder-logger` in the `thunder` namespace.
 
 ---
 
-### Question 3: Advanced CronJob
+## Question 3 | Advanced CronJob
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 6 | Application Design and Build | 20% | bolt | CronJob | `./exam/course/14/q3/cronjob.yaml` |
@@ -48,7 +48,7 @@ Create a CronJob named `lightning-strike` in the `bolt` namespace.
 
 ---
 
-### Question 4: Init Container Dependency
+## Question 4 | Init Container Dependency
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 6 | Application Design and Build | 20% | storm | Pod | `./exam/course/14/q4/pod.yaml` |
@@ -62,7 +62,7 @@ Create a Pod named `app-with-wait` in the `storm` namespace:
 
 ---
 
-### Question 5: Helm Template Overrides
+## Question 5 | Helm Template Overrides
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 5 | Application Deployment | 20% | surge | File | `./exam/course/14/q5/output.yaml` |
@@ -78,7 +78,7 @@ Do NOT install the helm chart.
 
 ---
 
-### Question 6: Deployment Rollback
+## Question 6 | Deployment Rollback
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 5 | Application Deployment | 20% | voltage | Deployment | N/A |
@@ -90,7 +90,7 @@ Ensure the Deployment is successfully rolled back and running.
 
 ---
 
-### Question 7: Canary Deployment
+## Question 7 | Canary Deployment
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 7 | Application Deployment | 20% | spark | Deployments, Service | `./exam/course/14/q7/` |
@@ -104,7 +104,7 @@ You need to introduce a canary version:
 
 ---
 
-### Question 8: Kustomize Strategic Merge Patch
+## Question 8 | Kustomize Strategic Merge Patch
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 6 | Application Deployment | 20% | charge | File | `./exam/course/14/q8/kustomization.yaml` |
@@ -118,7 +118,7 @@ Apply the kustomization to the `charge` namespace using `kubectl apply -k`.
 
 ---
 
-### Question 9: Troubleshoot CrashLoopBackOff
+## Question 9 | Troubleshoot CrashLoopBackOff
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 5 | Application Observability and Maintenance | 15% | flash | Pod | N/A |
@@ -130,7 +130,7 @@ Find the cause and fix it. The pod should be running successfully.
 
 ---
 
-### Question 10: Kubectl Events
+## Question 10 | Kubectl Events
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 5 | Application Observability and Maintenance | 15% | strike | File | `./exam/course/14/q10/events.txt` |
@@ -141,7 +141,7 @@ Save the output (which should include at least the time, type, reason, and objec
 
 ---
 
-### Question 11: All Three Probes
+## Question 11 | All Three Probes
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 7 | Application Observability and Maintenance | 15% | plasma | Pod | `./exam/course/14/q11/pod.yaml` |
@@ -155,7 +155,7 @@ Configure all three probe types for the container on port `80`:
 
 ---
 
-### Question 12: Downward API
+## Question 12 | Downward API
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 5 | Application Environment, Configuration and Security | 25% | thunder | Pod | `./exam/course/14/q12/pod.yaml` |
@@ -169,7 +169,7 @@ Use the Downward API to inject the following environment variables:
 
 ---
 
-### Question 13: SecurityContext Capabilities
+## Question 13 | SecurityContext Capabilities
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 6 | Application Environment, Configuration and Security | 25% | bolt | Pod | `./exam/course/14/q13/pod.yaml` |
@@ -182,7 +182,7 @@ Configure the container's `securityContext` to:
 
 ---
 
-### Question 14: Secret with stringData
+## Question 14 | Secret with stringData
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 5 | Application Environment, Configuration and Security | 25% | storm | Secret | `./exam/course/14/q14/secret.yaml` |
@@ -196,7 +196,7 @@ Apply the YAML file to create the Secret.
 
 ---
 
-### Question 15: ConfigMap as Command Args
+## Question 15 | ConfigMap as Command Args
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 5 | Application Environment, Configuration and Security | 25% | voltage | Pod, ConfigMap | `./exam/course/14/q15/` |
@@ -210,7 +210,7 @@ Use environment variables mapped from the ConfigMap to pass it to the `args` fie
 
 ---
 
-### Question 16: ClusterRole and Binding
+## Question 16 | ClusterRole and Binding
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 7 | Application Environment, Configuration and Security | 25% | spark | ClusterRole, ClusterRoleBinding | N/A |
@@ -221,7 +221,7 @@ Create a ClusterRoleBinding named `secret-reader-binding` to bind the `secret-re
 
 ---
 
-### Question 17: NetworkPolicy AND Logic
+## Question 17 | NetworkPolicy AND Logic
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 6 | Services and Networking | 20% | charge | NetworkPolicy | `./exam/course/14/q17/netpol.yaml` |
@@ -236,7 +236,7 @@ Allow ingress traffic on TCP port `3306` ONLY if the traffic comes from:
 
 ---
 
-### Question 18: Ingress Default Backend
+## Question 18 | Ingress Default Backend
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 5 | Services and Networking | 20% | surge | Ingress | `./exam/course/14/q18/ingress.yaml` |
@@ -248,7 +248,7 @@ There should be NO host or path rules defined.
 
 ---
 
-### Question 19: Service Session Affinity
+## Question 19 | Service Session Affinity
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 5 | Services and Networking | 20% | flash | Service | `./exam/course/14/q19/svc.yaml` |
@@ -261,7 +261,7 @@ Set the session affinity timeout to `10800` seconds (3 hours).
 
 ---
 
-### Question 20: Port Forwarding
+## Question 20 | Port Forwarding
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files to create/modify |
 | ------ | ----------- | ----------- | --------- | --------- | ---------------------- |
 | 6 | Services and Networking | 20% | strike | File | `./exam/course/14/q20/response.txt` |

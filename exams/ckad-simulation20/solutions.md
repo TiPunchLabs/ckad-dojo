@@ -2,7 +2,7 @@
 
 ---
 
-## Question 1
+## Question 1 | Kubernetes Practice
 ```bash
 cat <<EOF > ./exam/course/1/Dockerfile
 FROM golang:1.20 AS builder
@@ -25,7 +25,7 @@ Explanation: We use a multi-stage Dockerfile to build and then copy to a smaller
 
 ---
 
-## Question 2
+## Question 2 | Kubernetes Practice
 ```bash
 cat <<EOF > ./exam/course/2/multi-pod.yaml
 apiVersion: v1
@@ -62,7 +62,7 @@ Explanation: Defines a three-container pod sharing an emptyDir volume.
 
 ---
 
-## Question 3
+## Question 3 | Kubernetes Practice
 ```bash
 cat <<EOF > ./exam/course/3/job.yaml
 apiVersion: batch/v1
@@ -87,7 +87,7 @@ Explanation: Creates a job with specific completions and parallelism.
 
 ---
 
-## Question 4
+## Question 4 | Kubernetes Practice
 ```bash
 kubectl create cronjob db-backup --image=postgres:15 --schedule="*/15 * * * *" -n zenith --dry-run=client -o yaml > ./exam/course/4/cronjob.yaml
 # Add successfulJobsHistoryLimit: 3 and failedJobsHistoryLimit: 1
@@ -98,7 +98,7 @@ Explanation: CronJob with specific history limits and command.
 
 ---
 
-## Question 5
+## Question 5 | Kubernetes Practice
 ```bash
 helm create ./exam/course/5/my-chart
 cat <<EOF > ./exam/course/5/values.yaml
@@ -113,7 +113,7 @@ Explanation: Creates a Helm chart and installs it using custom values.
 
 ---
 
-## Question 6
+## Question 6 | Kubernetes Practice
 ```bash
 kubectl set image deployment/glory-deploy nginx=nginx:1.25 -n glory --record
 kubectl rollout undo deployment/glory-deploy -n glory
@@ -123,7 +123,7 @@ Explanation: Updates, rolls back, and scales a deployment.
 
 ---
 
-## Question 7
+## Question 7 | Kubernetes Practice
 ```bash
 cat <<EOF > ./exam/course/7/canary.yaml
 apiVersion: apps/v1
@@ -151,7 +151,7 @@ Explanation: Adds a canary deployment matching the main deployment's selector.
 
 ---
 
-## Question 8
+## Question 8 | Kubernetes Practice
 ```bash
 cat <<EOF > ./exam/course/8/prod/kustomization.yaml
 resources:
@@ -173,7 +173,7 @@ Explanation: Sets up a Kustomize overlay to patch replicas and add labels.
 
 ---
 
-## Question 9
+## Question 9 | Kubernetes Practice
 ```bash
 # Debug bug-1 (crashloopbackoff due to typo in command)
 # Debug bug-2 (pending due to resource constraints)
@@ -183,7 +183,7 @@ Explanation: Fixes various pod issues.
 
 ---
 
-## Question 10
+## Question 10 | Kubernetes Practice
 ```bash
 kubectl logs triumph-app -n triumph | grep ERROR > ./exam/course/10/logs.txt
 ```
@@ -191,7 +191,7 @@ Explanation: Extracts specific log lines to a file.
 
 ---
 
-## Question 11
+## Question 11 | Kubernetes Practice
 ```bash
 kubectl debug distroless-pod -it --image=busybox -n apex -- target=main
 # nslookup kubernetes.default
@@ -200,7 +200,7 @@ Explanation: Uses ephemeral container for debugging.
 
 ---
 
-## Question 12
+## Question 12 | Kubernetes Practice
 ```bash
 # YAML with SecurityContext
 ```
@@ -208,7 +208,7 @@ Explanation: Applies SecurityContext to the container.
 
 ---
 
-## Question 13
+## Question 13 | Kubernetes Practice
 ```bash
 kubectl create sa sword-master -n pinnacle
 kubectl create role blade-reader --verb=get,list,watch --resource=pods,configmaps -n pinnacle
@@ -218,7 +218,7 @@ Explanation: Creates RBAC resources.
 
 ---
 
-## Question 14
+## Question 14 | Kubernetes Practice
 ```bash
 # YAML with ConfigMap and Secret mounts
 ```
@@ -226,7 +226,7 @@ Explanation: Injects config map as env vars and secret as a volume.
 
 ---
 
-## Question 15
+## Question 15 | Kubernetes Practice
 ```bash
 # YAML with LimitRange and ResourceQuota
 ```
@@ -234,7 +234,7 @@ Explanation: Configures resource constraints.
 
 ---
 
-## Question 16
+## Question 16 | Kubernetes Practice
 ```bash
 # YAML with PV, PVC, Pod
 ```
@@ -242,7 +242,7 @@ Explanation: Creates storage resources.
 
 ---
 
-## Question 17
+## Question 17 | Kubernetes Practice
 ```bash
 # YAML with NetworkPolicy
 ```
@@ -250,7 +250,7 @@ Explanation: Sets up default deny and specific allow policy.
 
 ---
 
-## Question 18
+## Question 18 | Kubernetes Practice
 ```bash
 # YAML with Ingress
 ```
@@ -258,7 +258,7 @@ Explanation: Configures ingress rules.
 
 ---
 
-## Question 19
+## Question 19 | Kubernetes Practice
 ```bash
 kubectl create svc nodeport ascend-svc --tcp=80:80 --node-port=30080 -n ascend
 ```
@@ -266,7 +266,7 @@ Explanation: Exposes a NodePort service.
 
 ---
 
-## Question 20
+## Question 20 | Kubernetes Practice
 ```bash
 # kubectl run ...
 ```

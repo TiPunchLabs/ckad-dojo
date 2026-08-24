@@ -1,6 +1,6 @@
 # CKAD Simulation 18 - Solutions (Dojo Izanagi ✨)
 
-## Question 1
+## Question 1 | Kubernetes Practice
 
 ```bash
 # 1. Modify Dockerfile
@@ -29,7 +29,7 @@ kubectl run genesis-pod -n genesis --image=localhost:5000/genesis-app:v1
 
 ---
 
-## Question 2
+## Question 2 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -61,7 +61,7 @@ EOF
 
 ---
 
-## Question 3
+## Question 3 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -87,7 +87,7 @@ EOF
 
 ---
 
-## Question 4
+## Question 4 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -111,7 +111,7 @@ EOF
 
 ---
 
-## Question 5
+## Question 5 | Kubernetes Practice
 
 ```bash
 # Upgrade the release reusing existing values
@@ -121,7 +121,7 @@ helm upgrade genesis-web ./exam/course/5/genesis-web-chart -n nexus --reuse-valu
 
 ---
 
-## Question 6
+## Question 6 | Kubernetes Practice
 
 ```bash
 # Create Deployment
@@ -145,7 +145,7 @@ EOF
 
 ---
 
-## Question 7
+## Question 7 | Kubernetes Practice
 
 ```bash
 # Update image
@@ -161,7 +161,7 @@ kubectl patch deployment eden-api -n eden -p '{"spec":{"strategy":{"type":"Rolli
 
 ---
 
-## Question 8
+## Question 8 | Kubernetes Practice
 
 ```bash
 # Modify kustomization.yaml
@@ -181,7 +181,7 @@ kubectl kustomize ./exam/course/8/kustomize | kubectl apply -n matrix -f -
 
 ---
 
-## Question 9
+## Question 9 | Kubernetes Practice
 
 ```bash
 # View pod status and init containers
@@ -195,7 +195,7 @@ kubectl replace --force -f stuck.yaml
 
 ---
 
-## Question 10
+## Question 10 | Kubernetes Practice
 
 ```bash
 kubectl get events -n zenith -o custom-columns=TYPE:.type,REASON:.reason,MESSAGE:.message > ./exam/course/10/events.txt
@@ -204,7 +204,7 @@ kubectl get events -n zenith -o custom-columns=TYPE:.type,REASON:.reason,MESSAGE
 
 ---
 
-## Question 11
+## Question 11 | Kubernetes Practice
 
 ```bash
 cat <<EOF > ./exam/course/11/check.sh
@@ -221,7 +221,7 @@ chmod +x ./exam/course/11/check.sh
 
 ---
 
-## Question 12
+## Question 12 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -265,7 +265,7 @@ EOF
 
 ---
 
-## Question 13
+## Question 13 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -284,7 +284,7 @@ EOF
 
 ---
 
-## Question 14
+## Question 14 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -321,7 +321,7 @@ EOF
 
 ---
 
-## Question 15
+## Question 15 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -351,7 +351,7 @@ EOF
 
 ---
 
-## Question 16
+## Question 16 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -378,7 +378,7 @@ EOF
 
 ---
 
-## Question 17
+## Question 17 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -407,7 +407,7 @@ EOF
 
 ---
 
-## Question 18
+## Question 18 | Kubernetes Practice
 
 ```bash
 kubectl get ingress cosmos-ingress -n cosmos -o yaml > ingress.yaml
@@ -437,7 +437,7 @@ EOF
 
 ---
 
-## Question 19
+## Question 19 | Kubernetes Practice
 
 ```bash
 kubectl run dns-tester -n zenith --image=busybox:1.32 -- sleep 3600
@@ -447,7 +447,7 @@ echo "data-svc.ancient.svc.cluster.local" > ./exam/course/19/fqdn.txt
 
 ---
 
-## Question 20
+## Question 20 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -

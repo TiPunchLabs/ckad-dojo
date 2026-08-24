@@ -5,7 +5,7 @@
 
 ---
 
-### Question 1
+## Question 1 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -21,7 +21,7 @@ Then create a pod named `wisdom-server` in the `harmony` namespace using this im
 
 ---
 
-### Question 2
+## Question 2 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -36,7 +36,7 @@ The ambassador should proxy traffic from `localhost:8080` to an external service
 
 ---
 
-### Question 3
+## Question 3 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -50,7 +50,7 @@ Configure the Job to automatically delete itself 10 seconds after it finishes su
 
 ---
 
-### Question 4
+## Question 4 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -66,7 +66,7 @@ Enable process namespace sharing between the containers in this Pod so the `debu
 
 ---
 
-### Question 5
+## Question 5 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -81,7 +81,7 @@ Install the chart as a release named `wisdom-app` in the `chorus` namespace usin
 
 ---
 
-### Question 6
+## Question 6 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -95,7 +95,7 @@ After creation, update the image to `nginx:1.25-alpine` and record the rollout i
 
 ---
 
-### Question 7
+## Question 7 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -108,7 +108,7 @@ Undo the rollout and rollback to exactly revision 2.
 
 ---
 
-### Question 8
+## Question 8 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -126,7 +126,7 @@ Apply the overlay to the cluster using Kustomize.
 
 ---
 
-### Question 9
+## Question 9 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -139,7 +139,7 @@ Identify the cause of the issue and fix it. The pod should be running. Do not ch
 
 ---
 
-### Question 10
+## Question 10 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -153,7 +153,7 @@ Write the memory usage (in Ki or Mi, exactly as output by the API) to `./exam/co
 
 ---
 
-### Question 11
+## Question 11 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -167,7 +167,7 @@ Configure a Readiness probe that sends an HTTP GET request to `/ready` on port 8
 
 ---
 
-### Question 12
+## Question 12 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -185,7 +185,7 @@ The volume should project:
 
 ---
 
-### Question 13
+## Question 13 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -198,7 +198,7 @@ Create a ConfigMap named `binary-config` in the `rhythm` namespace containing th
 
 ---
 
-### Question 14
+## Question 14 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -212,7 +212,7 @@ Configure the Pod's SecurityContext to set the SELinux options:
 
 ---
 
-### Question 15
+## Question 15 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -226,7 +226,7 @@ Save the raw token string to `./exam/course/16/q15/token.txt`.
 
 ---
 
-### Question 16
+## Question 16 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -240,7 +240,7 @@ Allow INGRESS traffic on TCP ports 3000 through 3010 from any pod in the `chorus
 
 ---
 
-### Question 17
+## Question 17 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -255,7 +255,7 @@ Allow EGRESS traffic to the CIDR `10.0.0.0/8`, but explicitly deny/exclude traff
 
 ---
 
-### Question 18
+## Question 18 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -271,7 +271,7 @@ Configure TLS for both hosts. Use the existing secret `app1-tls` for `app1.benza
 
 ---
 
-### Question 19
+## Question 19 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|
@@ -284,7 +284,7 @@ Extract the IPv4 addresses from this EndpointSlice and write them to `./exam/cou
 
 ---
 
-### Question 20
+## Question 20 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files / File to create |
 |--------|-------------|-------------|-----------|-----------|------------------------|

@@ -59,7 +59,7 @@ show_help() {
 	echo "  --no-hints       Disable hints (remove Hint/Tip boxes)"
 	echo "  --skip-detection Skip existing exam resource detection"
 	echo "  --port PORT      Web interface port (default: $WEB_PORT)"
-	echo "  --terminal-port PORT  Terminal port (default: 7681)"
+	echo "  --terminal-port PORT  Terminal port (default: 7682)"
 	echo "  --browser NAME   Browser to use (firefox, chrome, chromium, brave, default)"
 	echo "                   Can also be set via CKAD_BROWSER env variable"
 	echo ""

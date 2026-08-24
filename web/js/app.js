@@ -492,8 +492,7 @@ async function startExam(examId) {
         state.currentQuestionIndex = 0;
         state.flaggedQuestions.clear();
         state.examStarted = true;
-        state.examEnded = false;
-        state.allowTimerPause = config.allow_timer_pause === true;
+            state.allowTimerPause = config.allow_timer_pause === true;
         state.allowHints = config.allow_hints !== false;
 
         // Update pause button visibility
@@ -1213,7 +1212,7 @@ function toggleHint(hintBox) {
 
 function showQuestion(index) {
     if (index < 0 || index >= state.questions.length) return;
-    if (state.examEnded && !elements.scoreModal.classList.contains('hidden')) return;
+    if (state.examEnded) return;
 
     state.currentQuestionIndex = index;
     const question = state.questions[index];
@@ -1343,7 +1342,6 @@ function showFlaggedList() {
 function closeScoreModal() {
     // Simply hide the score modal and return to the exam interface
     elements.scoreModal.classList.add('hidden');
-    state.examEnded = false;
 }
 
 function backToSelection() {
@@ -1360,7 +1358,6 @@ function backToSelection() {
 
     // Reset state
     state.examStarted = false;
-    state.examEnded = false;
 
     // Switch screens
     elements.examInterface.classList.add('hidden');
@@ -1561,8 +1558,7 @@ async function resumeExam(examId, startQuestion = 1) {
         state.currentQuestionIndex = 0;
         state.flaggedQuestions.clear();
         state.examStarted = true;
-        state.examEnded = false;
-        state.allowTimerPause = config.allow_timer_pause === true;
+            state.allowTimerPause = config.allow_timer_pause === true;
         state.allowHints = config.allow_hints !== false;
 
         // Update pause button visibility

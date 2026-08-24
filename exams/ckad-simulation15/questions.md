@@ -6,7 +6,7 @@
 
 ---
 
-### Question 1
+## Question 1 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -29,7 +29,7 @@ Modify the `Dockerfile` to use a multi-stage build to reduce the final image siz
 
 ---
 
-### Question 2
+## Question 2 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -49,7 +49,7 @@ Create a Pod named `log-generator` in the `tide` namespace that implements the s
 
 ---
 
-### Question 3
+## Question 3 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -71,7 +71,7 @@ Create a CronJob named `data-sync` in the `coral` namespace.
 
 ---
 
-### Question 4
+## Question 4 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -92,7 +92,7 @@ Create a Pod named `batch-worker` in the `abyss` namespace designed for a batch 
 
 ---
 
-### Question 5
+## Question 5 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -110,7 +110,7 @@ Uninstall the Helm release `ocean-api` from the `current` namespace and ensure t
 
 ---
 
-### Question 6
+## Question 6 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -132,7 +132,7 @@ Create a Deployment named `web-deploy` in the `reef` namespace.
 
 ---
 
-### Question 7
+## Question 7 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -151,7 +151,7 @@ There is an existing Deployment named `api-server` in the `lagoon` namespace.
 
 ---
 
-### Question 8
+## Question 8 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -175,7 +175,7 @@ Create a Kustomize configuration in `./exam/course/15/q8/` to generate a Deploym
 
 ---
 
-### Question 9
+## Question 9 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -193,7 +193,7 @@ Troubleshoot and fix the issue. The Pod is attempting to pull an image from an i
 
 ---
 
-### Question 10
+## Question 10 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -213,7 +213,7 @@ Analyze the cluster events in the `depths` namespace.
 
 ---
 
-### Question 11
+## Question 11 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -233,7 +233,7 @@ Create a Pod named `grpc-checker` in the `ocean` namespace.
 
 ---
 
-### Question 12
+## Question 12 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -253,7 +253,7 @@ Create a Pod named `grpc-checker` in the `ocean` namespace.
 
 ---
 
-### Question 13
+## Question 13 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -275,7 +275,7 @@ Create a generic Secret named `db-credentials` in the `coral` namespace.
 
 ---
 
-### Question 14
+## Question 14 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -294,7 +294,7 @@ Create a generic Secret named `db-credentials` in the `coral` namespace.
 
 ---
 
-### Question 15
+## Question 15 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -314,7 +314,7 @@ There is a Pod named `target-pod` in the `reef` namespace running a simple web s
 
 ---
 
-### Question 16
+## Question 16 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -333,7 +333,7 @@ There is a Pod named `target-pod` in the `reef` namespace running a simple web s
 
 ---
 
-### Question 17
+## Question 17 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -350,7 +350,7 @@ There is a Pod named `target-pod` in the `reef` namespace running a simple web s
 
 ---
 
-### Question 18
+## Question 18 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -368,7 +368,7 @@ Troubleshoot the issue and fix the Service or its corresponding pods so that `me
 
 ---
 
-### Question 19
+## Question 19 | Kubernetes Practice
 
 | Task | Details |
 |---|---|
@@ -389,7 +389,7 @@ Create a Service named `multi-port-svc` in the `depths` namespace.
 
 ---
 
-### Question 20
+## Question 20 | Kubernetes Practice
 
 | Task | Details |
 |---|---|

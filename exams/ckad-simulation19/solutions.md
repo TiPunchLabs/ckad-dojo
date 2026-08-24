@@ -2,7 +2,7 @@
 
 ---
 
-## Question 1
+## Question 1 | Kubernetes Practice
 
 **Explanation**: 
 Multi-stage builds reduce image size and improve security. We create a builder stage and a final stage.
@@ -26,7 +26,7 @@ kubectl run optimized-build -n ward --image=nginx:alpine
 
 ---
 
-## Question 2
+## Question 2 | Kubernetes Practice
 
 **Explanation**:
 Sidecar pattern for log tailing. Resource limits differ per container.
@@ -68,7 +68,7 @@ EOF
 
 ---
 
-## Question 3
+## Question 3 | Kubernetes Practice
 
 **Explanation**:
 Suspend a CronJob and create a manual Job from it.
@@ -80,7 +80,7 @@ kubectl create job manual-backup --from=cronjob/backup-cj -n shield
 
 ---
 
-## Question 4
+## Question 4 | Kubernetes Practice
 
 **Explanation**:
 Init containers run in strict sequence.
@@ -127,7 +127,7 @@ EOF
 
 ---
 
-## Question 5
+## Question 5 | Kubernetes Practice
 
 **Explanation**:
 Helm updates.
@@ -146,7 +146,7 @@ helm upgrade guardian-app ./exam/course/19/q5/chart-dummy -n haven --reuse-value
 
 ---
 
-## Question 6
+## Question 6 | Kubernetes Practice
 
 **Explanation**:
 Fix conflict between Deployment replica count and HPA.
@@ -158,7 +158,7 @@ kubectl patch hpa api-hpa -n refuge -p '{"spec":{"minReplicas":2,"maxReplicas":1
 
 ---
 
-## Question 7
+## Question 7 | Kubernetes Practice
 
 **Explanation**:
 Rollout updates and rollback.
@@ -170,7 +170,7 @@ kubectl rollout undo deployment/worker-deploy -n bastion
 
 ---
 
-## Question 8
+## Question 8 | Kubernetes Practice
 
 **Explanation**:
 Kustomize usage.
@@ -198,7 +198,7 @@ kubectl kustomize ./exam/course/19/q8 | kubectl apply -n bulwark -f -
 
 ---
 
-## Question 9
+## Question 9 | Kubernetes Practice
 
 **Explanation**:
 Troubleshooting missing secrets and wrong port/image.
@@ -211,7 +211,7 @@ kubectl patch deployment broken-app -n anchor --type='json' -p='[{"op": "replace
 
 ---
 
-## Question 10
+## Question 10 | Kubernetes Practice
 
 **Explanation**:
 kubectl top with label selector.
@@ -223,7 +223,7 @@ echo "backend-pod-2" > ./exam/course/19/q10/cpu-usage.txt
 
 ---
 
-## Question 11
+## Question 11 | Kubernetes Practice
 
 **Explanation**:
 Configure probes.
@@ -262,7 +262,7 @@ EOF
 
 ---
 
-## Question 12
+## Question 12 | Kubernetes Practice
 
 **Explanation**:
 ConfigMap mounting.
@@ -302,7 +302,7 @@ EOF
 
 ---
 
-## Question 13
+## Question 13 | Kubernetes Practice
 
 **Explanation**:
 TokenRequest API via kubectl.
@@ -315,7 +315,7 @@ kubectl create token vault-sa -n shield --duration=24h > ./exam/course/19/q13/to
 
 ---
 
-## Question 14
+## Question 14 | Kubernetes Practice
 
 **Explanation**:
 SecurityContext overrides.
@@ -344,7 +344,7 @@ EOF
 
 ---
 
-## Question 15
+## Question 15 | Kubernetes Practice
 
 **Explanation**:
 RBAC resourceNames.
@@ -380,7 +380,7 @@ EOF
 
 ---
 
-## Question 16
+## Question 16 | Kubernetes Practice
 
 **Explanation**:
 PodSecurityAdmission namespace labels.
@@ -392,7 +392,7 @@ kubectl label ns refuge pod-security.kubernetes.io/warn=baseline
 
 ---
 
-## Question 17
+## Question 17 | Kubernetes Practice
 
 **Explanation**:
 Complex NetworkPolicy.
@@ -431,7 +431,7 @@ EOF
 
 ---
 
-## Question 18
+## Question 18 | Kubernetes Practice
 
 **Explanation**:
 Ingress Regex.
@@ -470,7 +470,7 @@ EOF
 
 ---
 
-## Question 19
+## Question 19 | Kubernetes Practice
 
 **Explanation**:
 Service Topology Aware Hints.
@@ -495,7 +495,7 @@ EOF
 
 ---
 
-## Question 20
+## Question 20 | Kubernetes Practice
 
 **Explanation**:
 Default Deny NetworkPolicy targeting pods.

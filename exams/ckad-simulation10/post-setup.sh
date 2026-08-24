@@ -34,9 +34,6 @@ exam_post_setup() {
   # === Auto-generated starter files ===
   local BASE_DIR="./exam/course"
   mkdir -p "$BASE_DIR/13"
-  cat << 'EOF_FILE' > "$BASE_DIR/13/rollout-history.txt"
-# This file will be populated when you run the relevant kubectl commands
-EOF_FILE
   mkdir -p "$BASE_DIR/14"
   cat << 'EOF_FILE' > "$BASE_DIR/14/broken-deploy.yaml"
 apiVersion: extensions/v1beta1
@@ -60,9 +57,6 @@ spec:
         - containerPort: 80
 EOF_FILE
   mkdir -p "$BASE_DIR/15"
-  cat << 'EOF_FILE' > "$BASE_DIR/15/root-cause.txt"
-# This file will be populated when you run the relevant kubectl commands
-EOF_FILE
   mkdir -p "$BASE_DIR/20"
   cat << 'EOF_FILE' > "$BASE_DIR/20/sidecar-pod.yaml"
 apiVersion: v1

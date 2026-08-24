@@ -4,7 +4,7 @@
 
 ---
 
-## Question 1
+## Question 1 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files |
 |--------|-------------|-------------|-----------|-----------|-------|
@@ -20,7 +20,7 @@ Modify the `Dockerfile` to use a multi-stage build:
 
 ---
 
-## Question 2
+## Question 2 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -35,7 +35,7 @@ Create a Pod named `logging-pod` in the `aegis` namespace with two containers:
 
 ---
 
-## Question 3
+## Question 3 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -48,7 +48,7 @@ A CronJob named `backup-cj` exists in the `shield` namespace. It runs every 10 m
 
 ---
 
-## Question 4
+## Question 4 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -65,7 +65,7 @@ Create a Pod named `init-chain` in the `guardian` namespace that utilizes a sequ
 
 ---
 
-## Question 5
+## Question 5 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files |
 |--------|-------------|-------------|-----------|-----------|-------|
@@ -79,7 +79,7 @@ A Helm release named `guardian-app` is deployed in the `haven` namespace.
 
 ---
 
-## Question 6
+## Question 6 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -94,7 +94,7 @@ There is a conflict causing issues. The Deployment specifies 5 replicas, while t
 
 ---
 
-## Question 7
+## Question 7 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -110,7 +110,7 @@ Perform a complex rollout for a Deployment named `worker-deploy` in the `bastion
 
 ---
 
-## Question 8
+## Question 8 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files |
 |--------|-------------|-------------|-----------|-----------|-------|
@@ -124,7 +124,7 @@ Using Kustomize in `./exam/course/19/q8/`:
 
 ---
 
-## Question 9
+## Question 9 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -138,7 +138,7 @@ A Deployment named `broken-app` in the `anchor` namespace is failing to start. T
 
 ---
 
-## Question 10
+## Question 10 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files |
 |--------|-------------|-------------|-----------|-----------|-------|
@@ -152,7 +152,7 @@ Write the name of this Pod to `./exam/course/19/q10/cpu-usage.txt`.
 
 ---
 
-## Question 11
+## Question 11 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -166,7 +166,7 @@ Create a Pod named `monitored-pod` in the `ward` namespace using `nginx:alpine` 
 
 ---
 
-## Question 12
+## Question 12 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -184,7 +184,7 @@ Create a Pod named `monitored-pod` in the `ward` namespace using `nginx:alpine` 
 
 ---
 
-## Question 13
+## Question 13 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources | Files |
 |--------|-------------|-------------|-----------|-----------|-------|
@@ -197,7 +197,7 @@ Create a Pod named `monitored-pod` in the `ward` namespace using `nginx:alpine` 
 
 ---
 
-## Question 14
+## Question 14 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -211,7 +211,7 @@ Configure the SecurityContext:
 
 ---
 
-## Question 15
+## Question 15 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -224,7 +224,7 @@ Create RBAC resources in the `haven` namespace:
 
 ---
 
-## Question 16
+## Question 16 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -237,7 +237,7 @@ Configure PodSecurityAdmission for the `refuge` namespace.
 
 ---
 
-## Question 17
+## Question 17 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -252,7 +252,7 @@ Create a NetworkPolicy named `db-protect` in the `bastion` namespace.
 
 ---
 
-## Question 18
+## Question 18 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -267,7 +267,7 @@ Create an Ingress named `regex-ingress` in the `bulwark` namespace.
 
 ---
 
-## Question 19
+## Question 19 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|
@@ -281,7 +281,7 @@ Create a Service named `topology-service` in the `anchor` namespace.
 
 ---
 
-## Question 20
+## Question 20 | Kubernetes Practice
 
 | Points | CNCF Domain | CNCF Weight | Namespace | Resources |
 |--------|-------------|-------------|-----------|-----------|

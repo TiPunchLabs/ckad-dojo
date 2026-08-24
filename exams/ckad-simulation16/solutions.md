@@ -2,7 +2,7 @@
 
 ---
 
-### Question 1
+## Question 1 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/1/
@@ -17,7 +17,7 @@ kubectl run wisdom-server -n harmony --image=localhost:5000/benzaiten-wisdom:v1
 
 ---
 
-### Question 2
+## Question 2 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -46,7 +46,7 @@ EOF
 
 ---
 
-### Question 3
+## Question 3 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -69,7 +69,7 @@ EOF
 
 ---
 
-### Question 4
+## Question 4 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -91,7 +91,7 @@ EOF
 
 ---
 
-### Question 5
+## Question 5 | Kubernetes Practice
 
 ```bash
 helm dependency update ./exam/course/5/chart
@@ -105,7 +105,7 @@ helm install wisdom-app ./exam/course/5/chart -n chorus -f ./exam/course/5/value
 
 ---
 
-### Question 6
+## Question 6 | Kubernetes Practice
 
 ```bash
 kubectl create deploy rolling-deploy --image=nginx:1.24-alpine --replicas=5 -n sonata --dry-run=client -o yaml > deploy.yaml
@@ -122,7 +122,7 @@ kubectl set image deployment/rolling-deploy nginx=nginx:1.25-alpine -n sonata --
 
 ---
 
-### Question 7
+## Question 7 | Kubernetes Practice
 
 ```bash
 kubectl rollout undo deployment legacy-app --to-revision=2 -n verse
@@ -130,7 +130,7 @@ kubectl rollout undo deployment legacy-app --to-revision=2 -n verse
 
 ---
 
-### Question 8
+## Question 8 | Kubernetes Practice
 
 ```bash
 mkdir -p ./exam/course/8/overlays/production
@@ -154,7 +154,7 @@ kubectl apply -k ./exam/course/8/overlays/production
 
 ---
 
-### Question 9
+## Question 9 | Kubernetes Practice
 
 ```bash
 kubectl describe pod metrics-pod -n tempo
@@ -164,7 +164,7 @@ kubectl create configmap metrics-config -n tempo
 
 ---
 
-### Question 10
+## Question 10 | Kubernetes Practice
 
 ```bash
 kubectl get --raw /apis/metrics.k8s.io/v1beta1/namespaces/aria/pods/heavy-worker | jq -r '.containers[0].usage.memory' > ./exam/course/10/metrics.txt
@@ -172,7 +172,7 @@ kubectl get --raw /apis/metrics.k8s.io/v1beta1/namespaces/aria/pods/heavy-worker
 
 ---
 
-### Question 11
+## Question 11 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -202,7 +202,7 @@ EOF
 
 ---
 
-### Question 12
+## Question 12 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -238,7 +238,7 @@ EOF
 
 ---
 
-### Question 13
+## Question 13 | Kubernetes Practice
 
 ```bash
 kubectl create configmap binary-config --from-file=data.bin=./exam/course/13/data.bin -n rhythm
@@ -246,7 +246,7 @@ kubectl create configmap binary-config --from-file=data.bin=./exam/course/13/dat
 
 ---
 
-### Question 14
+## Question 14 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -268,7 +268,7 @@ EOF
 
 ---
 
-### Question 15
+## Question 15 | Kubernetes Practice
 
 ```bash
 kubectl create serviceaccount vault-accessor -n sonata
@@ -277,7 +277,7 @@ kubectl create token vault-accessor -n sonata --duration=3600s > ./exam/course/1
 
 ---
 
-### Question 16
+## Question 16 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -304,7 +304,7 @@ EOF
 
 ---
 
-### Question 17
+## Question 17 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -330,7 +330,7 @@ EOF
 
 ---
 
-### Question 18
+## Question 18 | Kubernetes Practice
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -373,7 +373,7 @@ EOF
 
 ---
 
-### Question 19
+## Question 19 | Kubernetes Practice
 
 ```bash
 kubectl get endpointslice -n tempo -l kubernetes.io/service-name=external-db-svc -o jsonpath='{.items[*].endpoints[*].addresses[*]}' | tr ' ' '
@@ -382,7 +382,7 @@ kubectl get endpointslice -n tempo -l kubernetes.io/service-name=external-db-svc
 
 ---
 
-### Question 20
+## Question 20 | Kubernetes Practice
 
 ```bash
 kubectl create deployment local-app --image=nginx:alpine --replicas=3 -n aria
