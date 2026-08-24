@@ -128,9 +128,15 @@ def show_version() -> None:
     print("  environment setup, real-time scoring, and a modern web interface.")
     print()
     print(color("Features:", Colors.BOLD))
-    print(f"  - {len(discover_exams())} exam simulations with 400+ questions")
+    _exams = discover_exams()
+    _total_q = sum(
+        int(x)
+        for e in _exams
+        if (x := (parse_exam_config(e) or {}).get("TOTAL_QUESTIONS", "")) and x.isdigit()
+    )
+    print(f"  - {len(_exams)} exam simulations with {_total_q}+ questions")
     print("  - Automated Kubernetes environment setup")
-    print("  - Real-time scoring with 400+ criteria")
+    print(f"  - Real-time scoring with {_total_q}+ criteria")
     print("  - Web interface with 120-minute countdown timer")
     print("  - Interactive menu or direct CLI commands")
     print()
