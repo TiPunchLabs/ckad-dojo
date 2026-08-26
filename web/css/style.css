@@ -1174,7 +1174,8 @@ html, body {
     font-weight: 600;
 }
 
-.criterion-description {
+.criterion-description,
+.criterion-text {
     flex: 1;
     color: var(--text-secondary);
 }
@@ -1183,7 +1184,8 @@ html, body {
     color: var(--accent-success);
 }
 
-.criterion-pass .criterion-description {
+.criterion-pass .criterion-description,
+.criterion-pass .criterion-text {
     color: var(--text-primary);
 }
 
@@ -1191,7 +1193,8 @@ html, body {
     color: var(--accent-danger);
 }
 
-.criterion-fail .criterion-description {
+.criterion-fail .criterion-description,
+.criterion-fail .criterion-text {
     color: var(--text-secondary);
 }
 
