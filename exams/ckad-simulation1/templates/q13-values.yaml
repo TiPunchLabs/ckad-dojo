@@ -8,7 +8,8 @@ image:
 
 service:
   type: ClusterIP
-  port: 8080
+  ports:
+    http: 8080
 
 resources:
   requests:

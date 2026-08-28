@@ -2,7 +2,7 @@
 
 *「朱雀は灰から蘇る」 - Le phénix renaît de ses cendres*
 
-This document contains the solutions for all 21 questions in CKAD Simulation 2.
+This document contains the solutions for all 21 questions in CKAD Simulation 1.
 
 ---
 
@@ -361,8 +361,8 @@ EOF
 
 ```bash
 # Copy template
-mkdir -p ./exam/course/12
-cp ./templates/q12-image/* ./exam/course/12/
+mkdir -p ./exam/course/12/image
+cp ./templates/q12-image/* ./exam/course/12/image/
 
 # Modify Dockerfile
 cat <<EOF > ./exam/course/12/image/Dockerfile
@@ -379,7 +379,7 @@ CMD ["nginx", "-g", "daemon off;"]
 EOF
 
 # Build with custom ARG value
-cd ./exam/course/12
+cd ./exam/course/12/image
 sudo docker build --build-arg APP_VERSION=2.0.0 -t localhost:5000/phoenix-app:2.0.0 .
 
 # Push to registry
