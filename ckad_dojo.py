@@ -128,9 +128,20 @@ def show_version() -> None:
     print("  environment setup, real-time scoring, and a modern web interface.")
     print()
     print(color("Features:", Colors.BOLD))
-    print("  - 4 exam simulations with 85+ questions")
+    _exams = [e for e in discover_exams() if e.startswith("ckad-simulation")]
+    _total_q = sum(
+        int(x)
+        for e in _exams
+        if (x := (parse_exam_config(e) or {}).get("TOTAL_QUESTIONS", "")) and x.isdigit()
+    )
+    _total_c = sum(
+        (get_exams_dir() / e / "scoring-functions.sh").read_text().count("check_criterion")
+        for e in _exams
+        if (get_exams_dir() / e / "scoring-functions.sh").exists()
+    )
+    print(f"  - {len(_exams)} exam simulations with {_total_q}+ questions")
     print("  - Automated Kubernetes environment setup")
-    print("  - Real-time scoring with 400+ criteria")
+    print(f"  - Real-time scoring with {_total_c}+ criteria")
     print("  - Web interface with 120-minute countdown timer")
     print("  - Interactive menu or direct CLI commands")
     print()
@@ -179,8 +190,6 @@ def discover_exams() -> list[str]:
 
     def _natural_sort_key(name: str) -> tuple[str, int]:
         """Sort exam IDs naturally: ckad-simulation1, ..., 9, 10."""
-        import re
-
         match = re.match(r"^(.*?)(\d+)$", name)
         if match:
             return (match.group(1), int(match.group(2)))
