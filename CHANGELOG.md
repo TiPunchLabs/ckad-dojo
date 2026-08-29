@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Browser UX: inline markdown values rendered in exam questions can now be copied with a visible hover/click affordance
+- Browser compatibility: clipboard fallback handling for non-Clipboard API environments such as Firefox secure-context restrictions
 - CI: `security` job with dependency audit (`pip-audit`) and secret scanning (`gitleaks`)
 - CI: `build` job with package build (`uv build`) and artifact upload
 - CI: Python test step with pytest and coverage reporting
