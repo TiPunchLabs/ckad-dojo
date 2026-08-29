@@ -45,8 +45,8 @@ direnv allow
 
 # 3. Install pre-commit hooks
 uv sync --group dev
-pre-commit install
-pre-commit install --hook-type commit-msg
+uv run pre-commit install
+uv run pre-commit install --hook-type commit-msg
 ```
 
 ## Commit Convention
