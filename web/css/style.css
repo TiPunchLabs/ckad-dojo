@@ -692,6 +692,52 @@ html, body {
     font-size: 0.9em;
 }
 
+.question-content .copyable-value {
+    position: relative;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.question-content .copyable-value:hover,
+.question-content .copyable-value:focus-visible {
+    background: var(--bg-tertiary);
+    border-color: var(--accent-primary);
+    outline: none;
+}
+
+.question-content .copyable-value::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%) translateY(4px);
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.35rem;
+    background: rgba(15, 23, 42, 0.95);
+    color: #fff;
+    font-size: 0.7rem;
+    line-height: 1.2;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 10;
+}
+
+.question-content .copyable-value:hover::after,
+.question-content .copyable-value:focus-visible::after,
+.question-content .copyable-value.copied::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.question-content .copyable-value.copied {
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(34, 197, 94, 0.6);
+    color: var(--text-primary);
+}
+
 .question-content pre {
     background: var(--bg-primary);
     border: 1px solid var(--border-color);
