@@ -123,6 +123,10 @@ main() {
 	fi
 	print_success "All prerequisites satisfied"
 
+	# Best-effort enablement for metric-based questions
+	print_section "Ensuring metrics-server is available..."
+	ensure_metrics_server || true
+
 	# Step 1: Create namespaces
 	if ! setup_namespaces; then
 		((errors++))

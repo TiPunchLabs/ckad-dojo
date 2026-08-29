@@ -298,7 +298,7 @@ Get the logs from the previous container instance and save to `./exam/course/13/
 
 Get the CPU and memory utilization of all nodes and save to `./exam/course/14/nodes.txt`.
 
-**Note**: This requires metrics-server to be running.
+**Note**: The setup script normally enables metrics-server. In a custom cluster, this command may fail if metrics are unavailable.
 
 **Hint**: Use `kubectl top nodes`.
 
@@ -439,6 +439,6 @@ Use an emptyDir volume named `log-volume`.
 
 Get the CPU and memory utilization of all Pods in namespace `storm` and save to `./exam/course/20/top-pods.txt`.
 
-**Note**: This requires metrics-server to be running.
+**Note**: The setup script normally enables metrics-server. In a custom cluster, this command may fail if metrics are unavailable.
 
 **Hint**: Use `kubectl top pods -n storm`.
