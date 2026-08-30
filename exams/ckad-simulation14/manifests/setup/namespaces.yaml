@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: thunder
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bolt
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: storm
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: voltage
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: spark
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: charge
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: surge
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flash
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: strike
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: plasma

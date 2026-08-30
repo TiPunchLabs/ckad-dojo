@@ -1,0 +1,79 @@
+# Q7: Deployment api-server in lagoon
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-server
+  namespace: lagoon
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api-server
+  template:
+    metadata:
+      labels:
+        app: api-server
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.23
+---
+# Q9: Pod backend-pod in wave (Wrong Registry)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend-pod
+  namespace: wave
+spec:
+  containers:
+  - name: backend
+    image: wrongregistry.k8s.io/nginx:alpine
+---
+# Q15: Pod target-pod in reef
+apiVersion: v1
+kind: Pod
+metadata:
+  name: target-pod
+  namespace: reef
+spec:
+  containers:
+  - name: web
+    image: nginx:alpine
+---
+# Q18: Service mesh-service and Pod mesh-pod in wave
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mesh-pod
+  namespace: wave
+  labels:
+    app: mesh-app
+spec:
+  containers:
+  - name: app
+    image: nginx:alpine
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mesh-service
+  namespace: wave
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: wrong-label
+---
+# Q20: Service api-service in ocean (Dummy service for Ingress)
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-service
+  namespace: ocean
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: api-app

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tornado-app
+  namespace: tornado
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tornado
+  template:
+    metadata:
+      labels:
+        app: tornado
+    spec:
+      containers:
+      - name: web
+        image: nginx:alpine
+        envFrom:
+        - configMapRef:
+            name: tornado-config

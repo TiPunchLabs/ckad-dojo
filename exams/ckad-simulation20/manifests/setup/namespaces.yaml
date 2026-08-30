@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: apex
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: summit
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pinnacle
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zenith
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: crown
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: glory
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: legacy
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mastery
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ascend
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: triumph

@@ -1,0 +1,135 @@
+# Question 7: eden-api deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eden-api
+  namespace: eden
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: eden-api
+  template:
+    metadata:
+      labels:
+        app: eden-api
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.20
+---
+# Question 9: stuck-pod in cosmos namespace
+apiVersion: v1
+kind: Pod
+metadata:
+  name: stuck-pod
+  namespace: cosmos
+spec:
+  initContainers:
+  - name: init-setup
+    image: busybox:1.32
+    command: ['sh', '-c', 'exit 1'] # Intentionally failing
+  containers:
+  - name: main-app
+    image: nginx:alpine
+---
+# Question 11: backend-api deployment & service in genesis namespace
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-api
+  namespace: genesis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-api
+  template:
+    metadata:
+      labels:
+        app: backend-api
+    spec:
+      containers:
+      - name: api
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-api
+  namespace: genesis
+spec:
+  selector:
+    app: backend-api
+  ports:
+  - port: 8080
+    targetPort: 80
+---
+# Question 12: my-secret and my-config in origin namespace
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-secret
+  namespace: origin
+stringData:
+  username: admin
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-config
+  namespace: origin
+data:
+  app.properties: "key=value"
+---
+# Question 18: cosmos-ingress and cosmos-svc
+apiVersion: v1
+kind: Service
+metadata:
+  name: cosmos-svc
+  namespace: cosmos
+spec:
+  selector:
+    app: cosmos
+  ports:
+  - port: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cosmos-ingress
+  namespace: cosmos
+spec:
+  rules:
+  - host: cosmos.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: cosmos-svc
+            port:
+              number: 8080 # Intentionally wrong port originally maybe? Let's just set it to 8080 so they fix it, or just 80. Wait, question says "Ensure the routing rule points traffic for cosmos.local to the service cosmos-svc on port 80."
+---
+# Question 19: data-svc in ancient namespace
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-svc
+  namespace: ancient
+spec:
+  selector:
+    app: data
+  ports:
+  - port: 80
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 1000000
+globalDefault: false
+description: "This priority class should be used for high priority service pods only."

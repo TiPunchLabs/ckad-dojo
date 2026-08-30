@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: harmony
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: melody
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rhythm
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cadence
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sonata
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: chorus
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: verse
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lyric
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tempo
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aria
