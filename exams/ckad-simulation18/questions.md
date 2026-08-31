@@ -27,6 +27,7 @@
 ### Task
 
 There is a skeleton Dockerfile located at `./exam/course/1/Dockerfile`.
+
 1. Modify the `Dockerfile` to use a non-root user. Add an instruction to create a user named `izanagi` with UID `1000` and switch to this user.
 2. Build the Docker image from this `Dockerfile` and tag it as `localhost:5000/genesis-app:v1`.
 3. Push the image to the local registry at `localhost:5000`.
@@ -47,8 +48,9 @@ There is a skeleton Dockerfile located at `./exam/course/1/Dockerfile`.
 ### Task
 
 Create a Pod named `data-transformer` in the `origin` namespace implementing the Adapter pattern.
+
 - The Pod should have an `emptyDir` volume named `shared-data`.
-- Main container: 
+- Main container:
   - Name: `app-container`
   - Image: `busybox:1.32`
   - Command: `sh`, `-c`, `while true; do echo "$(date) - DATA" >> /var/log/app.log; sleep 5; done`
@@ -74,6 +76,7 @@ Create a Pod named `data-transformer` in the `origin` namespace implementing the
 ### Task
 
 Create a Job named `index-processor` in the `primal` namespace.
+
 - Configure it to use Indexed completion mode (`completionMode: Indexed`).
 - It should run a total of `5` completions.
 - It should run up to `2` pods in parallel.
@@ -94,6 +97,7 @@ Create a Job named `index-processor` in the `primal` namespace.
 ### Task
 
 Create a Pod named `graceful-shutdown` in the `ancient` namespace.
+
 - Image: `nginx:1.21`
 - Set the `terminationGracePeriodSeconds` to `45`.
 - Configure a `preStop` hook using `exec` that runs the command: `sh`, `-c`, `sleep 10 && nginx -s quit`
@@ -113,6 +117,7 @@ Create a Pod named `graceful-shutdown` in the `ancient` namespace.
 ### Task
 
 A Helm release named `genesis-web` is deployed in the `nexus` namespace.
+
 1. Inspect the chart values currently deployed.
 2. Upgrade the release to change the `replicaCount` to `3` without altering any other custom values that were previously set (use `--reuse-values`).
 3. You can find the chart source at `./exam/course/5/genesis-web-chart` if needed, but you only need to modify the deployed release.
@@ -150,6 +155,7 @@ A Helm release named `genesis-web` is deployed in the `nexus` namespace.
 ### Task
 
 A Deployment named `eden-api` exists in the `eden` namespace.
+
 1. Update the Deployment's image from `nginx:1.20` to `nginx:1.21`.
 2. Ensure that the change is recorded in the rollout history by setting the revision annotation on the Deployment resource.
 3. Ensure the Deployment uses a rolling update strategy with `maxSurge` set to `2` and `maxUnavailable` set to `0`.
@@ -169,6 +175,7 @@ A Deployment named `eden-api` exists in the `eden` namespace.
 ### Task
 
 In `./exam/course/8/kustomize`, there is a `kustomization.yaml` file.
+
 1. Add a `secretGenerator` to the `kustomization.yaml` to generate a secret named `matrix-secret`.
 2. The secret should contain a literal `db-password=supersecret`.
 3. Configure `generatorOptions` to disable the suffix hash (`disableNameSuffixHash: true`).
@@ -189,6 +196,7 @@ In `./exam/course/8/kustomize`, there is a `kustomization.yaml` file.
 ### Task
 
 A Pod named `stuck-pod` in the `cosmos` namespace is stuck in the `Init:Error` state.
+
 1. Identify the reason why the init container is failing.
 2. Fix the pod so that it reaches the `Running` state. You may recreate the pod if necessary. Note: The init container is supposed to successfully run a shell command and exit.
 
@@ -225,6 +233,7 @@ Ensure the output has the exact headers `TYPE`, `REASON`, and `MESSAGE`.
 ### Task
 
 There is a deployment `backend-api` in the `genesis` namespace that is exposing an API internally on port `8080`.
+
 1. Create a script at `./exam/course/11/check.sh` that sets up a temporary port-forwarding to the `backend-api` service on local port `9999` mapping to the service port `8080`.
 2. The script should use `curl` to fetch `http://localhost:9999/health`, append the output to `./exam/course/11/health.log`, and then terminate the port-forward process.
 
@@ -246,6 +255,7 @@ There is a deployment `backend-api` in the `genesis` namespace that is exposing 
 
 Create a Pod named `projected-pod` in the `origin` namespace using the `nginx:alpine` image.
 Use a single `projected` volume mounted at `/var/run/projected` to expose all of the following sources:
+
 1. A Secret named `my-secret` (already exists in the namespace) - expose the `username` key.
 2. A ConfigMap named `my-config` (already exists) - expose all its keys.
 3. DownwardAPI - expose the pod's `metadata.labels` as a file named `labels`.
@@ -266,6 +276,7 @@ Use a single `projected` volume mounted at `/var/run/projected` to expose all of
 ### Task
 
 Create a Secret named `static-creds` in the `primal` namespace.
+
 - It should contain the literal `api-key=12345ABC`.
 - Make the Secret immutable so its contents cannot be modified.
 
@@ -285,6 +296,7 @@ Create a Secret named `static-creds` in the `primal` namespace.
 
 Create a Pod named `secure-pod` in the `ancient` namespace using the `nginx:alpine` image.
 Configure the container's security context with the following hardening settings:
+
 - It must run as a non-root user (e.g., `runAsNonRoot: true`, `runAsUser: 1000`).
 - The root filesystem must be read-only.
 - Drop ALL capabilities.
@@ -306,6 +318,7 @@ Configure the container's security context with the following hardening settings
 ### Task
 
 Create a ClusterRole named `monitor-viewer`.
+
 1. It should have permissions to `get`, `list`, and `watch` all `pods` and `services` cluster-wide.
 2. Create another ClusterRole named `aggregated-monitor` that uses aggregation labels to automatically inherit the rules from `monitor-viewer`.
 3. Add the required label to `monitor-viewer` so it gets aggregated into `aggregated-monitor`.
@@ -325,6 +338,7 @@ Create a ClusterRole named `monitor-viewer`.
 ### Task
 
 Create a ResourceQuota named `priority-quota` in the `eden` namespace.
+
 1. Configure it to limit the total number of pods to `5` and total requests.cpu to `2`.
 2. Apply a scope selector so that this quota ONLY applies to Pods that have the `PriorityClass` of `high-priority` (assume such PriorityClass exists or match by `PriorityClassIn` scope selector). Use the scope `PriorityClassIn` with values `high-priority`.
 
@@ -343,6 +357,7 @@ Create a ResourceQuota named `priority-quota` in the `eden` namespace.
 ### Task
 
 Create a NetworkPolicy named `allow-named-port` in the `matrix` namespace.
+
 - It should apply to pods with the label `role=backend`.
 - It should allow incoming TCP traffic on the named port `api-port`.
 - It should only allow this traffic from pods in the `matrix` namespace with the label `role=frontend`.
@@ -399,6 +414,7 @@ Create a file at `./exam/course/19/fqdn.txt` containing the Fully Qualified Doma
 ### Task
 
 Create a NetworkPolicy named `isolate-namespace` in the `nexus` namespace.
+
 - It should apply to ALL pods in the `nexus` namespace.
 - It should allow all incoming traffic from pods within the `nexus` namespace.
 - It should explicitly block all incoming traffic from pods in ANY OTHER namespace.

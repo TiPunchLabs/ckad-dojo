@@ -54,7 +54,9 @@ kubectl apply -f ./exam/course/14/q2/pod.yaml
 mkdir -p ./exam/course/14/q3
 kubectl create cronjob lightning-strike -n bolt --image=busybox --schedule="*/5 * * * *" --dry-run=client -o yaml -- echo "Strike!" > ./exam/course/14/q3/cronjob.yaml
 ```
+
 Modify `./exam/course/14/q3/cronjob.yaml` to add `startingDeadlineSeconds` and `successfulJobsHistoryLimit`:
+
 ```yaml
 apiVersion: batch/v1
 kind: CronJob
@@ -77,6 +79,7 @@ spec:
             - "Strike!"
           restartPolicy: OnFailure
 ```
+
 ```bash
 kubectl apply -f ./exam/course/14/q3/cronjob.yaml
 ```
@@ -130,7 +133,9 @@ kubectl rollout undo deployment api-gateway -n voltage --to-revision=1
 mkdir -p ./exam/course/14/q7
 kubectl get deployment backend-v1 -n spark -o yaml > ./exam/course/14/q7/backend-v2.yaml
 ```
+
 Modify `./exam/course/14/q7/backend-v2.yaml` to change name, replicas to 1, and pod template image to `nginx:1.23`. Keep the labels identical so the service matches it.
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -151,6 +156,7 @@ spec:
       - name: nginx
         image: nginx:1.23
 ```
+
 ```bash
 kubectl apply -f ./exam/course/14/q7/backend-v2.yaml
 ```
@@ -192,12 +198,15 @@ kubectl apply -k ./exam/course/14/q8/ -n charge
 ## Question 9 | Kubernetes Practice
 
 Find out why the pod is crashing:
+
 ```bash
 kubectl get pod data-processor -n flash
 kubectl describe pod data-processor -n flash
 kubectl logs data-processor -n flash
 ```
+
 Edit the pod or deployment to fix the error (e.g. correct the command/args or fix the readiness/liveness probe port).
+
 ```bash
 kubectl edit pod data-processor -n flash
 ```

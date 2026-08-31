@@ -115,6 +115,7 @@ patches:
         path: /spec/replicas
         value: 5
 ```
+
 ```bash
 kubectl kustomize ./exam/course/8/ > ./exam/course/8/kustomize-output.yaml
 kubectl apply -f ./exam/course/8/kustomize-output.yaml -n vanguard
