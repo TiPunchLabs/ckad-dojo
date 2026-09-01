@@ -61,7 +61,7 @@
 
 | Feature | Description |
 |---------|-------------|
-| **11 Dojos** | 218 questions across 11 themed dojos |
+| **20 Dojos** | 398 questions across 20 themed dojos |
 | **Unified CLI** | Single `uv run ckad-dojo` command for all operations |
 | **Web Interface** | Modern UI with 120-minute countdown timer |
 | **Auto-Scoring** | 400+ criteria automatically evaluated |
@@ -82,21 +82,32 @@
 
 ## The Eleven Dojos
 
-Three dojos are themed after the Shishin (四神) — Celestial Guardians from East Asian mythology. The remaining eight dojos feature mythical creatures and deities from Japanese folklore.
+The dojo roster spans the classic Shishin guardians, Japanese folklore, and increasingly advanced Kubernetes scenarios across the full CKAD syllabus.
 
-| # | Dojo | Title | Questions | Points | Theme | Credit |
-|:-:|------|-------|:---------:|:------:|-------|--------|
-| 1 | 🔥 **Suzaku** | Phénix Vermillon du Sud | 21 | 112 | Constellation (Orion, Andromeda...) | — |
-| 2 | 🐯 **Byakko** | Tigre Blanc de l'Ouest | 20 | 105 | Greek mythology (Olympus, Zeus...) | — |
-| 3 | 🐢 **Genbu** | Tortue Noire du Nord | 20 | 105 | Norse mythology (Odin, Thor...) | — |
-| 4 | 🐸 **Kappa** | Kappa des Rivières | 17 | 91 | River/water (stream, pond...) | [@aravind4799](https://github.com/aravind4799) |
-| 5 | 🦌 **Kirin** | Kirin Céleste | 20 | 105 | Ocean (shell, ocean, reef...) | — |
-| 6 | 👺 **Tengu** | Tengu des Montagnes | 20 | 100 | Mountain (peak, summit...) | [@dgkanatsios](https://github.com/dgkanatsios) |
-| 7 | 🦝 **Tanuki** | Tanuki des Forêts | 20 | 100 | Forest (grove, thicket...) | [@dgkanatsios](https://github.com/dgkanatsios) |
-| 8 | 🦊 **Inari** | Inari des Moissons | 20 | 100 | Harvest (harvest, grain...) | [@dgkanatsios](https://github.com/dgkanatsios) |
-| 9 | 🐲 **Ryujin** | Ryujin des Profondeurs | 20 | 100 | Sea (tide, wave, depths...) | [@dgkanatsios](https://github.com/dgkanatsios) |
-| 10 | 👹 **Oni** | Oni of the Demon Gate | 20 | 102 | Fortification (fortress, bastion...) | — |
-| 11 | ☀️ **Amaterasu** | Amaterasu of the Rising Sun | 20 | 104 | Sun/Light (solar, corona...) | — |
+| # | Exam | Dojo | Theme | Questions | Points | Credit |
+|:-:|------|------|-------|:---------:|:------:|--------|
+| 1 | `ckad-simulation1` | 🔥 **Suzaku** | Constellation (Orion, Andromeda...) | 21 | 112 | — |
+| 2 | `ckad-simulation2` | 🐯 **Byakko** | Greek mythology (Olympus, Zeus...) | 20 | 105 | — |
+| 3 | `ckad-simulation3` | 🐢 **Genbu** | Norse mythology (Odin, Thor...) | 20 | 105 | — |
+| 4 | `ckad-simulation4` | 🐸 **Kappa** | River/water (stream, pond...) | 17 | 91 | [@aravind4799](https://github.com/aravind4799) |
+| 5 | `ckad-simulation5` | 🦌 **Kirin** | Ocean (shell, ocean, reef...) | 20 | 105 | — |
+| 6 | `ckad-simulation6` | 👺 **Tengu** | Mountain (peak, summit...) | 20 | 100 | [@dgkanatsios](https://github.com/dgkanatsios) |
+| 7 | `ckad-simulation7` | 🦝 **Tanuki** | Forest (grove, thicket...) | 20 | 100 | [@dgkanatsios](https://github.com/dgkanatsios) |
+| 8 | `ckad-simulation8` | 🦊 **Inari** | Harvest (harvest, grain...) | 20 | 100 | [@dgkanatsios](https://github.com/dgkanatsios) |
+| 9 | `ckad-simulation9` | 🐲 **Ryujin** | Sea (tide, wave, depths...) | 20 | 100 | [@dgkanatsios](https://github.com/dgkanatsios) |
+| 10 | `ckad-simulation10` | 👹 **Oni** | Fortification (fortress, bastion...) | 20 | 102 | — |
+| 11 | `ckad-simulation11` | ☀️ **Amaterasu** | Sun/Light (solar, corona...) | 20 | 104 | — |
+| 12 | `ckad-simulation12` | 🌙 **Tsukuyomi** | Moonlit gloom (nightfall, eclipse, darkness...) | 20 | 108 | [@Sai7Teja](https://github.com/Sai7Teja) |
+| 13 | `ckad-simulation13` | 🌬️ **Fujin** | Storm winds (tempest, gale, thundercloud...) | 20 | 110 | [@Sai7Teja](https://github.com/Sai7Teja) |
+| 14 | `ckad-simulation14` | ⚡ **Raijin** | Thunder and lightning (strike, surge, charge...) | 20 | 112 | [@Sai7Teja](https://github.com/Sai7Teja) |
+| 15 | `ckad-simulation15` | 🌊 **Susanoo** | Sea and tide (current, reef, abyss...) | 20 | 110 | [@Sai7Teja](https://github.com/Sai7Teja) |
+| 16 | `ckad-simulation16` | 🎶 **Benzaiten** | Harmony and flow (melody, rhythm, cadence...) | 20 | 114 | [@Sai7Teja](https://github.com/Sai7Teja) |
+| 17 | `ckad-simulation17` | ⚔️ **Hachiman** | Strategy and battle (fortress, frontier, war...) | 20 | 119 | [@Sai7Teja](https://github.com/Sai7Teja) |
+| 18 | `ckad-simulation18` | ✨ **Izanagi** | Creation and order (origin, balance, bloom...) | 20 | 118 | [@Sai7Teja](https://github.com/Sai7Teja) |
+| 19 | `ckad-simulation19` | 🛡️ **Bishamonten** | Vigil and defense (guard, might, watch...) | 20 | 120 | [@Sai7Teja](https://github.com/Sai7Teja) |
+| 20 | `ckad-simulation20` | 🏆 **Musashi** | Mastery and duels (finale, discipline, victory...) | 20 | 122 | [@Sai7Teja](https://github.com/Sai7Teja) |
+
+> The original credit markers remain for the adapted sources, and the newer simulations are attributed to the repository author who added them.
 
 <details>
 <summary><strong>Dojo Quotes</strong></summary>
@@ -114,6 +125,15 @@ Three dojos are themed after the Shishin (四神) — Celestial Guardians from E
 | 🐲 Ryujin | *「龍神は波を操る」— Ryujin commands the waves* |
 | 👹 Oni | *「鬼の目にも涙」— Even the demon sheds tears* |
 | ☀️ Amaterasu | *「天照は光を導く」— Amaterasu guides the light* |
+| 🌙 Tsukuyomi | *「月読は夜を整える」— Tsukuyomi sorts the chaos by moonlight* |
+| 🌬️ Fujin | *「風神はノートを吹き飛ばす」— Fujin keeps the kubeconfig from getting stale* |
+| ⚡ Raijin | *「雷神は遅延を一瞬で裁く」— Raijin strikes the slow pods down* |
+| 🌊 Susanoo | *「スサノオは海を平定する」— Susanoo rules the seas and the service mesh* |
+| 🎶 Benzaiten | *「弁財天は音楽を持ち帰る」— Benzaiten sings in a perfect Helm release* |
+| ⚔️ Hachiman | *「八幡は戦略を磨く」— Hachiman always has a better rollout plan* |
+| ✨ Izanagi | *「イザナギは名を与える」— Izanagi names the pods before they misbehave* |
+| 🛡️ Bishamonten | *「毘沙門天は出口を守る」— Bishamonten guards the egress rules* |
+| 🏆 Musashi | *「武蔵は最後のデバッグを制す」— Musashi wins the duel against the stubborn bug* |
 
 </details>
 
@@ -480,7 +500,16 @@ ckad-dojo/
 │   ├── ckad-simulation8/     # Dojo Inari 🦊 - 20 questions, 100 points
 │   ├── ckad-simulation9/     # Dojo Ryujin 🐲 - 20 questions, 100 points
 │   ├── ckad-simulation10/    # Dojo Oni 👹 - 20 questions, 102 points
-│   └── ckad-simulation11/    # Dojo Amaterasu ☀️ - 20 questions, 104 points
+│   ├── ckad-simulation11/    # Dojo Amaterasu ☀️ - 20 questions, 104 points
+│   ├── ckad-simulation12/    # Dojo Tsukuyomi 🌙 - 20 questions, 108 points
+│   ├── ckad-simulation13/    # Dojo Fujin 🌬️ - 20 questions, 110 points
+│   ├── ckad-simulation14/    # Dojo Raijin ⚡ - 20 questions, 112 points
+│   ├── ckad-simulation15/    # Dojo Susanoo 🌊 - 20 questions, 110 points
+│   ├── ckad-simulation16/    # Dojo Benzaiten 🎶 - 20 questions, 114 points
+│   ├── ckad-simulation17/    # Dojo Hachiman ⚔️ - 20 questions, 119 points
+│   ├── ckad-simulation18/    # Dojo Izanagi ✨ - 20 questions, 118 points
+│   ├── ckad-simulation19/    # Dojo Bishamonten 🛡️ - 20 questions, 120 points
+│   └── ckad-simulation20/    # Dojo Musashi 🏆 - 20 questions, 122 points
 │       ├── exam.conf         # Configuration
 │       ├── questions.md      # Questions
 │       ├── solutions.md      # Solutions
@@ -687,6 +716,15 @@ Special thanks to the following contributors whose work has been adapted for thi
 | 🦝 Dojo Tanuki (Simulation 7) | [CKAD-exercises](https://github.com/dgkanatsios/CKAD-exercises) | [@dgkanatsios](https://github.com/dgkanatsios) |
 | 🦊 Dojo Inari (Simulation 8) | [CKAD-exercises](https://github.com/dgkanatsios/CKAD-exercises) | [@dgkanatsios](https://github.com/dgkanatsios) |
 | 🐲 Dojo Ryujin (Simulation 9) | [CKAD-exercises](https://github.com/dgkanatsios/CKAD-exercises) | [@dgkanatsios](https://github.com/dgkanatsios) |
+| 🌙 Dojo Tsukuyomi (Simulation 12) | Original dojo content | [@Sai7Teja](https://github.com/Sai7Teja) |
+| 🌬️ Dojo Fujin (Simulation 13) | Original dojo content | [@Sai7Teja](https://github.com/Sai7Teja) |
+| ⚡ Dojo Raijin (Simulation 14) | Original dojo content | [@Sai7Teja](https://github.com/Sai7Teja) |
+| 🌊 Dojo Susanoo (Simulation 15) | Original dojo content | [@Sai7Teja](https://github.com/Sai7Teja) |
+| 🎶 Dojo Benzaiten (Simulation 16) | Original dojo content | [@Sai7Teja](https://github.com/Sai7Teja) |
+| ⚔️ Dojo Hachiman (Simulation 17) | Original dojo content | [@Sai7Teja](https://github.com/Sai7Teja) |
+| ✨ Dojo Izanagi (Simulation 18) | Original dojo content | [@Sai7Teja](https://github.com/Sai7Teja) |
+| 🛡️ Dojo Bishamonten (Simulation 19) | Original dojo content | [@Sai7Teja](https://github.com/Sai7Teja) |
+| 🏆 Dojo Musashi (Simulation 20) | Original dojo content | [@Sai7Teja](https://github.com/Sai7Teja) |
 
 ---
 
