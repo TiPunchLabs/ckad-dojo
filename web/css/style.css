@@ -692,7 +692,8 @@ html, body {
     font-size: 0.9em;
 }
 
-.question-content .copyable-value {
+.question-content .copyable-value,
+.solution-content .copyable-value {
     position: relative;
     cursor: pointer;
     border: 1px solid var(--border-color);
@@ -700,13 +701,16 @@ html, body {
 }
 
 .question-content .copyable-value:hover,
-.question-content .copyable-value:focus-visible {
+.question-content .copyable-value:focus-visible,
+.solution-content .copyable-value:hover,
+.solution-content .copyable-value:focus-visible {
     background: var(--bg-tertiary);
     border-color: var(--accent-primary);
     outline: none;
 }
 
-.question-content .copyable-value::after {
+.question-content .copyable-value::after,
+.solution-content .copyable-value::after {
     content: attr(data-tooltip);
     position: absolute;
     left: 50%;
@@ -727,12 +731,16 @@ html, body {
 
 .question-content .copyable-value:hover::after,
 .question-content .copyable-value:focus-visible::after,
-.question-content .copyable-value.copied::after {
+.question-content .copyable-value.copied::after,
+.solution-content .copyable-value:hover::after,
+.solution-content .copyable-value:focus-visible::after,
+.solution-content .copyable-value.copied::after {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
 }
 
-.question-content .copyable-value.copied {
+.question-content .copyable-value.copied,
+.solution-content .copyable-value.copied {
     background: rgba(34, 197, 94, 0.12);
     border-color: rgba(34, 197, 94, 0.6);
     color: var(--text-primary);

@@ -1059,12 +1059,7 @@ function showSolution(index) {
 
     // Render solution content with markdown
     if (elements.solutionContent) {
-        elements.solutionContent.innerHTML = marked.parse(solution.content || '');
-
-        // Highlight code blocks
-        elements.solutionContent.querySelectorAll('pre code').forEach(block => {
-            hljs.highlightElement(block);
-        });
+        renderMarkdownContent(elements.solutionContent, solution.content || '');
     }
 
     // Update navigation buttons
@@ -1227,16 +1222,7 @@ function flashCopied(element) {
     }, 900);
 }
 
-async function copyInlineCodeValue(codeElement) {
-    const text = codeElement.textContent;
-    if (!text) return;
-
-    if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(text);
-        flashCopied(codeElement);
-        return;
-    }
-
+function copyTextWithFallback(text, element) {
     const fallbackArea = document.createElement('textarea');
     fallbackArea.value = text;
     fallbackArea.setAttribute('readonly', '');
@@ -1248,7 +1234,20 @@ async function copyInlineCodeValue(codeElement) {
     fallbackArea.select();
     document.execCommand('copy');
     document.body.removeChild(fallbackArea);
-    flashCopied(codeElement);
+    flashCopied(element);
+}
+
+async function copyInlineCodeValue(codeElement) {
+    const text = codeElement.textContent;
+    if (!text) return;
+
+    if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        flashCopied(codeElement);
+        return;
+    }
+
+    copyTextWithFallback(text, codeElement);
 }
 
 function handleInlineCodeClick(event) {
@@ -1257,18 +1256,7 @@ function handleInlineCodeClick(event) {
 
     event.preventDefault();
     copyInlineCodeValue(codeElement).catch(() => {
-        const fallbackArea = document.createElement('textarea');
-        fallbackArea.value = codeElement.textContent;
-        fallbackArea.setAttribute('readonly', '');
-        fallbackArea.style.position = 'fixed';
-        fallbackArea.style.opacity = '0';
-        fallbackArea.style.pointerEvents = 'none';
-        document.body.appendChild(fallbackArea);
-        fallbackArea.focus();
-        fallbackArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(fallbackArea);
-        flashCopied(codeElement);
+        copyTextWithFallback(codeElement.textContent, codeElement);
     });
 }
 
@@ -1293,9 +1281,28 @@ function bindCopyableInlineValues(root) {
         element.addEventListener('keydown', (event) => {
             if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();
-                copyInlineCodeValue(element);
+                copyInlineCodeValue(element).catch(() => {
+                    copyTextWithFallback(element.textContent, element);
+                });
             }
         });
+    });
+}
+
+function renderMarkdownContent(container, content, options = {}) {
+    if (!container) return;
+
+    const { processHints: includeHints = false } = options;
+
+    container.innerHTML = marked.parse(content || '');
+    bindCopyableInlineValues(container);
+
+    if (includeHints) {
+        processHints(container);
+    }
+
+    container.querySelectorAll('pre code').forEach(block => {
+        hljs.highlightElement(block);
     });
 }
 
@@ -1317,16 +1324,7 @@ function showQuestion(index) {
 
     // Render question content with markdown
     const content = question.content || '';
-    elements.questionContent.innerHTML = marked.parse(content);
-    bindCopyableInlineValues(elements.questionContent);
-
-    // Process hints (collapsible for Hint/Tip, visible for Note)
-    processHints(elements.questionContent);
-
-    // Highlight code blocks
-    elements.questionContent.querySelectorAll('pre code').forEach(block => {
-        hljs.highlightElement(block);
-    });
+    renderMarkdownContent(elements.questionContent, content, { processHints: true });
 
     // Update navigation buttons
     elements.btnPrev.disabled = index === 0;
