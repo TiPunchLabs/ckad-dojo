@@ -80,7 +80,7 @@
 
 ---
 
-## The Eleven Dojos
+## The Twenty Dojos
 
 The dojo roster spans the classic Shishin guardians, Japanese folklore, and increasingly advanced Kubernetes scenarios across the full CKAD syllabus.
 
