@@ -1059,12 +1059,7 @@ function showSolution(index) {
 
     // Render solution content with markdown
     if (elements.solutionContent) {
-        elements.solutionContent.innerHTML = marked.parse(solution.content || '');
-
-        // Highlight code blocks
-        elements.solutionContent.querySelectorAll('pre code').forEach(block => {
-            hljs.highlightElement(block);
-        });
+        renderMarkdownContent(elements.solutionContent, solution.content || '');
     }
 
     // Update navigation buttons
@@ -1209,6 +1204,108 @@ function toggleHint(hintBox) {
     header.setAttribute('aria-expanded', isExpanded);
 }
 
+function flashCopied(element) {
+    if (!element) return;
+
+    element.classList.add('copied');
+    const previousTitle = element.getAttribute('title') || 'Copy';
+    const previousTooltip = element.dataset.tooltip || 'Copy';
+
+    element.dataset.tooltip = 'Copied!';
+    element.setAttribute('title', 'Copied!');
+    clearTimeout(element.copyResetTimer);
+
+    element.copyResetTimer = setTimeout(() => {
+        element.classList.remove('copied');
+        element.dataset.tooltip = previousTooltip;
+        element.setAttribute('title', previousTitle);
+    }, 900);
+}
+
+function copyTextWithFallback(text, element) {
+    const fallbackArea = document.createElement('textarea');
+    fallbackArea.value = text;
+    fallbackArea.setAttribute('readonly', '');
+    fallbackArea.style.position = 'fixed';
+    fallbackArea.style.opacity = '0';
+    fallbackArea.style.pointerEvents = 'none';
+    document.body.appendChild(fallbackArea);
+    fallbackArea.focus();
+    fallbackArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(fallbackArea);
+    flashCopied(element);
+}
+
+async function copyInlineCodeValue(codeElement) {
+    const text = codeElement.textContent;
+    if (!text) return;
+
+    if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        flashCopied(codeElement);
+        return;
+    }
+
+    copyTextWithFallback(text, codeElement);
+}
+
+function handleInlineCodeClick(event) {
+    const codeElement = event.target.closest('code');
+    if (!codeElement || codeElement.closest('pre')) return;
+
+    event.preventDefault();
+    copyInlineCodeValue(codeElement).catch(() => {
+        copyTextWithFallback(codeElement.textContent, codeElement);
+    });
+}
+
+function bindCopyableInlineValues(root) {
+    if (!root) return;
+
+    if (root.dataset.copyHandlerBound !== 'true') {
+        root.addEventListener('click', handleInlineCodeClick);
+        root.dataset.copyHandlerBound = 'true';
+    }
+
+    root.querySelectorAll('code:not(pre code)').forEach((element) => {
+        if (element.dataset.copyBound === 'true') return;
+
+        element.dataset.copyBound = 'true';
+        element.classList.add('copyable-value');
+        element.dataset.tooltip = 'Copy';
+        element.title = 'Copy';
+        element.setAttribute('aria-label', 'Copy value');
+        element.setAttribute('tabindex', '0');
+
+        element.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                copyInlineCodeValue(element).catch(() => {
+                    copyTextWithFallback(element.textContent, element);
+                });
+            }
+        });
+    });
+}
+
+function renderMarkdownContent(container, content, options = {}) {
+    if (!container) return;
+
+    const { processHints: includeHints = false } = options;
+
+    container.innerHTML = marked.parse(content || '');
+    bindCopyableInlineValues(container);
+
+    if (includeHints) {
+        processHints(container);
+    }
+
+    container.querySelectorAll('pre code').forEach(block => {
+        hljs.highlightElement(block);
+    });
+}
+
 function showQuestion(index) {
     if (index < 0 || index >= state.questions.length) return;
     if (state.examEnded) return;
@@ -1227,15 +1324,7 @@ function showQuestion(index) {
 
     // Render question content with markdown
     const content = question.content || '';
-    elements.questionContent.innerHTML = marked.parse(content);
-
-    // Process hints (collapsible for Hint/Tip, visible for Note)
-    processHints(elements.questionContent);
-
-    // Highlight code blocks
-    elements.questionContent.querySelectorAll('pre code').forEach(block => {
-        hljs.highlightElement(block);
-    });
+    renderMarkdownContent(elements.questionContent, content, { processHints: true });
 
     // Update navigation buttons
     elements.btnPrev.disabled = index === 0;

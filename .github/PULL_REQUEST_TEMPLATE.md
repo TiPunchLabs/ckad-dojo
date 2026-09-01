@@ -18,7 +18,7 @@ Fixes #(issue number)
 
 - [ ] I have read the [CONTRIBUTING](../CONTRIBUTING.md) guide
 - [ ] My code follows the project's style guidelines
-- [ ] I have run `pre-commit run --all-files` and fixed any issues
+- [ ] I have run `uv run pre-commit run --all-files` and fixed any issues
 - [ ] I have run `./tests/run-tests.sh` and all tests pass
 - [ ] I have updated the documentation if needed
 - [ ] I have added tests for new functionality (if applicable)
