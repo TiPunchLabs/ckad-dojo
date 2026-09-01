@@ -460,7 +460,7 @@ score_q12() {
 	check_criterion "Image has version=2.0.0 label" "$([ "$label" = "2.0.0" ] && echo true || echo false)" && ((score++))
 
 	# Check pushed to registry (try to pull)
-	local pushed=$(docker manifest inspect --insecure localhost:5000/phoenix-app:2.0.0 > /dev/null 2>&1 && echo true || echo false)
+	local pushed=$(docker manifest inspect --insecure localhost:5000/phoenix-app:2.0.0 >/dev/null 2>&1 && echo true || echo false)
 	check_criterion "Image pushed to localhost:5000" "$pushed" && ((score++))
 
 	echo "$score/$total"

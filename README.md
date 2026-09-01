@@ -124,16 +124,16 @@ The dojo roster spans the classic Shishin guardians, Japanese folklore, and incr
 | 🦊 Inari | *「稲荷は豊穣を祝う」— Inari celebrates the harvest* |
 | 🐲 Ryujin | *「龍神は波を操る」— Ryujin commands the waves* |
 | 👹 Oni | *「鬼の目にも涙」— Even the demon sheds tears* |
-| ☀️ Amaterasu | *「天照は光を導く」— Amaterasu guides the light* |
-| 🌙 Tsukuyomi | *「月読は夜を整える」— Tsukuyomi sorts the chaos by moonlight* |
-| 🌬️ Fujin | *「風神はノートを吹き飛ばす」— Fujin keeps the kubeconfig from getting stale* |
-| ⚡ Raijin | *「雷神は遅延を一瞬で裁く」— Raijin strikes the slow pods down* |
-| 🌊 Susanoo | *「スサノオは海を平定する」— Susanoo rules the seas and the service mesh* |
-| 🎶 Benzaiten | *「弁財天は音楽を持ち帰る」— Benzaiten sings in a perfect Helm release* |
-| ⚔️ Hachiman | *「八幡は戦略を磨く」— Hachiman always has a better rollout plan* |
-| ✨ Izanagi | *「イザナギは名を与える」— Izanagi names the pods before they misbehave* |
-| 🛡️ Bishamonten | *「毘沙門天は出口を守る」— Bishamonten guards the egress rules* |
-| 🏆 Musashi | *「武蔵は最後のデバッグを制す」— Musashi wins the duel against the stubborn bug* |
+| ☀️ Amaterasu | *「天照は光を導く」 - Amaterasu guides the light* |
+| 🌙 Tsukuyomi | *「月読は闇を照らす」- Tsukuyomi illuminates the darkness* |
+| 🌬️ Fujin | *「風神は嵐を呼ぶ」- Fujin summons the storm* |
+| ⚡ Raijin | *「雷神は天を裂く」- Raijin splits the heavens* |
+| 🌊 Susanoo | *「スサノオは海を支配する」- Susanoo commands the seas* |
+| 🎶 Benzaiten | *「弁財天は智慧を授ける」- Benzaiten bestows wisdom* |
+| ⚔️ Hachiman | *「八幡は戦略を練る」- Hachiman hones strategy* |
+| ✨ Izanagi | *「イザナギは世界を創る」- Izanagi creates the world* |
+| 🛡️ Bishamonten | *「毘沙門天は正義を守る」- Bishamonten guards justice* |
+| 🏆 Musashi | *「武蔵は二刀を極める」- Musashi masters the two swords* |
 
 </details>
 

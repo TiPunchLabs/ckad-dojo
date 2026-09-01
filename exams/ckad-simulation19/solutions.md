@@ -4,7 +4,7 @@
 
 ## Question 1 | Kubernetes Practice
 
-**Explanation**: 
+**Explanation**:
 Multi-stage builds reduce image size and improve security. We create a builder stage and a final stage.
 
 ```bash
