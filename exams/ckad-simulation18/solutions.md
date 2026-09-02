@@ -25,6 +25,7 @@ docker push localhost:5000/genesis-app:v1
 # 4. Create Pod
 kubectl run genesis-pod -n genesis --image=localhost:5000/genesis-app:v1
 ```
+
 **Explanation:** The `USER` instruction sets the user for the container. Building, tagging, and pushing standard docker commands.
 
 ---
@@ -57,6 +58,7 @@ spec:
       mountPath: /var/log
 EOF
 ```
+
 **Explanation:** The adapter pattern uses an `emptyDir` volume shared between containers. The adapter container reads from the shared volume and modifies the data.
 
 ---
@@ -83,6 +85,7 @@ spec:
       restartPolicy: Never
 EOF
 ```
+
 **Explanation:** Indexed jobs provide the `$JOB_COMPLETION_INDEX` environment variable to each pod, allowing them to process specific slices of data.
 
 ---
@@ -107,6 +110,7 @@ spec:
           command: ["sh", "-c", "sleep 10 && nginx -s quit"]
 EOF
 ```
+
 **Explanation:** The `preStop` hook runs before the container receives a SIGTERM. `terminationGracePeriodSeconds` gives it enough time to complete.
 
 ---
@@ -117,6 +121,7 @@ EOF
 # Upgrade the release reusing existing values
 helm upgrade genesis-web ./exam/course/5/genesis-web-chart -n nexus --reuse-values --set replicaCount=3
 ```
+
 **Explanation:** `--reuse-values` keeps all previously set custom values, while `--set` applies the new changes.
 
 ---
@@ -141,6 +146,7 @@ spec:
       app: terra-web
 EOF
 ```
+
 **Explanation:** A PodDisruptionBudget ensures a minimum number of pods remain available during voluntary disruptions.
 
 ---
@@ -157,6 +163,7 @@ kubectl annotate deployment eden-api kubernetes.io/change-cause="Updated to ngin
 # Patch strategy
 kubectl patch deployment eden-api -n eden -p '{"spec":{"strategy":{"type":"RollingUpdate","rollingUpdate":{"maxSurge":2,"maxUnavailable":0}}}}'
 ```
+
 **Explanation:** Using `set image`, `annotate`, and `patch` to modify the deployment without writing a full YAML file.
 
 ---
@@ -177,6 +184,7 @@ EOF
 # Apply Kustomize
 kubectl kustomize ./exam/course/8/kustomize | kubectl apply -n matrix -f -
 ```
+
 **Explanation:** Kustomize `secretGenerator` creates secrets. `disableNameSuffixHash: true` prevents the random hash suffix.
 
 ---
@@ -191,6 +199,7 @@ kubectl get pod stuck-pod -n cosmos -o yaml > stuck.yaml
 sed -i 's/exit 1/exit 0/g' stuck.yaml
 kubectl replace --force -f stuck.yaml
 ```
+
 **Explanation:** The init container was intentionally exiting with 1. We change it to 0 so it succeeds.
 
 ---
@@ -200,6 +209,7 @@ kubectl replace --force -f stuck.yaml
 ```bash
 kubectl get events -n zenith -o custom-columns=TYPE:.type,REASON:.reason,MESSAGE:.message > ./exam/course/10/events.txt
 ```
+
 **Explanation:** `custom-columns` allows exact formatting of kubectl output.
 
 ---
@@ -217,6 +227,7 @@ kill \$PF_PID
 EOF
 chmod +x ./exam/course/11/check.sh
 ```
+
 **Explanation:** Port-forward runs in the background. We fetch the endpoint, log it, then kill the process.
 
 ---
@@ -261,6 +272,7 @@ spec:
           audience: vault
 EOF
 ```
+
 **Explanation:** Projected volumes combine multiple sources (Secrets, ConfigMaps, DownwardAPI, ServiceAccountTokens) into a single directory.
 
 ---
@@ -280,6 +292,7 @@ stringData:
   api-key: 12345ABC
 EOF
 ```
+
 **Explanation:** Setting `immutable: true` on a Secret or ConfigMap prevents any updates to its data.
 
 ---
@@ -317,6 +330,7 @@ spec:
     emptyDir: {}
 EOF
 ```
+
 **Explanation:** Hardening settings require an emptyDir for nginx because it needs to write to `/var/cache/nginx` and `/var/run` when the root FS is read-only.
 
 ---
@@ -347,6 +361,7 @@ aggregationRule:
 rules: []
 EOF
 ```
+
 **Explanation:** Aggregation allows a ClusterRole to dynamically inherit rules from other ClusterRoles based on labels.
 
 ---
@@ -374,6 +389,7 @@ spec:
       - high-priority
 EOF
 ```
+
 **Explanation:** ResourceQuotas can be restricted to specific scopes, like PriorityClasses.
 
 ---
@@ -403,6 +419,7 @@ spec:
       protocol: TCP
 EOF
 ```
+
 **Explanation:** Network Policies support named ports, which allows decoupling the policy from the specific port number.
 
 ---
@@ -433,6 +450,7 @@ spec:
               number: 80
 EOF
 ```
+
 **Explanation:** Explicitly setting `ingressClassName` is the standard way to associate an Ingress with a controller.
 
 ---
@@ -443,6 +461,7 @@ EOF
 kubectl run dns-tester -n zenith --image=busybox:1.32 -- sleep 3600
 echo "data-svc.ancient.svc.cluster.local" > ./exam/course/19/fqdn.txt
 ```
+
 **Explanation:** Cross-namespace service communication requires the FQDN: `<service-name>.<namespace>.svc.cluster.local`.
 
 ---
@@ -468,4 +487,5 @@ spec:
   - {}
 EOF
 ```
+
 **Explanation:** `podSelector: {}` targets all pods in the namespace. `from: - podSelector: {}` allows traffic from all pods in the same namespace. Egress with `{}` allows all outbound.

@@ -13,7 +13,8 @@ repos:
       - id: check-merge-conflict
       - id: check-yaml
         files: \.(yml|yaml)$
-        exclude: (^\.venv/)
+        # Helm chart templates contain Go templating and are not valid YAML
+        exclude: (^\.venv/|-chart/templates/)
         args: [--allow-multiple-documents]
       - id: check-toml
       - id: check-json
@@ -69,7 +70,8 @@ repos:
     hooks:
       - id: yamllint
         files: \.(yml|yaml)$
-        exclude: (^\.venv/)
+        # Helm chart templates contain Go templating and are not valid YAML
+        exclude: (^\.venv/|-chart/templates/)
 
   # =============================================================================
   # Python

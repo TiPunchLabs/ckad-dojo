@@ -85,6 +85,7 @@ Configure the Job to automatically delete itself 10 seconds after it finishes su
 
 Create a Pod named `shared-process-pod` in the `cadence` namespace.
 The Pod should run two containers:
+
 1. `app-container` using image `nginx:alpine`
 2. `debug-container` using image `busybox` running the command `sleep 3600`
 Enable process namespace sharing between the containers in this Pod so the `debug-container` can see processes running in the `app-container`.
@@ -160,6 +161,7 @@ Undo the rollout and rollback to exactly revision 2.
 A base kustomize configuration is at `./exam/course/16/q8/base`.
 Create an overlay for a `production` environment at `./exam/course/16/q8/overlays/production`.
 The overlay should:
+
 1. Change the namespace to `lyric`
 2. Apply a common label `env: production` to all resources
 3. Update the replicas of the deployment `app-deploy` to 4
@@ -235,6 +237,7 @@ Configure a Readiness probe that sends an HTTP GET request to `/ready` on port 8
 Create a Pod named `projected-pod` in the `melody` namespace using image `busybox`, command `sleep 3600`.
 Use a projected volume named `all-in-one` mounted at `/etc/projected`.
 The volume should project:
+
 1. A Downward API volume projecting the pod's labels into a file named `pod-labels.txt`
 2. A ConfigMap named `info-cm` projecting its contents
 3. A Secret named `info-secret` projecting its contents

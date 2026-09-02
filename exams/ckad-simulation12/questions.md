@@ -31,6 +31,7 @@ In the `lunar` namespace, you are tasked with creating a multi-stage Dockerfile.
 A stub Dockerfile has been provided at `./exam/course/12/q1/Dockerfile` and a simple main.go program at `./exam/course/12/q1/main.go`.
 
 Update the Dockerfile to have two stages:
+
 1. The first stage should use `golang:1.20-alpine` as the base image. Name it `builder`.
    - Copy `main.go` into `/app/`.
    - Build it with `go build -o /app/server /app/main.go`.
@@ -75,6 +76,7 @@ Add an init container named `wait-for-service` using the `busybox:1.36` image. T
 ### Task
 
 In the `twilight` namespace, create a CronJob named `nightly-backup`.
+
 - Schedule: every 10 minutes (`*/10 * * * *`).
 - Container image: `busybox:1.36`.
 - Command: `sh -c 'sleep 30'`.
@@ -135,6 +137,7 @@ Roll back the `api-release` release to its previous revision (revision 1).
 ### Task
 
 Create a Deployment named `slow-start-app` in the `shadow` namespace.
+
 - Replicas: 3
 - Image: `nginx:1.24`
 - To ensure no downtime during updates for this application that takes time to initialize, set `minReadySeconds` to `20`.
@@ -253,6 +256,7 @@ Use an `emptyDir` volume to share the `/var/log` directory between the two conta
 In the `crescent` namespace, a Secret named `db-creds` and a ConfigMap named `app-config` exist.
 Create a Pod named `combined-app` using the `nginx:alpine` image.
 Use a single `projected` volume mounted at `/opt/config` to expose:
+
 1. The `db-creds` Secret.
 2. The `app-config` ConfigMap.
 
@@ -290,6 +294,7 @@ Configure the ConfigMap to be immutable to prevent accidental changes.
 
 Create a Pod named `secure-pod` in the `eclipse` namespace using the `nginx:alpine` image.
 Apply the following security constraints:
+
 1. The pod must run as user ID `1000`.
 2. The container must NOT allow privilege escalation (`allowPrivilegeEscalation: false`).
 3. The container must have a read-only root filesystem.
@@ -329,6 +334,7 @@ A Pod named `token-reader` in the same namespace mounts this secret. No changes 
 
 Create a ResourceQuota named `compute-quota` in the `nightfall` namespace.
 Enforce the following limits:
+
 - Hard limit of `4` Pods.
 - Hard limit of `2` CPU requests.
 - Hard limit of `4Gi` Memory limits.
@@ -368,6 +374,7 @@ DENY all EGRESS traffic, except for traffic to DNS (UDP port 53).
 
 Create an Ingress named `star-ingress` in the `starlight` namespace.
 Route traffic based on paths:
+
 - Requests to `/api(/|$)(.*)` should route to a Service named `api-svc` on port 8080 (Prefix match).
 - Requests to `/web(/|$)(.*)` should route to a Service named `web-svc` on port 80 (Prefix match).
 Set the ingress class to `nginx`.

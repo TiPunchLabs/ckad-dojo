@@ -8,6 +8,7 @@
 You need to modify the `Dockerfile` to use a multi-stage build. This involves adding a second `FROM` instruction and copying the built artifact from the first stage.
 
 **Solution:**
+
 ```bash
 cat <<EOF > ./exam/course/1/Dockerfile
 FROM golang:1.20-alpine AS builder
@@ -30,6 +31,7 @@ EOF
 Create a Pod with two containers sharing an `emptyDir` volume. The main container writes logs to a file in the volume, and the sidecar container tails that file.
 
 **Solution:**
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -65,6 +67,7 @@ EOF
 Create a CronJob with `failedJobsHistoryLimit` and `suspend` properties set.
 
 **Solution:**
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: batch/v1
@@ -98,6 +101,7 @@ EOF
 Create a Pod for a batch task. The key here is setting the `restartPolicy` to `OnFailure` instead of the default `Always`.
 
 **Solution:**
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -122,6 +126,7 @@ EOF
 Uninstall a Helm release from a specific namespace.
 
 **Solution:**
+
 ```bash
 helm uninstall ocean-api -n current
 ```
@@ -134,10 +139,13 @@ helm uninstall ocean-api -n current
 Create a Deployment and configure its rolling update strategy attributes.
 
 **Solution:**
+
 ```bash
 kubectl create deployment web-deploy --image=nginx:1.23 --replicas=4 -n reef --dry-run=client -o yaml > deploy.yaml
 ```
+
 Edit `deploy.yaml` to add the strategy:
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -163,6 +171,7 @@ spec:
       - name: nginx
         image: nginx:1.23
 ```
+
 ```bash
 kubectl apply -f deploy.yaml
 ```
@@ -175,6 +184,7 @@ kubectl apply -f deploy.yaml
 Perform updates to a Deployment to generate history, then roll back to a specific revision.
 
 **Solution:**
+
 ```bash
 # Update to nginx:1.24 and record cause
 kubectl set image deployment/api-server nginx=nginx:1.24 -n lagoon
@@ -200,6 +210,7 @@ kubectl rollout undo deployment/api-server --to-revision=2 -n lagoon
 Create Kustomize resources with common labels and annotations.
 
 **Solution:**
+
 ```bash
 cd ./exam/course/8/
 kubectl create deployment app-deploy --image=nginx --dry-run=client -o yaml > deployment.yaml
@@ -229,6 +240,7 @@ kubectl apply -k . -n trench
 Fix the image of a Pod stuck in ErrImagePull. It's often easiest to recreate the pod.
 
 **Solution:**
+
 ```bash
 kubectl get pod backend-pod -n wave -o yaml > pod.yaml
 # Edit pod.yaml to change image from wrongregistry.k8s.io/nginx:alpine to nginx:alpine
@@ -245,6 +257,7 @@ kubectl apply -f pod.yaml
 Retrieve events, filter for Warnings, and save to a file.
 
 **Solution:**
+
 ```bash
 kubectl get events -n depths --field-selector type=Warning > ./exam/course/10/events.txt
 ```
@@ -257,6 +270,7 @@ kubectl get events -n depths --field-selector type=Warning > ./exam/course/10/ev
 Configure a gRPC liveness probe.
 
 **Solution:**
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -284,6 +298,7 @@ EOF
 Create a ConfigMap from a directory and mount it as a volume in a Pod.
 
 **Solution:**
+
 ```bash
 kubectl create configmap app-config-dir --from-file=./exam/course/12/config-files/ -n tide
 
@@ -316,6 +331,7 @@ EOF
 Create a Secret and expose its values as environment variables.
 
 **Solution:**
+
 ```bash
 kubectl create secret generic db-credentials --from-literal=username=admin --from-literal=password=supersecretpassword -n coral
 
@@ -351,6 +367,7 @@ EOF
 Apply SecurityContext to a Pod and create a NetworkPolicy to deny ingress.
 
 **Solution:**
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -396,6 +413,7 @@ EOF
 Use `kubectl debug` to attach an ephemeral container.
 
 **Solution:**
+
 ```bash
 kubectl debug -it target-pod -n reef --image=busybox --target=web -- custom-command
 # Alternatively, without interacting:
@@ -410,10 +428,11 @@ kubectl debug target-pod -n reef --image=busybox --container=debug-container
 Create a Deployment and a PodDisruptionBudget.
 
 **Solution:**
+
 ```bash
 kubectl create deployment critical-app --image=nginx --replicas=3 -n lagoon
 kubectl label deployment critical-app tier=critical -n lagoon
-# Label applies to pods automatically from deployment template if created this way? 
+# Label applies to pods automatically from deployment template if created this way?
 # Wait, kubectl create deployment adds app=critical-app label. To add tier=critical to pods, we need to patch or recreate.
 # It's better to use YAML.
 
@@ -458,6 +477,7 @@ EOF
 Create a default deny-all NetworkPolicy and a specific allow NetworkPolicy.
 
 **Solution:**
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: networking.k8s.io/v1
@@ -500,6 +520,7 @@ EOF
 Fix the Service selector to match the Pod's labels.
 
 **Solution:**
+
 ```bash
 kubectl edit service mesh-service -n wave
 # Change selector from app: wrong-label to app: mesh-app
@@ -513,6 +534,7 @@ kubectl edit service mesh-service -n wave
 Create a multi-port Service.
 
 **Solution:**
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -543,6 +565,7 @@ EOF
 Create an Ingress with an annotation for rewrite-target.
 
 **Solution:**
+
 ```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: networking.k8s.io/v1

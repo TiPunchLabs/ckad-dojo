@@ -137,9 +137,9 @@ metadata:
     kubernetes.io/service-name: external-db-svc
 addressType: IPv4
 ports:
-  - name: mysql
-    port: 3306
+- name: mysql
+  port: 3306
 endpoints:
-  - addresses:
-      - "192.168.1.100"
-      - "192.168.1.101"
+- addresses:
+  - "192.168.1.100"
+  - "192.168.1.101"

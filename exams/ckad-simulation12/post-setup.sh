@@ -2,24 +2,24 @@
 # CKAD Simulation 12 - Post Setup
 
 function exam_post_setup() {
-  echo "Running post-setup for Simulation 12..."
-  
-  echo "Upgrading Helm chart api-release with a bad image to create failure scenario..."
-  helm upgrade api-release bitnami/nginx --set image.tag="nonexistent-tag-12345" -n nebula --reuse-values --wait=false
+	echo "Running post-setup for Simulation 12..."
 
-  echo "Triggering rollout deployment update for Q7..."
-  kubectl set image deployment/critical-processor app=nginx:1.25 -n nightfall
+	echo "Upgrading Helm chart api-release with a bad image to create failure scenario..."
+	helm upgrade api-release bitnami/nginx --set image.tag="nonexistent-tag-12345" -n nebula --reuse-values --wait=false
 
-  # === Auto-generated starter files ===
-  local BASE_DIR="./exam/course"
-  mkdir -p "$BASE_DIR/12/q1"
-  cat << 'EOF_FILE' > "$BASE_DIR/12/q1/Dockerfile"
+	echo "Triggering rollout deployment update for Q7..."
+	kubectl set image deployment/critical-processor app=nginx:1.25 -n nightfall
+
+	# === Auto-generated starter files ===
+	local BASE_DIR="./exam/course"
+	mkdir -p "$BASE_DIR/12/q1"
+	cat <<'EOF_FILE' >"$BASE_DIR/12/q1/Dockerfile"
 # /opt/course/12/q1/Dockerfile
 FROM golang:1.20-alpine
 # TODO: Complete this Dockerfile per the task instructions
 EOF_FILE
 
-  cat << 'EOF_FILE' > "$BASE_DIR/12/q1/main.go"
+	cat <<'EOF_FILE' >"$BASE_DIR/12/q1/main.go"
 package main
 import "fmt"
 func main() {
@@ -27,8 +27,8 @@ func main() {
 }
 EOF_FILE
 
-  mkdir -p "$BASE_DIR/12/q8"
-  cat << 'EOF_FILE' > "$BASE_DIR/12/q8/deployment.yaml"
+	mkdir -p "$BASE_DIR/12/q8"
+	cat <<'EOF_FILE' >"$BASE_DIR/12/q8/deployment.yaml"
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -49,14 +49,14 @@ spec:
         image: nginx:1.24
 EOF_FILE
 
-  cat << 'EOF_FILE' > "$BASE_DIR/12/q8/kustomization.yaml"
+	cat <<'EOF_FILE' >"$BASE_DIR/12/q8/kustomization.yaml"
 resources:
   - deployment.yaml
 EOF_FILE
 
-  mkdir -p "$BASE_DIR/12/q10"
-  
-  mkdir -p "$BASE_DIR/12/q20"
-  
-  return 0
+	mkdir -p "$BASE_DIR/12/q10"
+
+	mkdir -p "$BASE_DIR/12/q20"
+
+	return 0
 }

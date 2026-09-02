@@ -29,6 +29,7 @@
 There is a `Dockerfile` located at `./exam/course/15/q1/Dockerfile` that builds a simple Go application. Currently, it uses a single-stage build resulting in a large image.
 
 Modify the `Dockerfile` to use a multi-stage build to reduce the final image size:
+
 1. Use `golang:1.20-alpine` as the builder stage and name the stage `builder`.
 2. Build the go application with `go build -o app main.go` inside the builder stage.
 3. Use `alpine:3.18` as the final image stage.
