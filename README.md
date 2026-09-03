@@ -16,6 +16,10 @@
 </p>
 
 <p align="center">
+  <strong><a href="https://ckad-dojo.tipunchlabs.fr/">ckad-dojo.tipunchlabs.fr</a></strong>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white" alt="Kubernetes">
   <img src="https://img.shields.io/badge/Helm-0F1689?style=for-the-badge&logo=helm&logoColor=white" alt="Helm">
   <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
@@ -23,6 +27,7 @@
 </p>
 
 <p align="center">
+  <a href="https://ckad-dojo.tipunchlabs.fr/"><img src="https://img.shields.io/badge/Website-ckad--dojo.tipunchlabs.fr-2ea44f" alt="Website"></a>
   <a href="docs/ckad-curriculum.md"><img src="https://img.shields.io/badge/CKAD_Curriculum-v1.35-326CE5" alt="CKAD Curriculum v1.35"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-CC%20BY--NC--SA%204.0-lightgrey" alt="License: CC BY-NC-SA 4.0"></a>
   <a href="https://scorecard.dev/viewer/?uri=github.com/TiPunchLabs/ckad-dojo"><img src="https://api.scorecard.dev/projects/github.com/TiPunchLabs/ckad-dojo/badge" alt="OpenSSF Scorecard"></a>
