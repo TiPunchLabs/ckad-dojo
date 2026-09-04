@@ -2,7 +2,7 @@
 
 ---
 
-## Question 1 | Kubernetes Practice
+## Question 1 | Multi-Stage Dockerfile Optimization
 
 **Explanation**:
 Multi-stage builds reduce image size and improve security. We create a builder stage and a final stage.
@@ -26,7 +26,7 @@ kubectl run optimized-build -n ward --image=nginx:alpine
 
 ---
 
-## Question 2 | Kubernetes Practice
+## Question 2 | Sidecar Logging with Shared Volume
 
 **Explanation**:
 Sidecar pattern for log tailing. Resource limits differ per container.
@@ -68,7 +68,7 @@ EOF
 
 ---
 
-## Question 3 | Kubernetes Practice
+## Question 3 | CronJob with History Limits
 
 **Explanation**:
 Suspend a CronJob and create a manual Job from it.
@@ -80,7 +80,7 @@ kubectl create job manual-backup --from=cronjob/backup-cj -n shield
 
 ---
 
-## Question 4 | Kubernetes Practice
+## Question 4 | Init Container Chain
 
 **Explanation**:
 Init containers run in strict sequence.
@@ -127,7 +127,7 @@ EOF
 
 ---
 
-## Question 5 | Kubernetes Practice
+## Question 5 | Helm Release Inspection
 
 **Explanation**:
 Helm updates.
@@ -146,7 +146,7 @@ helm upgrade guardian-app ./exam/course/19/q5/chart-dummy -n haven --reuse-value
 
 ---
 
-## Question 6 | Kubernetes Practice
+## Question 6 | HPA-Managed Deployment Rollout
 
 **Explanation**:
 Fix conflict between Deployment replica count and HPA.
@@ -158,7 +158,7 @@ kubectl patch hpa api-hpa -n refuge -p '{"spec":{"minReplicas":2,"maxReplicas":1
 
 ---
 
-## Question 7 | Kubernetes Practice
+## Question 7 | Deployment with minReadySeconds
 
 **Explanation**:
 Rollout updates and rollback.
@@ -170,7 +170,7 @@ kubectl rollout undo deployment/worker-deploy -n bastion
 
 ---
 
-## Question 8 | Kubernetes Practice
+## Question 8 | Kustomize Patches
 
 **Explanation**:
 Kustomize usage.
@@ -198,7 +198,7 @@ kubectl kustomize ./exam/course/19/q8 | kubectl apply -n bulwark -f -
 
 ---
 
-## Question 9 | Kubernetes Practice
+## Question 9 | Failing Deployment Troubleshooting
 
 **Explanation**:
 Troubleshooting missing secrets and wrong port/image.
@@ -211,7 +211,7 @@ kubectl patch deployment broken-app -n anchor --type='json' -p='[{"op": "replace
 
 ---
 
-## Question 10 | Kubernetes Practice
+## Question 10 | Top CPU Pod by Label
 
 **Explanation**:
 kubectl top with label selector.
@@ -223,7 +223,7 @@ echo "backend-pod-2" > ./exam/course/19/q10/cpu-usage.txt
 
 ---
 
-## Question 11 | Kubernetes Practice
+## Question 11 | Comprehensive Probes Setup
 
 **Explanation**:
 Configure probes.
@@ -262,7 +262,7 @@ EOF
 
 ---
 
-## Question 12 | Kubernetes Practice
+## Question 12 | ConfigMap Multiline and Volume
 
 **Explanation**:
 ConfigMap mounting.
@@ -302,7 +302,7 @@ EOF
 
 ---
 
-## Question 13 | Kubernetes Practice
+## Question 13 | ServiceAccount with Token Secret
 
 **Explanation**:
 TokenRequest API via kubectl.
@@ -315,7 +315,7 @@ kubectl create token vault-sa -n shield --duration=24h > ./exam/course/19/q13/to
 
 ---
 
-## Question 14 | Kubernetes Practice
+## Question 14 | Pod SecurityContext RunAsNonRoot
 
 **Explanation**:
 SecurityContext overrides.
@@ -344,7 +344,7 @@ EOF
 
 ---
 
-## Question 15 | Kubernetes Practice
+## Question 15 | Role and RoleBinding Setup
 
 **Explanation**:
 RBAC resourceNames.
@@ -380,7 +380,7 @@ EOF
 
 ---
 
-## Question 16 | Kubernetes Practice
+## Question 16 | PodSecurity Admission Label
 
 **Explanation**:
 PodSecurityAdmission namespace labels.
@@ -392,7 +392,7 @@ kubectl label ns refuge pod-security.kubernetes.io/warn=baseline
 
 ---
 
-## Question 17 | Kubernetes Practice
+## Question 17 | Ingress and Egress NetworkPolicy
 
 **Explanation**:
 Complex NetworkPolicy.
@@ -431,7 +431,7 @@ EOF
 
 ---
 
-## Question 18 | Kubernetes Practice
+## Question 18 | Ingress with Regex Path
 
 **Explanation**:
 Ingress Regex.
@@ -470,7 +470,7 @@ EOF
 
 ---
 
-## Question 19 | Kubernetes Practice
+## Question 19 | Service with Topology Hints
 
 **Explanation**:
 Service Topology Aware Hints.
@@ -495,7 +495,7 @@ EOF
 
 ---
 
-## Question 20 | Kubernetes Practice
+## Question 20 | Strict Deny NetworkPolicy
 
 **Explanation**:
 Default Deny NetworkPolicy targeting pods.

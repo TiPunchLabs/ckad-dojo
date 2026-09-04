@@ -2,7 +2,7 @@
 
 ---
 
-## Question 1 | Kubernetes Practice
+## Question 1 | Container Image with Healthcheck
 
 ```bash
 mkdir -p ./exam/course/14/q1
@@ -15,7 +15,7 @@ EOF
 
 ---
 
-## Question 2 | Kubernetes Practice
+## Question 2 | Sidecar Logging and Filtering
 
 ```bash
 mkdir -p ./exam/course/14/q2
@@ -48,7 +48,7 @@ kubectl apply -f ./exam/course/14/q2/pod.yaml
 
 ---
 
-## Question 3 | Kubernetes Practice
+## Question 3 | Advanced CronJob
 
 ```bash
 mkdir -p ./exam/course/14/q3
@@ -86,7 +86,7 @@ kubectl apply -f ./exam/course/14/q3/cronjob.yaml
 
 ---
 
-## Question 4 | Kubernetes Practice
+## Question 4 | Init Container Dependency
 
 ```bash
 mkdir -p ./exam/course/14/q4
@@ -110,7 +110,7 @@ kubectl apply -f ./exam/course/14/q4/pod.yaml
 
 ---
 
-## Question 5 | Kubernetes Practice
+## Question 5 | Helm Template Overrides
 
 ```bash
 mkdir -p ./exam/course/14/q5
@@ -119,7 +119,7 @@ helm template thunder-web /opt/course/14/q5/chart --namespace surge --set replic
 
 ---
 
-## Question 6 | Kubernetes Practice
+## Question 6 | Deployment Rollback
 
 ```bash
 kubectl rollout undo deployment api-gateway -n voltage --to-revision=1
@@ -127,7 +127,7 @@ kubectl rollout undo deployment api-gateway -n voltage --to-revision=1
 
 ---
 
-## Question 7 | Kubernetes Practice
+## Question 7 | Canary Deployment
 
 ```bash
 mkdir -p ./exam/course/14/q7
@@ -163,7 +163,7 @@ kubectl apply -f ./exam/course/14/q7/backend-v2.yaml
 
 ---
 
-## Question 8 | Kubernetes Practice
+## Question 8 | Kustomize Strategic Merge Patch
 
 ```bash
 cat <<EOF > ./exam/course/14/q8/kustomization.yaml
@@ -195,7 +195,7 @@ kubectl apply -k ./exam/course/14/q8/ -n charge
 
 ---
 
-## Question 9 | Kubernetes Practice
+## Question 9 | Troubleshoot CrashLoopBackOff
 
 Find out why the pod is crashing:
 
@@ -213,7 +213,7 @@ kubectl edit pod data-processor -n flash
 
 ---
 
-## Question 10 | Kubernetes Practice
+## Question 10 | Kubectl Events
 
 ```bash
 mkdir -p ./exam/course/14/q10
@@ -222,7 +222,7 @@ kubectl get events -n strike --sort-by='.metadata.creationTimestamp' > ./exam/co
 
 ---
 
-## Question 11 | Kubernetes Practice
+## Question 11 | All Three Probes
 
 ```bash
 mkdir -p ./exam/course/14/q11
@@ -260,7 +260,7 @@ kubectl apply -f ./exam/course/14/q11/pod.yaml
 
 ---
 
-## Question 12 | Kubernetes Practice
+## Question 12 | Downward API
 
 ```bash
 mkdir -p ./exam/course/14/q12
@@ -290,7 +290,7 @@ kubectl apply -f ./exam/course/14/q12/pod.yaml
 
 ---
 
-## Question 13 | Kubernetes Practice
+## Question 13 | SecurityContext Capabilities
 
 ```bash
 mkdir -p ./exam/course/14/q13
@@ -315,7 +315,7 @@ kubectl apply -f ./exam/course/14/q13/pod.yaml
 
 ---
 
-## Question 14 | Kubernetes Practice
+## Question 14 | Secret with stringData
 
 ```bash
 mkdir -p ./exam/course/14/q14
@@ -335,7 +335,7 @@ kubectl apply -f ./exam/course/14/q14/secret.yaml
 
 ---
 
-## Question 15 | Kubernetes Practice
+## Question 15 | ConfigMap as Command Args
 
 ```bash
 mkdir -p ./exam/course/14/q15
@@ -365,7 +365,7 @@ kubectl apply -f ./exam/course/14/q15/pod.yaml
 
 ---
 
-## Question 16 | Kubernetes Practice
+## Question 16 | ClusterRole and Binding
 
 ```bash
 kubectl create serviceaccount app-sa -n spark
@@ -375,7 +375,7 @@ kubectl create clusterrolebinding secret-reader-binding --clusterrole=secret-rea
 
 ---
 
-## Question 17 | Kubernetes Practice
+## Question 17 | NetworkPolicy AND Logic
 
 ```bash
 mkdir -p ./exam/course/14/q17
@@ -408,7 +408,7 @@ kubectl apply -f ./exam/course/14/q17/netpol.yaml
 
 ---
 
-## Question 18 | Kubernetes Practice
+## Question 18 | Ingress Default Backend
 
 ```bash
 mkdir -p ./exam/course/14/q18
@@ -430,7 +430,7 @@ kubectl apply -f ./exam/course/14/q18/ingress.yaml
 
 ---
 
-## Question 19 | Kubernetes Practice
+## Question 19 | Service Session Affinity
 
 ```bash
 mkdir -p ./exam/course/14/q19
@@ -457,7 +457,7 @@ kubectl apply -f ./exam/course/14/q19/svc.yaml
 
 ---
 
-## Question 20 | Kubernetes Practice
+## Question 20 | Port Forwarding
 
 ```bash
 mkdir -p ./exam/course/14/q20

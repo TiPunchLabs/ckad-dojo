@@ -2,10 +2,11 @@
 # CKAD Simulation 19 - Scoring Functions
 # Total Points: 120
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
-source "$SCRIPT_DIR/../../scripts/lib/common.sh" 2>/dev/null || true
+CURRENT_EXAM_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$CURRENT_EXAM_DIR/../.." && pwd)"
+source "$PROJECT_DIR/scripts/lib/common.sh"
 
-EXAM_DIR="./exam/course/19"
+EXAM_DIR="${EXAM_DIR:-./exam/course}"
 
 score_q1() {
 	local score=0
@@ -13,8 +14,8 @@ score_q1() {
 	local details=""
 
 	if
-		[ -f "$EXAM_DIR/q1/Dockerfile" ]
-		from_cnt=$(grep -ci "FROM" "$EXAM_DIR/q1/Dockerfile")
+		[ -f "$EXAM_DIR/19/q1/Dockerfile" ]
+		from_cnt=$(grep -ci "FROM" "$EXAM_DIR/19/q1/Dockerfile")
 	then
 		if [ "$from_cnt" -ge 2 ]; then
 			score=$((score + 3))
@@ -252,8 +253,8 @@ score_q10() {
 	local max_points=6
 	local details=""
 
-	if [ -f "$EXAM_DIR/q10/cpu-usage.txt" ]; then
-		local content=$(cat "$EXAM_DIR/q10/cpu-usage.txt")
+	if [ -f "$EXAM_DIR/19/q10/cpu-usage.txt" ]; then
+		local content=$(cat "$EXAM_DIR/19/q10/cpu-usage.txt")
 		if [[ "$content" == *"backend-pod-"* ]]; then
 			score=$((score + 6))
 			details="File contains pod name (6/6)."
@@ -328,8 +329,8 @@ score_q13() {
 		details="ServiceAccount missing (0/3). "
 	fi
 
-	if [ -f "$EXAM_DIR/q13/token.txt" ]; then
-		local ts=$(wc -c <"$EXAM_DIR/q13/token.txt")
+	if [ -f "$EXAM_DIR/19/q13/token.txt" ]; then
+		local ts=$(wc -c <"$EXAM_DIR/19/q13/token.txt")
 		if [ "$ts" -gt 100 ]; then
 			score=$((score + 3))
 			details+="Token looks valid (3/3)."

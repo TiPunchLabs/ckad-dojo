@@ -1,6 +1,6 @@
 # CKAD Simulation 12 - Solutions (Dojo Tsukuyomi 🌙)
 
-## Question 1: Multi-stage Dockerfile
+## Question 1 | Multi-stage Dockerfile
 
 ```dockerfile
 # /opt/course/12/q1/Dockerfile
@@ -17,7 +17,7 @@ Explanation: Multi-stage builds are a key Docker concept. We use `AS builder` to
 
 ---
 
-## Question 2: Init containers with dependencies
+## Question 2 | Init containers with dependencies
 
 ```yaml
 apiVersion: v1
@@ -39,7 +39,7 @@ Explanation: Init containers run to completion before the main app containers st
 
 ---
 
-## Question 3: CronJob with concurrencyPolicy
+## Question 3 | CronJob with concurrencyPolicy
 
 ```yaml
 apiVersion: batch/v1
@@ -65,7 +65,7 @@ Explanation: We set `concurrencyPolicy: Forbid` so that if the previous job hasn
 
 ---
 
-## Question 4: Multi-container ambassador pattern
+## Question 4 | Multi-container ambassador pattern
 
 ```yaml
 apiVersion: v1
@@ -87,7 +87,7 @@ Explanation: The Ambassador pattern involves a sidecar container proxying connec
 
 ---
 
-## Question 5: Helm rollback
+## Question 5 | Helm rollback
 
 ```bash
 helm rollback api-release 1 -n nebula
@@ -97,7 +97,7 @@ Explanation: The `helm rollback` command takes the release name and the target r
 
 ---
 
-## Question 6: Deployment with minReadySeconds
+## Question 6 | Deployment with minReadySeconds
 
 ```yaml
 apiVersion: apps/v1
@@ -125,7 +125,7 @@ Explanation: `minReadySeconds: 20` specifies the minimum number of seconds for w
 
 ---
 
-## Question 7: Rollout pause/resume
+## Question 7 | Rollout pause/resume
 
 ```bash
 kubectl rollout pause deployment critical-processor -n nightfall
@@ -135,7 +135,7 @@ Explanation: Pausing a deployment rollout halts the update process, giving you t
 
 ---
 
-## Question 8: Kustomize with JSON patch
+## Question 8 | Kustomize with JSON patch
 
 ```json
 # /opt/course/12/q8/patch.json
@@ -169,7 +169,7 @@ Explanation: JSON patching in Kustomize allows fine-grained manipulation of mani
 
 ---
 
-## Question 9: Debug ImagePullBackOff
+## Question 9 | Debug ImagePullBackOff
 
 ```bash
 # Find the pod
@@ -183,7 +183,7 @@ Explanation: A misspelled image name triggers ImagePullBackOff because the node 
 
 ---
 
-## Question 10: Container resource metrics
+## Question 10 | Container resource metrics
 
 ```bash
 kubectl top pods -n kube-system --sort-by=cpu
@@ -195,7 +195,7 @@ Explanation: `kubectl top pods` retrieves current metrics from the Metrics Serve
 
 ---
 
-## Question 11: Define custom log aggregation
+## Question 11 | Define custom log aggregation
 
 ```yaml
 apiVersion: v1
@@ -226,7 +226,7 @@ Explanation: Using an `emptyDir` volume to share a filesystem between the main a
 
 ---
 
-## Question 12: Projected volumes combining secrets+configmap
+## Question 12 | Projected volumes combining secrets+configmap
 
 ```yaml
 apiVersion: v1
@@ -255,7 +255,7 @@ Explanation: Projected volumes allow multiple volume sources to be combined into
 
 ---
 
-## Question 13: Immutable ConfigMap
+## Question 13 | Immutable ConfigMap
 
 ```yaml
 apiVersion: v1
@@ -272,7 +272,7 @@ Explanation: Setting `immutable: true` prevents accidental updates to ConfigMaps
 
 ---
 
-## Question 14: Pod with multiple security constraints
+## Question 14 | Pod with multiple security constraints
 
 ```yaml
 apiVersion: v1
@@ -305,7 +305,7 @@ Explanation: When `readOnlyRootFilesystem` is `true`, standard nginx images cras
 
 ---
 
-## Question 15: Secret rotation scenario
+## Question 15 | Secret rotation scenario
 
 ```bash
 kubectl create secret generic legacy-token -n shadow --from-literal=token=super-secret-v2 --dry-run=client -o yaml | kubectl apply -f -
@@ -315,7 +315,7 @@ Explanation: We can update the secret using `kubectl apply` or `kubectl edit`. B
 
 ---
 
-## Question 16: ResourceQuota enforcement
+## Question 16 | ResourceQuota enforcement
 
 ```yaml
 apiVersion: v1
@@ -334,7 +334,7 @@ Explanation: ResourceQuota objects enforce hard limits per namespace on the amou
 
 ---
 
-## Question 17: NetworkPolicy egress rules
+## Question 17 | NetworkPolicy egress rules
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -359,7 +359,7 @@ Explanation: Egress rules can be restricted while keeping internal DNS (UDP 53) 
 
 ---
 
-## Question 18: Multi-path Ingress
+## Question 18 | Multi-path Ingress
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -392,7 +392,7 @@ Explanation: Using multiple paths in a single Ingress rule routes different URI 
 
 ---
 
-## Question 19: ExternalName service
+## Question 19 | ExternalName service
 
 ```yaml
 apiVersion: v1
@@ -409,7 +409,7 @@ Explanation: ExternalName services return a CNAME record so that pods can use in
 
 ---
 
-## Question 20: DNS debugging
+## Question 20 | DNS debugging
 
 ```bash
 kubectl exec -it dns-tester -n void -- nslookup kubernetes.default.svc.cluster.local > /opt/course/12/q20/nslookup.txt
