@@ -202,6 +202,48 @@ command_exists() {
 	command -v "$1" &>/dev/null
 }
 
+# Attempt to enable metrics-server if the cluster does not already expose the
+# metrics.k8s.io API. This is intentionally best-effort and non-fatal.
+ensure_metrics_server() {
+	if ! command_exists kubectl; then
+		echo -e "${YELLOW}[WARN]${NC} kubectl is required to enable metrics-server."
+		return 1
+	fi
+
+	if ! kubectl cluster-info &>/dev/null; then
+		echo -e "${YELLOW}[WARN]${NC} Kubernetes cluster is not reachable, so metrics-server could not be enabled."
+		return 1
+	fi
+
+	if kubectl get --raw /apis/metrics.k8s.io/v1beta1/nodes &>/dev/null; then
+		return 0
+	fi
+
+	if command_exists minikube && minikube status &>/dev/null; then
+		echo -e "${YELLOW}[INFO]${NC} Enabling metrics-server for minikube..."
+		minikube addons enable metrics-server >/dev/null 2>&1 || true
+	else
+		echo -e "${YELLOW}[INFO]${NC} Installing metrics-server from the upstream manifest..."
+		kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml >/dev/null 2>&1 || true
+	fi
+
+	local retry_count="${CKAD_METRICS_SERVER_RETRY_SECONDS:-30}"
+	local retry_interval="${CKAD_METRICS_SERVER_RETRY_INTERVAL:-2}"
+
+	for _ in $(seq 1 "$retry_count"); do
+		if kubectl get --raw /apis/metrics.k8s.io/v1beta1/nodes &>/dev/null; then
+			print_success "metrics-server is available"
+			return 0
+		fi
+		if [ "$retry_interval" -gt 0 ]; then
+			sleep "$retry_interval"
+		fi
+	done
+
+	echo -e "${YELLOW}[WARN]${NC} metrics-server could not be enabled on this cluster; some metric-based questions may show errors or <unknown>."
+	return 1
+}
+
 # Check prerequisites
 # Usage: check_prerequisites [--verbose]
 # --verbose: show each check result (success/fail) instead of failing at first error

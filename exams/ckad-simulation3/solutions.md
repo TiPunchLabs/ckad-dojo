@@ -389,14 +389,14 @@ kubectl top pods -n jungle > ./exam/course/13/pod-resources.txt 2>&1
 # Find top CPU consumer
 kubectl top pods -n jungle --sort-by=cpu 2>/dev/null | head -2 | tail -1 | awk '{print $1}' > ./exam/course/13/top-cpu-pod.txt
 
-# If metrics-server not available, document it
+# If metrics-server is unavailable in a custom cluster, document it
 if ! kubectl top pods -n jungle 2>/dev/null; then
   echo "Metrics server not available" > ./exam/course/13/pod-resources.txt
   echo "unknown" > ./exam/course/13/top-cpu-pod.txt
 fi
 ```
 
-**Explanation:** `kubectl top` requires metrics-server to be installed. It shows real-time CPU and memory usage. The `--sort-by` flag orders results.
+**Explanation:** `kubectl top` depends on metrics-server being available. The setup script normally enables it automatically. In custom clusters where it is unavailable, the fallback documents the error instead of failing the score.
 
 ---
 

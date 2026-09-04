@@ -363,6 +363,7 @@ start_web() {
 		print_error "Prerequisites check failed. Please install missing tools."
 		exit 1
 	fi
+	ensure_metrics_server || true
 
 	# Check uv (Python package manager)
 	if ! command_exists uv; then
@@ -494,6 +495,7 @@ start_exam() {
 		print_error "Prerequisites check failed. Please install missing tools."
 		exit 1
 	fi
+	ensure_metrics_server || true
 
 	# Check if setup has been run
 	if ! verify_exam_setup; then

@@ -359,7 +359,7 @@ Use `kubectl top` to analyze resource usage:
 2. Save the output to `./exam/course/13/pod-resources.txt`
 3. Identify the pod consuming the most **CPU** and write its name to `./exam/course/13/top-cpu-pod.txt`
 
-**Note**: If metrics-server is not available, the command will show an error. Document this in the file.
+**Note**: The setup script normally enables metrics-server. If it is unavailable in a custom cluster, the command may fail or return an error and the file should document that condition.
 
 ---
 

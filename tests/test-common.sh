@@ -58,10 +58,43 @@ test_case "Utility functions are defined"
 
 assert_function_exists "command_exists" "command_exists function should exist"
 assert_function_exists "check_prerequisites" "check_prerequisites function should exist"
+assert_function_exists "ensure_metrics_server" "ensure_metrics_server function should exist"
 assert_function_exists "namespace_exists" "namespace_exists function should exist"
 assert_function_exists "resource_exists" "resource_exists function should exist"
 assert_function_exists "file_exists_and_not_empty" "file_exists_and_not_empty function should exist"
 assert_function_exists "file_contains" "file_contains function should exist"
+
+# ----------------------------------------------------------------------------
+# Test: metrics-server helper detects missing metrics API
+# ----------------------------------------------------------------------------
+test_case "metrics-server helper works correctly"
+
+FAKE_KUBECTL_DIR=$(mktemp -d)
+cat >"$FAKE_KUBECTL_DIR/kubectl" <<'EOF'
+#!/bin/bash
+if [ "$1" = "cluster-info" ]; then
+  exit 0
+fi
+if [ "$1" = "top" ]; then
+  echo "Error from server (NotFound): the server could not find the requested resource" >&2
+  exit 1
+fi
+if [ "$1" = "get" ] && [ "$2" = "--raw" ] && [[ "$3" == "/apis/metrics.k8s.io"* ]]; then
+  echo "Error from server (NotFound): the server could not find the requested resource" >&2
+  exit 1
+fi
+exit 0
+EOF
+chmod +x "$FAKE_KUBECTL_DIR/kubectl"
+OLD_PATH="$PATH"
+PATH="$FAKE_KUBECTL_DIR:$PATH"
+CKAD_METRICS_SERVER_RETRY_SECONDS=1
+CKAD_METRICS_SERVER_RETRY_INTERVAL=0
+
+assert_true 'ensure_metrics_server >/dev/null 2>&1; [ $? -ne 0 ]' "ensure_metrics_server should return non-zero when metrics are unavailable"
+PATH="$OLD_PATH"
+unset CKAD_METRICS_SERVER_RETRY_SECONDS CKAD_METRICS_SERVER_RETRY_INTERVAL
+rm -rf "$FAKE_KUBECTL_DIR"
 
 # ----------------------------------------------------------------------------
 # Test: Exam configuration functions exist

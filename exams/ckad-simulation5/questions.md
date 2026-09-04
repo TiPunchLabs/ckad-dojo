@@ -69,7 +69,7 @@ Use `kubectl autoscale` or create the HPA manifest directly.
 
 Verify the HPA is created with `kubectl get hpa`.
 
-**Note**: If metrics-server is not installed, the HPA will show `<unknown>` for current metrics. This is expected.
+**Note**: The setup script normally enables metrics-server. If it is unavailable in a custom cluster, the HPA may show `<unknown>` for current metrics.
 
 ---
 
