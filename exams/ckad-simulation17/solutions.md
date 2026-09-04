@@ -2,7 +2,7 @@
 
 ---
 
-## Question 1 | Kubernetes Practice
+## Question 1 | Pod Command and Args Override
 
 ```bash
 kubectl run entry-override -n fortress --image=nginx:alpine --dry-run=client -o yaml --command -- sleep 3600 > ./exam/course/1/pod.yaml
@@ -14,7 +14,7 @@ To override the Entrypoint, we use the `command` field in Kubernetes. The argume
 
 ---
 
-## Question 2 | Kubernetes Practice
+## Question 2 | ConfigMap as Init Script Volume
 
 ```bash
 # Create ConfigMap
@@ -32,7 +32,7 @@ Init containers run to completion before the main containers start. Shared empty
 
 ---
 
-## Question 3 | Kubernetes Practice
+## Question 3 | CronJob Scheduled Report
 
 ```bash
 kubectl create cronjob siege-report -n siege --image=busybox:1.36 --schedule="30 * * * *" --dry-run=client -o yaml -- /bin/sh -c "date; echo Hello from siege" > ./exam/course/3/cronjob.yaml
@@ -45,7 +45,7 @@ CronJobs support a `timeZone` field (since 1.27) directly under `spec`.
 
 ---
 
-## Question 4 | Kubernetes Practice
+## Question 4 | Sidecar Process Monitor
 
 ```bash
 # Create pod template
@@ -58,7 +58,7 @@ Setting `shareProcessNamespace: true` at the pod `spec` level allows containers 
 
 ---
 
-## Question 5 | Kubernetes Practice
+## Question 5 | Helm Release Rollback
 
 ```bash
 helm upgrade battle-web ./exam/course/5/battle-chart/ -n garrison --atomic --timeout 1m --set replicaCount=3
@@ -69,7 +69,7 @@ The `--atomic` flag ensures that if the deployment does not become ready within 
 
 ---
 
-## Question 6 | Kubernetes Practice
+## Question 6 | Deployment with Recreate Strategy
 
 ```bash
 kubectl create deployment citadel-guard -n citadel --image=nginx:1.24.0-alpine --dry-run=client -o yaml > ./exam/course/6/deploy.yaml
@@ -82,7 +82,7 @@ Explanation:
 
 ---
 
-## Question 7 | Kubernetes Practice
+## Question 7 | Blue-Green Service Switch
 
 ```bash
 # Create green deployment
@@ -96,7 +96,7 @@ Blue/Green deployments involve deploying a new version alongside the old one and
 
 ---
 
-## Question 8 | Kubernetes Practice
+## Question 8 | Kustomize Base and Overlay
 
 ```yaml
 # In ./exam/course/8/kustomization.yaml
@@ -126,7 +126,7 @@ Kustomize images transformer overrides image tags easily. Inline patches or stra
 
 ---
 
-## Question 9 | Kubernetes Practice
+## Question 9 | CrashLoopBackOff Pod Debug
 
 ```bash
 # Get pod details
@@ -143,7 +143,7 @@ OOMKilled means the container tried to use more memory than its limit. We fix it
 
 ---
 
-## Question 10 | Kubernetes Practice
+## Question 10 | Ephemeral Debug Container
 
 ```bash
 kubectl debug -it secure-app -n outpost --image=busybox:1.36 --target=secure-app -- custom-debugger -- sh
@@ -154,7 +154,7 @@ Explanation:
 
 ---
 
-## Question 11 | Kubernetes Practice
+## Question 11 | Pending Deployment Troubleshooting
 
 ```bash
 # Check why pods are pending/not created
@@ -171,7 +171,7 @@ ResourceQuotas enforce limits on aggregate resource consumption. If a namespace 
 
 ---
 
-## Question 12 | Kubernetes Practice
+## Question 12 | Pod Resource Limits and Requests
 
 ```bash
 # Define env vars using valueFrom: resourceFieldRef
@@ -182,7 +182,7 @@ The Downward API can expose pod and container fields (like requests/limits) to t
 
 ---
 
-## Question 13 | Kubernetes Practice
+## Question 13 | ServiceAccount with ClusterRoleBinding
 
 ```yaml
 # Edit service account
@@ -201,7 +201,7 @@ Disabling automount improves security. If a token is needed, it can be mounted m
 
 ---
 
-## Question 14 | Kubernetes Practice
+## Question 14 | Pod with SecurityContext Capabilities
 
 ```yaml
 # Under pod spec.securityContext:
@@ -216,7 +216,7 @@ The SecurityContext applies security settings. `RuntimeDefault` enforces the def
 
 ---
 
-## Question 15 | Kubernetes Practice
+## Question 15 | Secret Volume and Env Injection
 
 ```yaml
 volumes:
@@ -233,7 +233,7 @@ The `items` array in a secret volume projection allows you to selectively mount 
 
 ---
 
-## Question 16 | Kubernetes Practice
+## Question 16 | LimitRange Default CPU
 
 ```bash
 # Create limitrange
@@ -246,7 +246,7 @@ LimitRanges automatically inject default requests and limits into pods that don'
 
 ---
 
-## Question 17 | Kubernetes Practice
+## Question 17 | Ingress NetworkPolicy
 
 ```yaml
 # podSelector: matchLabels: role: db
@@ -263,7 +263,7 @@ NetworkPolicies use selectors to allow traffic. Using `namespaceSelector` relies
 
 ---
 
-## Question 18 | Kubernetes Practice
+## Question 18 | Ingress Rewrite Rule
 
 ```yaml
 # annotations:
@@ -276,7 +276,7 @@ Canary Ingresses allow splitting traffic by percentages, headers, or cookies usi
 
 ---
 
-## Question 19 | Kubernetes Practice
+## Question 19 | ExternalName Service
 
 ```bash
 # Create service without selector
@@ -288,7 +288,7 @@ Services without selectors don't automatically create Endpoints. You must create
 
 ---
 
-## Question 20 | Kubernetes Practice
+## Question 20 | CoreDNS ConfigMap Inspection
 
 ```yaml
 # Edit configmap coredns in kube-system

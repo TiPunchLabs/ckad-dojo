@@ -1,6 +1,6 @@
 # CKAD Simulation 18 - Solutions (Dojo Izanagi ✨)
 
-## Question 1 | Kubernetes Practice
+## Question 1 | Multi-Stage Dockerfile Build
 
 ```bash
 # 1. Modify Dockerfile
@@ -30,7 +30,7 @@ kubectl run genesis-pod -n genesis --image=localhost:5000/genesis-app:v1
 
 ---
 
-## Question 2 | Kubernetes Practice
+## Question 2 | Adapter Pattern Sidecar
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -63,7 +63,7 @@ EOF
 
 ---
 
-## Question 3 | Kubernetes Practice
+## Question 3 | Parallel Job with Completions
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -90,7 +90,7 @@ EOF
 
 ---
 
-## Question 4 | Kubernetes Practice
+## Question 4 | Pod Lifecycle PreStop Hook
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -115,7 +115,7 @@ EOF
 
 ---
 
-## Question 5 | Kubernetes Practice
+## Question 5 | Helm Release Values Override
 
 ```bash
 # Upgrade the release reusing existing values
@@ -126,7 +126,7 @@ helm upgrade genesis-web ./exam/course/5/genesis-web-chart -n nexus --reuse-valu
 
 ---
 
-## Question 6 | Kubernetes Practice
+## Question 6 | Deployment Canary Split
 
 ```bash
 # Create Deployment
@@ -151,7 +151,7 @@ EOF
 
 ---
 
-## Question 7 | Kubernetes Practice
+## Question 7 | Deployment Rollback
 
 ```bash
 # Update image
@@ -168,7 +168,7 @@ kubectl patch deployment eden-api -n eden -p '{"spec":{"strategy":{"type":"Rolli
 
 ---
 
-## Question 8 | Kubernetes Practice
+## Question 8 | Kustomize ConfigMap Generator
 
 ```bash
 # Modify kustomization.yaml
@@ -189,7 +189,7 @@ kubectl kustomize ./exam/course/8/kustomize | kubectl apply -n matrix -f -
 
 ---
 
-## Question 9 | Kubernetes Practice
+## Question 9 | Init Container Failure Debug
 
 ```bash
 # View pod status and init containers
@@ -204,7 +204,7 @@ kubectl replace --force -f stuck.yaml
 
 ---
 
-## Question 10 | Kubernetes Practice
+## Question 10 | Namespace Events Export
 
 ```bash
 kubectl get events -n zenith -o custom-columns=TYPE:.type,REASON:.reason,MESSAGE:.message > ./exam/course/10/events.txt
@@ -214,7 +214,7 @@ kubectl get events -n zenith -o custom-columns=TYPE:.type,REASON:.reason,MESSAGE
 
 ---
 
-## Question 11 | Kubernetes Practice
+## Question 11 | Service Internal Traffic Policy
 
 ```bash
 cat <<EOF > ./exam/course/11/check.sh
@@ -232,7 +232,7 @@ chmod +x ./exam/course/11/check.sh
 
 ---
 
-## Question 12 | Kubernetes Practice
+## Question 12 | Projected ServiceAccount Token
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -277,7 +277,7 @@ EOF
 
 ---
 
-## Question 13 | Kubernetes Practice
+## Question 13 | Secret stringData Entry
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -297,7 +297,7 @@ EOF
 
 ---
 
-## Question 14 | Kubernetes Practice
+## Question 14 | Pod with ReadOnlyRootFilesystem
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -335,7 +335,7 @@ EOF
 
 ---
 
-## Question 15 | Kubernetes Practice
+## Question 15 | ClusterRole and ClusterRoleBinding
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -366,7 +366,7 @@ EOF
 
 ---
 
-## Question 16 | Kubernetes Practice
+## Question 16 | ResourceQuota for Namespace
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -394,7 +394,7 @@ EOF
 
 ---
 
-## Question 17 | Kubernetes Practice
+## Question 17 | NetworkPolicy Named Port
 
 ```bash
 cat <<EOF | kubectl apply -f -
@@ -424,7 +424,7 @@ EOF
 
 ---
 
-## Question 18 | Kubernetes Practice
+## Question 18 | Ingress Default Backend
 
 ```bash
 kubectl get ingress cosmos-ingress -n cosmos -o yaml > ingress.yaml
@@ -455,7 +455,7 @@ EOF
 
 ---
 
-## Question 19 | Kubernetes Practice
+## Question 19 | Service Endpoint Inspection
 
 ```bash
 kubectl run dns-tester -n zenith --image=busybox:1.32 -- sleep 3600
@@ -466,7 +466,7 @@ echo "data-svc.ancient.svc.cluster.local" > ./exam/course/19/fqdn.txt
 
 ---
 
-## Question 20 | Kubernetes Practice
+## Question 20 | Namespace Isolation NetworkPolicy
 
 ```bash
 cat <<EOF | kubectl apply -f -

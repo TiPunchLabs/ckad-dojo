@@ -160,7 +160,7 @@ def parse_criteria_from_output(output: str, question_id: str) -> list:
     # Find all DETAILS lines and return the one at target_index
     details_lines = []
     for line in lines:
-        details_match = re.match(r"^DETAILS:(.+)$", line.strip())
+        details_match = re.match(r"^DETAILS:(.*)$", line.strip())
         if details_match:
             details_lines.append(details_match.group(1).strip())
 
@@ -305,7 +305,9 @@ def parse_solutions_md(exam_id: str) -> list[dict[str, object]]:
     solutions = []
 
     # Split by question headers (## Question N | Topic or ## Preview Question N | Topic)
-    solution_pattern = r"^## (Question|Preview Question) (\d+|P\d+) \| (.+?)$"
+    solution_pattern = (
+        r"^#{2,3}\s+(Question|Preview Question|Solution)\s+(\d+|P\d+)\s*[:|]\s*(.+?)$"
+    )
 
     lines = content.split("\n")
     current_solution = None

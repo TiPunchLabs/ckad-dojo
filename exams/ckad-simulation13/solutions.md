@@ -2,7 +2,7 @@
 
 ---
 
-## Question 1 | Kubernetes Practice
+## Question 1 | Docker Image Build and Push
 
 ```bash
 cd ./exam/course/13/q1
@@ -14,7 +14,7 @@ docker push localhost:5000/fujin-api:v2
 
 ---
 
-## Question 2 | Kubernetes Practice
+## Question 2 | Sidecar Logging Container
 
 ```bash
 kubectl get pod wind-logger -n gale -o yaml > wind.yaml
@@ -39,7 +39,7 @@ kubectl replace --force -f wind.yaml
 
 ---
 
-## Question 3 | Kubernetes Practice
+## Question 3 | Batch Job Processing
 
 ```bash
 kubectl create job storm-processor -n breeze --image=busybox:1.31.1 --dry-run=client -o yaml -- sh -c 'sleep 2; echo "Processing storm data"' > job.yaml
@@ -60,7 +60,7 @@ kubectl apply -f job.yaml
 
 ---
 
-## Question 4 | Kubernetes Practice
+## Question 4 | Fix Deployment CrashLoopBackOff
 
 ```bash
 kubectl get deployment tempest-app -n tempest -o yaml > dep.yaml
@@ -93,7 +93,7 @@ kubectl apply -f ./exam/course/13/q4/pod.yaml
 
 ---
 
-## Question 5 | Kubernetes Practice
+## Question 5 | Helm Release Upgrade
 
 ```bash
 helm upgrade storm-app ./exam/course/13/q5/storm-chart -n typhoon --set replicaCount=3 --set image.tag=v2.0.0
@@ -103,7 +103,7 @@ helm upgrade storm-app ./exam/course/13/q5/storm-chart -n typhoon --set replicaC
 
 ---
 
-## Question 6 | Kubernetes Practice
+## Question 6 | Rolling Update Strategy
 
 ```bash
 kubectl patch deployment cyclone-web -n cyclone -p '{"spec":{"revisionHistoryLimit":2}}'
@@ -114,7 +114,7 @@ kubectl set image deployment/cyclone-web -n cyclone web=nginx:1.23.1
 
 ---
 
-## Question 7 | Kubernetes Practice
+## Question 7 | Blue-Green Deployment Switch
 
 ```bash
 kubectl patch svc zephyr-svc -n zephyr -p '{"spec":{"selector":{"version":"green"}}}'
@@ -124,7 +124,7 @@ kubectl patch svc zephyr-svc -n zephyr -p '{"spec":{"selector":{"version":"green
 
 ---
 
-## Question 8 | Kubernetes Practice
+## Question 8 | Kustomize Apply
 
 ```bash
 cd ./exam/course/13/q8
@@ -145,7 +145,7 @@ kubectl apply -k . -n tornado
 
 ---
 
-## Question 9 | Kubernetes Practice
+## Question 9 | OOMKilled Pod Troubleshooting
 
 ```bash
 kubectl get pod memory-hog -n mistral -o yaml > hog.yaml
@@ -157,7 +157,7 @@ kubectl replace --force -f hog.yaml
 
 ---
 
-## Question 10 | Kubernetes Practice
+## Question 10 | Top Memory-Consuming Pods
 
 ```bash
 kubectl top pods -n sirocco --sort-by=memory
@@ -173,7 +173,7 @@ EOF
 
 ---
 
-## Question 11 | Kubernetes Practice
+## Question 11 | Liveness and Readiness Probes
 
 ```bash
 cat <<EOF > q11.yaml
@@ -202,7 +202,7 @@ kubectl apply -f q11.yaml
 
 ---
 
-## Question 12 | Kubernetes Practice
+## Question 12 | Secret from File
 
 ```bash
 kubectl create secret generic gale-secret -n gale --from-literal=password.txt=super-secret-wind
@@ -233,7 +233,7 @@ kubectl apply -f q12.yaml
 
 ---
 
-## Question 13 | Kubernetes Practice
+## Question 13 | Role and RoleBinding
 
 ```bash
 kubectl create role breeze-manager -n breeze --verb=create,delete,list,watch --resource=deployments,statefulsets --dry-run=client -o yaml > role.yaml
@@ -247,7 +247,7 @@ kubectl create rolebinding breeze-manager-binding -n breeze --role=breeze-manage
 
 ---
 
-## Question 14 | Kubernetes Practice
+## Question 14 | Pod with Volume and SecurityContext
 
 ```bash
 cat <<EOF > q14.yaml
@@ -270,7 +270,7 @@ kubectl apply -f q14.yaml
 
 ---
 
-## Question 15 | Kubernetes Practice
+## Question 15 | LimitRange Configuration
 
 ```bash
 cat <<EOF > q15.yaml
@@ -299,7 +299,7 @@ kubectl apply -f q15.yaml
 
 ---
 
-## Question 16 | Kubernetes Practice
+## Question 16 | Disable Default ServiceAccount Automount
 
 ```bash
 kubectl get pod zephyr-api -n zephyr -o yaml > q16.yaml
@@ -311,7 +311,7 @@ kubectl replace --force -f q16.yaml
 
 ---
 
-## Question 17 | Kubernetes Practice
+## Question 17 | Egress NetworkPolicy for DNS
 
 ```bash
 cat <<EOF > q17.yaml
@@ -340,7 +340,7 @@ kubectl apply -f q17.yaml
 
 ---
 
-## Question 18 | Kubernetes Practice
+## Question 18 | Ingress with Path Routing
 
 ```bash
 cat <<EOF > q18.yaml
@@ -376,7 +376,7 @@ kubectl apply -f q18.yaml
 
 ---
 
-## Question 19 | Kubernetes Practice
+## Question 19 | Headless Service for StatefulSet
 
 ```bash
 kubectl create service clusterip mistral-db-headless -n mistral --clusterip="None" --tcp=3306:3306 --dry-run=client -o yaml > svc.yaml
@@ -388,7 +388,7 @@ kubectl apply -f svc.yaml
 
 ---
 
-## Question 20 | Kubernetes Practice
+## Question 20 | Debug Service Connectivity
 
 ```bash
 kubectl exec -it sirocco-app -n sirocco -- env | grep SIROCCO_BACKEND

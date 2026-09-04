@@ -2,7 +2,7 @@
 
 ---
 
-## Question 1 | Kubernetes Practice
+## Question 1 | Multi-Stage Dockerfile
 
 **Explanation:**
 You need to modify the `Dockerfile` to use a multi-stage build. This involves adding a second `FROM` instruction and copying the built artifact from the first stage.
@@ -25,7 +25,7 @@ EOF
 
 ---
 
-## Question 2 | Kubernetes Practice
+## Question 2 | Ambassador Proxy Sidecar
 
 **Explanation:**
 Create a Pod with two containers sharing an `emptyDir` volume. The main container writes logs to a file in the volume, and the sidecar container tails that file.
@@ -61,7 +61,7 @@ EOF
 
 ---
 
-## Question 3 | Kubernetes Practice
+## Question 3 | CronJob with Concurrency Policy
 
 **Explanation:**
 Create a CronJob with `failedJobsHistoryLimit` and `suspend` properties set.
@@ -95,7 +95,7 @@ EOF
 
 ---
 
-## Question 4 | Kubernetes Practice
+## Question 4 | Init Container File Dependency
 
 **Explanation:**
 Create a Pod for a batch task. The key here is setting the `restartPolicy` to `OnFailure` instead of the default `Always`.
@@ -120,7 +120,7 @@ EOF
 
 ---
 
-## Question 5 | Kubernetes Practice
+## Question 5 | Helm Dry Run and Upgrade
 
 **Explanation:**
 Uninstall a Helm release from a specific namespace.
@@ -133,7 +133,7 @@ helm uninstall ocean-api -n current
 
 ---
 
-## Question 6 | Kubernetes Practice
+## Question 6 | Deployment with maxSurge Strategy
 
 **Explanation:**
 Create a Deployment and configure its rolling update strategy attributes.
@@ -178,7 +178,7 @@ kubectl apply -f deploy.yaml
 
 ---
 
-## Question 7 | Kubernetes Practice
+## Question 7 | Deployment Rollback
 
 **Explanation:**
 Perform updates to a Deployment to generate history, then roll back to a specific revision.
@@ -204,7 +204,7 @@ kubectl rollout undo deployment/api-server --to-revision=2 -n lagoon
 
 ---
 
-## Question 8 | Kubernetes Practice
+## Question 8 | Kustomize Strategic Merge Patch
 
 **Explanation:**
 Create Kustomize resources with common labels and annotations.
@@ -234,7 +234,7 @@ kubectl apply -k . -n trench
 
 ---
 
-## Question 9 | Kubernetes Practice
+## Question 9 | Pending Pod Troubleshooting
 
 **Explanation:**
 Fix the image of a Pod stuck in ErrImagePull. It's often easiest to recreate the pod.
@@ -251,7 +251,7 @@ kubectl apply -f pod.yaml
 
 ---
 
-## Question 10 | Kubernetes Practice
+## Question 10 | Metrics API Raw Query
 
 **Explanation:**
 Retrieve events, filter for Warnings, and save to a file.
@@ -264,7 +264,7 @@ kubectl get events -n depths --field-selector type=Warning > ./exam/course/10/ev
 
 ---
 
-## Question 11 | Kubernetes Practice
+## Question 11 | All Three Probes
 
 **Explanation:**
 Configure a gRPC liveness probe.
@@ -292,7 +292,7 @@ EOF
 
 ---
 
-## Question 12 | Kubernetes Practice
+## Question 12 | Projected Volume
 
 **Explanation:**
 Create a ConfigMap from a directory and mount it as a volume in a Pod.
@@ -325,7 +325,7 @@ EOF
 
 ---
 
-## Question 13 | Kubernetes Practice
+## Question 13 | Secret from Binary File
 
 **Explanation:**
 Create a Secret and expose its values as environment variables.
@@ -361,7 +361,7 @@ EOF
 
 ---
 
-## Question 14 | Kubernetes Practice
+## Question 14 | SELinux SecurityContext
 
 **Explanation:**
 Apply SecurityContext to a Pod and create a NetworkPolicy to deny ingress.
@@ -407,7 +407,7 @@ EOF
 
 ---
 
-## Question 15 | Kubernetes Practice
+## Question 15 | ServiceAccount Token Projection
 
 **Explanation:**
 Use `kubectl debug` to attach an ephemeral container.
@@ -422,7 +422,7 @@ kubectl debug target-pod -n reef --image=busybox --container=debug-container
 
 ---
 
-## Question 16 | Kubernetes Practice
+## Question 16 | NetworkPolicy Port Range
 
 **Explanation:**
 Create a Deployment and a PodDisruptionBudget.
@@ -471,7 +471,7 @@ EOF
 
 ---
 
-## Question 17 | Kubernetes Practice
+## Question 17 | Egress NetworkPolicy
 
 **Explanation:**
 Create a default deny-all NetworkPolicy and a specific allow NetworkPolicy.
@@ -514,7 +514,7 @@ EOF
 
 ---
 
-## Question 18 | Kubernetes Practice
+## Question 18 | Multi-TLS Ingress
 
 **Explanation:**
 Fix the Service selector to match the Pod's labels.
@@ -528,7 +528,7 @@ kubectl edit service mesh-service -n wave
 
 ---
 
-## Question 19 | Kubernetes Practice
+## Question 19 | EndpointSlice Inspection
 
 **Explanation:**
 Create a multi-port Service.
@@ -559,7 +559,7 @@ EOF
 
 ---
 
-## Question 20 | Kubernetes Practice
+## Question 20 | Local Registry Deployment
 
 **Explanation:**
 Create an Ingress with an annotation for rewrite-target.
