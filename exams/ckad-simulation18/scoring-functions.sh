@@ -2,9 +2,15 @@
 # CKAD Simulation 18 - Scoring Functions
 # DOJO_NAME="Dojo Izanagi"
 
-source "$SCRIPT_DIR/../../scripts/lib/common.sh" 2>/dev/null || true
 
 # Q1: 6 points
+
+CURRENT_EXAM_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$CURRENT_EXAM_DIR/../.." && pwd)"
+source "$PROJECT_DIR/scripts/lib/common.sh"
+
+EXAM_DIR="${EXAM_DIR:-./exam/course}"
+
 score_q1() {
 	local score=0
 	local max_points=6

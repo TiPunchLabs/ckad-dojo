@@ -3,9 +3,11 @@
 # Dojo Benzaiten 🎶
 # Total Points: 114
 
-source "$SCRIPT_DIR/../../scripts/lib/common.sh" 2>/dev/null || true
+CURRENT_EXAM_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$CURRENT_EXAM_DIR/../.." && pwd)"
+source "$PROJECT_DIR/scripts/lib/common.sh"
 
-EXAM_DIR="./exam/course/16"
+EXAM_DIR="${EXAM_DIR:-./exam/course}"
 
 score_q1() {
 	local score=0

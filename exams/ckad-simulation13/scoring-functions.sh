@@ -2,8 +2,11 @@
 # Scoring functions for CKAD Simulation 13
 # Total Points: 110
 
-source "$SCRIPT_DIR/../../scripts/lib/common.sh" 2>/dev/null || true
-EXAM_DIR="./exam/course/13"
+CURRENT_EXAM_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$CURRENT_EXAM_DIR/../.." && pwd)"
+source "$PROJECT_DIR/scripts/lib/common.sh"
+
+EXAM_DIR="${EXAM_DIR:-./exam/course}"
 
 score_q1() {
 	local score=0
@@ -171,7 +174,7 @@ score_q8() {
 	else
 		details="ConfigMap not found"
 	fi
-	if [ -f "$EXAM_DIR/q8/kustomization.yaml" ]; then
+	if [ -f "$EXAM_DIR/13/q8/kustomization.yaml" ]; then
 		score=$((score + 3))
 		details="$details; kustomization.yaml created"
 	fi
