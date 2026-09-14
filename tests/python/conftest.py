@@ -59,3 +59,48 @@ def tmp_exam_with_questions(tmp_exam_dir: Path) -> Path:
     )
 
     return tmp_exam_dir
+
+
+@pytest.fixture
+def tmp_exam_with_edge_cases(tmp_exam_dir: Path) -> Path:
+    """Create a temporary exam directory with edge-case metadata."""
+    exam_dir = tmp_exam_dir / "exams" / "ckad-edge-cases"
+    exam_dir.mkdir(parents=True)
+
+    exam_conf = exam_dir / "exam.conf"
+    exam_conf.write_text(
+        'EXAM_NAME="CKAD Edge Cases"\n'
+        'EXAM_ID="ckad-edge-cases"\n'
+        "EXAM_DURATION=120\n"
+        "TOTAL_QUESTIONS=1\n"
+        "PREVIEW_QUESTIONS=0\n"
+        "TOTAL_POINTS=100\n"
+        "PASSING_PERCENTAGE=66\n"
+        'DOJO_NAME="Edge"\n'
+        'DOJO_EMOJI="⚠️"\n'
+        'EXAM_VERSION="1.0"\n'
+        "ALLOW_TIMER_PAUSE=false\n"
+    )
+
+    questions_md = exam_dir / "questions.md"
+    questions_md.write_text(
+        "# CKAD Edge Cases\n\n"
+        "## Question 1 | Edge Cases\n\n"
+        "| | |\n"
+        "|---|---|\n"
+        "| **Points** | 0/100 (0%) |\n"
+        "| **Namespace** | - |\n"
+        "| **Resources** | `ConfigMap`, `Secret` |\n"
+        "| **Files** | - |\n"
+        "| **File to create** | `./exam/course/1/edge-case.yaml` |\n\n"
+        "Test content with various metadata edge cases.\n"
+    )
+
+    solutions_md = exam_dir / "solutions.md"
+    solutions_md.write_text(
+        "# Solutions\n\n"
+        "## Question 1 | Edge Cases\n\n"
+        "```bash\nkubectl apply -f edge-case.yaml\n```\n"
+    )
+
+    return tmp_exam_dir
