@@ -42,6 +42,7 @@ score_q1() {
 		details+="Pod genesis-pod not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -76,6 +77,7 @@ score_q2() {
 		details+="Pod data-transformer not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -108,6 +110,7 @@ score_q3() {
 		details+="Job index-processor not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -136,6 +139,7 @@ score_q4() {
 		details+="Pod graceful-shutdown not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -164,6 +168,7 @@ score_q5() {
 		details+="Helm release genesis-web not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -197,6 +202,7 @@ score_q6() {
 		details+="PDB terra-pdb not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -230,6 +236,7 @@ score_q7() {
 		details+="Deployment eden-api not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -252,6 +259,7 @@ score_q8() {
 		details+="Secret matrix-secret not found (ensure disableNameSuffixHash is used). "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -274,6 +282,7 @@ score_q9() {
 		details+="Pod stuck-pod not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -299,6 +308,7 @@ score_q10() {
 		details+="File not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -325,6 +335,7 @@ score_q11() {
 		details+="Script check.sh not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -352,6 +363,7 @@ score_q12() {
 		details+="Pod projected-pod not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -376,6 +388,7 @@ score_q13() {
 		details+="Secret static-creds not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -403,6 +416,7 @@ score_q14() {
 		details+="Pod secure-pod not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -435,6 +449,7 @@ score_q15() {
 		details+="ClusterRole aggregated-monitor not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -463,6 +478,7 @@ score_q16() {
 		details+="ResourceQuota priority-quota not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -485,6 +501,7 @@ score_q17() {
 		details+="NetworkPolicy allow-named-port not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -513,6 +530,7 @@ score_q18() {
 		details+="Ingress cosmos-ingress not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -540,6 +558,7 @@ score_q19() {
 		details+="File fqdn.txt not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -567,6 +586,7 @@ score_q20() {
 		details+="NetworkPolicy isolate-namespace not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }

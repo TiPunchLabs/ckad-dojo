@@ -20,6 +20,7 @@ score_q1() {
 		details="Image fujin-api:v2 not found in registry"
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -45,6 +46,7 @@ score_q2() {
 	else
 		details="Pod wind-logger not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -66,6 +68,7 @@ score_q3() {
 	else
 		details="Job storm-processor not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -93,6 +96,7 @@ score_q4() {
 	else
 		details="$details; File not created"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -117,6 +121,7 @@ score_q5() {
 	else
 		details="Helm deployment not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -138,6 +143,7 @@ score_q6() {
 	else
 		details="Deployment cyclone-web not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -158,6 +164,7 @@ score_q7() {
 	else
 		details="Service zephyr-svc not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -178,6 +185,7 @@ score_q8() {
 		score=$((score + 3))
 		details="$details; kustomization.yaml created"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -198,6 +206,7 @@ score_q9() {
 	else
 		details="Pod memory-hog not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -218,6 +227,7 @@ score_q10() {
 	else
 		details="top-pods.txt not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -238,6 +248,7 @@ score_q11() {
 	else
 		details="Pod monsoon-checker not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -258,6 +269,7 @@ score_q12() {
 	else
 		details="Pod secret-reader not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -275,6 +287,7 @@ score_q13() {
 		score=$((score + 3))
 		details="$details; RoleBinding exists"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -295,6 +308,7 @@ score_q14() {
 	else
 		details="Pod secure-storage not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -310,6 +324,7 @@ score_q15() {
 	else
 		details="LimitRange not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -330,6 +345,7 @@ score_q16() {
 	else
 		details="Pod zephyr-api not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -350,6 +366,7 @@ score_q17() {
 	else
 		details="NetworkPolicy not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -370,6 +387,7 @@ score_q18() {
 	else
 		details="Ingress not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -390,6 +408,7 @@ score_q19() {
 	else
 		details="Service mistral-db-headless not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -409,6 +428,7 @@ score_q20() {
 	else
 		details="File svc-env.txt not found"
 	fi
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }

@@ -36,6 +36,7 @@ score_q1() {
 		details+="Dockerfile not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -70,6 +71,7 @@ score_q2() {
 		details+="Pod thunder-logger not found in thunder namespace."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -104,6 +106,7 @@ score_q3() {
 		details+="CronJob lightning-strike not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -134,6 +137,7 @@ score_q4() {
 		details+="Pod app-with-wait not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -161,6 +165,7 @@ score_q5() {
 		details+="output.yaml not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -185,6 +190,7 @@ score_q6() {
 		details+="Deployment api-gateway not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -219,6 +225,7 @@ score_q7() {
 		details+="Canary deployment not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -243,6 +250,7 @@ score_q8() {
 		details+="Deployment api-worker not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -264,6 +272,7 @@ score_q9() {
 		details+="Pod not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -286,6 +295,7 @@ score_q10() {
 		details+="events.txt not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -320,6 +330,7 @@ score_q11() {
 		details+="Pod complex-app not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -348,6 +359,7 @@ score_q12() {
 		details+="Pod env-info not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -376,6 +388,7 @@ score_q13() {
 		details+="Pod secure-net not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -404,6 +417,7 @@ score_q14() {
 		details+="Secret db-credentials not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -433,6 +447,7 @@ score_q15() {
 		details+="Pod arg-reader not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -468,6 +483,7 @@ score_q16() {
 		details+="ClusterRoleBinding not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -500,6 +516,7 @@ score_q17() {
 		details+="NetworkPolicy strict-ingress not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -524,6 +541,7 @@ score_q18() {
 		details+="Ingress default-ing not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -554,6 +572,7 @@ score_q19() {
 		details+="Service sticky-svc not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -578,6 +597,7 @@ score_q20() {
 		details+="response.txt not found."
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }

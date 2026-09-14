@@ -29,6 +29,7 @@ score_q1() {
 		details+="Dockerfile not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -58,6 +59,7 @@ score_q2() {
 		details+="Pod data-processor not found in crescent namespace. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -81,6 +83,7 @@ score_q3() {
 		details+="Cronjob nightly-backup not found in twilight namespace. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -106,6 +109,7 @@ score_q4() {
 		details+="Pod legacy-app not found in eclipse namespace. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -123,6 +127,7 @@ score_q5() {
 		details+="Release not rolled back to 1. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -146,6 +151,7 @@ score_q6() {
 		details+="Deployment slow-start-app not found in shadow namespace. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -167,6 +173,7 @@ score_q7() {
 		details+="Deployment critical-processor not found in nightfall namespace. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -190,6 +197,7 @@ score_q8() {
 		details+="Files patch.json or kustomization.yaml missing. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -215,6 +223,7 @@ score_q9() {
 		details+="Pod metrics-gatherer not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -234,6 +243,7 @@ score_q10() {
 		details+="cpu-usage.txt not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -259,6 +269,7 @@ score_q11() {
 		details+="Pod logger not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -284,6 +295,7 @@ score_q12() {
 		details+="Pod combined-app not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -306,6 +318,7 @@ score_q13() {
 		details+="ConfigMap static-config not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -339,6 +352,7 @@ score_q14() {
 		details+="Pod secure-pod not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -356,6 +370,7 @@ score_q15() {
 		details+="Token not updated. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -382,6 +397,7 @@ score_q16() {
 		details+="ResourceQuota compute-quota not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -407,6 +423,7 @@ score_q17() {
 		details+="NetworkPolicy deny-external not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -432,6 +449,7 @@ score_q18() {
 		details+="Ingress star-ingress not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -457,6 +475,7 @@ score_q19() {
 		details+="Service db-ext-svc not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -478,6 +497,7 @@ score_q20() {
 		details+="nslookup.txt not found. "
 	fi
 
+	[ -z "$details" ] && details="No criteria matched."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
