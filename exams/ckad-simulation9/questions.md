@@ -298,7 +298,7 @@ Get the logs from the previous container instance and save to `./exam/course/13/
 
 Get the CPU and memory utilization of all nodes and save to `./exam/course/14/nodes.txt`.
 
-**Note**: This question requires a metrics-server pod to be installed on your minikube cluster. To install it run: `minikube addons enable metrics-server`
+**Note**: `kubectl top` needs metrics-server. Without it the command returns an error; scoring does not depend on live metrics. To install it: on minikube run `minikube addons enable metrics-server`; on kubeadm or kind apply https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml and add `--kubelet-insecure-tls` to the container args if the kubelet uses self-signed certificates.
 
 **Hint**: Use `kubectl top nodes`.
 
@@ -439,6 +439,6 @@ Use an emptyDir volume named `log-volume`.
 
 Get the CPU and memory utilization of all Pods in namespace `storm` and save to `./exam/course/20/top-pods.txt`.
 
-**Note**: This question requires a metrics-server pod to be installed on your minikube cluster. To install it run: `minikube addons enable metrics-server`
+**Note**: `kubectl top` needs metrics-server. Without it the command returns an error; scoring does not depend on live metrics. To install it: on minikube run `minikube addons enable metrics-server`; on kubeadm or kind apply https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml and add `--kubelet-insecure-tls` to the container args if the kubelet uses self-signed certificates.
 
 **Hint**: Use `kubectl top pods -n storm`.

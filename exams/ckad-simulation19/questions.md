@@ -140,7 +140,7 @@ There is a conflict causing issues. The Deployment specifies 5 replicas, while t
 2. Ensure the HPA targets the Deployment correctly and has CPU utilization target set to 75%.
 3. Scale the Deployment manually to 3 replicas (which the HPA might later override, but just perform the scale action if possible, or ensure it rests at min replicas). Actually, just fix the HPA to target 75% CPU and min 2 max 10.
 
-**Note**: This question requires a metrics-server pod to be installed on your minikube cluster. To install it run: `minikube addons enable metrics-server`
+**Note**: The HPA needs metrics-server to read CPU usage. Without it the HPA shows `<unknown>` for current metrics; scoring checks the HPA spec only. To install it: on minikube run `minikube addons enable metrics-server`; on kubeadm or kind apply https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml and add `--kubelet-insecure-tls` to the container args if the kubelet uses self-signed certificates.
 
 ---
 
