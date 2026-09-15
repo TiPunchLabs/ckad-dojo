@@ -26,7 +26,7 @@
 
 ### Task
 
-Create a Dockerfile in `./exam/course/14/q1/` that fulfills the following requirements:
+Create a Dockerfile in `./exam/course/1/` that fulfills the following requirements:
 
 - Use `nginx:1.23-alpine` as the base image.
 - Add a `HEALTHCHECK` instruction that tests if the web server is responding.
@@ -117,7 +117,7 @@ Override the following values:
 
 - `replicaCount` to `3`
 - `image.tag` to `latest`
-Save the rendered output to `./exam/course/14/q5/output.yaml`.
+Save the rendered output to `./exam/course/5/output.yaml`.
 Do NOT install the helm chart.
 
 ---
@@ -173,7 +173,7 @@ You need to introduce a canary version:
 
 ### Task
 
-In `./exam/course/14/q8/`, there is a base deployment file `deployment.yaml`.
+In `./exam/course/8/`, there is a base deployment file `deployment.yaml`.
 Create a `kustomization.yaml` file in the same directory.
 Configure it to include `deployment.yaml` as a resource.
 Add a strategic merge patch (either inline or as a separate file) that adds the environment variable `APP_ENV=production` to the `worker` container of the deployment.
@@ -212,7 +212,7 @@ Find the cause and fix it. The pod should be running successfully.
 ### Task
 
 List all events in the `strike` namespace, sorted by their creation timestamp (oldest first).
-Save the output (which should include at least the time, type, reason, and object name) to `./exam/course/14/q10/events.txt`.
+Save the output (which should include at least the time, type, reason, and object name) to `./exam/course/10/events.txt`.
 
 ---
 
@@ -410,5 +410,5 @@ Set the session affinity timeout to `10800` seconds (3 hours).
 There is a Pod named `hidden-api` running in the `strike` namespace, listening on port `8080`.
 Use port-forwarding to forward local port `9090` to the pod's port `8080`.
 While the port-forward is running, use `curl` to fetch `http://localhost:9090/status`.
-Save the exact response body to `./exam/course/14/q20/response.txt`.
+Save the exact response body to `./exam/course/20/response.txt`.
 (Ensure you kill the port-forward process after obtaining the response).

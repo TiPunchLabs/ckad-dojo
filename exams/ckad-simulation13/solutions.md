@@ -5,7 +5,7 @@
 ## Question 1 | Docker Image Build and Push
 
 ```bash
-cd ./exam/course/13/q1
+cd ./exam/course/1
 docker build -t localhost:5000/fujin-api:v2 .
 docker push localhost:5000/fujin-api:v2
 ```
@@ -86,7 +86,7 @@ spec:
 ```
 
 ```bash
-kubectl apply -f ./exam/course/13/q4/pod.yaml
+kubectl apply -f ./exam/course/4/pod.yaml
 ```
 
 **Explanation:** Extract the template from the deployment and wrap it in a Pod definition, changing only the requested command.
@@ -96,7 +96,7 @@ kubectl apply -f ./exam/course/13/q4/pod.yaml
 ## Question 5 | Helm Release Upgrade
 
 ```bash
-helm upgrade storm-app ./exam/course/13/q5/storm-chart -n typhoon --set replicaCount=3 --set image.tag=v2.0.0
+helm upgrade storm-app ./exam/course/5/storm-chart -n typhoon --set replicaCount=3 --set image.tag=v2.0.0
 ```
 
 **Explanation:** Upgrade the helm release using `--set` to override values defined in `values.yaml`.
@@ -127,7 +127,7 @@ kubectl patch svc zephyr-svc -n zephyr -p '{"spec":{"selector":{"version":"green
 ## Question 8 | Kustomize Apply
 
 ```bash
-cd ./exam/course/13/q8
+cd ./exam/course/8
 cat <<EOF > kustomization.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
@@ -162,7 +162,7 @@ kubectl replace --force -f hog.yaml
 ```bash
 kubectl top pods -n sirocco --sort-by=memory
 # Find top 3 pod names and write to top-pods.txt
-cat <<EOF > ./exam/course/13/q10/top-pods.txt
+cat <<EOF > ./exam/course/10/top-pods.txt
 pod-1
 pod-2
 pod-3
@@ -392,7 +392,7 @@ kubectl apply -f svc.yaml
 
 ```bash
 kubectl exec -it sirocco-app -n sirocco -- env | grep SIROCCO_BACKEND
-echo "SIROCCO_BACKEND_SERVICE_HOST" > ./exam/course/13/q20/svc-env.txt
+echo "SIROCCO_BACKEND_SERVICE_HOST" > ./exam/course/20/svc-env.txt
 ```
 
 **Explanation:** Kubernetes injects variables mapping service IP (e.g. `[SERVICE_NAME]_SERVICE_HOST`). The file should contain this exact variable name.

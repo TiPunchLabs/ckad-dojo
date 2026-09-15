@@ -23,12 +23,12 @@
 | **CNCF Weight** | 20% |
 | **Namespace** | `ward` |
 | **Resources** | Pod |
-| **File to create** | `./exam/course/19/q1/Dockerfile` |
+| **File to create** | `./exam/course/1/Dockerfile` |
 
 ### Task
 
 You have been tasked to optimize a container build process using multi-stage builds.
-In the directory `./exam/course/19/q1/`, there is a basic `main.go` application and an incomplete `Dockerfile`.
+In the directory `./exam/course/1/`, there is a basic `main.go` application and an incomplete `Dockerfile`.
 Modify the `Dockerfile` to use a multi-stage build:
 
 1. Stage 1: Name it `builder` and use `golang:1.20-alpine` as the base image. Compile the Go app here.
@@ -109,15 +109,15 @@ Create a Pod named `init-chain` in the `guardian` namespace that utilizes a sequ
 | **CNCF Weight** | 20% |
 | **Namespace** | `haven` |
 | **Resources** | Helm Release |
-| **File to create** | `./exam/course/19/q5/values.yaml` |
+| **File to create** | `./exam/course/5/values.yaml` |
 
 ### Task
 
 A Helm release named `guardian-app` is deployed in the `haven` namespace.
 
-1. Download its current values to `./exam/course/19/q5/old-values.yaml`.
-2. Update the replica count to 3 and the image tag to `latest` in a new file `./exam/course/19/q5/new-values.yaml`.
-3. Upgrade the release using `./exam/course/19/q5/new-values.yaml` without changing other existing configurations.
+1. Download its current values to `./exam/course/5/old-values.yaml`.
+2. Update the replica count to 3 and the image tag to `latest` in a new file `./exam/course/5/new-values.yaml`.
+3. Upgrade the release using `./exam/course/5/new-values.yaml` without changing other existing configurations.
 
 ---
 
@@ -173,11 +173,11 @@ Perform a complex rollout for a Deployment named `worker-deploy` in the `bastion
 | **CNCF Weight** | 20% |
 | **Namespace** | `bulwark` |
 | **Resources** | Kustomization |
-| **File to create** | `./exam/course/19/q8/` |
+| **File to create** | `./exam/course/8/` |
 
 ### Task
 
-Using Kustomize in `./exam/course/19/q8/`:
+Using Kustomize in `./exam/course/8/`:
 
 1. Create a `kustomization.yaml` that includes `deployment.yaml` as a resource.
 2. Apply a patch `patch.yaml` to change the replicas of the deployment to `4`.
@@ -214,12 +214,12 @@ A Deployment named `broken-app` in the `anchor` namespace is failing to start. T
 | **CNCF Weight** | 15% |
 | **Namespace** | `helm` |
 | **Resources** | Pod |
-| **File to create** | `./exam/course/19/q10/cpu-usage.txt` |
+| **File to create** | `./exam/course/10/cpu-usage.txt` |
 
 ### Task
 
 Find the Pod in the `helm` namespace with the label `tier=backend` that is consuming the most CPU.
-Write the name of this Pod to `./exam/course/19/q10/cpu-usage.txt`.
+Write the name of this Pod to `./exam/course/10/cpu-usage.txt`.
 
 *(Note: In this simulated environment, write the pod name `backend-pod-2` to the file)*
 
@@ -279,13 +279,13 @@ Create a Pod named `monitored-pod` in the `ward` namespace using `nginx:alpine` 
 | **CNCF Weight** | 25% |
 | **Namespace** | `shield` |
 | **Resources** | ServiceAccount |
-| **File to create** | `./exam/course/19/q13/token.txt` |
+| **File to create** | `./exam/course/13/token.txt` |
 
 ### Task
 
 1. Create a ServiceAccount named `vault-sa` in the `shield` namespace.
 2. Generate a token for this ServiceAccount using the TokenRequest API (via `kubectl create token`) with an expiration of 24 hours.
-3. Save the token to `./exam/course/19/q13/token.txt`.
+3. Save the token to `./exam/course/13/token.txt`.
 
 ---
 

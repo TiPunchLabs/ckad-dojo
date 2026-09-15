@@ -11,10 +11,10 @@ exam_post_setup() {
 	kubectl delete pod failing-pod --namespace depths --force --grace-period=0 >/dev/null 2>&1
 
 	# === Auto-generated starter files ===
-	local BASE_DIR="./exam/course/15"
+	local BASE_DIR="./exam/course"
 
-	mkdir -p "$BASE_DIR/q1"
-	cat <<'EOF_FILE' >"$BASE_DIR/q1/Dockerfile"
+	mkdir -p "$BASE_DIR/1"
+	cat <<'EOF_FILE' >"$BASE_DIR/1/Dockerfile"
 FROM golang:1.20-alpine
 COPY . /app
 WORKDIR /app
@@ -22,12 +22,12 @@ RUN go build -o app main.go
 CMD ["./app"]
 EOF_FILE
 
-	mkdir -p "$BASE_DIR/q10"
+	mkdir -p "$BASE_DIR/10"
 
-	mkdir -p "$BASE_DIR/q12/config-files"
-	echo "key1=value1" >"$BASE_DIR/q12/config-files/app.conf"
+	mkdir -p "$BASE_DIR/12/config-files"
+	echo "key1=value1" >"$BASE_DIR/12/config-files/app.conf"
 
-	mkdir -p "$BASE_DIR/q8"
+	mkdir -p "$BASE_DIR/8"
 
 	return 0
 }

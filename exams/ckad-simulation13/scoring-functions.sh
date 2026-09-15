@@ -87,7 +87,7 @@ score_q4() {
 		details="Pod tempest-debug not found"
 	fi
 
-	if [ -f "$LOCAL_PATH_PREFIX/13/q4/pod.yaml" ]; then
+	if [ -f "$EXAM_DIR/4/pod.yaml" ]; then
 		score=$((score + 3))
 		details="$details; File created"
 	else
@@ -174,7 +174,7 @@ score_q8() {
 	else
 		details="ConfigMap not found"
 	fi
-	if [ -f "$EXAM_DIR/13/q8/kustomization.yaml" ]; then
+	if [ -f "$EXAM_DIR/8/kustomization.yaml" ]; then
 		score=$((score + 3))
 		details="$details; kustomization.yaml created"
 	fi
@@ -207,8 +207,8 @@ score_q10() {
 	local max_points=5
 	local details=""
 
-	if [ -f "$LOCAL_PATH_PREFIX/13/q10/top-pods.txt" ]; then
-		local lines=$(wc -l <"$LOCAL_PATH_PREFIX/13/q10/top-pods.txt")
+	if [ -f "$EXAM_DIR/10/top-pods.txt" ]; then
+		local lines=$(wc -l <"$EXAM_DIR/10/top-pods.txt")
 		if [ "$lines" -ge 3 ]; then
 			score=$((score + 5))
 			details="Top pods file created with content"
@@ -399,8 +399,8 @@ score_q20() {
 	local max_points=6
 	local details=""
 
-	if [ -f "$LOCAL_PATH_PREFIX/13/q20/svc-env.txt" ]; then
-		if grep -q "SIROCCO_BACKEND_SERVICE_HOST" "$LOCAL_PATH_PREFIX/13/q20/svc-env.txt"; then
+	if [ -f "$EXAM_DIR/20/svc-env.txt" ]; then
+		if grep -q "SIROCCO_BACKEND_SERVICE_HOST" "$EXAM_DIR/20/svc-env.txt"; then
 			score=$((score + 6))
 			details="Environment variable identified correctly"
 		else

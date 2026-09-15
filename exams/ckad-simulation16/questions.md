@@ -26,8 +26,8 @@
 
 ### Task
 
-You have been asked to build an application container image. A directory has been provided at `./exam/course/16/q1/app` with the application source code.
-Create a `Dockerfile` at `./exam/course/16/q1/Dockerfile` to build an image named `localhost:5000/benzaiten-wisdom:v1` using `nginx:alpine` as the base image.
+You have been asked to build an application container image. A directory has been provided at `./exam/course/1/app` with the application source code.
+Create a `Dockerfile` at `./exam/course/1/Dockerfile` to build an image named `localhost:5000/benzaiten-wisdom:v1` using `nginx:alpine` as the base image.
 Copy the contents of the `app` directory into `/usr/share/nginx/html/` in the container.
 Build the image and push it to the local registry.
 Then create a pod named `wisdom-server` in the `harmony` namespace using this image.
@@ -104,9 +104,9 @@ Enable process namespace sharing between the containers in this Pod so the `debu
 
 ### Task
 
-A Helm chart is located at `./exam/course/16/q5/chart`. It has a dependency on a subchart.
+A Helm chart is located at `./exam/course/5/chart`. It has a dependency on a subchart.
 First, update the chart dependencies.
-Then, create a values file at `./exam/course/16/q5/values.yaml` to set `replicaCount: 3` and `service.port: 8080`.
+Then, create a values file at `./exam/course/5/values.yaml` to set `replicaCount: 3` and `service.port: 8080`.
 Install the chart as a release named `wisdom-app` in the `chorus` namespace using the values file.
 
 ---
@@ -158,8 +158,8 @@ Undo the rollout and rollback to exactly revision 2.
 
 ### Task
 
-A base kustomize configuration is at `./exam/course/16/q8/base`.
-Create an overlay for a `production` environment at `./exam/course/16/q8/overlays/production`.
+A base kustomize configuration is at `./exam/course/8/base`.
+Create an overlay for a `production` environment at `./exam/course/8/overlays/production`.
 The overlay should:
 
 1. Change the namespace to `lyric`
@@ -200,7 +200,7 @@ Identify the cause of the issue and fix it. The pod should be running. Do not ch
 
 Use the `kubectl` raw API to query the metrics API server.
 Find the memory usage of the pod `heavy-worker` in the `aria` namespace.
-Write the memory usage (in Ki or Mi, exactly as output by the API) to `./exam/course/16/q10/metrics.txt`.
+Write the memory usage (in Ki or Mi, exactly as output by the API) to `./exam/course/10/metrics.txt`.
 
 ---
 
@@ -257,7 +257,7 @@ The volume should project:
 
 ### Task
 
-A binary file is provided at `./exam/course/16/q13/data.bin`.
+A binary file is provided at `./exam/course/13/data.bin`.
 Create a ConfigMap named `binary-config` in the `rhythm` namespace containing this file as binary data.
 
 ---
@@ -294,7 +294,7 @@ Configure the Pod's SecurityContext to set the SELinux options:
 
 Create a ServiceAccount named `vault-accessor` in the `sonata` namespace.
 Create a token for this ServiceAccount with a duration of 1 hour (3600 seconds) using the TokenRequest API (via kubectl).
-Save the raw token string to `./exam/course/16/q15/token.txt`.
+Save the raw token string to `./exam/course/15/token.txt`.
 
 ---
 
@@ -368,7 +368,7 @@ Configure TLS for both hosts. Use the existing secret `app1-tls` for `app1.benza
 ### Task
 
 Find the EndpointSlice for the Service `external-db-svc` in the `tempo` namespace.
-Extract the IPv4 addresses from this EndpointSlice and write them to `./exam/course/16/q19/endpoints.txt`, one address per line.
+Extract the IPv4 addresses from this EndpointSlice and write them to `./exam/course/19/endpoints.txt`, one address per line.
 
 ---
 
