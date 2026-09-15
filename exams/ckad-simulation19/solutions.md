@@ -8,8 +8,8 @@
 Multi-stage builds reduce image size and improve security. We create a builder stage and a final stage.
 
 ```bash
-mkdir -p ./exam/course/19/q1/
-cat <<EOF > ./exam/course/19/q1/Dockerfile
+mkdir -p ./exam/course/1/
+cat <<EOF > ./exam/course/1/Dockerfile
 FROM golang:1.20-alpine AS builder
 WORKDIR /app
 COPY . .
@@ -133,14 +133,14 @@ EOF
 Helm updates.
 
 ```bash
-mkdir -p ./exam/course/19/q5/
-helm get values guardian-app -n haven > ./exam/course/19/q5/old-values.yaml
-cat <<EOF > ./exam/course/19/q5/new-values.yaml
+mkdir -p ./exam/course/5/
+helm get values guardian-app -n haven > ./exam/course/5/old-values.yaml
+cat <<EOF > ./exam/course/5/new-values.yaml
 replicaCount: 3
 image:
   tag: "latest"
 EOF
-helm upgrade guardian-app ./exam/course/19/q5/chart-dummy -n haven --reuse-values -f ./exam/course/19/q5/new-values.yaml
+helm upgrade guardian-app ./exam/course/5/chart-dummy -n haven --reuse-values -f ./exam/course/5/new-values.yaml
 # (In real exam, just the helm upgrade command matters)
 ```
 
@@ -176,15 +176,15 @@ kubectl rollout undo deployment/worker-deploy -n bastion
 Kustomize usage.
 
 ```bash
-mkdir -p ./exam/course/19/q8
-cat <<EOF > ./exam/course/19/q8/kustomization.yaml
+mkdir -p ./exam/course/8
+cat <<EOF > ./exam/course/8/kustomization.yaml
 resources:
 - deployment.yaml
 patches:
 - path: patch.yaml
 EOF
 
-cat <<EOF > ./exam/course/19/q8/patch.yaml
+cat <<EOF > ./exam/course/8/patch.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -193,7 +193,7 @@ spec:
   replicas: 4
 EOF
 
-kubectl kustomize ./exam/course/19/q8 | kubectl apply -n bulwark -f -
+kubectl kustomize ./exam/course/8 | kubectl apply -n bulwark -f -
 ```
 
 ---
@@ -217,8 +217,8 @@ kubectl patch deployment broken-app -n anchor --type='json' -p='[{"op": "replace
 kubectl top with label selector.
 
 ```bash
-mkdir -p ./exam/course/19/q10/
-echo "backend-pod-2" > ./exam/course/19/q10/cpu-usage.txt
+mkdir -p ./exam/course/10/
+echo "backend-pod-2" > ./exam/course/10/cpu-usage.txt
 ```
 
 ---
@@ -309,8 +309,8 @@ TokenRequest API via kubectl.
 
 ```bash
 kubectl create sa vault-sa -n shield
-mkdir -p ./exam/course/19/q13
-kubectl create token vault-sa -n shield --duration=24h > ./exam/course/19/q13/token.txt
+mkdir -p ./exam/course/13
+kubectl create token vault-sa -n shield --duration=24h > ./exam/course/13/token.txt
 ```
 
 ---
