@@ -213,6 +213,8 @@ Create a HorizontalPodAutoscaler for Deployment `app-deploy` in namespace `root`
 
 **Hint**: Use `kubectl autoscale deployment` command.
 
+**Note**: The HPA needs metrics-server to read CPU usage. Without it the HPA shows `<unknown>` for current metrics; scoring checks the HPA spec only. To install it: on minikube run `minikube addons enable metrics-server`; on kubeadm or kind apply https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml and add `--kubelet-insecure-tls` to the container args if the kubelet uses self-signed certificates.
+
 ---
 
 ## Question 10 | Deployment Rollout Pause and Resume

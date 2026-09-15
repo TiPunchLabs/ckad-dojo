@@ -359,7 +359,7 @@ Use `kubectl top` to analyze resource usage:
 2. Save the output to `./exam/course/13/pod-resources.txt`
 3. Identify the pod consuming the most **CPU** and write its name to `./exam/course/13/top-cpu-pod.txt`
 
-**Note**: If metrics-server is not available, the command will show an error. Document this in the file.
+**Note**: `kubectl top` needs metrics-server. Without it the command returns an error; scoring does not depend on live metrics. To install it: on minikube run `minikube addons enable metrics-server`; on kubeadm or kind apply https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml and add `--kubelet-insecure-tls` to the container args if the kubelet uses self-signed certificates.
 
 ---
 
