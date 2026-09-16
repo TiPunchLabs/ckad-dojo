@@ -219,6 +219,8 @@ Find the Pod in the `kube-system` namespace that is consuming the most CPU.
 Write the name of the Pod into the file `./exam/course/10/cpu-usage.txt`.
 (If multiple pods are similar, just record the top one based on `kubectl top`).
 
+**Note**: `kubectl top` needs metrics-server. Without it the command returns an error; scoring does not depend on live metrics. To install it: on minikube run `minikube addons enable metrics-server`; on kubeadm or kind apply https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml and add `--kubelet-insecure-tls` to the container args if the kubelet uses self-signed certificates.
+
 ---
 
 ## Question 11 | Application Observability and Maintenance
