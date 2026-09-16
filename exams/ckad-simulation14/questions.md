@@ -111,7 +111,7 @@ Create a Pod named `app-with-wait` in the `storm` namespace:
 
 ### Task
 
-A helm chart is located at `/opt/course/14/q5/chart`.
+A helm chart is located at `./exam/course/5/chart`.
 Render the helm templates using the release name `thunder-web` and namespace `surge`.
 Override the following values:
 
