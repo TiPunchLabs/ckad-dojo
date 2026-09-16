@@ -38,7 +38,7 @@ score_q1() {
 		details+="Pod entry-override not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -74,7 +74,7 @@ score_q2() {
 		details+="Pod web-setup not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -103,7 +103,7 @@ score_q3() {
 		details+="CronJob siege-report not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -132,7 +132,7 @@ score_q4() {
 		details+="Pod process-monitor not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -158,7 +158,7 @@ score_q5() {
 		details+="Helm release not deployed or failed. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -183,7 +183,7 @@ score_q6() {
 		details+="Deployment not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -208,7 +208,7 @@ score_q7() {
 		details+="Green deployment not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -237,7 +237,7 @@ score_q8() {
 		details+="Deployment vanguard-web not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -263,7 +263,7 @@ score_q9() {
 		details+="Pod data-processor not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -291,7 +291,7 @@ score_q10() {
 		details+="Pod secure-app not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -319,7 +319,7 @@ score_q11() {
 		details+="Deployment weapon-smith not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -348,7 +348,7 @@ score_q12() {
 		details+="Pod resource-aware not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -380,7 +380,7 @@ score_q13() {
 		fi
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -409,7 +409,7 @@ score_q14() {
 		details+="Pod secure-workload not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -441,7 +441,7 @@ score_q15() {
 		details+="Pod db-consumer not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -464,7 +464,7 @@ score_q16() {
 		fi
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -493,7 +493,7 @@ score_q17() {
 		details+="NetPol protect-db not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -518,7 +518,7 @@ score_q18() {
 		details+="Canary ingress not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -547,7 +547,7 @@ score_q19() {
 		fi
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -572,7 +572,7 @@ score_q20() {
 		details+="File ./exam/course/20/coredns.yaml not found. "
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }

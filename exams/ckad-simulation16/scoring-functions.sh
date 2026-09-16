@@ -26,7 +26,7 @@ score_q1() {
 		details="Pod not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -49,7 +49,7 @@ score_q2() {
 		details="Pod not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -72,7 +72,7 @@ score_q3() {
 		details="Job not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -95,7 +95,7 @@ score_q4() {
 		details="Pod not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -118,7 +118,7 @@ score_q5() {
 		details="Helm release not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -142,7 +142,7 @@ score_q6() {
 		details="Deployment not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -165,7 +165,7 @@ score_q7() {
 		details="Deployment not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -188,7 +188,7 @@ score_q8() {
 		details="Deployment not found in lyric namespace"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -210,7 +210,7 @@ score_q9() {
 		details="Pod not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -232,7 +232,7 @@ score_q10() {
 		details="Metrics file not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -256,7 +256,7 @@ score_q11() {
 		details="Pod not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -279,7 +279,7 @@ score_q12() {
 		details="Pod not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -301,7 +301,7 @@ score_q13() {
 		details="ConfigMap not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -324,7 +324,7 @@ score_q14() {
 		details="Pod not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -346,7 +346,7 @@ score_q15() {
 		details="Token file not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -369,7 +369,7 @@ score_q16() {
 		details="NetworkPolicy not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -392,7 +392,7 @@ score_q17() {
 		details="NetworkPolicy not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -415,7 +415,7 @@ score_q18() {
 		details="Ingress not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -437,7 +437,7 @@ score_q19() {
 		details="Endpoints file not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -460,7 +460,7 @@ score_q20() {
 		details="Service not found"
 	fi
 
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }

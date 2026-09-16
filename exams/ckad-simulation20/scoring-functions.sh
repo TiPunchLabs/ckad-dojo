@@ -25,7 +25,7 @@ score_q1() {
 	else
 		details+="Pod musashi-pod not found. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -47,7 +47,7 @@ score_q2() {
 	else
 		details+="Pod tri-blade not found. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -70,7 +70,7 @@ score_q3() {
 	else
 		details+="Job data-processor not found. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -92,7 +92,7 @@ score_q4() {
 	else
 		details+="CronJob db-backup not found. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -107,7 +107,7 @@ score_q5() {
 	else
 		details+="Helm release crown-release not found. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -132,7 +132,7 @@ score_q6() {
 	else
 		details+="Deployment glory-deploy not found. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -154,7 +154,7 @@ score_q7() {
 	else
 		details+="Canary deployment not found. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -176,7 +176,7 @@ score_q8() {
 	else
 		details+="Deployment my-app not found. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -193,7 +193,7 @@ score_q9() {
 		score=$((count * 2))
 		details+="$count/3 broken pods are running. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -214,7 +214,7 @@ score_q10() {
 	else
 		details+="File logs.txt not found. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -230,7 +230,7 @@ score_q11() {
 	else
 		details+="No ephemeral container found on distroless-pod. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -252,7 +252,7 @@ score_q12() {
 	else
 		details+="Pod secure-pod not found. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -267,7 +267,7 @@ score_q13() {
 	else
 		details+="Rolebinding master-binding not found. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -290,7 +290,7 @@ score_q14() {
 	else
 		details+="Pod inject-pod not found. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -311,7 +311,7 @@ score_q15() {
 	else
 		details+="ResourceQuota missing. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -332,7 +332,7 @@ score_q16() {
 	else
 		details+="PVC glory-pvc missing. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -347,7 +347,7 @@ score_q17() {
 	else
 		details+="NetworkPolicy allow-web missing. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -362,7 +362,7 @@ score_q18() {
 	else
 		details+="Ingress mastery-ing missing. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -384,7 +384,7 @@ score_q19() {
 	else
 		details+="Service ascend-svc missing. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
@@ -399,7 +399,7 @@ score_q20() {
 	else
 		details+="Output file dns-output.txt missing. "
 	fi
-	[ -z "$details" ] && details="No criteria matched."
+	[ -z "$details" ] && details="Expected configuration not found."
 	echo "$score/$max_points"
 	echo "DETAILS:$details"
 }
