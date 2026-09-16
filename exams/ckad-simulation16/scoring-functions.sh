@@ -211,8 +211,8 @@ score_q10() {
 	local max_points=6
 	local details=""
 
-	if [ -f "./exam/course/16/q10/metrics.txt" ] || [ -f "./exam/course/16/q10/metrics.txt" ]; then
-		local val=$(cat ./exam/course/16/q10/metrics.txt 2>/dev/null || cat ./exam/course/16/q10/metrics.txt 2>/dev/null)
+	if [ -f "./exam/course/10/metrics.txt" ] || [ -f "./exam/course/10/metrics.txt" ]; then
+		local val=$(cat ./exam/course/10/metrics.txt 2>/dev/null || cat ./exam/course/10/metrics.txt 2>/dev/null)
 		if [[ -n "$val" ]]; then
 			score=$((score + 6))
 			details="Metrics file found and has content"
@@ -320,8 +320,8 @@ score_q15() {
 	local max_points=4
 	local details=""
 
-	if [ -f "./exam/course/16/q15/token.txt" ] || [ -f "./exam/course/16/q15/token.txt" ]; then
-		local val=$(cat ./exam/course/16/q15/token.txt 2>/dev/null || cat ./exam/course/16/q15/token.txt 2>/dev/null)
+	if [ -f "./exam/course/15/token.txt" ] || [ -f "./exam/course/15/token.txt" ]; then
+		local val=$(cat ./exam/course/15/token.txt 2>/dev/null || cat ./exam/course/15/token.txt 2>/dev/null)
 		if [[ -n "$val" ]]; then
 			score=$((score + 4))
 			details="Token file found and has content"
@@ -407,8 +407,8 @@ score_q19() {
 	local max_points=5
 	local details=""
 
-	if [ -f "./exam/course/16/q19/endpoints.txt" ] || [ -f "./exam/course/16/q19/endpoints.txt" ]; then
-		local val=$(cat ./exam/course/16/q19/endpoints.txt 2>/dev/null || cat ./exam/course/16/q19/endpoints.txt 2>/dev/null)
+	if [ -f "./exam/course/19/endpoints.txt" ] || [ -f "./exam/course/19/endpoints.txt" ]; then
+		local val=$(cat ./exam/course/19/endpoints.txt 2>/dev/null || cat ./exam/course/19/endpoints.txt 2>/dev/null)
 		if [[ -n "$val" ]]; then
 			score=$((score + 5))
 			details="Endpoints file found and has content"

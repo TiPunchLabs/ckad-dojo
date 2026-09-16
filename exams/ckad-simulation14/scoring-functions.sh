@@ -12,7 +12,7 @@ score_q1() {
 	local score=0
 	local max_points=4
 	local details=""
-	local file="${EXAM_DIR}/q1/Dockerfile"
+	local file="${EXAM_DIR}/1/Dockerfile"
 
 	if [ -f "$file" ]; then
 		((score++))
@@ -142,7 +142,7 @@ score_q5() {
 	local score=0
 	local max_points=5
 	local details=""
-	local file="${EXAM_DIR}/q5/output.yaml"
+	local file="${EXAM_DIR}/5/output.yaml"
 
 	if [ -f "$file" ]; then
 		((score += 2))
@@ -272,7 +272,7 @@ score_q10() {
 	local score=0
 	local max_points=5
 	local details=""
-	local file="${EXAM_DIR}/q10/events.txt"
+	local file="${EXAM_DIR}/10/events.txt"
 
 	if [ -f "$file" ]; then
 		((score += 3))
@@ -562,7 +562,7 @@ score_q20() {
 	local score=0
 	local max_points=6
 	local details=""
-	local file="${EXAM_DIR}/q20/response.txt"
+	local file="${EXAM_DIR}/20/response.txt"
 
 	if [ -f "$file" ]; then
 		((score += 3))

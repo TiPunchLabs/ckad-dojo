@@ -12,14 +12,14 @@ function exam_post_setup() {
 
 	# === Auto-generated starter files ===
 	local BASE_DIR="./exam/course"
-	mkdir -p "$BASE_DIR/12/q1"
-	cat <<'EOF_FILE' >"$BASE_DIR/12/q1/Dockerfile"
-# /opt/course/12/q1/Dockerfile
+	mkdir -p "$BASE_DIR/1"
+	cat <<'EOF_FILE' >"$BASE_DIR/1/Dockerfile"
+# /opt/course/1/Dockerfile
 FROM golang:1.20-alpine
 # TODO: Complete this Dockerfile per the task instructions
 EOF_FILE
 
-	cat <<'EOF_FILE' >"$BASE_DIR/12/q1/main.go"
+	cat <<'EOF_FILE' >"$BASE_DIR/1/main.go"
 package main
 import "fmt"
 func main() {
@@ -27,8 +27,8 @@ func main() {
 }
 EOF_FILE
 
-	mkdir -p "$BASE_DIR/12/q8"
-	cat <<'EOF_FILE' >"$BASE_DIR/12/q8/deployment.yaml"
+	mkdir -p "$BASE_DIR/8"
+	cat <<'EOF_FILE' >"$BASE_DIR/8/deployment.yaml"
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -49,14 +49,14 @@ spec:
         image: nginx:1.24
 EOF_FILE
 
-	cat <<'EOF_FILE' >"$BASE_DIR/12/q8/kustomization.yaml"
+	cat <<'EOF_FILE' >"$BASE_DIR/8/kustomization.yaml"
 resources:
   - deployment.yaml
 EOF_FILE
 
-	mkdir -p "$BASE_DIR/12/q10"
+	mkdir -p "$BASE_DIR/10"
 
-	mkdir -p "$BASE_DIR/12/q20"
+	mkdir -p "$BASE_DIR/20"
 
 	return 0
 }

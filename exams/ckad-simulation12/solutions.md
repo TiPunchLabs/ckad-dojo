@@ -3,7 +3,7 @@
 ## Question 1 | Multi-stage Dockerfile
 
 ```dockerfile
-# /opt/course/12/q1/Dockerfile
+# ./exam/course/1/Dockerfile
 FROM golang:1.20-alpine AS builder
 COPY main.go /app/
 RUN go build -o /app/server /app/main.go
@@ -138,7 +138,7 @@ Explanation: Pausing a deployment rollout halts the update process, giving you t
 ## Question 8 | Kustomize with JSON patch
 
 ```json
-# /opt/course/12/q8/patch.json
+# ./exam/course/8/patch.json
 [
   {
     "op": "add",
@@ -154,7 +154,7 @@ Explanation: Pausing a deployment rollout halts the update process, giving you t
 ```
 
 ```yaml
-# /opt/course/12/q8/kustomization.yaml
+# ./exam/course/8/kustomization.yaml
 resources:
   - deployment.yaml
 
@@ -188,7 +188,7 @@ Explanation: A misspelled image name triggers ImagePullBackOff because the node 
 ```bash
 kubectl top pods -n kube-system --sort-by=cpu
 # Assuming 'kube-apiserver-...' is the highest
-echo "kube-apiserver-minikube" > /opt/course/12/q10/cpu-usage.txt
+echo "kube-apiserver-minikube" > ./exam/course/10/cpu-usage.txt
 ```
 
 Explanation: `kubectl top pods` retrieves current metrics from the Metrics Server.
@@ -412,7 +412,7 @@ Explanation: ExternalName services return a CNAME record so that pods can use in
 ## Question 20 | DNS debugging
 
 ```bash
-kubectl exec -it dns-tester -n void -- nslookup kubernetes.default.svc.cluster.local > /opt/course/12/q20/nslookup.txt
+kubectl exec -it dns-tester -n void -- nslookup kubernetes.default.svc.cluster.local > ./exam/course/20/nslookup.txt
 ```
 
 Explanation: `nslookup` provides verification that CoreDNS is functioning properly within the cluster.

@@ -12,16 +12,16 @@ score_q1() {
 	local max_points=6
 	local details=""
 
-	if [ -f "$EXAM_DIR/12/q1/Dockerfile" ]; then
-		if grep -q -E "FROM golang:1.20-alpine AS builder|FROM golang:1.20-alpine as builder" "$EXAM_DIR/12/q1/Dockerfile"; then
+	if [ -f "$EXAM_DIR/1/Dockerfile" ]; then
+		if grep -q -E "FROM golang:1.20-alpine AS builder|FROM golang:1.20-alpine as builder" "$EXAM_DIR/1/Dockerfile"; then
 			((score += 2))
 			details+="Builder stage defined. "
 		fi
-		if grep -q "FROM alpine:3.18" "$EXAM_DIR/12/q1/Dockerfile"; then
+		if grep -q "FROM alpine:3.18" "$EXAM_DIR/1/Dockerfile"; then
 			((score += 2))
 			details+="Alpine stage defined. "
 		fi
-		if grep -q "COPY --from=builder" "$EXAM_DIR/12/q1/Dockerfile"; then
+		if grep -q "COPY --from=builder" "$EXAM_DIR/1/Dockerfile"; then
 			((score += 2))
 			details+="Binary copied from builder. "
 		fi
@@ -176,13 +176,13 @@ score_q8() {
 	local max_points=6
 	local details=""
 
-	if [ -f "$EXAM_DIR/12/q8/kustomization.yaml" ] && [ -f "$EXAM_DIR/12/q8/patch.json" ]; then
+	if [ -f "$EXAM_DIR/8/kustomization.yaml" ] && [ -f "$EXAM_DIR/8/patch.json" ]; then
 		((score += 2))
-		if grep -q "patch.json" "$EXAM_DIR/12/q8/kustomization.yaml"; then
+		if grep -q "patch.json" "$EXAM_DIR/8/kustomization.yaml"; then
 			((score += 2))
 			details+="patch.json referenced in kustomization. "
 		fi
-		if grep -q "production" "$EXAM_DIR/12/q8/patch.json" && grep -q "MODE" "$EXAM_DIR/12/q8/patch.json"; then
+		if grep -q "production" "$EXAM_DIR/8/patch.json" && grep -q "MODE" "$EXAM_DIR/8/patch.json"; then
 			((score += 2))
 			details+="Patch contains MODE=production. "
 		fi
@@ -224,8 +224,8 @@ score_q10() {
 	local max_points=5
 	local details=""
 
-	if [ -f "$EXAM_DIR/12/q10/cpu-usage.txt" ]; then
-		local content=$(cat "$EXAM_DIR/12/q10/cpu-usage.txt")
+	if [ -f "$EXAM_DIR/10/cpu-usage.txt" ]; then
+		local content=$(cat "$EXAM_DIR/10/cpu-usage.txt")
 		if [[ -n "$content" ]]; then
 			((score += 5))
 			details+="Found CPU usage file. Content: $content. "
@@ -466,8 +466,8 @@ score_q20() {
 	local max_points=6
 	local details=""
 
-	if [ -f "$EXAM_DIR/12/q20/nslookup.txt" ]; then
-		local content=$(cat "$EXAM_DIR/12/q20/nslookup.txt")
+	if [ -f "$EXAM_DIR/20/nslookup.txt" ]; then
+		local content=$(cat "$EXAM_DIR/20/nslookup.txt")
 		if echo "$content" | grep -q "kubernetes.default.svc.cluster.local"; then
 			((score += 6))
 			details+="nslookup output valid. "

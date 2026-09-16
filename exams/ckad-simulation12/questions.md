@@ -23,12 +23,12 @@
 | **CNCF Weight** | 20% |
 | **Namespace** | `lunar` |
 | **Resources** | `Dockerfile` |
-| **File to create** | `./exam/course/12/q1/Dockerfile` |
+| **File to create** | `./exam/course/1/Dockerfile` |
 
 ### Task
 
 In the `lunar` namespace, you are tasked with creating a multi-stage Dockerfile.
-A stub Dockerfile has been provided at `./exam/course/12/q1/Dockerfile` and a simple main.go program at `./exam/course/12/q1/main.go`.
+A stub Dockerfile has been provided at `./exam/course/1/Dockerfile` and a simple main.go program at `./exam/course/1/main.go`.
 
 Update the Dockerfile to have two stages:
 
@@ -171,11 +171,11 @@ Pause the rollout of the `critical-processor` deployment.
 | **CNCF Weight** | 20% |
 | **Namespace** | `dusk` |
 | **Resources** | `Kustomization` |
-| **File to create** | `./exam/course/12/q8/` |
+| **File to create** | `./exam/course/8/` |
 
 ### Task
 
-In `./exam/course/12/q8/`, there is a base deployment file `deployment.yaml` and a `kustomization.yaml`.
+In `./exam/course/8/`, there is a base deployment file `deployment.yaml` and a `kustomization.yaml`.
 Create a JSON patch file named `patch.json` in the same directory.
 The patch should add an environment variable `MODE=production` to the container named `web` in the Deployment `frontend`.
 
@@ -211,12 +211,12 @@ Identify the issue and fix it. The pod should be running smoothly.
 | **CNCF Weight** | 15% |
 | **Namespace** | `void` |
 | **Resources** | `Metrics` |
-| **File to create** | `./exam/course/12/q10/cpu-usage.txt` |
+| **File to create** | `./exam/course/10/cpu-usage.txt` |
 
 ### Task
 
 Find the Pod in the `kube-system` namespace that is consuming the most CPU.
-Write the name of the Pod into the file `./exam/course/12/q10/cpu-usage.txt`.
+Write the name of the Pod into the file `./exam/course/10/cpu-usage.txt`.
 (If multiple pods are similar, just record the top one based on `kubectl top`).
 
 ---
@@ -407,12 +407,12 @@ It should map to the external name `database.external.example.com`.
 | **CNCF Weight** | 20% |
 | **Namespace** | `void` |
 | **Resources** | `Pod` |
-| **File to create** | `./exam/course/12/q20/nslookup.txt` |
+| **File to create** | `./exam/course/20/nslookup.txt` |
 
 ### Task
 
 A Pod named `dns-tester` is running in the `void` namespace.
 Execute an `nslookup` command from within this Pod to look up the DNS record for the `kubernetes.default.svc.cluster.local` service.
-Save the output of the command to the file `./exam/course/12/q20/nslookup.txt` on your local machine.
+Save the output of the command to the file `./exam/course/20/nslookup.txt` on your local machine.
 
 ---

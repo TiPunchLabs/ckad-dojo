@@ -26,7 +26,7 @@
 
 ### Task
 
-There is a Dockerfile located at `./exam/course/13/q1/Dockerfile`.
+There is a Dockerfile located at `./exam/course/1/Dockerfile`.
 Build a container image using this Dockerfile and tag it as `localhost:5000/fujin-api:v2`.
 Push the built image to the local registry at `localhost:5000`.
 
@@ -78,14 +78,14 @@ Configure the Job to run a total of `6` successful completions, with `3` pods ru
 | **CNCF Weight** | 20% |
 | **Namespace** | `tempest` |
 | **Resources** | Pod |
-| **File to create** | `./exam/course/13/q4/pod.yaml` |
+| **File to create** | `./exam/course/4/pod.yaml` |
 
 ### Task
 
 There is a deployment named `tempest-app` in the `tempest` namespace.
 Extract its pod template and create a standalone Pod named `tempest-debug` in the `tempest` namespace.
 The `tempest-debug` Pod should have the exact same container specifications (image, ports, env vars) as the deployment's pod template, but change the container's command to `['sleep', '3600']`.
-Save the YAML definition used to create this Pod at `./exam/course/13/q4/pod.yaml`.
+Save the YAML definition used to create this Pod at `./exam/course/4/pod.yaml`.
 
 ---
 
@@ -102,7 +102,7 @@ Save the YAML definition used to create this Pod at `./exam/course/13/q4/pod.yam
 ### Task
 
 A Helm chart has been deployed to the `typhoon` namespace with the release name `storm-app`.
-Update the release `storm-app` using the chart located at `./exam/course/13/q5/storm-chart`.
+Update the release `storm-app` using the chart located at `./exam/course/5/storm-chart`.
 Override the replica count to `3` and change the image tag to `v2.0.0` during the upgrade.
 
 ---
@@ -152,11 +152,11 @@ Ensure that the `zephyr-svc` routes all traffic to pods with the label `version:
 | **CNCF Weight** | 20% |
 | **Namespace** | `tornado` |
 | **Resources** | ConfigMap, Kustomization |
-| **File to create** | `./exam/course/13/q8/kustomization.yaml` |
+| **File to create** | `./exam/course/8/kustomization.yaml` |
 
 ### Task
 
-A Kustomization directory is located at `./exam/course/13/q8/`.
+A Kustomization directory is located at `./exam/course/8/`.
 Add a Kustomization file (`kustomization.yaml`) in that directory.
 It should include the `deployment.yaml` file located in the same directory as a resource.
 Also, generate a ConfigMap named `tornado-config` from a literal value `WIND_SPEED=150mph` using `configMapGenerator`.
@@ -190,12 +190,12 @@ Investigate and fix the issue by increasing the memory limit of the container na
 | **CNCF Weight** | 15% |
 | **Namespace** | `sirocco` |
 | **Resources** | File |
-| **File to create** | `./exam/course/13/q10/top-pods.txt` |
+| **File to create** | `./exam/course/10/top-pods.txt` |
 
 ### Task
 
 Identify the top 3 pods in the `sirocco` namespace that are consuming the most memory.
-Write the names of these pods (just the pod names, one per line) to `./exam/course/13/q10/top-pods.txt`, sorted from highest memory consumption to lowest.
+Write the names of these pods (just the pod names, one per line) to `./exam/course/10/top-pods.txt`, sorted from highest memory consumption to lowest.
 
 ---
 
@@ -375,13 +375,13 @@ Create a headless service named `mistral-db-headless` in the `mistral` namespace
 | **CNCF Weight** | 20% |
 | **Namespace** | `sirocco` |
 | **Resources** | File |
-| **File to create** | `./exam/course/13/q20/svc-env.txt` |
+| **File to create** | `./exam/course/20/svc-env.txt` |
 
 ### Task
 
 There is a pod named `sirocco-app` and a service named `sirocco-backend` in the `sirocco` namespace.
 When the pod was started, Kubernetes automatically injected environment variables for the service.
 Find the name of the environment variable that stores the IP address of the `sirocco-backend` service inside the `sirocco-app` pod.
-Write the name of this environment variable (just the variable name, e.g., `SIROCCO_BACKEND_SERVICE_HOST`) into `./exam/course/13/q20/svc-env.txt`.
+Write the name of this environment variable (just the variable name, e.g., `SIROCCO_BACKEND_SERVICE_HOST`) into `./exam/course/20/svc-env.txt`.
 
 ---

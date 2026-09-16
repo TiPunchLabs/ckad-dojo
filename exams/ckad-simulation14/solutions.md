@@ -5,8 +5,8 @@
 ## Question 1 | Container Image with Healthcheck
 
 ```bash
-mkdir -p ./exam/course/14/q1
-cat <<EOF > ./exam/course/14/q1/Dockerfile
+mkdir -p ./exam/course/1
+cat <<EOF > ./exam/course/1/Dockerfile
 FROM nginx:1.23-alpine
 HEALTHCHECK --interval=10s --timeout=3s --retries=3 \
   CMD curl -f http://localhost/ || exit 1
@@ -18,8 +18,8 @@ EOF
 ## Question 2 | Sidecar Logging and Filtering
 
 ```bash
-mkdir -p ./exam/course/14/q2
-cat <<EOF > ./exam/course/14/q2/pod.yaml
+mkdir -p ./exam/course/2
+cat <<EOF > ./exam/course/2/pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -43,7 +43,7 @@ spec:
   - name: log-volume
     emptyDir: {}
 EOF
-kubectl apply -f ./exam/course/14/q2/pod.yaml
+kubectl apply -f ./exam/course/2/pod.yaml
 ```
 
 ---
@@ -51,11 +51,11 @@ kubectl apply -f ./exam/course/14/q2/pod.yaml
 ## Question 3 | Advanced CronJob
 
 ```bash
-mkdir -p ./exam/course/14/q3
-kubectl create cronjob lightning-strike -n bolt --image=busybox --schedule="*/5 * * * *" --dry-run=client -o yaml -- echo "Strike!" > ./exam/course/14/q3/cronjob.yaml
+mkdir -p ./exam/course/3
+kubectl create cronjob lightning-strike -n bolt --image=busybox --schedule="*/5 * * * *" --dry-run=client -o yaml -- echo "Strike!" > ./exam/course/3/cronjob.yaml
 ```
 
-Modify `./exam/course/14/q3/cronjob.yaml` to add `startingDeadlineSeconds` and `successfulJobsHistoryLimit`:
+Modify `./exam/course/3/cronjob.yaml` to add `startingDeadlineSeconds` and `successfulJobsHistoryLimit`:
 
 ```yaml
 apiVersion: batch/v1
@@ -81,7 +81,7 @@ spec:
 ```
 
 ```bash
-kubectl apply -f ./exam/course/14/q3/cronjob.yaml
+kubectl apply -f ./exam/course/3/cronjob.yaml
 ```
 
 ---
@@ -89,8 +89,8 @@ kubectl apply -f ./exam/course/14/q3/cronjob.yaml
 ## Question 4 | Init Container Dependency
 
 ```bash
-mkdir -p ./exam/course/14/q4
-cat <<EOF > ./exam/course/14/q4/pod.yaml
+mkdir -p ./exam/course/4
+cat <<EOF > ./exam/course/4/pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -105,7 +105,7 @@ spec:
   - name: main-app
     image: nginx:alpine
 EOF
-kubectl apply -f ./exam/course/14/q4/pod.yaml
+kubectl apply -f ./exam/course/4/pod.yaml
 ```
 
 ---
@@ -113,8 +113,8 @@ kubectl apply -f ./exam/course/14/q4/pod.yaml
 ## Question 5 | Helm Template Overrides
 
 ```bash
-mkdir -p ./exam/course/14/q5
-helm template thunder-web /opt/course/14/q5/chart --namespace surge --set replicaCount=3 --set image.tag=latest > ./exam/course/14/q5/output.yaml
+mkdir -p ./exam/course/5
+helm template thunder-web ./exam/course/5/chart --namespace surge --set replicaCount=3 --set image.tag=latest > ./exam/course/5/output.yaml
 ```
 
 ---
@@ -130,11 +130,11 @@ kubectl rollout undo deployment api-gateway -n voltage --to-revision=1
 ## Question 7 | Canary Deployment
 
 ```bash
-mkdir -p ./exam/course/14/q7
-kubectl get deployment backend-v1 -n spark -o yaml > ./exam/course/14/q7/backend-v2.yaml
+mkdir -p ./exam/course/7
+kubectl get deployment backend-v1 -n spark -o yaml > ./exam/course/7/backend-v2.yaml
 ```
 
-Modify `./exam/course/14/q7/backend-v2.yaml` to change name, replicas to 1, and pod template image to `nginx:1.23`. Keep the labels identical so the service matches it.
+Modify `./exam/course/7/backend-v2.yaml` to change name, replicas to 1, and pod template image to `nginx:1.23`. Keep the labels identical so the service matches it.
 
 ```yaml
 apiVersion: apps/v1
@@ -158,7 +158,7 @@ spec:
 ```
 
 ```bash
-kubectl apply -f ./exam/course/14/q7/backend-v2.yaml
+kubectl apply -f ./exam/course/7/backend-v2.yaml
 ```
 
 ---
@@ -166,7 +166,7 @@ kubectl apply -f ./exam/course/14/q7/backend-v2.yaml
 ## Question 8 | Kustomize Strategic Merge Patch
 
 ```bash
-cat <<EOF > ./exam/course/14/q8/kustomization.yaml
+cat <<EOF > ./exam/course/8/kustomization.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
@@ -175,7 +175,7 @@ patchesStrategicMerge:
 - patch.yaml
 EOF
 
-cat <<EOF > ./exam/course/14/q8/patch.yaml
+cat <<EOF > ./exam/course/8/patch.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -190,7 +190,7 @@ spec:
           value: production
 EOF
 
-kubectl apply -k ./exam/course/14/q8/ -n charge
+kubectl apply -k ./exam/course/8/ -n charge
 ```
 
 ---
@@ -216,8 +216,8 @@ kubectl edit pod data-processor -n flash
 ## Question 10 | Kubectl Events
 
 ```bash
-mkdir -p ./exam/course/14/q10
-kubectl get events -n strike --sort-by='.metadata.creationTimestamp' > ./exam/course/14/q10/events.txt
+mkdir -p ./exam/course/10
+kubectl get events -n strike --sort-by='.metadata.creationTimestamp' > ./exam/course/10/events.txt
 ```
 
 ---
@@ -225,8 +225,8 @@ kubectl get events -n strike --sort-by='.metadata.creationTimestamp' > ./exam/co
 ## Question 11 | All Three Probes
 
 ```bash
-mkdir -p ./exam/course/14/q11
-cat <<EOF > ./exam/course/14/q11/pod.yaml
+mkdir -p ./exam/course/11
+cat <<EOF > ./exam/course/11/pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -255,7 +255,7 @@ spec:
       periodSeconds: 5
       initialDelaySeconds: 5
 EOF
-kubectl apply -f ./exam/course/14/q11/pod.yaml
+kubectl apply -f ./exam/course/11/pod.yaml
 ```
 
 ---
@@ -263,8 +263,8 @@ kubectl apply -f ./exam/course/14/q11/pod.yaml
 ## Question 12 | Downward API
 
 ```bash
-mkdir -p ./exam/course/14/q12
-cat <<EOF > ./exam/course/14/q12/pod.yaml
+mkdir -p ./exam/course/12
+cat <<EOF > ./exam/course/12/pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -285,7 +285,7 @@ spec:
         fieldRef:
           fieldPath: metadata.namespace
 EOF
-kubectl apply -f ./exam/course/14/q12/pod.yaml
+kubectl apply -f ./exam/course/12/pod.yaml
 ```
 
 ---
@@ -293,8 +293,8 @@ kubectl apply -f ./exam/course/14/q12/pod.yaml
 ## Question 13 | SecurityContext Capabilities
 
 ```bash
-mkdir -p ./exam/course/14/q13
-cat <<EOF > ./exam/course/14/q13/pod.yaml
+mkdir -p ./exam/course/13
+cat <<EOF > ./exam/course/13/pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -310,7 +310,7 @@ spec:
         add: ["NET_ADMIN"]
         drop: ["ALL"]
 EOF
-kubectl apply -f ./exam/course/14/q13/pod.yaml
+kubectl apply -f ./exam/course/13/pod.yaml
 ```
 
 ---
@@ -318,8 +318,8 @@ kubectl apply -f ./exam/course/14/q13/pod.yaml
 ## Question 14 | Secret with stringData
 
 ```bash
-mkdir -p ./exam/course/14/q14
-cat <<EOF > ./exam/course/14/q14/secret.yaml
+mkdir -p ./exam/course/14
+cat <<EOF > ./exam/course/14/secret.yaml
 apiVersion: v1
 kind: Secret
 metadata:
@@ -330,7 +330,7 @@ stringData:
   username: admin
   password: supersecret123
 EOF
-kubectl apply -f ./exam/course/14/q14/secret.yaml
+kubectl apply -f ./exam/course/14/secret.yaml
 ```
 
 ---
@@ -338,9 +338,9 @@ kubectl apply -f ./exam/course/14/q14/secret.yaml
 ## Question 15 | ConfigMap as Command Args
 
 ```bash
-mkdir -p ./exam/course/14/q15
+mkdir -p ./exam/course/15
 kubectl create configmap app-args --from-literal=mode=verbose -n voltage
-cat <<EOF > ./exam/course/14/q15/pod.yaml
+cat <<EOF > ./exam/course/15/pod.yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -360,7 +360,7 @@ spec:
           key: mode
   restartPolicy: Never
 EOF
-kubectl apply -f ./exam/course/14/q15/pod.yaml
+kubectl apply -f ./exam/course/15/pod.yaml
 ```
 
 ---
@@ -378,8 +378,8 @@ kubectl create clusterrolebinding secret-reader-binding --clusterrole=secret-rea
 ## Question 17 | NetworkPolicy AND Logic
 
 ```bash
-mkdir -p ./exam/course/14/q17
-cat <<EOF > ./exam/course/14/q17/netpol.yaml
+mkdir -p ./exam/course/17
+cat <<EOF > ./exam/course/17/netpol.yaml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -403,7 +403,7 @@ spec:
     - protocol: TCP
       port: 3306
 EOF
-kubectl apply -f ./exam/course/14/q17/netpol.yaml
+kubectl apply -f ./exam/course/17/netpol.yaml
 ```
 
 ---
@@ -411,8 +411,8 @@ kubectl apply -f ./exam/course/14/q17/netpol.yaml
 ## Question 18 | Ingress Default Backend
 
 ```bash
-mkdir -p ./exam/course/14/q18
-cat <<EOF > ./exam/course/14/q18/ingress.yaml
+mkdir -p ./exam/course/18
+cat <<EOF > ./exam/course/18/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -425,7 +425,7 @@ spec:
       port:
         number: 8080
 EOF
-kubectl apply -f ./exam/course/14/q18/ingress.yaml
+kubectl apply -f ./exam/course/18/ingress.yaml
 ```
 
 ---
@@ -433,8 +433,8 @@ kubectl apply -f ./exam/course/14/q18/ingress.yaml
 ## Question 19 | Service Session Affinity
 
 ```bash
-mkdir -p ./exam/course/14/q19
-cat <<EOF > ./exam/course/14/q19/svc.yaml
+mkdir -p ./exam/course/19
+cat <<EOF > ./exam/course/19/svc.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -452,7 +452,7 @@ spec:
     clientIP:
       timeoutSeconds: 10800
 EOF
-kubectl apply -f ./exam/course/14/q19/svc.yaml
+kubectl apply -f ./exam/course/19/svc.yaml
 ```
 
 ---
@@ -460,10 +460,10 @@ kubectl apply -f ./exam/course/14/q19/svc.yaml
 ## Question 20 | Port Forwarding
 
 ```bash
-mkdir -p ./exam/course/14/q20
+mkdir -p ./exam/course/20
 kubectl port-forward pod/hidden-api 9090:8080 -n strike &
 sleep 2
-curl http://localhost:9090/status > ./exam/course/14/q20/response.txt
+curl http://localhost:9090/status > ./exam/course/20/response.txt
 fg
 # Use Ctrl+C to kill the port-forward process
 ```
