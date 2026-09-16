@@ -1303,9 +1303,12 @@ function bindCopyableInlineValues(root) {
 function renderMarkdownContent(container, content, options = {}) {
     if (!container) return;
 
-    const { processHints: includeHints = false } = options;
+    const { processHints: includeHints = false, inline = false } = options;
 
-    container.innerHTML = marked.parse(content || '');
+    const text = String(content || '');
+    // Inline fields (metadata bar) only become copyable through backticks in
+    // the markdown source: plain prose such as "N/A (local task)" stays plain.
+    container.innerHTML = inline ? marked.parseInline(text) : marked.parse(text);
     bindCopyableInlineValues(container);
 
     if (includeHints) {
@@ -1328,10 +1331,12 @@ function showQuestion(index) {
     elements.questionSelect.value = index;
 
     // Update metadata
+    // Points: always plain text, no copy needed
     elements.metaPoints.textContent = question.points || '-';
-    elements.metaNamespace.textContent = question.namespace || '-';
-    elements.metaResources.textContent = question.resources || '-';
-    elements.metaFiles.textContent = question.files || '-';
+    // Other fields: render with markdown formatting and conditional copyability
+    renderMarkdownContent(elements.metaNamespace, String(question.namespace || '-'), { inline: true });
+    renderMarkdownContent(elements.metaResources, String(question.resources || '-'), { inline: true });
+    renderMarkdownContent(elements.metaFiles, String(question.files || '-'), { inline: true });
 
     // Render question content with markdown
     const content = question.content || '';

@@ -421,7 +421,7 @@ def parse_questions_md(exam_id: str) -> list:
                         if points_match:
                             current_question["points"] = int(points_match.group(1))
                     elif key == "namespace":
-                        current_question["namespace"] = value.strip("`")
+                        current_question["namespace"] = value
                     elif key == "resources":
                         current_question["resources"] = value
                     elif key in ("file to create", "files to create", "files"):
