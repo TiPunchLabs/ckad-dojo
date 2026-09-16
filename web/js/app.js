@@ -1309,22 +1309,9 @@ function renderMarkdownContent(container, content, options = {}) {
     const { processHints: includeHints = false, inline = false } = options;
 
     const text = String(content || '');
-    let html = inline
-        ? marked.parseInline(text)
-        : marked.parse(text);
-
-    if (inline) {
-        // Check if result contains any HTML tags
-        const hasHtmlTags = /<\/?[a-z][^>]*>/i.test(html);
-        const trimmedText = text.trim();
-        if (!hasHtmlTags && trimmedText !== '-') {
-            // Wrap plain text in <code> tags for guaranteed copyability
-            // Skip placeholder dash '-' values as they don't need to be copied
-            html = `<code>${html}</code>`;
-        }
-    }
-
-    container.innerHTML = html;
+    // Inline fields (metadata bar) only become copyable through backticks in
+    // the markdown source: plain prose such as "N/A (local task)" stays plain.
+    container.innerHTML = inline ? marked.parseInline(text) : marked.parse(text);
     bindCopyableInlineValues(container);
 
     if (includeHints) {
