@@ -386,6 +386,8 @@ sudo docker build --build-arg APP_VERSION=2.0.0 -t localhost:5000/phoenix-app:2.
 sudo docker push localhost:5000/phoenix-app:2.0.0
 ```
 
+**Note**: If the push fails because the registry uses HTTP, ensure `localhost:5000` is listed in Docker’s `insecure-registries` (see the exam’s README for details).
+
 **Explanation:** ARG defines build-time variables. They can have default values and be overridden with `--build-arg`. LABEL adds metadata to the image. Using `${ARG_NAME}` in LABEL allows dynamic labeling during build.
 
 ---

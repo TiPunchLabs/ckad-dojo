@@ -407,7 +407,7 @@ score_q11() {
 
 	# Check Docker image pushed to registry
 	local docker_pushed=$(curl -s http://localhost:5000/v2/sun-cipher/tags/list 2>/dev/null | grep -q "v1" && echo true || echo false)
-	check_criterion "Docker image pushed to registry" "$docker_pushed" && ((score++))
+	check_criterion "Docker image pushed to registry (if push fails, check insecure-registries)" "$docker_pushed" && ((score++))
 
 	# Check Docker container is running
 	local container_running=$(sudo docker ps --format '{{.Names}}' 2>/dev/null | grep -q "sun-cipher" && echo true || echo false)
