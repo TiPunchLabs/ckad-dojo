@@ -367,19 +367,22 @@ kind: Ingress
 metadata:
   name: star-ingress
   namespace: starlight
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   ingressClassName: nginx
   rules:
   - http:
       paths:
-      - path: /api
+      - path: /api(/|$)(.*)
         pathType: Prefix
         backend:
           service:
             name: api-svc
             port:
               number: 8080
-      - path: /web
+      - path: /web(/|$)(.*)
         pathType: Prefix
         backend:
           service:
@@ -388,7 +391,7 @@ spec:
               number: 80
 ```
 
-Explanation: Using multiple paths in a single Ingress rule routes different URI prefixes to different backend services.
+Explanation: The regex capture groups `(/|$)(.*)` match everything after `/api` or `/web`, and `rewrite-target: /$2` strips that prefix before forwarding to the backend Service — so `api-svc`/`web-svc` receive clean paths without needing to know they're served under a prefix. `use-regex: "true"` is required for the NGINX controller to interpret `path` as a regular expression rather than a literal prefix string. `pathType: Prefix` still satisfies the core Kubernetes API schema, independent of the NGINX-specific regex behavior layered on via annotation.
 
 ---
 

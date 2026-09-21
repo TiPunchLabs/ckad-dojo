@@ -436,14 +436,51 @@ score_q18() {
 	if resource_exists "ingress" "star-ingress" "starlight"; then
 		((score += 2))
 
-		local paths=$(kubectl get ingress star-ingress -n starlight -o jsonpath='{range .spec.rules[*].http.paths[*]}{.path}{" "}{.backend.service.name}{"\n"}{end}' 2>/dev/null)
-		if echo "$paths" | grep -q "/api api-svc"; then
-			((score += 2))
-			details+="/api path mapped. "
+		local ingress_class=$(kubectl get ingress star-ingress -n starlight -o jsonpath='{.spec.ingressClassName}' 2>/dev/null)
+		if [ "$ingress_class" != "nginx" ]; then
+			details+="ingressClassName is not 'nginx'. "
 		fi
-		if echo "$paths" | grep -q "/web web-svc"; then
-			((score += 2))
-			details+="/web path mapped. "
+
+		local annotations=$(kubectl get ingress star-ingress -n starlight -o jsonpath='{.metadata.annotations}' 2>/dev/null)
+		local has_regex=false
+		local has_rewrite=false
+
+		if echo "$annotations" | grep -q '"nginx.ingress.kubernetes.io/use-regex":"true"'; then
+			has_regex=true
+		fi
+		if echo "$annotations" | grep -qE '"nginx.ingress.kubernetes.io/rewrite-target":"/\$2"'; then
+			has_rewrite=true
+		fi
+
+		if ! $has_regex; then
+			details+="Missing or incorrect use-regex annotation. "
+		fi
+		if ! $has_rewrite; then
+			details+="Missing or incorrect rewrite-target annotation (expected /\$2). "
+		fi
+
+		local paths=$(kubectl get ingress star-ingress -n starlight -o jsonpath='{range .spec.rules[*].http.paths[*]}{.path}{" "}{.backend.service.name}{" "}{.backend.service.port.number}{"\n"}{end}' 2>/dev/null)
+
+		if echo "$paths" | grep -qE '^/api\(/\|\$\)\(\.\*\) api-svc 8080$'; then
+			if $has_regex && $has_rewrite; then
+				((score += 2))
+				details+="/api regex path correctly mapped to api-svc:8080. "
+			else
+				details+="/api path pattern correct, but required annotations missing. "
+			fi
+		else
+			details+="/api regex path not correctly mapped to api-svc:8080. "
+		fi
+
+		if echo "$paths" | grep -qE '^/web\(/\|\$\)\(\.\*\) web-svc 80$'; then
+			if $has_regex && $has_rewrite; then
+				((score += 2))
+				details+="/web regex path correctly mapped to web-svc:80. "
+			else
+				details+="/web path pattern correct, but required annotations missing. "
+			fi
+		else
+			details+="/web regex path not correctly mapped to web-svc:80. "
 		fi
 	else
 		details+="Ingress star-ingress not found. "
