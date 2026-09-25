@@ -1,4 +1,41 @@
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: crescent
+data:
+  app.conf: mode=production
+  feature.flags: dark-mode=on
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-pod
+  namespace: crescent
+spec:
+  containers:
+  - name: app
+    image: busybox:1.36
+    command: ["sleep", "3600"]
+    volumeMounts:
+    - name: config-vol
+      mountPath: /etc/app
+  volumes:
+  - name: config-vol
+    configMap:
+      name: app-config
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-credentials
+  namespace: crescent
+type: Opaque
+data:
+  username: dHN1a3V5b21p
+  password: bW9vbmxpZ2h0LTQy
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -29,21 +66,15 @@ spec:
     image: nginxxxxx:alpine
 ---
 apiVersion: v1
-kind: Secret
+kind: Pod
 metadata:
-  name: db-creds
-  namespace: crescent
-type: Opaque
-data:
-  password: cGFzc3dvcmQxMjM=
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: app-config
-  namespace: crescent
-data:
-  color: blue
+  name: secure-runner
+  namespace: twilight
+spec:
+  containers:
+  - name: runner
+    image: busybox:1.36
+    command: ["sleep", "3600"]
 ---
 apiVersion: v1
 kind: Secret
@@ -72,13 +103,70 @@ spec:
     secret:
       secretName: legacy-token
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: dusk
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: web
+        image: nginx:1.24
+---
 apiVersion: v1
 kind: Pod
 metadata:
-  name: dns-tester
-  namespace: void
+  name: backend
+  namespace: dusk
+  labels:
+    app: backend
 spec:
   containers:
-  - name: tester
+  - name: client
     image: busybox:1.36
     command: ["sleep", "3600"]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deploy
+  namespace: void
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: api
+        version: stable
+    spec:
+      containers:
+      - name: api
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: void-svc
+  namespace: void
+spec:
+  selector:
+    app: api
+    version: stable
+  ports:
+  - port: 80
+    targetPort: 80

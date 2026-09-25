@@ -14,56 +14,55 @@
 
 ---
 
-## Question 1 | Application Design and Build
+## Question 1 | Image Save and Load
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
 | **Points** | 6 |
 | **CNCF Domain** | Application Design and Build |
 | **CNCF Weight** | 20% |
-| **Namespace** | `lunar` |
 | **Resources** | `Dockerfile` |
-| **File to create** | `./exam/course/1/Dockerfile` |
+| **Files to create** | `./exam/course/1/lunar-app.tar`, `./exam/course/1/run-output.txt` |
 
 ### Task
 
-In the `lunar` namespace, you are tasked with creating a multi-stage Dockerfile.
-A stub Dockerfile has been provided at `./exam/course/1/Dockerfile` and a simple main.go program at `./exam/course/1/main.go`.
+A multi-stage Dockerfile and a `main.go` program are provided in `./exam/course/1/`.
 
-Update the Dockerfile to have two stages:
-
-1. The first stage should use `golang:1.20-alpine` as the base image. Name it `builder`.
-   - Copy `main.go` into `/app/`.
-   - Build it with `go build -o /app/server /app/main.go`.
-2. The second stage should use `alpine:3.18`.
-   - Copy the `server` binary from the `builder` stage to `/opt/server`.
-   - Set the entrypoint to `/opt/server`.
-
-You do not need to build the image, just ensure the `Dockerfile` is correctly defined.
+1. Build an image from this Dockerfile and tag it `lunar-app:v1.0`.
+2. Save the image as a tar archive to `./exam/course/1/lunar-app.tar`.
+3. Load the archive back into the local image store, and make the loaded image available under the tag `lunar-app:v1.0-verified`, without rebuilding it.
+4. Run a container from `lunar-app:v1.0-verified` and write its output to `./exam/course/1/run-output.txt`.
 
 ---
 
-## Question 2 | Application Design and Build
+## Question 2 | ConfigMap subPath Mount
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
 | **Points** | 5 |
-| **CNCF Domain** | Application Design and Build |
-| **CNCF Weight** | 20% |
+| **CNCF Domain** | Application Environment, Configuration and Security |
+| **CNCF Weight** | 25% |
 | **Namespace** | `crescent` |
-| **Resources** | `Pod` |
+| **Resources** | `Pod`, `ConfigMap` |
+| **Files to create** | `./exam/course/2/before.txt`, `./exam/course/2/after-no-restart.txt`, `./exam/course/2/after-restart.txt` |
 
 ### Task
 
-Create a Pod named `data-processor` in the `crescent` namespace.
-The Pod should run a main container using the `nginx:alpine` image named `main-app`.
+The Pod `config-pod` in the `crescent` namespace mounts the whole ConfigMap `app-config` as a directory at `/etc/app`.
 
-The main container should only start AFTER an init container successfully completes its task.
-Add an init container named `wait-for-service` using the `busybox:1.36` image. The init container should run the command: `sh -c 'sleep 5 && echo "Dependencies ready"'`.
+Change the Pod so that only the `app.conf` key is mounted, at the exact path `/etc/app/app.conf`, using `subPath`.
+
+Once the Pod is running with this change, capture the content of `/etc/app/app.conf` inside the Pod three times, each into its own file:
+
+1. Before any ConfigMap change → `./exam/course/2/before.txt`
+2. Update the `app.conf` key of `app-config` to `mode=staging`. Wait about 90 seconds **without** restarting the Pod, then capture again → `./exam/course/2/after-no-restart.txt`
+3. Delete and recreate the Pod (same manifest), then capture again → `./exam/course/2/after-restart.txt`
+
+All captures must come from `kubectl exec` output against the running Pod — do not edit the files by hand.
 
 ---
 
-## Question 3 | Application Design and Build
+## Question 3 | CronJob with Manual Trigger
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -71,20 +70,22 @@ Add an init container named `wait-for-service` using the `busybox:1.36` image. T
 | **CNCF Domain** | Application Design and Build |
 | **CNCF Weight** | 20% |
 | **Namespace** | `twilight` |
-| **Resources** | `CronJob` |
+| **Resources** | `CronJob`, `Job` |
 
 ### Task
 
-In the `twilight` namespace, create a CronJob named `nightly-backup`.
+In the `twilight` namespace, create a CronJob named `nightly-backup`:
 
-- Schedule: every 10 minutes (`*/10 * * * *`).
+- Runs every 10 minutes.
 - Container image: `busybox:1.36`.
 - Command: `sh -c 'sleep 30'`.
-- Configure the CronJob to `Forbid` concurrent executions.
+- A new run must never start while a previous one is still running.
+
+Then check that the CronJob works without waiting for its schedule: trigger one Job from it manually and make sure that Job completes successfully.
 
 ---
 
-## Question 4 | Application Design and Build
+## Question 4 | Log Streaming Sidecar
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -96,17 +97,18 @@ In the `twilight` namespace, create a CronJob named `nightly-backup`.
 
 ### Task
 
-A developer wants to use the Ambassador pattern for a legacy application.
-Create a Pod named `legacy-app` in the `eclipse` namespace.
+Create a Pod named `log-aggregator` in the `eclipse` namespace with two containers sharing the `/var/log` directory through an `emptyDir` volume:
 
-1. Main container: Name it `backend`, use image `nginx:1.25`, and expose port 80.
-2. Ambassador container: Name it `proxy`, use image `haproxy:2.8-alpine`.
+1. Main container `app`, image `nginx:1.25`, port 80. It writes to `/var/log/app.log` with:
+   `sh -c 'while true; do echo "Request processed" >> /var/log/app.log; sleep 5; done'`
+2. Sidecar container `log-tailer`, image `busybox:1.36`. It streams that file to its stdout with:
+   `sh -c 'tail -f /var/log/app.log'`
 
-(Note: we are just simulating the pattern, no advanced haproxy config is needed, just defining the two containers is sufficient).
+`kubectl logs log-aggregator -c log-tailer -n eclipse` must show the `Request processed` lines.
 
 ---
 
-## Question 5 | Application Deployment
+## Question 5 | Helm Release Rollback
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -124,7 +126,7 @@ Roll back the `api-release` release to its previous revision (revision 1).
 
 ---
 
-## Question 6 | Application Deployment
+## Question 6 | Rolling Update Strategy
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -136,15 +138,17 @@ Roll back the `api-release` release to its previous revision (revision 1).
 
 ### Task
 
-Create a Deployment named `slow-start-app` in the `shadow` namespace.
+Create a Deployment named `slow-start-app` in the `shadow` namespace, running 4 replicas of `nginx:1.24`.
 
-- Replicas: 3
-- Image: `nginx:1.24`
-- To ensure no downtime during updates for this application that takes time to initialize, set `minReadySeconds` to `20`.
+This application takes time to initialize after its container starts, so a Pod reporting `Running` is not necessarily ready to serve. Configure the Deployment so that:
+
+- During a rolling update, at most one extra Pod is ever created above the desired replica count.
+- A rolling update never reduces capacity below 4 available Pods.
+- A Pod must stay ready for 20 seconds before it is counted as available.
 
 ---
 
-## Question 7 | Application Deployment
+## Question 7 | Paused Rollout
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -152,17 +156,22 @@ Create a Deployment named `slow-start-app` in the `shadow` namespace.
 | **CNCF Domain** | Application Deployment |
 | **CNCF Weight** | 20% |
 | **Namespace** | `nightfall` |
-| **Resources** | `Deployment` |
+| **Resources** | `Deployment`, `ReplicaSet` |
+| **Files to create** | `./exam/course/7/before-pause.txt`, `./exam/course/7/during-pause.txt`, `./exam/course/7/after-resume.txt` |
 
 ### Task
 
 A Deployment named `critical-processor` exists in the `nightfall` namespace.
-You have been instructed to pause the rollout of this deployment to investigate an issue.
-Pause the rollout of the `critical-processor` deployment.
+Use `kubectl get rs -n nightfall -o wide` for every capture below.
+
+1. Before changing anything, save the ReplicaSets to `./exam/course/7/before-pause.txt`.
+2. Pause the rollout of `critical-processor`.
+3. While it is paused, change the container image to `nginx:1.26`, then save the ReplicaSets to `./exam/course/7/during-pause.txt`.
+4. Resume the rollout. Once it has completed, save the ReplicaSets to `./exam/course/7/after-resume.txt`.
 
 ---
 
-## Question 8 | Application Deployment
+## Question 8 | Kustomize JSON Patch
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -171,7 +180,7 @@ Pause the rollout of the `critical-processor` deployment.
 | **CNCF Weight** | 20% |
 | **Namespace** | `dusk` |
 | **Resources** | `Kustomization` |
-| **File to create** | `./exam/course/8/` |
+| **File to create** | `./exam/course/8/patch.json` |
 
 ### Task
 
@@ -184,7 +193,7 @@ You do not need to apply the Kustomization, just set up the files.
 
 ---
 
-## Question 9 | Application Observability and Maintenance
+## Question 9 | Fix a Failing Pod
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -198,18 +207,19 @@ You do not need to apply the Kustomization, just set up the files.
 
 A Pod named `metrics-gatherer` in the `starlight` namespace is failing to start.
 Identify the issue and fix it. The pod should be running smoothly.
-(Hint: The image name might be misspelled).
+
+**Hint**: Look at the Pod events.
 
 ---
 
-## Question 10 | Application Observability and Maintenance
+## Question 10 | Top CPU Consumer
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
 | **Points** | 5 |
 | **CNCF Domain** | Application Observability and Maintenance |
 | **CNCF Weight** | 15% |
-| **Namespace** | `void` |
+| **Namespace** | `kube-system` |
 | **Resources** | `Metrics` |
 | **File to create** | `./exam/course/10/cpu-usage.txt` |
 
@@ -223,7 +233,7 @@ Write the name of the Pod into the file `./exam/course/10/cpu-usage.txt`.
 
 ---
 
-## Question 11 | Application Observability and Maintenance
+## Question 11 | Broken Deployment Manifest
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -231,19 +241,22 @@ Write the name of the Pod into the file `./exam/course/10/cpu-usage.txt`.
 | **CNCF Domain** | Application Observability and Maintenance |
 | **CNCF Weight** | 15% |
 | **Namespace** | `lunar` |
-| **Resources** | `Pod` |
+| **Resources** | `Deployment` |
+| **File to fix** | `./exam/course/11/broken-deploy.yaml` |
 
 ### Task
 
-Create a Pod named `logger` in the `lunar` namespace.
-The Pod should run a single container using the `busybox:1.36` image.
-It should run a script that outputs logs to `/var/log/app.log`: `sh -c 'while true; do echo "App is running" >> /var/log/app.log; sleep 5; done'`.
-Configure a sidecar container in the same pod named `log-tailer` using `busybox:1.36` that reads from `/var/log/app.log` and outputs to stdout: `sh -c 'tail -f /var/log/app.log'`.
-Use an `emptyDir` volume to share the `/var/log` directory between the two containers.
+The manifest `./exam/course/11/broken-deploy.yaml` defines a Deployment named `broken-app` for the `lunar` namespace.
+It currently fails to apply, and even once applied its Pods never become Ready.
+
+Fix the manifest file in place and apply it, so that:
+
+- `kubectl apply -f ./exam/course/11/broken-deploy.yaml` succeeds with no validation error.
+- All `broken-app` Pods become Ready, with the readiness probe kept in place.
 
 ---
 
-## Question 12 | Application Environment, Configuration and Security
+## Question 12 | Read a Mounted Secret
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -251,20 +264,20 @@ Use an `emptyDir` volume to share the `/var/log` directory between the two conta
 | **CNCF Domain** | Application Environment, Configuration and Security |
 | **CNCF Weight** | 25% |
 | **Namespace** | `crescent` |
-| **Resources** | `Pod` |
+| **Resources** | `Pod`, `Secret` |
+| **File to create** | `./exam/course/12/password.txt` |
 
 ### Task
 
-In the `crescent` namespace, a Secret named `db-creds` and a ConfigMap named `app-config` exist.
-Create a Pod named `combined-app` using the `nginx:alpine` image.
-Use a single `projected` volume mounted at `/opt/config` to expose:
+A Secret named `db-credentials` exists in the `crescent` namespace.
 
-1. The `db-creds` Secret.
-2. The `app-config` ConfigMap.
+1. Create a Pod named `secret-reader` in `crescent`, image `busybox:1.36`, that mounts this Secret as a volume at `/etc/secrets` and runs:
+   `sh -c 'cat /etc/secrets/*; sleep 3600'`
+2. Write the decoded value of the `password` key of `db-credentials` to `./exam/course/12/password.txt`.
 
 ---
 
-## Question 13 | Application Environment, Configuration and Security
+## Question 13 | Container Capabilities
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -272,17 +285,21 @@ Use a single `projected` volume mounted at `/opt/config` to expose:
 | **CNCF Domain** | Application Environment, Configuration and Security |
 | **CNCF Weight** | 25% |
 | **Namespace** | `twilight` |
-| **Resources** | `ConfigMap` |
+| **Resources** | `Pod` |
 
 ### Task
 
-Create a ConfigMap named `static-config` in the `twilight` namespace with the following key-value pair:
-`version=v2.1.0`
-Configure the ConfigMap to be immutable to prevent accidental changes.
+Modify the Pod `secure-runner` in the `twilight` namespace so that its container:
+
+- Runs as user ID `2000` (not root).
+- Drops all Linux capabilities.
+- Adds back only the `NET_ADMIN` capability.
+
+Security context fields cannot be changed on a running Pod, so deleting and recreating the Pod is expected.
 
 ---
 
-## Question 14 | Application Environment, Configuration and Security
+## Question 14 | Hardened Pod Security Context
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -304,7 +321,7 @@ Apply the following security constraints:
 
 ---
 
-## Question 15 | Application Environment, Configuration and Security
+## Question 15 | Rotate a Mounted Secret
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -312,29 +329,34 @@ Apply the following security constraints:
 | **CNCF Domain** | Application Environment, Configuration and Security |
 | **CNCF Weight** | 25% |
 | **Namespace** | `shadow` |
-| **Resources** | `Secret` |
+| **Resources** | `Secret`, `Pod` |
+| **Files to create** | `./exam/course/15/before.txt`, `./exam/course/15/after.txt` |
 
 ### Task
 
 A Secret named `legacy-token` in the `shadow` namespace is compromised.
-Update the Secret to have the new value `token=super-secret-v2` (base64 encoded as needed).
-A Pod named `token-reader` in the same namespace mounts this secret. No changes are required to the Pod, just update the Secret.
+The Pod `token-reader` in the same namespace mounts it at `/etc/secret`.
+
+1. Save the content of `/etc/secret/token` as seen inside `token-reader` to `./exam/course/15/before.txt`.
+2. Update the Secret so that the `token` key holds `super-secret-v2`.
+3. Delete and recreate the `token-reader` Pod.
+4. Save the content of `/etc/secret/token` as seen inside the new Pod to `./exam/course/15/after.txt`.
 
 ---
 
-## Question 16 | Application Environment, Configuration and Security
+## Question 16 | ResourceQuota
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
 | **Points** | 6 |
 | **CNCF Domain** | Application Environment, Configuration and Security |
 | **CNCF Weight** | 25% |
-| **Namespace** | `nightfall` |
+| **Namespace** | `dusk` |
 | **Resources** | `ResourceQuota` |
 
 ### Task
 
-Create a ResourceQuota named `compute-quota` in the `nightfall` namespace.
+Create a ResourceQuota named `compute-quota` in the `dusk` namespace.
 Enforce the following limits:
 
 - Hard limit of `4` Pods.
@@ -343,7 +365,7 @@ Enforce the following limits:
 
 ---
 
-## Question 17 | Services and Networking
+## Question 17 | Restrict Ingress with a NetworkPolicy
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -355,14 +377,16 @@ Enforce the following limits:
 
 ### Task
 
-Create a NetworkPolicy named `deny-external` in the `dusk` namespace.
-It should apply to all pods in the `dusk` namespace.
-Allow all INGRESS traffic.
-DENY all EGRESS traffic, except for traffic to DNS (UDP port 53).
+Create a NetworkPolicy named `frontend-policy` in the `dusk` namespace:
+
+- It applies to Pods with label `app=frontend`.
+- Only Pods with label `app=backend` in the same namespace may reach them.
+- All other incoming traffic to those Pods is denied.
+- Their outgoing traffic must not be restricted.
 
 ---
 
-## Question 18 | Services and Networking
+## Question 18 | Path-Based Ingress
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -374,16 +398,16 @@ DENY all EGRESS traffic, except for traffic to DNS (UDP port 53).
 
 ### Task
 
-Create an Ingress named `star-ingress` in the `starlight` namespace.
-Route traffic based on paths:
+Create an Ingress named `star-ingress` in the `starlight` namespace, with ingress class `nginx`:
 
-- Requests to `/api(/|$)(.*)` should route to a Service named `api-svc` on port 8080 (Prefix match).
-- Requests to `/web(/|$)(.*)` should route to a Service named `web-svc` on port 80 (Prefix match).
-Set the ingress class to `nginx`.
+- It only handles requests for the host `star.local`.
+- Requests whose path starts with `/api` go to Service `api-svc` on port 8080.
+- Requests whose path starts with `/web` go to Service `web-svc` on port 80.
+- Path matching must follow path segments: `/api/users` goes to `api-svc`, but `/apiary` does not.
 
 ---
 
-## Question 19 | Services and Networking
+## Question 19 | ExternalName Service
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -400,7 +424,7 @@ It should map to the external name `database.external.example.com`.
 
 ---
 
-## Question 20 | Services and Networking
+## Question 20 | Canary Deployment
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -408,13 +432,15 @@ It should map to the external name `database.external.example.com`.
 | **CNCF Domain** | Services and Networking |
 | **CNCF Weight** | 20% |
 | **Namespace** | `void` |
-| **Resources** | `Pod` |
-| **File to create** | `./exam/course/20/nslookup.txt` |
+| **Resources** | `Deployment`, `Service` |
 
 ### Task
 
-A Pod named `dns-tester` is running in the `void` namespace.
-Execute an `nslookup` command from within this Pod to look up the DNS record for the `kubernetes.default.svc.cluster.local` service.
-Save the output of the command to the file `./exam/course/20/nslookup.txt` on your local machine.
+The Deployment `api-deploy` in the `void` namespace is exposed by the Service `void-svc`.
+
+1. Create a canary Deployment named `api-deploy-canary` in `void`: 1 replica, same image as `api-deploy`, and its Pods carry the label `version=canary`.
+2. `void-svc` must send traffic to **both** the `api-deploy` Pods and the canary Pods.
+
+Do not modify the `api-deploy` Deployment.
 
 ---

@@ -1,93 +1,123 @@
 # CKAD Simulation 12 - Solutions (Dojo Tsukuyomi 🌙)
 
-## Question 1 | Multi-stage Dockerfile
+## Question 1 | Image Save and Load
 
-```dockerfile
-# ./exam/course/1/Dockerfile
-FROM golang:1.20-alpine AS builder
-COPY main.go /app/
-RUN go build -o /app/server /app/main.go
+```bash
+cd ./exam/course/1
+docker build -t lunar-app:v1.0 .
+docker save -o lunar-app.tar lunar-app:v1.0
 
-FROM alpine:3.18
-COPY --from=builder /app/server /opt/server
-ENTRYPOINT ["/opt/server"]
+# Load restores the original tag; add the new one on the loaded image
+docker load -i lunar-app.tar
+docker tag lunar-app:v1.0 lunar-app:v1.0-verified
+
+docker run --rm lunar-app:v1.0-verified > run-output.txt
+cat run-output.txt
+cd -
 ```
 
-Explanation: Multi-stage builds are a key Docker concept. We use `AS builder` to name the first stage, compile the binary, and then `COPY --from=builder` in the second minimal alpine stage.
+Explanation: `docker save` exports an image with all its layers and tags to a tar archive, and `docker load` imports it back without any build step. The archive keeps the original tag, so a second tag is added with `docker tag`. Both tags point to the same image ID, which is how you can tell the image was loaded, not rebuilt.
 
 ---
 
-## Question 2 | Init containers with dependencies
+## Question 2 | ConfigMap subPath Mount
 
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: data-processor
-  namespace: crescent
-spec:
-  initContainers:
-  - name: wait-for-service
-    image: busybox:1.36
-    command: ['sh', '-c', 'sleep 5 && echo "Dependencies ready"']
-  containers:
-  - name: main-app
-    image: nginx:alpine
+```bash
+kubectl get pod config-pod -n crescent -o yaml > config-pod.yaml
 ```
 
-Explanation: Init containers run to completion before the main app containers start. They are useful for delaying startup until dependencies are ready.
+Edit the volume mount in `config-pod.yaml`:
+
+```yaml
+    volumeMounts:
+    - name: config-vol
+      mountPath: /etc/app/app.conf
+      subPath: app.conf
+```
+
+```bash
+kubectl replace --force -f config-pod.yaml
+kubectl wait --for=condition=Ready pod/config-pod -n crescent
+
+kubectl exec -n crescent config-pod -- cat /etc/app/app.conf > ./exam/course/2/before.txt
+
+kubectl patch configmap app-config -n crescent --type merge -p '{"data":{"app.conf":"mode=staging"}}'
+sleep 90
+kubectl exec -n crescent config-pod -- cat /etc/app/app.conf > ./exam/course/2/after-no-restart.txt
+
+kubectl replace --force -f config-pod.yaml
+kubectl wait --for=condition=Ready pod/config-pod -n crescent
+kubectl exec -n crescent config-pod -- cat /etc/app/app.conf > ./exam/course/2/after-restart.txt
+```
+
+Expected contents: `before.txt` → `mode=production`, `after-no-restart.txt` → `mode=production`, `after-restart.txt` → `mode=staging`.
+
+Explanation: A ConfigMap mounted as a directory is refreshed by the kubelet after an update, because the kubelet swaps a symlink. A `subPath` mount bind-mounts one file once, when the container starts, so it never sees later ConfigMap updates. Only a new Pod picks up the new value.
 
 ---
 
-## Question 3 | CronJob with concurrencyPolicy
+## Question 3 | CronJob with Manual Trigger
+
+```bash
+kubectl create cronjob nightly-backup -n twilight --image=busybox:1.36 \
+  --schedule="*/10 * * * *" --dry-run=client -o yaml -- sh -c 'sleep 30' > cj.yaml
+```
+
+Add the concurrency policy under `spec`:
 
 ```yaml
-apiVersion: batch/v1
-kind: CronJob
-metadata:
-  name: nightly-backup
-  namespace: twilight
 spec:
-  schedule: "*/10 * * * *"
   concurrencyPolicy: Forbid
-  jobTemplate:
-    spec:
-      template:
-        spec:
-          containers:
-          - name: backup
-            image: busybox:1.36
-            command: ["sh", "-c", "sleep 30"]
-          restartPolicy: OnFailure
 ```
 
-Explanation: We set `concurrencyPolicy: Forbid` so that if the previous job hasn't finished, the next one is skipped.
+```bash
+kubectl apply -f cj.yaml
+kubectl create job nightly-backup-manual --from=cronjob/nightly-backup -n twilight
+kubectl wait --for=condition=complete job/nightly-backup-manual -n twilight --timeout=90s
+```
+
+Explanation: `concurrencyPolicy: Forbid` skips a scheduled run while the previous one is still active. `kubectl create job --from=cronjob/...` creates a Job from the CronJob's `jobTemplate` right away, which is the standard way to test a CronJob without waiting for its schedule.
 
 ---
 
-## Question 4 | Multi-container ambassador pattern
+## Question 4 | Log Streaming Sidecar
 
 ```yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: legacy-app
+  name: log-aggregator
   namespace: eclipse
 spec:
   containers:
-  - name: backend
+  - name: app
     image: nginx:1.25
     ports:
     - containerPort: 80
-  - name: proxy
-    image: haproxy:2.8-alpine
+    command: ["sh", "-c", "while true; do echo \"Request processed\" >> /var/log/app.log; sleep 5; done"]
+    volumeMounts:
+    - name: logs
+      mountPath: /var/log
+  - name: log-tailer
+    image: busybox:1.36
+    command: ["sh", "-c", "tail -f /var/log/app.log"]
+    volumeMounts:
+    - name: logs
+      mountPath: /var/log
+  volumes:
+  - name: logs
+    emptyDir: {}
 ```
 
-Explanation: The Ambassador pattern involves a sidecar container proxying connections to/from the main container over localhost.
+```bash
+kubectl logs log-aggregator -c log-tailer -n eclipse
+```
+
+Explanation: The `emptyDir` volume lives as long as the Pod and is shared by every container that mounts it. The sidecar turns a log file into stdout, which is what `kubectl logs` and cluster log collectors read.
 
 ---
 
-## Question 5 | Helm rollback
+## Question 5 | Helm Release Rollback
 
 ```bash
 helm rollback api-release 1 -n nebula
@@ -97,7 +127,7 @@ Explanation: The `helm rollback` command takes the release name and the target r
 
 ---
 
-## Question 6 | Deployment with minReadySeconds
+## Question 6 | Rolling Update Strategy
 
 ```yaml
 apiVersion: apps/v1
@@ -106,11 +136,16 @@ metadata:
   name: slow-start-app
   namespace: shadow
 spec:
-  replicas: 3
+  replicas: 4
+  minReadySeconds: 20
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
   selector:
     matchLabels:
       app: slow-start-app
-  minReadySeconds: 20
   template:
     metadata:
       labels:
@@ -121,21 +156,29 @@ spec:
         image: nginx:1.24
 ```
 
-Explanation: `minReadySeconds: 20` specifies the minimum number of seconds for which a newly created pod should be ready without any of its container crashing, for it to be considered available.
+Explanation: `maxSurge: 1` allows one extra Pod above `replicas` during an update, and `maxUnavailable: 0` forbids dropping below `replicas` available Pods. `minReadySeconds: 20` makes a new Pod count as available only after it has stayed ready for 20 seconds, so the rollout waits for real readiness before removing an old Pod.
 
 ---
 
-## Question 7 | Rollout pause/resume
+## Question 7 | Paused Rollout
 
 ```bash
-kubectl rollout pause deployment critical-processor -n nightfall
+kubectl get rs -n nightfall -o wide > ./exam/course/7/before-pause.txt
+
+kubectl rollout pause deployment/critical-processor -n nightfall
+kubectl set image deployment/critical-processor app=nginx:1.26 -n nightfall
+kubectl get rs -n nightfall -o wide > ./exam/course/7/during-pause.txt
+
+kubectl rollout resume deployment/critical-processor -n nightfall
+kubectl rollout status deployment/critical-processor -n nightfall
+kubectl get rs -n nightfall -o wide > ./exam/course/7/after-resume.txt
 ```
 
-Explanation: Pausing a deployment rollout halts the update process, giving you time to investigate potential issues without rolling out further broken pods.
+Explanation: While a Deployment is paused, changes to its Pod template are recorded but not acted on: no new ReplicaSet appears in `during-pause.txt`. When the rollout resumes, the controller creates the `nginx:1.26` ReplicaSet and scales the old one down. Pausing lets you batch several changes into a single rollout.
 
 ---
 
-## Question 8 | Kustomize with JSON patch
+## Question 8 | Kustomize JSON Patch
 
 ```json
 # ./exam/course/8/patch.json
@@ -169,110 +212,123 @@ Explanation: JSON patching in Kustomize allows fine-grained manipulation of mani
 
 ---
 
-## Question 9 | Debug ImagePullBackOff
+## Question 9 | Fix a Failing Pod
 
 ```bash
-# Find the pod
-kubectl get pods -n starlight
-# Edit the pod (or rather, the deployment/pod manifest) to fix the image name
-kubectl edit pod metrics-gatherer -n starlight
-# Change the image to a valid one, e.g., nginx:alpine
+kubectl describe pod metrics-gatherer -n starlight   # Events: failed to pull image "nginxxxxx:alpine"
+kubectl set image pod/metrics-gatherer gatherer=nginx:alpine -n starlight
+kubectl get pod metrics-gatherer -n starlight
 ```
 
-Explanation: A misspelled image name triggers ImagePullBackOff because the node cannot pull the non-existent image from the registry.
+Explanation: The Pod events show an `ErrImagePull` / `ImagePullBackOff` for a misspelled image. A container image is one of the few Pod fields that can be changed in place, so no recreation is needed.
 
 ---
 
-## Question 10 | Container resource metrics
+## Question 10 | Top CPU Consumer
 
 ```bash
-kubectl top pods -n kube-system --sort-by=cpu
-# Assuming 'kube-apiserver-...' is the highest
-echo "kube-apiserver-minikube" > ./exam/course/10/cpu-usage.txt
+kubectl top pod -n kube-system --sort-by=cpu --no-headers | head -1 | awk '{print $1}' > ./exam/course/10/cpu-usage.txt
 ```
 
-Explanation: `kubectl top pods` retrieves current metrics from the Metrics Server.
+Explanation: `kubectl top` reads live usage from metrics-server. `--sort-by=cpu` puts the largest consumer first.
 
 ---
 
-## Question 11 | Define custom log aggregation
+## Question 11 | Broken Deployment Manifest
+
+```bash
+kubectl apply -f ./exam/course/11/broken-deploy.yaml
+# The Deployment "broken-app" is invalid: spec.template.metadata.labels: Invalid value: ...
+#   `selector` does not match template `labels`
+```
+
+Fix both defects in `./exam/course/11/broken-deploy.yaml`:
+
+```yaml
+  template:
+    metadata:
+      labels:
+        app: broken-app        # was "broken": must match spec.selector
+    spec:
+      containers:
+      - name: web
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80           # was 8080: nginx listens on 80
+          initialDelaySeconds: 2
+          periodSeconds: 3
+```
+
+```bash
+kubectl apply -f ./exam/course/11/broken-deploy.yaml
+kubectl rollout status deployment/broken-app -n lunar
+```
+
+Explanation: The API server rejects a Deployment whose selector does not match its Pod template labels. Once that is fixed, the Pods start but stay `0/1 READY`: `kubectl describe pod` shows `Readiness probe failed: ... connection refused` on port 8080. Pointing the probe at the port nginx really listens on makes the Pods Ready.
+
+---
+
+## Question 12 | Read a Mounted Secret
 
 ```yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: logger
-  namespace: lunar
-spec:
-  volumes:
-  - name: log-volume
-    emptyDir: {}
-  containers:
-  - name: app
-    image: busybox:1.36
-    command: ['sh', '-c', 'while true; do echo "App is running" >> /var/log/app.log; sleep 5; done']
-    volumeMounts:
-    - name: log-volume
-      mountPath: /var/log
-  - name: log-tailer
-    image: busybox:1.36
-    command: ['sh', '-c', 'tail -f /var/log/app.log']
-    volumeMounts:
-    - name: log-volume
-      mountPath: /var/log
-```
-
-Explanation: Using an `emptyDir` volume to share a filesystem between the main app and a logging sidecar container.
-
----
-
-## Question 12 | Projected volumes combining secrets+configmap
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: combined-app
+  name: secret-reader
   namespace: crescent
 spec:
   containers:
-  - name: app
-    image: nginx:alpine
+  - name: reader
+    image: busybox:1.36
+    command: ["sh", "-c", "cat /etc/secrets/*; sleep 3600"]
     volumeMounts:
-    - name: all-in-one
-      mountPath: /opt/config
+    - name: creds
+      mountPath: /etc/secrets
+      readOnly: true
   volumes:
-  - name: all-in-one
-    projected:
-      sources:
-      - secret:
-          name: db-creds
-      - configMap:
-          name: app-config
+  - name: creds
+    secret:
+      secretName: db-credentials
 ```
 
-Explanation: Projected volumes allow multiple volume sources to be combined into a single directory.
+```bash
+kubectl logs secret-reader -n crescent
+kubectl get secret db-credentials -n crescent -o jsonpath='{.data.password}' | base64 -d > ./exam/course/12/password.txt
+```
+
+Explanation: Each key of a Secret mounted as a volume becomes a file, already decoded. Through the API, `data` values are base64-encoded, which is an encoding, not encryption: anyone who can read the Secret can decode it.
 
 ---
 
-## Question 13 | Immutable ConfigMap
+## Question 13 | Container Capabilities
+
+```bash
+kubectl get pod secure-runner -n twilight -o yaml > secure-runner.yaml
+```
+
+Add to the container in `secure-runner.yaml`:
 
 ```yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: static-config
-  namespace: twilight
-data:
-  version: v2.1.0
-immutable: true
+    securityContext:
+      runAsUser: 2000
+      capabilities:
+        drop: ["ALL"]
+        add: ["NET_ADMIN"]
 ```
 
-Explanation: Setting `immutable: true` prevents accidental updates to ConfigMaps (and Secrets) which can provide safety and slight performance improvements.
+```bash
+kubectl replace --force -f secure-runner.yaml
+```
+
+Explanation: `drop: ["ALL"]` removes every Linux capability, then `add` grants back only what the workload needs. Most `securityContext` fields are immutable on a running Pod, so the Pod has to be recreated.
 
 ---
 
-## Question 14 | Pod with multiple security constraints
+## Question 14 | Hardened Pod Security Context
 
 ```yaml
 apiVersion: v1
@@ -305,24 +361,33 @@ Explanation: When `readOnlyRootFilesystem` is `true`, standard nginx images cras
 
 ---
 
-## Question 15 | Secret rotation scenario
+## Question 15 | Rotate a Mounted Secret
 
 ```bash
-kubectl create secret generic legacy-token -n shadow --from-literal=token=super-secret-v2 --dry-run=client -o yaml | kubectl apply -f -
+kubectl exec -n shadow token-reader -- cat /etc/secret/token > ./exam/course/15/before.txt
+
+kubectl create secret generic legacy-token -n shadow --from-literal=token=super-secret-v2 \
+  --dry-run=client -o yaml | kubectl apply -f -
+
+kubectl get pod token-reader -n shadow -o yaml > token-reader.yaml
+kubectl replace --force -f token-reader.yaml
+kubectl wait --for=condition=Ready pod/token-reader -n shadow
+
+kubectl exec -n shadow token-reader -- cat /etc/secret/token > ./exam/course/15/after.txt
 ```
 
-Explanation: We can update the secret using `kubectl apply` or `kubectl edit`. Because it is mounted as a volume in the pod, kubelet will eventually update the file in the pod.
+Explanation: The `--dry-run=client -o yaml | kubectl apply` pattern updates an existing Secret from literals without hand-encoding base64. A Secret volume (without `subPath`) is eventually refreshed in a running Pod, but recreating the Pod guarantees the new value is read right away — and is required when the application only reads its credentials at startup.
 
 ---
 
-## Question 16 | ResourceQuota enforcement
+## Question 16 | ResourceQuota
 
 ```yaml
 apiVersion: v1
 kind: ResourceQuota
 metadata:
   name: compute-quota
-  namespace: nightfall
+  namespace: dusk
 spec:
   hard:
     pods: "4"
@@ -330,36 +395,44 @@ spec:
     limits.memory: "4Gi"
 ```
 
-Explanation: ResourceQuota objects enforce hard limits per namespace on the amount of resources that can be requested or defined.
+Explanation: ResourceQuota objects enforce hard limits per namespace on the amount of resources that can be requested or defined. Once a quota covers `requests.cpu` or `limits.memory`, every new Pod in the namespace must declare those values or it is rejected.
 
 ---
 
-## Question 17 | NetworkPolicy egress rules
+## Question 17 | Restrict Ingress with a NetworkPolicy
 
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: deny-external
+  name: frontend-policy
   namespace: dusk
 spec:
-  podSelector: {}
+  podSelector:
+    matchLabels:
+      app: frontend
   policyTypes:
   - Ingress
-  - Egress
   ingress:
-  - {} # allow all ingress
-  egress:
-  - ports:
-    - protocol: UDP
-      port: 53
+  - from:
+    - podSelector:
+        matchLabels:
+          app: backend
 ```
 
-Explanation: Egress rules can be restricted while keeping internal DNS (UDP 53) open so pods can still resolve service names.
+Explanation: Listing only `Ingress` in `policyTypes` leaves egress untouched. Once a Pod is selected by a policy with an ingress section, everything not explicitly allowed is denied. A `podSelector` alone in `from` matches Pods of the policy's own namespace.
 
 ---
 
-## Question 18 | Multi-path Ingress
+## Question 18 | Path-Based Ingress
+
+```bash
+kubectl create ingress star-ingress -n starlight --class=nginx \
+  --rule="star.local/api*=api-svc:8080" \
+  --rule="star.local/web*=web-svc:80"
+```
+
+Equivalent manifest:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -370,7 +443,8 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - http:
+  - host: star.local
+    http:
       paths:
       - path: /api
         pathType: Prefix
@@ -388,11 +462,11 @@ spec:
               number: 80
 ```
 
-Explanation: Using multiple paths in a single Ingress rule routes different URI prefixes to different backend services.
+Explanation: A trailing `*` in a `kubectl create ingress` rule sets `pathType: Prefix`. `Prefix` matches element by element on `/`-separated segments, so `/api` matches `/api` and `/api/users` but not `/apiary`, whatever the Ingress controller. `Exact` would only match `/api` itself, and `ImplementationSpecific` leaves the behaviour to the controller. Only standard `networking.k8s.io/v1` fields are used here, so the manifest works with any controller behind the `nginx` class.
 
 ---
 
-## Question 19 | ExternalName service
+## Question 19 | ExternalName Service
 
 ```yaml
 apiVersion: v1
@@ -409,10 +483,41 @@ Explanation: ExternalName services return a CNAME record so that pods can use in
 
 ---
 
-## Question 20 | DNS debugging
+## Question 20 | Canary Deployment
 
 ```bash
-kubectl exec -it dns-tester -n void -- nslookup kubernetes.default.svc.cluster.local > ./exam/course/20/nslookup.txt
+kubectl get svc void-svc -n void -o jsonpath='{.spec.selector}'   # {"app":"api","version":"stable"}
 ```
 
-Explanation: `nslookup` provides verification that CoreDNS is functioning properly within the cluster.
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deploy-canary
+  namespace: void
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: api
+        version: canary
+    spec:
+      containers:
+      - name: api
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
+```
+
+```bash
+kubectl apply -f canary.yaml
+kubectl patch svc void-svc -n void --type json -p '[{"op":"remove","path":"/spec/selector/version"}]'
+kubectl get endpointslices -n void -l kubernetes.io/service-name=void-svc
+```
+
+Explanation: A Service sends traffic to every Pod matching all of its selector labels. `void-svc` also selected `version=stable`, which excluded the canary. Keeping only the shared `app=api` label makes it balance across both Deployments — roughly 1 request in 3 goes to the canary with 2 stable replicas.
