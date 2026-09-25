@@ -176,6 +176,9 @@ The ResourceQuota allows: `requests.cpu: 500m`, `requests.memory: 512Mi`.
 3. Save the image as a tar archive to `./exam/course/7/oni-app.tar`
 4. Push the image to the local registry at `localhost:5000`
 
+> **Note**: If `docker push` fails with an error about an HTTP registry, you may need to add `localhost:5000` to Docker’s insecure registries.
+> Edit `/etc/docker/daemon.json` to include `{ "insecure-registries": ["localhost:5000"] }` and restart Docker (`sudo systemctl restart docker`).
+
 ---
 
 ## Question 8 | Canary Deployment

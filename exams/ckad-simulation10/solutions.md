@@ -272,6 +272,8 @@ docker save -o ./exam/course/7/oni-app.tar localhost:5000/oni-app:1.0
 docker push localhost:5000/oni-app:1.0
 ```
 
+**Note**: If the push fails because the registry uses HTTP, ensure `localhost:5000` is listed in Docker’s `insecure-registries` (see the exam’s README for details).
+
 Verify:
 
 ```bash

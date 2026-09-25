@@ -30,6 +30,9 @@ There is a Dockerfile located at `./exam/course/1/Dockerfile`.
 Build a container image using this Dockerfile and tag it as `localhost:5000/fujin-api:v2`.
 Push the built image to the local registry at `localhost:5000`.
 
+> **Note**: If `docker push` fails with an error about an HTTP registry, you may need to add `localhost:5000` to Docker’s insecure registries.
+> Edit `/etc/docker/daemon.json` to include `{ "insecure-registries": ["localhost:5000"] }` and restart Docker (`sudo systemctl restart docker`).
+
 ---
 
 ## Question 2 | Sidecar Logging Container

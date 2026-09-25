@@ -30,6 +30,9 @@ You have been asked to build an application container image. A directory has bee
 Create a `Dockerfile` at `./exam/course/1/Dockerfile` to build an image named `localhost:5000/benzaiten-wisdom:v1` using `nginx:alpine` as the base image.
 Copy the contents of the `app` directory into `/usr/share/nginx/html/` in the container.
 Build the image and push it to the local registry.
+
+> **Note**: If `docker push` fails with an error about an HTTP registry, you may need to add `localhost:5000` to Docker’s insecure registries.
+> Edit `/etc/docker/daemon.json` to include `{ "insecure-registries": ["localhost:5000"] }` and restart Docker (`sudo systemctl restart docker`).
 Then create a pod named `wisdom-server` in the `harmony` namespace using this image.
 
 ---
