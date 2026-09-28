@@ -1,3 +1,12 @@
+### Task
+
+A Dockerfile is provided in `./exam/course/1/`.
+
+1. Build an image from this Dockerfile and tag it `lunar-app:v1.0`.
+2. Save the image as a tar archive to `./exam/course/1/lunar-app.tar`.
+3. Remove `lunar-app:v1.0` from the local image store, then load the archive back. Make the loaded image available under the tag `lunar-app:v1.0-verified`, without rebuilding it.
+4. Run a container from `lunar-app:v1.0-verified` and write its output to `./exam/course/1/run-output.txt`.
+
 # CKAD Exam Simulator - Dojo Tsukuyomi 🌙
 
 > **Total Score**: 108 points | **Passing Score**: ~66% (71 points)
@@ -35,7 +44,7 @@ A multi-stage Dockerfile and a `main.go` program are provided in `./exam/course/
 
 ---
 
-## Question 2 | ConfigMap subPath Mount
+## Question 2 | ConfigMap Update Needs a Restart
 
 |                          |                                   |
 | ------------------------ | --------------------------------- |
@@ -44,21 +53,17 @@ A multi-stage Dockerfile and a `main.go` program are provided in `./exam/course/
 | **CNCF Weight** | 25% |
 | **Namespace** | `crescent` |
 | **Resources** | `Pod`, `ConfigMap` |
-| **Files to create** | `./exam/course/2/before.txt`, `./exam/course/2/after-no-restart.txt`, `./exam/course/2/after-restart.txt` |
+| **Files to create** | `./exam/course/2/app.conf.txt` |
 
 ### Task
 
-The Pod `config-pod` in the `crescent` namespace mounts the whole ConfigMap `app-config` as a directory at `/etc/app`.
+The Pod `config-pod` in the `crescent` namespace reads its settings from `/etc/app/app.conf`. This file comes from the `app.conf` key of the ConfigMap `app-config`, mounted with `subPath`.
 
-Change the Pod so that only the `app.conf` key is mounted, at the exact path `/etc/app/app.conf`, using `subPath`.
+1. Update the `app.conf` key of `app-config` to `mode=staging`.
+2. Make sure `config-pod` actually uses the new value. Keep the ConfigMap mounted with `subPath` at `/etc/app/app.conf`.
+3. Save the content of `/etc/app/app.conf` as seen inside the running Pod to `./exam/course/2/app.conf.txt`.
 
-Once the Pod is running with this change, capture the content of `/etc/app/app.conf` inside the Pod three times, each into its own file:
-
-1. Before any ConfigMap change → `./exam/course/2/before.txt`
-2. Update the `app.conf` key of `app-config` to `mode=staging`. Wait about 90 seconds **without** restarting the Pod, then capture again → `./exam/course/2/after-no-restart.txt`
-3. Delete and recreate the Pod (same manifest), then capture again → `./exam/course/2/after-restart.txt`
-
-All captures must come from `kubectl exec` output against the running Pod — do not edit the files by hand.
+**Hint**: A `subPath` mount is set up once, when the container starts. Kubernetes never updates it in a running container.
 
 ---
 
@@ -76,7 +81,7 @@ All captures must come from `kubectl exec` output against the running Pod — do
 
 In the `twilight` namespace, create a CronJob named `nightly-backup`:
 
-- Runs every 10 minutes.
+- Runs every day at 02:00.
 - Container image: `busybox:1.36`.
 - Command: `sh -c 'sleep 30'`.
 - A new run must never start while a previous one is still running.

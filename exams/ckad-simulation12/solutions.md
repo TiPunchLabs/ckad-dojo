@@ -7,6 +7,7 @@ cd ./exam/course/1
 docker build -t lunar-app:v1.0 .
 docker save -o lunar-app.tar lunar-app:v1.0
 
+docker rmi lunar-app:v1.0
 # Load restores the original tag; add the new one on the loaded image
 docker load -i lunar-app.tar
 docker tag lunar-app:v1.0 lunar-app:v1.0-verified
@@ -16,43 +17,29 @@ cat run-output.txt
 cd -
 ```
 
-Explanation: `docker save` exports an image with all its layers and tags to a tar archive, and `docker load` imports it back without any build step. The archive keeps the original tag, so a second tag is added with `docker tag`. Both tags point to the same image ID, which is how you can tell the image was loaded, not rebuilt.
+Explanation: `docker save` exports an image with all its layers and tags to a tar archive, and `docker load` imports it back without any build step. The archive keeps the original tag, so a second tag is added with `docker tag`. Both tags point to the same image ID.
 
 ---
 
-## Question 2 | ConfigMap subPath Mount
+## Question 2 | ConfigMap Update Needs a Restart
 
 ```bash
-kubectl get pod config-pod -n crescent -o yaml > config-pod.yaml
-```
-
-Edit the volume mount in `config-pod.yaml`:
-
-```yaml
-    volumeMounts:
-    - name: config-vol
-      mountPath: /etc/app/app.conf
-      subPath: app.conf
-```
-
-```bash
-kubectl replace --force -f config-pod.yaml
-kubectl wait --for=condition=Ready pod/config-pod -n crescent
-
-kubectl exec -n crescent config-pod -- cat /etc/app/app.conf > ./exam/course/2/before.txt
-
 kubectl patch configmap app-config -n crescent --type merge -p '{"data":{"app.conf":"mode=staging"}}'
-sleep 90
-kubectl exec -n crescent config-pod -- cat /etc/app/app.conf > ./exam/course/2/after-no-restart.txt
 
+# The subPath file still shows the old value, even minutes later
+kubectl exec -n crescent config-pod -- cat /etc/app/app.conf
+
+# Recreate the Pod with the same spec
+kubectl get pod config-pod -n crescent -o yaml > config-pod.yaml
 kubectl replace --force -f config-pod.yaml
 kubectl wait --for=condition=Ready pod/config-pod -n crescent
-kubectl exec -n crescent config-pod -- cat /etc/app/app.conf > ./exam/course/2/after-restart.txt
+
+kubectl exec -n crescent config-pod -- cat /etc/app/app.conf > ./exam/course/2/app.conf.txt
 ```
 
-Expected contents: `before.txt` → `mode=production`, `after-no-restart.txt` → `mode=production`, `after-restart.txt` → `mode=staging`.
+Expected content of `app.conf.txt`: `mode=staging`.
 
-Explanation: A ConfigMap mounted as a directory is refreshed by the kubelet after an update, because the kubelet swaps a symlink. A `subPath` mount bind-mounts one file once, when the container starts, so it never sees later ConfigMap updates. Only a new Pod picks up the new value.
+Explanation: A ConfigMap mounted as a directory is refreshed by the kubelet after an update, because the kubelet swaps a symlink. A `subPath` mount bind-mounts one file once, when the container starts, so it never sees later ConfigMap updates. Only a new container picks up the new value: recreate the Pod (or, for a Deployment, run `kubectl rollout restart`).
 
 ---
 
@@ -60,7 +47,7 @@ Explanation: A ConfigMap mounted as a directory is refreshed by the kubelet afte
 
 ```bash
 kubectl create cronjob nightly-backup -n twilight --image=busybox:1.36 \
-  --schedule="*/10 * * * *" --dry-run=client -o yaml -- sh -c 'sleep 30' > cj.yaml
+  --schedule="0 2 * * *" --dry-run=client -o yaml -- sh -c 'sleep 30' > cj.yaml
 ```
 
 Add the concurrency policy under `spec`:

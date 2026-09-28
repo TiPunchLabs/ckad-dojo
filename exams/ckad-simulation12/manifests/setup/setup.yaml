@@ -20,7 +20,8 @@ spec:
     command: ["sleep", "3600"]
     volumeMounts:
     - name: config-vol
-      mountPath: /etc/app
+      mountPath: /etc/app/app.conf
+      subPath: app.conf
   volumes:
   - name: config-vol
     configMap:

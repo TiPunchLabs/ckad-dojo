@@ -34,9 +34,9 @@ score_q1() {
 		details+="Image lunar-app:v1.0-verified not found. "
 	elif [ "$verified_id" == "$built_id" ]; then
 		((score += 1))
-		details+="lunar-app:v1.0-verified is the loaded image. "
+		details+="lunar-app:v1.0-verified has the same image ID as lunar-app:v1.0. "
 	else
-		details+="lunar-app:v1.0-verified has a different image ID (rebuilt instead of loaded): incorrect. "
+		details+="lunar-app:v1.0-verified has a different image ID from lunar-app:v1.0: incorrect. "
 	fi
 
 	if [ -f "$EXAM_DIR/1/run-output.txt" ] && grep -q "Tsukuyomi server running" "$EXAM_DIR/1/run-output.txt"; then
@@ -55,35 +55,36 @@ score_q2() {
 	local max_points=5
 	local details=""
 
-	local mounts phase
-	mounts=$(kubectl get pod config-pod -n crescent -o jsonpath='{range .spec.containers[*].volumeMounts[*]}{.mountPath}{" "}{.subPath}{"\n"}{end}' 2>/dev/null)
-	phase=$(kubectl get pod config-pod -n crescent -o jsonpath='{.status.phase}' 2>/dev/null)
-	if echo "$mounts" | grep -qx "/etc/app/app.conf app.conf" && [ "$phase" == "Running" ]; then
+	local cm_value live_value mounts
+	cm_value=$(kubectl get configmap app-config -n crescent -o jsonpath='{.data.app\.conf}' 2>/dev/null)
+	if [ "$cm_value" == "mode=staging" ]; then
+		((score += 1))
+		details+="ConfigMap app.conf is mode=staging. "
+	else
+		details+="ConfigMap app.conf is not mode=staging ($cm_value): incorrect. "
+	fi
+
+	live_value=$(kubectl exec -n crescent config-pod -- cat /etc/app/app.conf 2>/dev/null)
+	if [ "$live_value" == "mode=staging" ]; then
 		((score += 2))
-		details+="config-pod mounts app.conf via subPath. "
+		details+="config-pod serves mode=staging. "
+
+		mounts=$(kubectl get pod config-pod -n crescent -o jsonpath='{range .spec.containers[*].volumeMounts[*]}{.mountPath}{" "}{.subPath}{"\n"}{end}' 2>/dev/null)
+		if echo "$mounts" | grep -qx "/etc/app/app.conf app.conf"; then
+			((score += 1))
+			details+="app.conf still mounted via subPath. "
+		else
+			details+="subPath mount of app.conf at /etc/app/app.conf missing. "
+		fi
 	else
-		details+="config-pod not running with a subPath mount of app.conf at /etc/app/app.conf: missing. "
+		details+="config-pod does not serve mode=staging at /etc/app/app.conf ($live_value): incorrect. "
 	fi
 
-	if [ -f "$EXAM_DIR/2/before.txt" ] && grep -q "mode=production" "$EXAM_DIR/2/before.txt"; then
+	if [ -f "$EXAM_DIR/2/app.conf.txt" ] && grep -qx "mode=staging" "$EXAM_DIR/2/app.conf.txt"; then
 		((score += 1))
-		details+="before.txt shows mode=production. "
+		details+="app.conf.txt shows mode=staging. "
 	else
-		details+="before.txt missing or incorrect. "
-	fi
-
-	if [ -f "$EXAM_DIR/2/after-no-restart.txt" ] && grep -q "mode=production" "$EXAM_DIR/2/after-no-restart.txt"; then
-		((score += 1))
-		details+="after-no-restart.txt still shows mode=production (subPath is not refreshed). "
-	else
-		details+="after-no-restart.txt missing or incorrect. "
-	fi
-
-	if [ -f "$EXAM_DIR/2/after-restart.txt" ] && grep -q "mode=staging" "$EXAM_DIR/2/after-restart.txt"; then
-		((score += 1))
-		details+="after-restart.txt shows mode=staging. "
-	else
-		details+="after-restart.txt missing or incorrect. "
+		details+="app.conf.txt missing or incorrect. "
 	fi
 
 	echo "$score/$max_points"
@@ -101,9 +102,9 @@ score_q3() {
 
 		local schedule conc
 		schedule=$(kubectl get cronjob nightly-backup -n twilight -o jsonpath='{.spec.schedule}' 2>/dev/null)
-		if [ "$schedule" == "*/10 * * * *" ]; then
+		if [ "$schedule" == "0 2 * * *" ]; then
 			((score += 1))
-			details+="Schedule runs every 10 minutes. "
+			details+="Schedule runs every day at 02:00. "
 		else
 			details+="Schedule incorrect ($schedule). "
 		fi
@@ -363,7 +364,7 @@ score_q10() {
 	if [ -n "$content" ]; then
 		((score += 2))
 		details+="cpu-usage.txt written ($content). "
-		if resource_exists "pod" "$content" "kube-system"; then
+		if [[ "$content" != -* ]] && resource_exists "pod" "$content" "kube-system"; then
 			((score += 3))
 			details+="$content is a kube-system Pod. "
 		else
@@ -572,15 +573,16 @@ score_q15() {
 		details+="after.txt missing or incorrect. "
 	fi
 
-	local created before_mtime=0
+	# Both timestamps come from the API server, so host clock skew cannot matter
+	local created secret_updated
 	phase=$(kubectl get pod token-reader -n shadow -o jsonpath='{.status.phase}' 2>/dev/null)
-	created=$(date -d "$(kubectl get pod token-reader -n shadow -o jsonpath='{.metadata.creationTimestamp}' 2>/dev/null)" +%s 2>/dev/null || echo 0)
-	[ -f "$EXAM_DIR/15/before.txt" ] && before_mtime=$(stat -c %Y "$EXAM_DIR/15/before.txt")
-	if [ "$phase" == "Running" ] && [ "$before_mtime" -gt 0 ] && [ "$created" -gt "$before_mtime" ]; then
+	created=$(kubectl get pod token-reader -n shadow -o jsonpath='{.metadata.creationTimestamp}' 2>/dev/null)
+	secret_updated=$(kubectl get secret legacy-token -n shadow -o jsonpath='{range .metadata.managedFields[*]}{.time}{"\n"}{end}' 2>/dev/null | sort | tail -1)
+	if [ "$val" == "super-secret-v2" ] && [ "$phase" == "Running" ] && [ -n "$created" ] && [[ ! "$created" < "$secret_updated" ]]; then
 		((score += 1))
-		details+="Pod token-reader recreated and running. "
+		details+="Pod token-reader recreated after the Secret update and running. "
 	else
-		details+="Pod token-reader not recreated after the first capture: missing. "
+		details+="Pod token-reader not recreated after the Secret update: missing. "
 	fi
 
 	echo "$score/$max_points"
@@ -636,11 +638,11 @@ score_q17() {
 		else
 			details+="podSelector incorrect ($selector). "
 		fi
-		if [ "$from_app" == "backend" ] && [ -z "$from_ns" ]; then
+		if [ "$from_app" == "backend" ] && [ -z "$from_ns" ] && [[ -z "$types" || "$types" == *Ingress* ]]; then
 			((score += 2))
 			details+="Ingress allowed only from app=backend. "
 		else
-			details+="Ingress source incorrect ($from_app). "
+			details+="Ingress source incorrect ($from_app, policyTypes: ${types:-default}). "
 		fi
 		if [[ "$types" != *Egress* ]] || [ "$egress" == "[{}]" ]; then
 			((score += 1))
@@ -667,7 +669,8 @@ score_q18() {
 
 		local ingress_class hosts paths
 		ingress_class=$(kubectl get ingress star-ingress -n starlight -o jsonpath='{.spec.ingressClassName}' 2>/dev/null)
-		hosts=$(kubectl get ingress star-ingress -n starlight -o jsonpath='{.spec.rules[*].host}' 2>/dev/null)
+		# One line per rule: a host-less rule shows up as an empty line
+		hosts=$(kubectl get ingress star-ingress -n starlight -o jsonpath='{range .spec.rules[*]}{.host}{"\n"}{end}' 2>/dev/null | sort -u | paste -sd' ')
 		paths=$(kubectl get ingress star-ingress -n starlight -o jsonpath='{range .spec.rules[*].http.paths[*]}{.path}{" "}{.pathType}{" "}{.backend.service.name}{" "}{.backend.service.port.number}{"\n"}{end}' 2>/dev/null)
 
 		if [ "$ingress_class" == "nginx" ]; then

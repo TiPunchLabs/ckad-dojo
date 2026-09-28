@@ -11,6 +11,10 @@ function exam_post_setup() {
 	# Removing them here makes every setup start Q1 from a clean state.
 	docker rmi -f lunar-app:v1.0 lunar-app:v1.0-verified &>/dev/null || true
 
+	# Pre-pull the Q1 base image so the candidate's build is near instant
+	echo "Pulling alpine:3.18 for Q1..."
+	docker pull -q alpine:3.18 >/dev/null 2>&1 || echo "Warning: could not pull alpine:3.18, Q1 will pull it at build time"
+
 	echo "Upgrading Helm chart api-release with a bad image to create failure scenario..."
 	helm upgrade api-release bitnami/nginx --set image.tag="nonexistent-tag-12345" -n nebula --reuse-values --wait=false
 
@@ -21,24 +25,8 @@ function exam_post_setup() {
 	local BASE_DIR="./exam/course"
 	mkdir -p "$BASE_DIR/1"
 	cat <<'EOF_FILE' >"$BASE_DIR/1/Dockerfile"
-FROM golang:1.20-alpine AS builder
-WORKDIR /app
-COPY main.go .
-RUN go build -o /app/server main.go
-
 FROM alpine:3.18
-COPY --from=builder /app/server /opt/server
-ENTRYPOINT ["/opt/server"]
-EOF_FILE
-
-	cat <<'EOF_FILE' >"$BASE_DIR/1/main.go"
-package main
-
-import "fmt"
-
-func main() {
-	fmt.Println("Tsukuyomi server running")
-}
+CMD ["echo", "Tsukuyomi server running"]
 EOF_FILE
 
 	mkdir -p "$BASE_DIR/8"
