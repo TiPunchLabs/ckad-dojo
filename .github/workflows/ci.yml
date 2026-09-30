@@ -70,7 +70,9 @@ jobs:
         run: uv sync
 
       - name: Audit dependencies
-        run: uvx pip-audit --ignore-vuln CVE-2026-4539  # pygments 2.19.2 - no fix available yet
+        # Audit the locked project deps, not pip-audit's own isolated env
+        shell: bash
+        run: uv export --format requirements-txt --no-hashes --no-emit-project | uvx pip-audit -r /dev/stdin
 
       - name: Secret scan
         run: |
