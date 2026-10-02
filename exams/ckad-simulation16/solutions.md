@@ -12,6 +12,7 @@ COPY app /usr/share/nginx/html/
 EOF
 docker build -t localhost:5000/benzaiten-wisdom:v1 ./exam/course/1/
 docker push localhost:5000/benzaiten-wisdom:v1
+**Note**: If the push fails because the registry uses HTTP, ensure `localhost:5000` is listed in Docker’s `insecure-registries` (see the exam’s README for details).
 kubectl run wisdom-server -n harmony --image=localhost:5000/benzaiten-wisdom:v1
 ```
 

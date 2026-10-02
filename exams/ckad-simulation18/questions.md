@@ -33,6 +33,9 @@ There is a skeleton Dockerfile located at `./exam/course/1/Dockerfile`.
 3. Push the image to the local registry at `localhost:5000`.
 4. Create a Pod named `genesis-pod` in the `genesis` namespace using this image `localhost:5000/genesis-app:v1`. Ensure it executes the default command defined in the Dockerfile.
 
+> **Note**: If `docker push` fails with an error about an HTTP registry, you may need to add `localhost:5000` to Docker’s insecure registries.
+> Edit `/etc/docker/daemon.json` to include `{ "insecure-registries": ["localhost:5000"] }` and restart Docker (`sudo systemctl restart docker`).
+
 ---
 
 ## Question 2 | Adapter Pattern Sidecar

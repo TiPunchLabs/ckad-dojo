@@ -383,7 +383,7 @@ score_q7() {
 		((score += 2))
 		details+="Image pushed to registry."
 	else
-		details+="Image not found in registry."
+		details+="Image not found in registry. If Docker push failed, ensure localhost:5000 is added to Docker's insecure registries (/etc/docker/daemon.json) and restart Docker."
 	fi
 
 	echo "$score/$max_points"

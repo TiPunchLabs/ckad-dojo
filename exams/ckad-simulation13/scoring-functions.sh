@@ -17,7 +17,7 @@ score_q1() {
 		score=$((score + 5))
 		details="Image fujin-api:v2 pushed to local registry"
 	else
-		details="Image fujin-api:v2 not found in registry"
+		details="Image fujin-api:v2 not found in registry. If Docker push failed, ensure localhost:5000 is added to Docker's insecure registries (/etc/docker/daemon.json) and restart Docker."
 	fi
 
 	[ -z "$details" ] && details="Expected configuration not found."

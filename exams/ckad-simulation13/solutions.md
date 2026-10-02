@@ -10,6 +10,8 @@ docker build -t localhost:5000/fujin-api:v2 .
 docker push localhost:5000/fujin-api:v2
 ```
 
+**Note**: If the push fails because the registry uses HTTP, ensure `localhost:5000` is listed in Docker’s `insecure-registries` (see the exam’s README for details).
+
 **Explanation:** Build the container image from the provided Dockerfile and tag it appropriately. Then push it to the local registry.
 
 ---

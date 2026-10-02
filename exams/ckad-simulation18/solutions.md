@@ -21,6 +21,7 @@ docker build -t localhost:5000/genesis-app:v1 ./exam/course/1/
 
 # 3. Push image
 docker push localhost:5000/genesis-app:v1
+**Note**: If the push fails because the registry uses HTTP, ensure `localhost:5000` is listed in Docker’s `insecure-registries` (see the exam’s README for details).
 
 # 4. Create Pod
 kubectl run genesis-pod -n genesis --image=localhost:5000/genesis-app:v1
