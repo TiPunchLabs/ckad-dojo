@@ -553,13 +553,25 @@ lsof -i :9090                             # Check port availability
 </details>
 
 <details>
-<summary><strong>Q11 registry push fails</strong></summary>
+<summary><strong>Registry push fails (<code>localhost:5000</code>)</strong></summary>
+
+Docker already allows plain HTTP for `localhost` (`127.0.0.0/8`), so no `insecure-registries` change is usually needed.
+
+**On macOS**: since Monterey, the AirPlay Receiver listens on port 5000, so `localhost:5000` can answer as AirPlay instead of the registry (the scoring then shows "Image not found in registry"). Check who owns the port:
 
 ```bash
-# For Docker, ensure the registry is in the insecure registries list
-# Edit /etc/docker/daemon.json and add:
+docker ps --filter name=registry
+curl -si http://localhost:5000/v2/    # a working registry answers 200 with {}
+lsof -nP -i :5000                     # ControlCenter on :5000 = AirPlay Receiver
+```
+
+If it is AirPlay, turn it off (System Settings → General → AirDrop & Handoff → AirPlay Receiver) and push again.
+
+If your Docker setup still rejects HTTP, add the registry to `/etc/docker/daemon.json`:
+
+```bash
 # { "insecure-registries": ["localhost:5000"] }
-# Then restart Docker: sudo systemctl restart docker
+sudo systemctl restart docker
 ```
 
 </details>
