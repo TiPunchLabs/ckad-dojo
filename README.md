@@ -142,6 +142,17 @@ The dojo roster spans the classic Shishin guardians, Japanese folklore, and incr
 
 </details>
 
+### Recommended Path
+
+The dojo numbers reflect the order they were added, not their difficulty. If you are not sure where to start, follow this path:
+
+| Step | Dojos | Why |
+|:----:|-------|-----|
+| 1. Fundamentals | 👺 Tengu, 🦝 Tanuki | Pod, workload and configuration basics. Light on networking and observability. |
+| 2. Exam prep | 🐸 Kappa, 🦊 Inari, 👹 Oni | Closest to the real exam's domain balance. Oni focuses on fixing broken workloads. |
+| 3. Broad practice | 🔥 Suzaku, 🐯 Byakko, 🐢 Genbu, 🦌 Kirin, then ☀️ Amaterasu → 🏆 Musashi | Wide coverage of the whole syllabus, in their current order. |
+| Targeted drill | 🐲 Ryujin | Helm, storage and CLI debugging. No Services/Networking questions, so use it as a drill rather than a full simulation. |
+
 ---
 
 ## 🚀 Quick Start (5 minutes)
