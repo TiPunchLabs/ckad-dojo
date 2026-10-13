@@ -1216,12 +1216,25 @@ function flashCopied(element) {
 
     element.classList.add('copied');
     element.dataset.tooltip = 'Copied!';
+    announceCopied();
     clearTimeout(element.copyResetTimer);
 
     element.copyResetTimer = setTimeout(() => {
         element.classList.remove('copied');
         element.dataset.tooltip = originalLabel;
     }, 900);
+}
+
+// The "Copied!" tooltip is CSS-only (::after), so screen readers never hear
+// it. Clearing first makes a repeat copy re-announce instead of being skipped.
+function announceCopied() {
+    const status = document.getElementById('copy-status');
+    if (!status) return;
+
+    status.textContent = '';
+    setTimeout(() => {
+        status.textContent = 'Copied';
+    }, 50);
 }
 
 function copyTextWithFallback(text, element) {
@@ -1295,7 +1308,8 @@ function bindCopyableInlineValues(root) {
         element.classList.add('copyable-value');
         element.dataset.copyLabel = 'Copy';
         element.dataset.tooltip = 'Copy';
-        element.setAttribute('aria-label', 'Copy value');
+        element.setAttribute('role', 'button');
+        element.setAttribute('aria-label', `Copy ${element.textContent}`);
         element.setAttribute('tabindex', '0');
     });
 }
