@@ -198,7 +198,7 @@ response for the interface.
 | **helm** | Helm charts | Install releases for Helm-related questions |
 | **docker** | Local registry | `registry:2` on `localhost:5000` for build questions |
 | **ttyd** | Web terminal | Embedded in the interface via iframe on port 7682 |
-| **uv** | Python manager | Runs the server, tests, and linting |
+| **uv** | Python manager (Python 3.11+) | Runs the server, tests, and linting |
 
 ------
 

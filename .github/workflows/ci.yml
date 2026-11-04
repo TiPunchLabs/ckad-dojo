@@ -37,6 +37,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: [lint]
+    strategy:
+      fail-fast: false
+      matrix:
+        # 3.11 = minimum supported (requires-python), 3.12 = reference version
+        python-version: ['3.11', '3.12']
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -46,7 +53,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
-          python-version: '3.12'
+          python-version: ${{ matrix.python-version }}
 
       - name: Install uv
         uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
@@ -55,7 +62,9 @@ jobs:
         run: uv sync --group dev
 
       - name: Run Python tests with coverage
-        run: uv run pytest --cov --cov-report=term-missing
+        run: |
+          uv run python --version
+          uv run pytest --cov --cov-report=term-missing
 
   security:
     runs-on: ubuntu-latest
@@ -73,6 +82,11 @@ jobs:
         # Audit the locked project deps, not pip-audit's own isolated env
         shell: bash
         run: uv export --format requirements-txt --no-hashes --no-emit-project | uvx pip-audit -r /dev/stdin
+
+      - name: Audit dependencies (Python 3.11, minimum supported)
+        # pip-audit evaluates environment markers against its own interpreter
+        shell: bash
+        run: uv export --format requirements-txt --no-hashes --no-emit-project | uvx --python 3.11 pip-audit -r /dev/stdin
 
       - name: Secret scan
         run: |

@@ -5,6 +5,7 @@
 ![helm 3.x](https://img.shields.io/badge/helm-3.x-0F1689?logo=helm&logoColor=white)
 ![docker 20.x+](https://img.shields.io/badge/docker-20.x+-2496ED?logo=docker&logoColor=white)
 ![ttyd 1.7+](https://img.shields.io/badge/ttyd-1.7+-black)
+![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
 ![Setup ~5 min](https://img.shields.io/badge/setup-~5_min-brightgreen)
 
 ---
@@ -29,6 +30,8 @@ direnv allow   # if you use direnv (otherwise ignore)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 uv run ckad-dojo
 ```
+
+> 💡 **Note** : ckad-dojo requiert Python 3.11 ou plus récent (Python 3.10 n'est plus supporté). Inutile de l'installer vous-même : `uv` télécharge automatiquement une version compatible. Si ces téléchargements sont en mode `manual`, lancez d'abord `uv python install 3.11` ; en mode `never`, installez Python 3.11+ via votre gestionnaire de paquets système.
 
 Le menu interactif s'affiche. L'interface web s'ouvre sur `http://localhost:9090`.
 

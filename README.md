@@ -198,7 +198,7 @@ ckad-dojo exam start   # Start an exam
 
 ```bash
 uv tool list           # List installed tools
-uv tool upgrade ckad-dojo   # Upgrade to latest version
+uv tool upgrade ckad-dojo   # Upgrade to latest version (add --python 3.11 if the tool was installed with Python 3.10)
 uv tool uninstall ckad-dojo # Remove
 ```
 
@@ -214,7 +214,7 @@ uv run ckad-dojo       # uv handles dependencies automatically
 
 ### Option 3: Bash Scripts Only
 
-If you prefer not to use Python/uv:
+If you prefer not to use the Python CLI (the web interface still runs through `uv` and Python 3.11+):
 
 ```bash
 git clone https://github.com/TiPunchLabs/ckad-dojo.git
@@ -236,7 +236,10 @@ cd ckad-dojo
 | `docker` | 20.x+ | Container runtime | [docs.docker.com](https://docs.docker.com/engine/install/) |
 | `ttyd` | 1.7+ | Embedded web terminal | `apt install ttyd` or [github.com/tsl0922/ttyd](https://github.com/tsl0922/ttyd) |
 | `uv` | 0.4+ | Python package manager | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
+| Python | 3.11+ | CLI and web server runtime | Installed by `uv` on demand, or `uv python install 3.11` |
 | `bash` | 4.0+ | Script execution | Pre-installed on Linux |
+
+> 💡 **Note**: Python 3.10 is no longer supported. You do not need to install Python yourself: `uv` downloads a compatible interpreter automatically. If automatic downloads are set to `manual`, run `uv python install 3.11` first. If they are set to `never` (`python-downloads` or `UV_PYTHON_DOWNLOADS`), `uv` refuses every download: install Python 3.11+ with your system package manager, or switch the setting to `manual`.
 
 ### Verify Installation
 
@@ -560,6 +563,29 @@ uv --version                              # Check uv installed
 lsof -i :9090                             # Check port availability
 ./scripts/ckad-exam.sh web --port 8888    # Use alternative port
 ```
+
+</details>
+
+<details>
+<summary><strong>Python version error after updating (Python 3.10)</strong></summary>
+
+ckad-dojo now requires Python 3.11+. An error like `the current Python version (3.10.x) does not satisfy Python>=3.11` means `uv` is still using a 3.10 interpreter.
+
+Run from the repository clone (Option 2), from inside the `ckad-dojo` directory:
+
+```bash
+uv sync                                   # Recreates .venv if it was built with 3.10
+```
+
+Global install (Option 1), from any directory:
+
+```bash
+uv tool install --reinstall --python 3.11 <source>
+```
+
+Use the same `<source>` you installed from: `ckad-dojo`, the path to your clone, or the `git+https://` URL. Without `--python`, `uv tool install --reinstall` and `uv tool upgrade` can keep the tool's Python 3.10 and fail to resolve.
+
+If no Python 3.11+ is available, run `uv python install 3.11` first (not possible when downloads are set to `never`: see [Prerequisites](#prerequisites)).
 
 </details>
 
