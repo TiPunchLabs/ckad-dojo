@@ -192,7 +192,7 @@ structuree pour l'interface.
 | **helm** | Charts Helm | Installation de releases pour les questions Helm |
 | **docker** | Registry local | `registry:2` sur `localhost:5000` pour les questions de build |
 | **ttyd** | Terminal web | Embarque dans l'interface via iframe sur le port 7682 |
-| **uv** | Gestionnaire Python (Python 3.11+) | Execute le serveur, les tests, le linting |
+| **uv** | Gestionnaire Python (Python 3.12+) | Execute le serveur, les tests, le linting |
 
 ------
 

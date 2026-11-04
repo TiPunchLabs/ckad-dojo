@@ -40,8 +40,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # 3.11 = minimum supported (requires-python), 3.12 = reference version
-        python-version: ['3.11', '3.12']
+        # 3.12 = minimum supported (requires-python)
+        python-version: ['3.12']
     env:
       UV_PYTHON: ${{ matrix.python-version }}
     steps:
@@ -83,10 +83,10 @@ jobs:
         shell: bash
         run: uv export --format requirements-txt --no-hashes --no-emit-project | uvx pip-audit -r /dev/stdin
 
-      - name: Audit dependencies (Python 3.11, minimum supported)
+      - name: Audit dependencies (Python 3.12, minimum supported)
         # pip-audit evaluates environment markers against its own interpreter
         shell: bash
-        run: uv export --format requirements-txt --no-hashes --no-emit-project | uvx --python 3.11 pip-audit -r /dev/stdin
+        run: uv export --format requirements-txt --no-hashes --no-emit-project | uvx --python 3.12 pip-audit -r /dev/stdin
 
       - name: Secret scan
         run: |

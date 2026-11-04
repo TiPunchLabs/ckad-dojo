@@ -33,7 +33,7 @@ Have an idea? [Create a feature request](https://github.com/TiPunchLabs/ckad-doj
 
 ## Development Setup
 
-This project uses [direnv](https://direnv.net/) and [pre-commit](https://pre-commit.com/) for a consistent development environment. It requires Python 3.11+, which `uv` installs on demand.
+This project uses [direnv](https://direnv.net/) and [pre-commit](https://pre-commit.com/) for a consistent development environment. It requires Python 3.12+, which `uv` installs on demand.
 
 ```bash
 # 1. Install direnv (if not already installed)
@@ -49,7 +49,7 @@ uv run pre-commit install
 uv run pre-commit install --hook-type commit-msg
 ```
 
-> 💡 **Note**: If your `.venv` was created with Python 3.10, `uv sync` recreates it with a compatible interpreter. If `uv` cannot find one, run `uv python install 3.11` first (or install Python 3.11+ with your system package manager if downloads are set to `never`).
+> 💡 **Note**: If your `.venv` was created with Python 3.10 or 3.11, `uv sync` recreates it with a compatible interpreter. If `uv` cannot find one, run `uv python install 3.12` first (or install Python 3.12+ with your system package manager if downloads are set to `never`).
 
 ## Commit Convention
 
