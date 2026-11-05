@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - CI: `security` job with dependency audit (`pip-audit`) and secret scanning (`gitleaks`)
 - CI: `build` job with package build (`uv build`) and artifact upload
 - CI: Python test step with pytest and coverage reporting
+- CI: Python tests run on a version matrix starting at Python 3.12, and the dependency audit also runs under Python 3.12 (minimum supported version)
+- CI: Python tests also run on Python 3.15 (latest stable release, newest patch) to cover the newest supported interpreter
 - `.gitleaks.toml` config for path-based allowlist of exercise templates
 - Pre-commit: `check-added-large-files` hook (max 500KB)
 - Pre-commit: `mirrors-mypy` hook for Python type checking
@@ -25,6 +27,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
+- **BREAKING — Python 3.12+ is now required** (`requires-python = ">=3.12"`, was `>=3.10`): Python 3.10 and 3.11 are no longer supported. Dropping 3.10 also removes a vulnerable lock entry, since the patched releases of `filelock` (CVE fixes from 4.2.1 onward) no longer support Python 3.10. Ruff (`target-version`) and mypy (`python_version`) now target 3.12 as well.
+  - Most users have nothing to do: `uv` downloads a compatible Python automatically on the next `uv run ckad-dojo`.
+  - If automatic Python downloads are set to `manual`, run `uv python install 3.12` first. If they are set to `never` (`python-downloads` or `UV_PYTHON_DOWNLOADS`), install Python 3.12+ with your system package manager or switch the setting to `manual`.
+  - Existing clone with a `.venv` built on 3.10 or 3.11: run `uv sync` to recreate it.
+  - Global install (`uv tool install`) built on 3.10 or 3.11: run `uv tool install --reinstall --python 3.12 <source>` with the source you installed from (`ckad-dojo`, `./ckad-dojo` or the `git+https://` URL). Without `--python`, `uv` can keep the tool's old interpreter and resolution fails.
 - CI: restructured pipeline into 3 ordered stages (lint -> test+security -> build)
 - Pre-commit: replaced flake8 with ruff (lint + format)
 - Ruff configuration in `pyproject.toml` with comprehensive rule selection
@@ -39,6 +46,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Removed
 
 - `.flake8` configuration file (replaced by ruff in `pyproject.toml`)
+
+### Security
+
+- Dependencies: `filelock` 3.31.2 -> 4.2.7 and `virtualenv` 21.14.4 -> 21.15.2 (dev dependencies) to fix 20 known CVEs reported by `pip-audit` (12 in filelock, 8 in virtualenv)
 
 ## [1.7.0] - 2026-01-26
 

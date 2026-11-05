@@ -3,7 +3,7 @@ name = "ckad-dojo"
 version = "1.7.0"
 description = "CKAD Exam Simulator - Practice for Kubernetes certification"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = { text = "MIT" }
 authors = [{ name = "ckad-dojo contributors" }]
 keywords = ["kubernetes", "ckad", "exam", "simulator", "certification"]
@@ -14,8 +14,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Education",
 ]
@@ -33,7 +31,7 @@ build-backend = "hatchling.build"
 packages = ["web", "ckad_dojo.py"]
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py312"
 line-length = 100
 exclude = [".venv", ".specify", "specs", "__pycache__"]
 
@@ -69,7 +67,7 @@ quote-style = "double"
 indent-style = "space"
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.12"
 explicit_package_bases = true
 warn_return_any = true
 warn_unused_configs = true

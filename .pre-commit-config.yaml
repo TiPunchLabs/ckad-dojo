@@ -99,6 +99,8 @@ repos:
     rev: v0.16.0
     hooks:
       - id: markdownlint-cli2
+        # Pinned: nodeenv's "latest" lookup crashes on node pre-release tags (v27.0.0-alpha)
+        language_version: 26.13.0
         args: ["--fix"]
         exclude: (^\.venv/|^\.specify/|CHANGELOG\.md)
 
