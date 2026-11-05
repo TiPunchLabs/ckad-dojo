@@ -14,7 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - CI: `security` job with dependency audit (`pip-audit`) and secret scanning (`gitleaks`)
 - CI: `build` job with package build (`uv build`) and artifact upload
 - CI: Python test step with pytest and coverage reporting
-- CI: Python tests run on a version matrix pinned to Python 3.12, and the dependency audit also runs under Python 3.12 (minimum supported version)
+- CI: Python tests run on a version matrix starting at Python 3.12, and the dependency audit also runs under Python 3.12 (minimum supported version)
+- CI: Python tests also run on Python 3.15 (latest stable release, newest patch) to cover the newest supported interpreter
 - `.gitleaks.toml` config for path-based allowlist of exercise templates
 - Pre-commit: `check-added-large-files` hook (max 500KB)
 - Pre-commit: `mirrors-mypy` hook for Python type checking
