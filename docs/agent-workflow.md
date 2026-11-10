@@ -122,7 +122,8 @@ Rules for every artifact, local ones included:
 
 One SHA-256 over the primary checkout's HEAD, staged and unstaged changes,
 untracked files, the ignored local files agents could plausibly damage
-(`.claude/`, `CLAUDE.local.md`, `exam/`, ignored exams) and the stash list.
+(`.claude/`, `CLAUDE.md` while a checkout still ignores it, `CLAUDE.local.md`,
+`exam/`, ignored exams) and the stash list.
 Prints only the hash. Each snippet in this file is written for a single Bash call.
 
 ```bash
@@ -132,7 +133,7 @@ snap() {  # snap <checkout>
       && echo '#staged' && git diff --cached --binary \
       && echo '#unstaged' && git diff --binary \
       && echo '#untracked' && git ls-files -o --exclude-standard -z | xargs -0r sha256sum \
-      && echo '#ignored' && git ls-files -o -i --exclude-standard -z -- .claude CLAUDE.local.md exam exams | xargs -0r sha256sum \
+      && echo '#ignored' && git ls-files -o -i --exclude-standard -z -- .claude CLAUDE.md CLAUDE.local.md exam exams | xargs -0r sha256sum \
       && echo '#stash' && git stash list --format=%H) || return 1
   h=$(printf '%s\n' "$s" | sha256sum | cut -d' ' -f1)
   [[ $h =~ ^[0-9a-f]{64}$ ]] || return 1
@@ -214,12 +215,13 @@ Write `$MD/review-brief-$N.md` from the [template](#review-brief-nmd). The brief
 and the evidence it quotes stay in `$MD`, outside the review worktree: Codex can
 read them but not change them. Quote only sanitized excerpts.
 
-### 5.3 Start Codex (first review of a session)
+### 5.3 Start Codex
 
-The pane drops credential-like variables and points `KUBECONFIG` at `/dev/null`
-before Codex starts, and the launch flags repeat both for every command Codex
-runs. Codex's own default (`ignore_default_excludes = true`) does **not** filter
-`*KEY*`, `*SECRET*` or `*TOKEN*` variables, hence the explicit overrides.
+The pane replaces its shell with a clean one that keeps an explicit allowlist of
+variables (no credentials, `KUBECONFIG=/dev/null`) before Codex starts; the
+launch flags then apply the same rules to every command Codex runs. Codex's own
+default (`ignore_default_excludes = true`) does **not** filter `*KEY*`,
+`*SECRET*` or `*TOKEN*` variables, hence the explicit overrides.
 
 ```bash
 R=ckad-review
@@ -227,12 +229,14 @@ herdr agent list | grep -q "$R" && { echo "STOP: an agent named $R already exist
 P=$(set -o pipefail; herdr pane split --current --direction right --cwd "$RW" --no-focus \
       | jq -er .result.pane.pane_id) && [ -n "$P" ] || { echo "STOP: pane not created" >&2; exit 1; }
 stop() { herdr pane close "$P"; echo "STOP: $1; pane $P closed" >&2; exit 1; }
-herdr pane run "$P" 'for v in $(compgen -e | grep -iE "token|secret|passw|api_?key|credential|^ssh_auth_sock$|^kubeconfig$"); do unset "$v"; done; export KUBECONFIG=/dev/null; echo "env_dirty=$(compgen -e | grep -ciE "token|secret|passw|api_?key|credential|^ssh_auth_sock$") kubeconfig=$KUBECONFIG"' \
-  || stop "env cleanup not sent"
-herdr pane wait-output "$P" --regex 'env_dirty=[0-9]+ kubeconfig=\S+' --source recent-unwrapped --timeout 15000 \
+herdr pane run "$P" 'a=(); for v in HOME USER LOGNAME PATH TERM COLORTERM LANG $(compgen -e | grep "^HERDR_"); do a+=("$v=${!v}"); done; exec env -i "${a[@]}" SHELL=/bin/bash KUBECONFIG=/dev/null bash --noprofile --norc' \
+  || stop "clean shell not started"
+herdr pane run "$P" 'echo "env_extra=$(compgen -e | grep -cvxE "HOME|USER|LOGNAME|PATH|TERM|COLORTERM|LANG|SHELL|KUBECONFIG|HERDR_[A-Z_]+|PWD|OLDPWD|SHLVL|_") kubeconfig=$KUBECONFIG"' \
+  || stop "env check not sent"
+herdr pane wait-output "$P" --regex 'env_extra=[0-9]+ kubeconfig=\S+' --source recent-unwrapped --timeout 15000 >/dev/null \
   || stop "env check not seen"
 out=$(herdr pane read "$P" --source recent-unwrapped --lines 50) || stop "pane read failed"
-grep -qx 'env_dirty=0 kubeconfig=/dev/null' <<<"$out" || stop "environment not clean"
+grep -qx 'env_extra=0 kubeconfig=/dev/null' <<<"$out" || stop "environment not clean"
 herdr agent start "$R" --kind codex --pane "$P" -- \
   -C "$RW" --add-dir "$MD/reviews" \
   --sandbox workspace-write --ask-for-approval never \
@@ -241,7 +245,9 @@ herdr agent start "$R" --kind codex --pane "$P" -- \
   -c shell_environment_policy.inherit=core \
   -c shell_environment_policy.ignore_default_excludes=false \
   -c 'shell_environment_policy.set.KUBECONFIG="/dev/null"' \
-  || stop "agent start failed"
+  -c plugins._default.enabled=false \
+  -c skills.include_instructions=false \
+  >/dev/null || stop "agent start failed"
 echo "pane=$P"
 ```
 
@@ -251,29 +257,39 @@ Effect, per flag:
 |---|---|
 | `-C "$RW"` | Codex's working root is the detached review worktree, never `$W` |
 | `--sandbox workspace-write` + `--add-dir "$MD/reviews"` | Writable: `$RW`, `$MD/reviews`, `/tmp`. `.git` stays read-only, so Codex cannot stage or commit |
-| `--ask-for-approval never` | No escalation request is possible; a denied command fails and goes under "Not checked" |
+| `--ask-for-approval never` | No escalation request is possible; a denied command fails and goes under "Not verified" |
 | `network_access=false` | No network for Codex's commands (overrides a global `true`) |
 | `shell_environment_policy.*` | Commands get only core variables, minus KEY/SECRET/TOKEN names, with `KUBECONFIG=/dev/null` |
+| `plugins._default.enabled=false`, `skills.include_instructions=false` | No plugin (Superpowers included) and no skill catalog in the reviewer's session |
 
 The filesystem outside the writable roots stays **readable** in this sandbox:
 the reviewer's limits in [`AGENTS.md`](../AGENTS.md#limits) forbid reading
 credentials, and the cleared `KUBECONFIG` plus disabled network keep `kubectl`
-and `helm` from reaching a cluster.
+and `helm` from reaching a cluster. The write and network restrictions are
+enforced by Codex's sandbox; nobody probes them by trying a forbidden write or
+connection.
 
 Before the first prompt:
 
 ```bash
-herdr agent get "$R"                         # expect idle, no pending launch
+herdr agent get "$R"                         # expect idle, interactive_ready true
 herdr agent read "$R" --source visible       # look for a "Trust this folder?" dialog
 ```
 
 Herdr may report a trust dialog as `idle`. Any trust, approval or sandbox
 question goes to the owner; never answer it. If a flag is rejected, drop it,
-record it, and never widen permissions instead. The first brief of every Codex
-session includes the permission probes of the template; confirm their results
-in the review, and check the session's effective policy in Codex's newest
-rollout file (`~/.codex/sessions/…/rollout-*.jsonl`, `turn_context` entry:
-`sandbox_policy`, `approval_policy`, `network_access`).
+record it, and never widen permissions instead.
+
+After the first prompt, read the effective policy Codex recorded for the session
+(newest file under `~/.codex/sessions/`, `turn_context` entry) and keep it as
+evidence:
+
+```bash
+f=$(ls -t ~/.codex/sessions/*/*/*/rollout-*.jsonl | head -1)
+jq -c 'select(.type=="turn_context") | .payload | {cwd, approval_policy, sandbox_policy}' "$f" | head -1
+# expect cwd = $RW, approval_policy "never", type "workspace-write",
+# writable_roots = ["$MD/reviews"], network_access false
+```
 
 ### 5.4 Prompt
 
@@ -295,13 +311,20 @@ then `herdr agent wait "$R" --timeout 600000` while it is `working`.
 
 ### 5.5 After the review
 
+Every check must pass before the verdict is used; the first failure stops.
+
 ```bash
 F="$MD/reviews/review-$N.md"
-test "$F" -nt "$MD/review-brief-$N.md" || echo "STALE or missing review"
-grep -xE 'VERDICT: (PASS|PASS_WITH_RESERVATIONS|CHANGES_REQUESTED|BLOCKED)' "$F"
-grep -x "Brief: review-brief-$N.md" "$F" && grep -x "Candidate: $CAND" "$F"
-[ "$(git -C "$RW" rev-parse HEAD)" = "$CAND" ] && [ -z "$(git -C "$RW" status --porcelain)" ] && echo "review worktree intact"
-sha256sum "$F" >> "$MD/evidence/reviews.sha256"
+fail() { echo "STOP: $1" >&2; exit 1; }
+[ -f "$F" ] && [ "$F" -nt "$MD/review-brief-$N.md" ] || fail "review missing or older than its brief"
+[ "$(grep -cE '^VERDICT:' "$F")" = 1 ] || fail "not exactly one VERDICT line"
+V=$(grep -xE 'VERDICT: (PASS|PASS_WITH_RESERVATIONS|CHANGES_REQUESTED|BLOCKED)' "$F") || fail "malformed verdict"
+grep -qx "Brief: review-brief-$N.md" "$F" || fail "wrong brief"
+grep -qx "Candidate: $CAND" "$F" || fail "wrong candidate SHA"
+[ "$(git -C "$RW" rev-parse HEAD)" = "$CAND" ] || fail "review worktree moved"
+[ -z "$(git -C "$RW" status --porcelain)" ] || fail "review worktree changed"
+sha256sum "$F" >> "$MD/evidence/reviews.sha256" || fail "checksum not recorded"
+echo "$V"
 ```
 
 Then cross-check at least one finding or one acceptance-criterion claim against
@@ -324,7 +347,8 @@ Codex once to write the file.
   move the review worktree to it (§5.1), and write `review-brief-<N+1>.md`. The
   new brief answers every open finding: fixed (where) or rejected (why).
 - Reuse the running Codex agent; its sandbox still points at `$RW`. Start a new
-  one (§5.3) only if the pane is gone.
+  one (§5.3) if the pane is gone or the launch procedure itself changed (close
+  the old pane first).
 - Any commit after a verdict invalidates it: the new head needs its own review
   before the PR or the report can claim a verdict for it.
 - If findings remain after the last allowed review, stop and report `BLOCKED` or
@@ -458,12 +482,9 @@ In: … / Out: …
 - … (why)
 ## Earlier findings (N > 1)
 - F<k>.<j>: fixed in <file:line> | rejected because …
-## Permission probes (first brief of a Codex session)
+## Environment probes (read-only, first brief of a Codex session)
 - `echo "KUBECONFIG=${KUBECONFIG-unset}"` → expect /dev/null
-- `env | grep -ciE 'token|secret|passw|api_?key|credential'` → expect 0
-- `touch "$HOME/.ckad-review-probe"` → expect permission denied
-- `touch "$(git rev-parse --git-common-dir)/ckad-review-probe"` → expect permission denied
-- `curl -sS -m 5 -o /dev/null https://example.com` → expect failure
+- `env | grep -ciE 'token|secret|passw|key|credential'` → expect 0 (names counted, values never printed)
 ## Limits
 AGENTS.md "Limits" applies. <mission-specific limits>
 ```
