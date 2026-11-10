@@ -31,6 +31,13 @@ Have an idea? [Create a feature request](https://github.com/TiPunchLabs/ckad-doj
 6. Commit with a [conventional message](https://www.conventionalcommits.org/)
 7. Open a Pull Request
 
+### Agent-assisted Contributions
+
+Maintainers may delegate a change to Claude Code with an independent Codex review.
+That workflow, its mission files and its safeguards are described in
+[docs/agent-workflow.md](docs/agent-workflow.md). It does not change the steps
+above for other contributors.
+
 ## Development Setup
 
 This project uses [direnv](https://direnv.net/) and [pre-commit](https://pre-commit.com/) for a consistent development environment. It requires Python 3.12+, which `uv` installs on demand.

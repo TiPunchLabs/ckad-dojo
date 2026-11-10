@@ -34,3 +34,15 @@ Describe how you tested your changes:
 ## Screenshots (if applicable)
 
 Add screenshots to show visual changes.
+
+## Agent-assisted PR (optional)
+
+Only for PRs prepared with the [agent workflow](../docs/agent-workflow.md); delete this section otherwise.
+
+- Reviewed SHA: <!-- full SHA the reviewer approved; must equal the PR head -->
+- Review verdict: <!-- PASS | PASS_WITH_RESERVATIONS | CHANGES_REQUESTED | BLOCKED | pending -->
+- Review cycles: <!-- N of 3 -->
+- Checks: <!-- documentation / Bash tests / Python tests / Kubernetes integration: status each -->
+- Reservations: <!-- open reservations, or "none" -->
+- Cluster access: <!-- none | context and disposable cluster used -->
+- Linked issue: <!-- #n or none -->
