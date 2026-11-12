@@ -472,11 +472,11 @@ PASS - Congratulations!
 ## Déroulement type
 
 ```
-1. Start an exam        →  uv run ckad-dojo exam start -e ckad-simulation1
-2. Solve questions      →  Work in the embedded terminal (or your own)
-3. Score your answers   →  uv run ckad-dojo score -e ckad-simulation1
-4. Review solutions     →  Open exams/ckad-simulation1/solutions.md
-5. Cleanup & retry      →  uv run ckad-dojo cleanup -e ckad-simulation1
+1. Lancer un examen         →  uv run ckad-dojo exam start -e ckad-simulation1
+2. Résoudre les questions   →  Travaillez dans le terminal intégré (ou le vôtre)
+3. Noter vos réponses       →  uv run ckad-dojo score -e ckad-simulation1
+4. Revoir les solutions     →  Ouvrez exams/ckad-simulation1/solutions.md
+5. Nettoyer et recommencer  →  uv run ckad-dojo cleanup -e ckad-simulation1
 ```
 
 > 💡 **Astuce** : vous pouvez noter vos réponses à tout moment pendant l'examen — inutile d'attendre la fin. Cela vous permet d'avancer question par question.
@@ -500,17 +500,17 @@ Les questions font référence à des chemins comme `/opt/course/N/` (comme dans
 ckad-dojo/
 ├── .github/
 │   └── workflows/
-│       └── scorecard.yml     # OpenSSF Scorecard security analysis
-├── ckad_dojo.py              # Unified Python CLI
-├── pyproject.toml            # Python project config (uv)
+│       └── scorecard.yml     # Analyse de sécurité OpenSSF Scorecard
+├── ckad_dojo.py              # CLI Python unifiée
+├── pyproject.toml            # Configuration du projet Python (uv)
 ├── scripts/
-│   ├── ckad-exam.sh          # Main launcher (bash)
-│   ├── ckad-setup.sh         # Environment setup
-│   ├── ckad-score.sh         # Automated scoring
-│   ├── ckad-cleanup.sh       # Cleanup
-│   └── lib/                  # Shared functions
-├── web/                      # Web interface
-├── exams/                    # Exam definitions
+│   ├── ckad-exam.sh          # Lanceur principal (bash)
+│   ├── ckad-setup.sh         # Mise en place de l'environnement
+│   ├── ckad-score.sh         # Notation automatique
+│   ├── ckad-cleanup.sh       # Nettoyage
+│   └── lib/                  # Fonctions partagées
+├── web/                      # Interface web
+├── exams/                    # Définitions des examens
 │   ├── ckad-simulation1/     # Dojo Suzaku 🔥 - 21 questions, 112 points
 │   ├── ckad-simulation2/     # Dojo Byakko 🐯 - 20 questions, 105 points
 │   ├── ckad-simulation3/     # Dojo Genbu 🐢 - 20 questions, 105 points
@@ -535,11 +535,11 @@ ckad-dojo/
 │       ├── questions.md      # Questions
 │       ├── solutions.md      # Solutions
 │       ├── scoring-functions.sh # Scoring
-│       ├── post-setup.sh     # Optional post-setup
-│       ├── manifests/setup/  # K8s resources
-│       └── templates/        # Template files
-├── exam/course/              # Your answers (created by setup)
-└── tests/                    # Unit tests
+│       ├── post-setup.sh     # Post-setup facultatif
+│       ├── manifests/setup/  # Ressources K8s
+│       └── templates/        # Fichiers modèles
+├── exam/course/              # Vos réponses (créées par le setup)
+└── tests/                    # Tests unitaires
 ```
 
 ---

@@ -172,11 +172,11 @@ exams/ckad-simulation1/
 scoring-functions.sh                    web/server.py
 ┌─────────────────────┐                ┌──────────────────────┐
 │ score_q1() {        │   stdout       │ run_scoring_script() │
-│   # kubectl checks  │ ──────────────>│   parse output:      │
+│   # vérifs kubectl  │ ──────────────>│   analyse la sortie :│
 │   echo "2/3"        │                │   - regex Q(\d+)     │
 │   echo "DETAILS:..."│                │   - regex TOTAL      │
-│ }                   │                │   - parse DETAILS:   │
-└─────────────────────┘                │   return JSON        │
+│ }                   │                │   - analyse DETAILS: │
+└─────────────────────┘                │   renvoie du JSON    │
                                        └──────────────────────┘
 ```
 
