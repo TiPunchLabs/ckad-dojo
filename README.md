@@ -1,3 +1,5 @@
+**Language:** English (default) | [Français](README.fr.md)
+
 <p align="center">
   <pre>
  ██████╗██╗  ██╗ █████╗ ██████╗        ██████╗  ██████╗      ██╗ ██████╗

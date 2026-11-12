@@ -21,6 +21,7 @@ Fixes #(issue number)
 - [ ] I have run `uv run pre-commit run --all-files` and fixed any issues
 - [ ] I have run `./tests/run-tests.sh` and all tests pass
 - [ ] I have updated the documentation if needed
+- [ ] Documentation changes update both the English file and its French `.fr.md` translation ([documentation languages](../CONTRIBUTING.md#documentation-languages))
 - [ ] I have added tests for new functionality (if applicable)
 
 ## Testing Done

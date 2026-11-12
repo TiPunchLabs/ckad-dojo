@@ -1,5 +1,7 @@
 # ADR-0002: Bash for Business Logic
 
+**Language:** English (default) | [Français](0002-bash-for-business-logic.fr.md)
+
 **Status**: Accepted
 **Date**: 2025-12-04
 **Authors**: @xgueret

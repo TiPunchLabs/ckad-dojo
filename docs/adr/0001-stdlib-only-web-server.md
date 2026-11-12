@@ -1,5 +1,7 @@
 # ADR-0001: Standard Library Only for Web Server
 
+**Language:** English (default) | [Français](0001-stdlib-only-web-server.fr.md)
+
 **Status**: Accepted
 **Date**: 2025-12-04
 **Authors**: @xgueret

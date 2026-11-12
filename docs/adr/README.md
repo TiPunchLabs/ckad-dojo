@@ -1,5 +1,7 @@
 # Architecture Decision Records
 
+**Language:** English (default) | [Français](README.fr.md)
+
 > This directory contains Architecture Decision Records (ADR) for the ckad-dojo project.
 > ADRs document significant architectural choices with their context, rationale, and consequences.
 

@@ -1,4 +1,6 @@
-# 🥋 Démarrer avec ckad-dojo en 3 étapes
+# 🥋 Get Started with ckad-dojo in 3 Steps
+
+**Language:** English (default) | [Français](QUICKSTART.fr.md)
 
 ![Kubernetes 1.28+](https://img.shields.io/badge/Kubernetes-1.28+-326CE5?logo=kubernetes&logoColor=white)
 ![kubectl](https://img.shields.io/badge/kubectl-required-326CE5)
@@ -10,19 +12,19 @@
 
 ---
 
-## Étape 1 — Prérequis
+## Step 1 — Prerequisites
 
-Un cluster Kubernetes fonctionnel + les outils suivants installés :
+A working Kubernetes cluster and the following tools installed:
 
 ```bash
 kubectl cluster-info && helm version && docker --version && ttyd --version
 ```
 
-Si une commande échoue, installez l'outil manquant. Détails : [README.md#prerequisites](README.md#prerequisites).
+If a command fails, install the missing tool. Details: [README.md#prerequisites](README.md#prerequisites).
 
 ---
 
-## Étape 2 — Installer et lancer
+## Step 2 — Install and Run
 
 ```bash
 git clone https://github.com/TiPunchLabs/ckad-dojo.git && cd ckad-dojo
@@ -31,26 +33,26 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv run ckad-dojo
 ```
 
-> 💡 **Note** : ckad-dojo requiert Python 3.12 ou plus récent (Python 3.10 et 3.11 ne sont plus supportés). Inutile de l'installer vous-même : `uv` télécharge automatiquement une version compatible. Si ces téléchargements sont en mode `manual`, lancez d'abord `uv python install 3.12` ; en mode `never`, installez Python 3.12+ via votre gestionnaire de paquets système.
+> 💡 **Note**: ckad-dojo requires Python 3.12 or newer (Python 3.10 and 3.11 are no longer supported). You do not need to install it yourself: `uv` downloads a compatible version automatically. If these downloads are set to `manual`, run `uv python install 3.12` first; if they are set to `never`, install Python 3.12+ with your system package manager.
 
-Le menu interactif s'affiche. L'interface web s'ouvre sur `http://localhost:9090`.
+The interactive menu appears. The web interface opens at `http://localhost:9090`.
 
 ---
 
-## Étape 3 — Commencer l'examen
+## Step 3 — Start the Exam
 
-Choisissez un dojo dans le menu, ou lancez directement :
+Pick a dojo from the menu, or start one directly:
 
 ```bash
 uv run ckad-dojo exam start -e ckad-simulation1
 ```
 
-Timer 120 min. Terminal kubectl intégré. Scoring automatique.
+120-minute timer. Built-in kubectl terminal. Automatic scoring.
 
 ---
 
-## Et ensuite ?
+## What's Next?
 
-- **Vérifier votre score** : `uv run ckad-dojo score -e ckad-simulation1`
-- **10 dojos disponibles** (198 questions) — voir la [liste complète](README.md#the-ten-dojos)
-- **Full guide** : [README.md](README.md)
+- **Check your score**: `uv run ckad-dojo score -e ckad-simulation1`
+- **20 dojos available** (398 questions) — see the [full list](README.md#the-twenty-dojos)
+- **Full guide**: [README.md](README.md)

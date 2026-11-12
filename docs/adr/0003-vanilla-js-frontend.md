@@ -1,5 +1,7 @@
 # ADR-0003: Vanilla JS Frontend
 
+**Language:** English (default) | [Français](0003-vanilla-js-frontend.fr.md)
+
 **Status**: Accepted
 **Date**: 2025-12-04
 **Authors**: @xgueret

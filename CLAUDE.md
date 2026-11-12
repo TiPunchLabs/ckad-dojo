@@ -1,8 +1,10 @@
 # ckad-dojo — instructions for Claude Code
 
+**Language:** English (default) | [Français](CLAUDE.fr.md)
+
 Entry point for a Claude Code session in this repository. Human-facing
 documentation: [`README.md`](README.md), [`CONTRIBUTING.md`](CONTRIBUTING.md),
-[`docs/architecture.en.md`](docs/architecture.en.md), ADRs in [`docs/adr/`](docs/adr/).
+[`docs/architecture.md`](docs/architecture.md), ADRs in [`docs/adr/`](docs/adr/).
 When this file and the code disagree, the code wins: fix both.
 
 ## Your role
@@ -45,7 +47,7 @@ content into a tracked file, a commit message, a PR or an issue.
 | Change | Checks |
 |---|---|
 | Any | `git add` the files, then `uv run pre-commit run --files <files>`; `git diff --check`, then `git diff --check <base>...HEAD` after the commit |
-| Documentation | the above, plus every relative link, anchor and quoted command verified |
+| Documentation | the above, plus every relative link, anchor and quoted command verified; the English and French (`*.fr.md`) versions updated together ([documentation languages](CONTRIBUTING.md#documentation-languages)) |
 | Bash | `./tests/run-tests.sh` |
 | Python | `uv run pytest --cov --cov-report=term-missing` |
 | CI parity | `uv sync --group dev && uv run pre-commit run --all-files` |

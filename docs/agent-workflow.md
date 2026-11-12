@@ -1,5 +1,7 @@
 # Agent workflow — objective → Claude Code → Codex review → report
 
+**Language:** English (default) | [Français](agent-workflow.fr.md)
+
 How a mission runs in this repository when the owner hands an objective to
 Claude Code (implementer and orchestrator) and Codex CLI reviews the result
 independently, with Herdr as the link between the two. Claude Code starts from
@@ -161,7 +163,7 @@ CI (`.github/workflows/ci.yml`) runs `uv sync --group dev`,
 | Change | Local checks |
 |---|---|
 | Any | `git add` the changed files, then `uv run pre-commit run --files <files>` (gitleaks scans staged content); `git diff --check` before the commit and `git diff --check <base>...HEAD` after it |
-| Documentation | the above; every relative link and anchor resolves; every command quoted exists (`--help`) |
+| Documentation | the above; every relative link and anchor resolves; every command quoted exists (`--help`); the English and French (`*.fr.md`) versions change together ([documentation languages](../CONTRIBUTING.md#documentation-languages)) |
 | Bash (`scripts/`, `exams/*/scoring-functions.sh`) | `./tests/run-tests.sh` |
 | Python (`ckad_dojo.py`, `web/`, `scripts/bump-version.py`) | `uv run pytest --cov --cov-report=term-missing` |
 | CI or hooks configuration | `uv run pre-commit run --all-files`; the PR's CI run is the evidence |

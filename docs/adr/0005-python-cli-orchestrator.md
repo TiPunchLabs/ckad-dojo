@@ -1,5 +1,7 @@
 # ADR-0005: Python CLI as Orchestrator
 
+**Language:** English (default) | [Français](0005-python-cli-orchestrator.fr.md)
+
 **Status**: Accepted
 **Date**: 2025-12-04
 **Authors**: @xgueret
