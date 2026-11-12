@@ -55,8 +55,8 @@ Thumbs.db
 # Timer state
 .timer_*
 
-# Claude Code and Specify (local development only)
-CLAUDE.md
+# Claude Code and Specify (local development only; CLAUDE.md is tracked)
+CLAUDE.local.md
 .claude/
 .specify/
 

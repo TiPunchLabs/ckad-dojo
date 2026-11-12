@@ -689,6 +689,14 @@ Aligned with the **[official CNCF CKAD Curriculum v1.35](docs/ckad-curriculum.md
 
 This is an open source project and contributions are welcome!
 
+### Development workflow
+
+I use Claude Code to implement changes and Codex to review them independently,
+with Herdr coordinating the handoff. The repository includes
+[`CLAUDE.md`](CLAUDE.md) for implementation instructions,
+[`AGENTS.md`](AGENTS.md) for review instructions, and a
+[workflow guide](docs/agent-workflow.md) describing how I use them together.
+
 ### Report a Bug
 
 Found a bug? Please [open an issue](https://github.com/TiPunchLabs/ckad-dojo/issues/new?template=bug_report.md) with:
