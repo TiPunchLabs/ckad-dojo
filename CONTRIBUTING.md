@@ -64,6 +64,9 @@ language and the canonical reference.
   only the English `CLAUDE.md`, `AGENTS.md` and `docs/agent-workflow.md`.
 - Not translated: `LICENSE`, `CHANGELOG.md`, the GitHub issue and pull request
   templates, exam content (`exams/`) and the `specs/` archive.
+- `docs/architecture.en.md` is a compatibility page for old links to the former
+  English architecture file. It points to `docs/architecture.md` and
+  `docs/architecture.fr.md`, is not a translation pair, and has no French version.
 
 ## Development Setup
 

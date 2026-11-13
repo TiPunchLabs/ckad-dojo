@@ -64,6 +64,10 @@ par défaut et la référence canonique.
   agents suivent uniquement les fichiers anglais `CLAUDE.md`, `AGENTS.md` et `docs/agent-workflow.md`.
 - Non traduits : `LICENSE`, `CHANGELOG.md`, les modèles d'issue et de pull request
   GitHub, le contenu des examens (`exams/`) et les archives `specs/`.
+- `docs/architecture.en.md` est une page de compatibilité pour les anciens liens vers
+  l'ancien fichier d'architecture anglais. Elle renvoie vers `docs/architecture.md` et
+  `docs/architecture.fr.md`, ne fait pas partie d'une paire de traduction et n'a pas
+  de version française.
 
 ## Environnement de développement
 
