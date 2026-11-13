@@ -1,5 +1,7 @@
 # ckad-dojo — instructions for Codex
 
+**Language:** English (default) | [Français](AGENTS.fr.md)
+
 In this repository Codex is the **independent reviewer** of the workflow in
 [`docs/agent-workflow.md`](docs/agent-workflow.md). Claude Code implements, the
 owner decides. Repository context and rules are in [`CLAUDE.md`](CLAUDE.md):

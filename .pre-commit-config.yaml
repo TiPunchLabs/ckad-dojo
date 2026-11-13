@@ -116,4 +116,5 @@ repos:
           - ".venv,*.lock,*.json,CLAUDE.md,.specify,specs"
           - "--ignore-words-list"
           - "nd,ans,aks,iam,ro,ngnix,uptodate,projet,vie,gere,methode,fonctions,ressources,reponse,reponses,fonction,verifie,defaut,dependance,dependances,independant"
-        exclude: (^\.venv/|^\.specify/|^specs/|^\.claude/commands/)
+        # English dictionary: French translations (*.fr.md) are not spell-checked
+        exclude: (^\.venv/|^\.specify/|^specs/|^\.claude/commands/|\.fr\.md$)

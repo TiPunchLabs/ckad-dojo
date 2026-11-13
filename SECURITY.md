@@ -1,5 +1,7 @@
 # Security Policy
 
+**Language:** English (default) | [Français](SECURITY.fr.md)
+
 ## Supported Versions
 
 | Version | Supported          |

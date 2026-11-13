@@ -1,5 +1,7 @@
 # ADR-0006: In-Memory Timer
 
+**Language:** English (default) | [Français](0006-in-memory-timer.fr.md)
+
 **Status**: Accepted
 **Date**: 2025-12-04
 **Authors**: @xgueret

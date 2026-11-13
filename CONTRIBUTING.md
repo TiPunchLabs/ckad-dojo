@@ -1,5 +1,7 @@
 # Contributing to ckad-dojo
 
+**Language:** English (default) | [Français](CONTRIBUTING.fr.md)
+
 Thank you for your interest in contributing to ckad-dojo!
 
 ## How to Contribute
@@ -37,6 +39,34 @@ Maintainers may delegate a change to Claude Code with an independent Codex revie
 That workflow, its mission files and its safeguards are described in
 [docs/agent-workflow.md](docs/agent-workflow.md). It does not change the steps
 above for other contributors.
+
+## Documentation Languages
+
+The documentation is maintained in English and French. English is the default
+language and the canonical reference.
+
+- Unsuffixed files (`README.md`, `docs/architecture.md`, …) contain English. The
+  French translation sits in the same directory with the `.fr.md` suffix
+  (`README.fr.md`, `docs/architecture.fr.md`).
+- Adding a document, or changing one substantively, updates both language
+  versions in the same pull request.
+- Each pair keeps its language selector near the top, English first, linking to
+  the exact counterpart.
+- Relative links and section anchors must resolve in both languages. French
+  headings produce French anchors: keep the French tables of contents and
+  fragment links in step with them.
+- Default entry points (the repository landing page, links from English
+  documents) stay in English. Inside a French document, links point to the French
+  counterpart when one exists, otherwise to the English file.
+- When the two versions diverge, the English one is authoritative: fix the French one.
+- The translations of agent instructions (`CLAUDE.fr.md`, `AGENTS.fr.md`,
+  `docs/agent-workflow.fr.md`) are reference documents for readers. Agents follow
+  only the English `CLAUDE.md`, `AGENTS.md` and `docs/agent-workflow.md`.
+- Not translated: `LICENSE`, `CHANGELOG.md`, the GitHub issue and pull request
+  templates, exam content (`exams/`) and the `specs/` archive.
+- `docs/architecture.en.md` is a compatibility page for old links to the former
+  English architecture file. It points to `docs/architecture.md` and
+  `docs/architecture.fr.md`, is not a translation pair, and has no French version.
 
 ## Development Setup
 

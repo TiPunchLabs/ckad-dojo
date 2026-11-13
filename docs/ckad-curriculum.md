@@ -1,5 +1,7 @@
 # CKAD Official Curriculum Reference
 
+**Language:** English (default) | [Français](ckad-curriculum.fr.md)
+
 > **Source**: [CNCF Curriculum Repository](https://github.com/cncf/curriculum)
 > **File**: `CKAD_Curriculum_v1.35.pdf`
 > **Kubernetes Version**: 1.35

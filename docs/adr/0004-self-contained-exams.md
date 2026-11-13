@@ -1,5 +1,7 @@
 # ADR-0004: Self-Contained Exam Directories
 
+**Language:** English (default) | [Français](0004-self-contained-exams.fr.md)
+
 **Status**: Accepted
 **Date**: 2025-12-04
 **Authors**: @xgueret
